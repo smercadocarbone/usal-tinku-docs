@@ -1,0 +1,105 @@
+%!TEX root = ../main.tex
+% =============================================================
+%  CAPÍTULO 5 — JUSTIFICACIÓN ECONÓMICA (Entrega 5 · 15 % · 15/9)
+% =============================================================
+
+\chapter{Justificación económica}\label{cap:economica}
+
+\begin{guia}[Guía de la cátedra: qué se evalúa en este capítulo]
+Es el capítulo de mayor peso individual (15\,\%). Se evalúa como una
+evaluación de proyectos de inversión:
+\begin{enumerate}
+    \item \textbf{Análisis de mercado y competidores}: tamaño, segmentos,
+          precios de referencia.
+    \item \textbf{Modelo de negocio}: B2B, B2C, B2G o interno; niveles de
+          precio y fuentes de ingreso.
+    \item \textbf{Inversión inicial} desglosada por rol y tiempo, más
+          infraestructura.
+    \item \textbf{Costos operativos} recurrentes.
+    \item \textbf{Escenarios} pesimista, base y optimista, con flujo de caja
+          proyectado a 3 a 5 años.
+    \item \textbf{Indicadores}: \gls{van}, \gls{tir} y período de repago,
+          con una tasa de descuento construida y justificada con fuentes.
+    \item \textbf{Supuestos y restricciones} explícitos.
+\end{enumerate}
+Todo número con su origen: cotización, tarifa pública, estadística
+citada o estimación propia declarada como tal.
+\end{guia}
+
+\completar{Desarrollo del capítulo.}
+
+\section{\completar{Nombre de la sección}}
+
+\completar{Texto.}
+
+\begin{table}[H]
+    \centering
+    \caption{Inversión inicial desglosada (ejemplo de estructura)}
+    \label{tab:inversion}
+    \small
+    \begin{tabularx}{\textwidth}{L r r r L}
+        \toprule
+        \tb{Concepto} & \tb{Cantidad} & \tb{Unitario (USD)} & \tb{Total (USD)} & \tb{Fuente} \\
+        \midrule
+        Desarrollador full stack (meses) & 6 & \completar{2.500} & \completar{15.000} & \completar{encuesta salarial citada} \\
+        Científico de datos (meses) & 4 & \completar{...} & \completar{...} & \completar{...} \\
+        Diseño \gls{ux} (horas) & 80 & \completar{...} & \completar{...} & \completar{...} \\
+        Infraestructura inicial & 1 & \completar{...} & \completar{...} & \completar{tarifa pública del proveedor} \\
+        \midrule
+        \multicolumn{3}{r}{\tb{Total}} & \tb{\completar{...}} & \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\section{\completar{Nombre de la sección}}
+
+\completar{Texto.}
+
+\begin{table}[H]
+    \centering
+    \caption{Flujo de caja proyectado por escenario, en USD (ejemplo de estructura)}
+    \label{tab:flujo-caja}
+    \small
+    \begin{tabularx}{\textwidth}{l R R R R R R}
+        \toprule
+        \tb{Escenario} & \tb{Año 0} & \tb{Año 1} & \tb{Año 2} & \tb{Año 3} & \tb{Año 4} & \tb{Año 5} \\
+        \midrule
+        Pesimista & $-$\completar{...} & \completar{...} & \completar{...} & \completar{...} & \completar{...} & \completar{...} \\
+        Base      & $-$\completar{...} & \completar{...} & \completar{...} & \completar{...} & \completar{...} & \completar{...} \\
+        Optimista & $-$\completar{...} & \completar{...} & \completar{...} & \completar{...} & \completar{...} & \completar{...} \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\begin{ejemplo}[Ejemplo: construcción de la tasa de descuento]
+La tasa de descuento \gls{sym:r} se construye sumando una tasa libre de
+riesgo (bono del Tesoro de EE.\,UU.\ a 10 años), el riesgo país (índice
+EMBI) y una prima por riesgo de proyecto en etapa temprana. Cada
+componente se cita con su fuente y fecha de consulta.
+\end{ejemplo}
+
+El \gls{sym:van} se calcula como
+\begin{equation}
+    \mathit{VAN} = -I_0 + \sum_{t=1}^{n} \frac{\gls{sym:fc}}{(1 + r)^{t}},
+    \label{eq:van}
+\end{equation}
+donde $I_0$ es la inversión inicial, $FC_t$ el flujo de caja neto del
+año $t$ y $r$ la tasa de descuento. La \gls{tir} es la tasa que anula el
+\gls{van}, y el período de repago es el primer año en que el flujo
+acumulado se vuelve positivo.
+
+\begin{table}[H]
+    \centering
+    \caption{Indicadores financieros por escenario (ejemplo de estructura)}
+    \label{tab:indicadores-financieros}
+    \small
+    \begin{tabular}{l r r r}
+        \toprule
+        \tb{Escenario} & \tb{VAN (USD)} & \tb{TIR} & \tb{Repago} \\
+        \midrule
+        Pesimista & \completar{...} & \completar{...\,\%} & \completar{n} años \\
+        Base      & \completar{...} & \completar{...\,\%} & \completar{n} años \\
+        Optimista & \completar{...} & \completar{...\,\%} & \completar{n} años \\
+        \bottomrule
+    \end{tabular}
+\end{table}

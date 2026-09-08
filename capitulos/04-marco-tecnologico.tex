@@ -1,0 +1,93 @@
+%!TEX root = ../main.tex
+% =============================================================
+%  CAPÍTULO 4 — MARCO TECNOLÓGICO       (Entrega 4 · 10 % · 25/8)
+% =============================================================
+
+\chapter{Marco tecnológico}\label{cap:marco-tecnologico}
+
+\begin{guia}[Guía de la cátedra: qué se evalúa en este capítulo]
+Documenta el \emph{cómo}. No es un manual de uso: es la justificación
+de cada elección tecnológica. Regla: nada ``porque sí''.
+\begin{enumerate}
+    \item \textbf{Arquitectura}: diagrama con componentes y conexiones,
+          responsabilidad y tecnología de cada uno, flujo de datos y
+          justificación del estilo arquitectónico con alternativas
+          evaluadas \citep{sommerville2016}.
+    \item \textbf{Prototipo o \gls{g:mvp}}: cuál es y por qué; alcance
+          implementado vs.\ simulado; capturas o enlace; cómo se probó.
+    \item \textbf{Stack}: por tecnología, nombre, versión, capa, por qué
+          (madurez, comunidad, costo, conocimiento del equipo) y qué
+          alternativas se descartaron.
+    \item \textbf{Infraestructura y base de datos}: dónde se aloja cada
+          componente, escalabilidad, costos (enlazados al
+          capítulo~\ref{cap:economica}), motor y modelo de datos.
+    \item \textbf{Diseño y \gls{ux}}: quién lo usa, mockups, decisiones de
+          diseño y \textbf{cómo se validó con usuarios} (la cátedra lo marca
+          como importante; cuestionario en el apéndice~\ref{apx:encuesta}).
+    \item \textbf{Seguridad, calidad y despliegue}: autenticación, control
+          de acceso, cifrado, plan de pruebas, repositorio, \gls{cicd} y
+          monitoreo.
+\end{enumerate}
+\end{guia}
+
+\completar{Desarrollo del capítulo.}
+
+\section{\completar{Nombre de la sección}}
+
+\completar{Texto.}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{example-image-a}
+    \caption{Diagrama de arquitectura del sistema (ejemplo de figura)}
+    \label{fig:arquitectura}
+\end{figure}
+
+\begin{ejemplo}[Ejemplo: decisión con alternativas]
+Se adoptó una arquitectura \completar{cliente-servidor en capas} porque
+\completar{el volumen de usuarios previsto y el equipo de una persona no
+justifican la complejidad operativa de microservicios}. Se evaluó
+\completar{alternativa} y se descartó porque \completar{motivo concreto}.
+\end{ejemplo}
+
+\section{\completar{Nombre de la sección}}
+
+\completar{Texto.}
+
+\begin{table}[H]
+    \centering
+    \caption{Stack tecnológico y alternativas evaluadas (ejemplo de estructura)}
+    \label{tab:stack}
+    \small
+    \begin{tabularx}{\textwidth}{l l l L L}
+        \toprule
+        \tb{Capa} & \tb{Tecnología} & \tb{Versión} & \tb{Justificación} & \tb{Alternativas descartadas} \\
+        \midrule
+        Frontend & \completar{framework} & \completar{x.y} & \completar{madurez, comunidad, conocimiento del equipo} & \completar{alternativa: motivo} \\
+        Backend & \completar{lenguaje/framework} & \completar{x.y} & \completar{...} & \completar{...} \\
+        Base de datos & \completar{motor} & \completar{x.y} & \completar{relacional por integridad referencial y consultas ad hoc} \citep{postgresqldocs} & \completar{NoSQL: sin necesidad de esquema flexible} \\
+        Modelo & \completar{librería} & \completar{x.y} & \completar{...} \citep{pedregosa2011} & \completar{...} \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includegraphics[width=\textwidth]{example-image-a}
+        \caption{Pantalla de inicio}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includegraphics[width=\textwidth]{example-image-b}
+        \caption{Panel principal}
+    \end{subfigure}
+    \caption{Mockups de pantallas (ejemplo de figura compuesta)}
+    \label{fig:mockups}
+\end{figure}
+
+\begin{lstlisting}[language=Python, caption={Ejemplo de código fuente con resaltado}, label={lst:ejemplo}]
+def test_calcular_exposicion():
+    # exposición = probabilidad x impacto
+    assert calcular_exposicion(probabilidad=4, impacto=5) == 20
+\end{lstlisting}

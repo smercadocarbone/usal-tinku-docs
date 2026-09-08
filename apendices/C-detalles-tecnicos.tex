@@ -1,0 +1,59 @@
+%!TEX root = ../main.tex
+% APÉNDICE C — Detalles técnicos e implementación
+
+\chapter{Detalles técnicos e implementación}\label{apx:tecnicos}
+
+\begin{guia}
+Todo lo que alguien necesita para reproducir los resultados:
+hiperparámetros exactos, identificadores y versiones de los datos,
+versiones de librerías, variables de entorno (sin secretos) y esquemas
+de base de datos. Reproducibilidad total es un marcador de excelencia.
+\end{guia}
+
+\section{Configuración de los modelos}
+
+\begin{table}[H]
+    \centering
+    \caption{Hiperparámetros del modelo final (ejemplo de estructura)}
+    \label{tab:hiperparametros}
+    \small
+    \begin{tabular}{l l l}
+        \toprule
+        \tb{Parámetro} & \tb{Valor} & \tb{Criterio de selección} \\
+        \midrule
+        \completar{n\_estimators} & \completar{500} & \completar{búsqueda en grilla, validación cruzada 5 pliegues} \\
+        \completar{max\_depth} & \completar{8} & \completar{...} \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\section{Datos utilizados}
+
+\completar{Identificador, fuente, versión, fecha de descarga, licencia y
+tamaño de cada conjunto de datos.}
+
+\section{Arquitectura de la aplicación}
+
+\subsection{Stack tecnológico}
+
+\begin{lstlisting}[caption={Dependencias principales (ejemplo)}, label={lst:dependencias}]
+python == 3.12
+scikit-learn == 1.5.0
+fastapi == 0.111.0
+postgresql == 16
+\end{lstlisting}
+
+\subsection{Esquema de base de datos}
+
+\begin{lstlisting}[language=SQL, caption={Definición de tablas (ejemplo de código SQL)}, label={lst:esquema}]
+CREATE TABLE usuario (
+    id          SERIAL PRIMARY KEY,
+    correo      TEXT NOT NULL UNIQUE,
+    creado_en   TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+\end{lstlisting}
+
+\subsection{Variables de entorno}
+
+\completar{Nombre, propósito y ejemplo de valor de cada variable. Nunca
+incluir secretos reales.}

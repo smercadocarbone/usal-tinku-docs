@@ -1,0 +1,107 @@
+%!TEX root = ../main.tex
+% =============================================================
+%  CAPÍTULO 7 — PRESENTACIÓN DE RESULTADOS
+%                                       (Entrega 7 · 5 % · 13/10)
+% =============================================================
+
+\chapter{Presentación de resultados}\label{cap:resultados}
+
+\begin{guia}[Guía de la cátedra: qué se evalúa en este capítulo]
+\begin{enumerate}
+    \item \textbf{Requerimientos formales}: \gls{rf} y \gls{rnf} con ID,
+          descripción, prioridad y criterio de aceptación medible,
+          trazados a los indicadores del capítulo~\ref{cap:metodologia}.
+    \item \textbf{Evidencia de implementación}: capturas reales del sistema
+          funcionando, enlaces al repositorio (anexo~\ref{anx:repositorios})
+          y al despliegue.
+    \item \textbf{Resultados cuantitativos honestos}: diseño experimental,
+          métricas, matrices de confusión o su equivalente en el dominio,
+          incluyendo lo que salió mal y su análisis. Reportar también lo
+          malo y argumentarlo vale más que esconderlo. Hiperparámetros y
+          versiones en el apéndice~\ref{apx:tecnicos}.
+    \item \textbf{Validación con usuarios y expertos}: idealmente
+          triangulada (métricas técnicas, encuesta, entrevista) y
+          traducida a decisiones de diseño concretas. Instrumentos en los
+          apéndices \ref{apx:encuesta} y \ref{apx:entrevista}.
+\end{enumerate}
+El sistema tiene que existir y andar: la entrega final incluye el
+proyecto funcional.
+\end{guia}
+
+\completar{Desarrollo del capítulo.}
+
+\section{\completar{Nombre de la sección}}
+
+\completar{Texto.}
+
+\begin{table}[H]
+    \centering
+    \caption{Requerimientos funcionales (ejemplo de estructura)}
+    \label{tab:rf}
+    \small
+    \begin{tabularx}{\textwidth}{l L L l L}
+        \toprule
+        \tb{ID} & \tb{Nombre} & \tb{Descripción} & \tb{Prioridad} & \tb{Criterio de aceptación} \\
+        \midrule
+        RF-01 & Autenticación & El sistema permite registrarse e iniciar sesión con credenciales propias & Alta & Un usuario nuevo completa el registro y accede en menos de 2 minutos \\
+        RF-02 & \completar{...} & \completar{...} & \completar{...} & \completar{...} \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{Requerimientos no funcionales (ejemplo de estructura)}
+    \label{tab:rnf}
+    \small
+    \begin{tabularx}{\textwidth}{l L L l L}
+        \toprule
+        \tb{ID} & \tb{Atributo} & \tb{Descripción} & \tb{Prioridad} & \tb{Umbral medible} \\
+        \midrule
+        RNF-01 & Rendimiento & Tiempo de respuesta de las consultas principales & Alta & Latencia p95 menor a 5 s (indicador I-02) \\
+        RNF-02 & Calidad del modelo & Capacidad predictiva sobre datos no vistos & Alta & $F_1 \geq 0{,}70$ (indicador I-01) \\
+        RNF-03 & \completar{...} & \completar{...} & \completar{...} & \completar{...} \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\section{\completar{Nombre de la sección}}
+
+\completar{Texto.}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{example-image-c}
+    \caption{Captura del sistema en funcionamiento (ejemplo de figura)}
+    \label{fig:captura}
+\end{figure}
+
+\begin{table}[H]
+    \centering
+    \caption{Resultados sobre el conjunto de prueba (ejemplo de estructura)}
+    \label{tab:metricas}
+    \small
+    \begin{tabular}{l r r r r}
+        \toprule
+        \tb{Modelo} & \tb{Precisión} & \tb{Exhaustividad} & \tb{$F_1$} & \tb{Tiempo (s)} \\
+        \midrule
+        Línea de base & \completar{...} & \completar{...} & \completar{...} & \completar{...} \\
+        Modelo propuesto & \completar{...} & \completar{...} & \completar{...} & \completar{...} \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{Traducción de la retroalimentación en decisiones de diseño (ejemplo de estructura)}
+    \label{tab:feedback-decisiones}
+    \small
+    \begin{tabularx}{\textwidth}{l L L l}
+        \toprule
+        \tb{Fuente} & \tb{Hallazgo} & \tb{Decisión} & \tb{Estado} \\
+        \midrule
+        Encuesta (n=\completar{..}) & \completar{El 60\,\% no encontró la función X} & \completar{Mover X al menú principal} & Implementado \\
+        Experto 1 & \completar{...} & \completar{...} & Planificado \\
+        \bottomrule
+    \end{tabularx}
+\end{table}

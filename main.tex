@@ -1,0 +1,101 @@
+%!TEX TS-program = lualatex
+%!TEX encoding = UTF-8 Unicode
+% =============================================================
+%   Proyecto Final de Ingeniería Informática — USAL
+%   Archivo principal. Compilar con LuaLaTeX (+ biber + makeglossaries).
+%   En Overleaf: Menú > Compiler > LuaLaTeX. El resto es automático.
+% =============================================================
+
+\documentclass[%
+    language=spanish,   % spanish (por defecto) o english
+    guias=true,         % true: muestra las cajas de guía de la cátedra
+                        % false: las oculta (usar para la ENTREGA FINAL)
+]{usal-proyecto-final}
+
+
+% -------------------------------------------------------------
+% DATOS DEL TRABAJO  (completar)
+% -------------------------------------------------------------
+\title{Título del proyecto: qué se hace, para quién y dónde\\
+       en no más de veinte palabras}
+\thesisHeader{Facultad de Ingeniería\\Proyecto Final de Ingeniería Informática}
+\academicYear{2026}
+% \graduationDate{17/11/2026} % (opcional) fecha de defensa
+
+% autor/a (para trabajos grupales, separar con \\ o \and)
+\author{Nombre Apellido}
+\authorEmail{nombre.apellido@usal.edu.ar}
+
+% autoridades que figuran en la portada (verificar cargos vigentes)
+\decano{Walter Oscar Rodríguez Esquivel}{Decano, Facultad de Ingeniería}
+\director{Germán Buchniv}{Director de las carreras Lic. en Sistemas de Información e Ingeniería en Informática}
+\profesor{Esteban Tissera}{Profesor, Facultad de Ingeniería}
+% \tutor{Nombre del tutor o tutora}{Cargo, Institución} % (opcional)
+
+% resumen / abstract
+\palabrasclave{palabra 1, palabra 2, palabra 3, palabra 4}
+\keywords{keyword 1, keyword 2, keyword 3, keyword 4}
+
+% segunda página: declaración de originalidad
+\secondpage{\input{preliminares/segunda-pagina}}
+
+% dedicatoria (opcional; descomentar para agregar una página de dedicatoria)
+% \dedication{\textit{A ...}}
+
+% portada: logo y marca de agua (opcionales)
+% \coverlogo{template/usal}            % logo superior (por defecto)
+% \coverwatermark{template/marca-agua} % marca de agua de fondo (vacío = sin marca)
+
+
+% -------------------------------------------------------------
+% RECURSOS
+% -------------------------------------------------------------
+\addbibresource{refs.bib}                 % bibliografía (BibTeX)
+\loadglsentries{preliminares/glosario}    % términos del glosario
+\loadglsentries{preliminares/siglas}      % siglas y acrónimos
+\loadglsentries{preliminares/simbolos}    % símbolos
+\input{custom-symbols}                    % macros y teoremas propios
+
+% índice general: 2 = hasta subsección (1.1.1 no se lista)
+\setcounter{tocdepth}{2}
+
+%% Para imprimir solo la tapa con letra grande y sin marca de agua:
+%\begin{document}
+%    \makecover
+%\end{document}
+
+
+% =============================================================
+\begin{document}
+
+    % portada, agradecimientos, resumen, declaración de IA, índices, glosario
+    \frontmatter
+
+    % cuerpo del trabajo: un archivo por capítulo, en el orden de entrega
+    \mainmatter
+    \input{capitulos/01-introduccion}
+    \glsresetall % las siglas se vuelven a expandir completas a partir de acá
+    \input{capitulos/02-metodologia}
+    \input{capitulos/03-marco-teorico}
+    \input{capitulos/04-marco-tecnologico}
+    \input{capitulos/05-justificacion-economica}
+    \input{capitulos/06-riesgos}
+    \input{capitulos/07-resultados}
+    \input{capitulos/08-conclusiones}
+
+    % bibliografía
+    \backmatter
+
+    % apéndices: material producido por el autor (A, B, C...)
+    \begin{appendices}
+        \input{apendices/A-encuesta-validacion}
+        \input{apendices/B-entrevista}
+        \input{apendices/C-detalles-tecnicos}
+    \end{appendices}
+
+    % anexos: material de terceros o externo (I, II...)
+    \begin{anexos}
+        \input{anexos/I-repositorios}
+    \end{anexos}
+
+\end{document}

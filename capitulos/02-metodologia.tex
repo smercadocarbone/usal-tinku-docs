@@ -1,0 +1,109 @@
+%!TEX root = ../main.tex
+% =============================================================
+%  CAPÍTULO 2 — METODOLOGÍA             (Entrega 2 · 5 % · 5/5)
+% =============================================================
+
+\chapter{Metodología y procedimientos}\label{cap:metodologia}
+
+\begin{guia}[Guía de la cátedra: qué se evalúa en este capítulo]
+La cátedra exige \textbf{dos metodologías}. El error más común es
+entregar solo una.
+\begin{enumerate}
+    \item \textbf{Metodología de la investigación}: área temática,
+          planteamiento y delimitación del problema, marco teórico
+          previsto, diseño concreto (fases), indicadores medibles con
+          fuente y umbral, técnicas de recolección, instrumentos, datos,
+          procesamiento, análisis crítico y síntesis. Tipo de
+          investigación: en general, aplicada.
+    \item \textbf{Metodología de dirección del proyecto}: marco de trabajo
+          justificado, alcance y entregables, cronograma con fechas reales
+          (Gantt con hitos que coinciden con las entregas), costos, riesgos
+          (referencia al capítulo~\ref{cap:riesgos}), calidad, recursos y
+          satisfacción de las partes interesadas.
+    \item \textbf{Declaración de uso de IA}: qué tareas fueron asistidas y
+          cómo se verificaron. Los prompts se guardan en una carpeta
+          compartida con la cátedra.
+\end{enumerate}
+Extensión orientativa: 6 a 10 páginas. Referencias habituales:
+\citet{hernandezsampieri2014} para investigación y \citet{pmi2021}
+para gestión.
+\end{guia}
+
+\completar{Desarrollo del capítulo.}
+
+\section{\completar{Nombre de la sección}}
+
+\completar{Texto.}
+
+\begin{table}[H]
+    \centering
+    \caption{Indicadores del proyecto (ejemplo de estructura)}
+    \label{tab:indicadores}
+    \small
+    \begin{tabularx}{\textwidth}{l L L l l}
+        \toprule
+        \tb{ID} & \tb{Variable} & \tb{Indicador} & \tb{Umbral} & \tb{Fuente} \\
+        \midrule
+        I-01 & Calidad de la predicción & \gls{sym:f1} sobre el conjunto de prueba & $\geq 0{,}70$ & \citet{pedregosa2011} \\
+        I-02 & Tiempo de respuesta & Latencia p95 de la \gls{api} & $< 5$ s & Registros del servidor \\
+        I-03 & Usabilidad & Tareas completadas sin ayuda en prueba con usuarios & $\geq 80\,\%$ & \citet{nielsen1993} \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\section{\completar{Nombre de la sección}}
+
+\completar{Texto.}
+
+\begin{table}[H]
+    \centering
+    \caption{Hitos y entregables del proyecto (calendario 2026 de la cátedra)}
+    \label{tab:hitos}
+    \small
+    \begin{tabularx}{\textwidth}{l L l l}
+        \toprule
+        \tb{Hito} & \tb{Entregable} & \tb{Fecha} & \tb{Peso} \\
+        \midrule
+        H0 & Idea y resumen & \completar{fecha} & 10\,\% \\
+        H1 & Cap.~2 Metodología y procedimientos & 5/5/2026 & 5\,\% \\
+        H2 & Cap.~1 Introducción & 9/6/2026 & 5\,\% \\
+        H3 & Cap.~3 Síntesis de la literatura consultada & 28/7/2026 & 10\,\% \\
+        H4 & Cap.~4 Marco tecnológico & 25/8/2026 & 10\,\% \\
+        H5 & Cap.~5 Justificación económica & 15/9/2026 & 15\,\% \\
+        H6 & Cap.~6 Análisis de riesgos & 29/9/2026 & 5\,\% \\
+        H7 & Cap.~7 Presentación de resultados & 13/10/2026 & 5\,\% \\
+        H8 & Cap.~8 Conclusiones & 20/10/2026 & 5\,\% \\
+        H9 & Documento final, proyecto funcional y presentación & 17/11/2026 & 30\,\% \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \begin{ganttchart}[
+        hgrid, vgrid={*{6}{draw=none}, dotted},
+        x unit=0.42mm,
+        y unit chart=6mm, y unit title=7mm,
+        time slot format=isodate,
+        bar label font=\small, milestone label font=\small,
+        title label font=\small,
+        bar/.append style={fill=mainColor!60, draw=none},
+        milestone/.append style={fill=mainColor, draw=none},
+    ]{2026-03-16}{2026-11-20}
+        \gantttitlecalendar{month=shortname} \\
+        \ganttbar{Idea y resumen}{2026-03-16}{2026-04-10} \\
+        \ganttbar{Metodología}{2026-04-06}{2026-05-05} \\
+        \ganttbar{Introducción}{2026-05-06}{2026-06-09} \\
+        \ganttbar{Marco teórico}{2026-06-01}{2026-07-28} \\
+        \ganttbar{Marco tecnológico}{2026-07-01}{2026-08-25} \\
+        \ganttbar{Justif. económica}{2026-08-10}{2026-09-15} \\
+        \ganttbar{Riesgos}{2026-09-01}{2026-09-29} \\
+        \ganttbar{Desarrollo del sistema}{2026-06-15}{2026-10-10} \\
+        \ganttbar{Resultados}{2026-09-20}{2026-10-13} \\
+        \ganttbar{Conclusiones}{2026-10-05}{2026-10-20} \\
+        \ganttbar{Integración y revisión}{2026-10-21}{2026-11-16} \\
+        \ganttmilestone{Entrega final}{2026-11-17}
+    \end{ganttchart}
+    \caption{Cronograma del proyecto (ejemplo con el ciclo lectivo 2026)}
+    \label{fig:gantt}
+\end{figure}

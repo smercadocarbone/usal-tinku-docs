@@ -1,0 +1,102 @@
+%!TEX root = ../main.tex
+% =============================================================
+%  CAPÍTULO 6 — ANÁLISIS DE RIESGOS     (Entrega 6 · 5 % · 29/9)
+% =============================================================
+
+\chapter{Análisis de riesgos}\label{cap:riesgos}
+
+\begin{guia}[Guía de la cátedra: qué espera ver en este capítulo]
+Formato obligatorio de cada riesgo: \textbf{``Debido a [causa], podría
+ocurrir [evento], lo que provocaría [efecto]''}. Sin causa es un miedo,
+no un riesgo.
+\begin{enumerate}
+    \item \textbf{Tabla de riesgos} con ID, descripción causa--evento--efecto,
+          naturaleza, etapa, probabilidad (1--5), impacto (1--5),
+          \gls{exposicion} (1--25), respuesta, responsable y contingencia;
+          ordenada por exposición descendente. Con los 6 a 8 primeros bien
+          tratados alcanza; el resto se monitorea.
+    \item Al menos un riesgo de \textbf{cada naturaleza} (alcance, técnicos,
+          recursos, terceros, datos y cumplimiento) y de \textbf{cada etapa}
+          (antes de arrancar, durante, pasaje a producción, operación).
+    \item Al menos un riesgo \textbf{externo} (``si no tienen ninguno, no
+          miraron para afuera'') y al menos uno con respuesta
+          \textbf{aceptar} bien justificado (``aceptar se escribe; ignorar
+          se paga'').
+    \item \textbf{Supuestos y restricciones} separados de los riesgos. Cada
+          supuesto que falla se convierte en riesgo.
+    \item Que sean propios: ``un riesgo copiado de internet se nota a tres
+          metros''.
+\end{enumerate}
+Los siete que matan proyectos: alcance que nunca cierra (el número uno
+de la materia), pérdida de la fuente de datos, equipo que se desarma,
+tecnología que no da, inviabilidad de costo, barrera legal o ética,
+nadie a cargo. Y la pregunta de jurado: ¿quién lo mantiene cuando
+ustedes se reciben? Marco de referencia: \citet{pmi2021}.
+\end{guia}
+
+\completar{Desarrollo del capítulo.}
+
+\section{\completar{Nombre de la sección}}
+
+\completar{Texto.}
+
+% Matriz de exposición de la clase 11: probabilidad x impacto.
+\begin{table}[H]
+    \centering
+    \caption{Matriz de exposición: probabilidad $\times$ impacto (escala de la cátedra)}
+    \label{tab:exposicion}
+    \small
+    \begin{tabular}{l c c c c c}
+        \toprule
+        & \tb{1 Insignif.} & \tb{2 Menor} & \tb{3 Moderado} & \tb{4 Importante} & \tb{5 Severo} \\
+        \midrule
+        \tb{5 Muy probable}   & \riesgoBajo{5}  & \riesgoMedio{10} & \riesgoAlto{15} & \riesgoAlto{20} & \riesgoAlto{25} \\
+        \tb{4 Probable}       & \riesgoBajo{4}  & \riesgoMedio{8}  & \riesgoAlto{12} & \riesgoAlto{16} & \riesgoAlto{20} \\
+        \tb{3 Posible}        & \riesgoBajo{3}  & \riesgoMedio{6}  & \riesgoMedio{9} & \riesgoAlto{12} & \riesgoAlto{15} \\
+        \tb{2 Poco probable}  & \riesgoBajo{2}  & \riesgoBajo{4}   & \riesgoMedio{6} & \riesgoMedio{8} & \riesgoMedio{10} \\
+        \tb{1 Muy improbable} & \riesgoBajo{1}  & \riesgoBajo{2}   & \riesgoBajo{3}  & \riesgoBajo{4}  & \riesgoBajo{5} \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\begin{ejemplo}[Ejemplo de la cátedra: así no / así sí]
+\textbf{Así no:} ``Puede fallar el servidor.'' No hay causa, no hay
+consecuencia y no se puede hacer nada con esa frase.
+
+\textbf{Así sí:} ``Debido a que el prototipo corre en una única VM sin
+réplica, podría caerse durante la demo, lo que impediría mostrar el
+resultado al jurado.''
+
+Cuatro respuestas posibles: \textbf{evitar} (sacar la causa: cambiar el
+alcance), \textbf{mitigar} (bajar probabilidad o impacto: repositorio con
+backup, ambiente de respaldo), \textbf{transferir} (que lo asuma un
+tercero: hosting administrado, librería probada) y \textbf{aceptar}
+(convivir con él, documentado, con responsable y contingencia).
+\end{ejemplo}
+
+% La matriz va apaisada (landscape) porque tiene muchas columnas.
+% Columnas: l = ancho fijo, p{..} = ancho fijo con corte de línea,
+% L = ancho automático (se reparte el espacio restante).
+\begin{landscape}
+\small
+\begin{xltabular}{\linewidth}{l L p{1.7cm} p{1.6cm} c c c L p{1.3cm} L}
+    \caption{Matriz de riesgos ordenada por exposición (ejemplo de estructura)}
+    \label{tab:matriz-riesgos} \\
+    \toprule
+    \tb{ID} & \tb{Descripción (causa, evento, efecto)} & \tb{Naturaleza} & \tb{Etapa} & \tb{P} & \tb{I} & \tb{E} & \tb{Respuesta} & \tb{Resp.} & \tb{Contingencia} \\
+    \midrule
+    \endfirsthead
+    \toprule
+    \tb{ID} & \tb{Descripción (causa, evento, efecto)} & \tb{Naturaleza} & \tb{Etapa} & \tb{P} & \tb{I} & \tb{E} & \tb{Respuesta} & \tb{Resp.} & \tb{Contingencia} \\
+    \midrule
+    \endhead
+    \bottomrule
+    \endfoot
+    R-01 & Debido a que los requerimientos se relevan con un solo usuario, podría ocurrir que aparezcan funciones nuevas en cada revisión, lo que provocaría que el alcance no cierre antes de la entrega final. & Alcance & Durante & 4 & 5 & \riesgoAlto{20} & Mitigar: congelar el alcance del \gls{mvp} en el hito H4 & Autor & Recortar a los \gls{rf} de prioridad alta \\
+    R-02 & Debido a que el prototipo corre en una única VM sin réplica, podría caerse durante la demo, lo que impediría mostrar el resultado al jurado. & Técnico & Pasaje a producción & 3 & 5 & \riesgoAlto{15} & Mitigar: ambiente de respaldo y video de la demo & Autor & Mostrar el video y el ambiente local \\
+    R-03 & Debido a que la fuente de datos es una \gls{api} de terceros sin acuerdo de servicio, podría ocurrir que cambie o se cierre, lo que provocaría la pérdida del insumo del modelo. & Datos / terceros (externo) & Operación & 3 & 5 & \riesgoAlto{15} & Mitigar: descarga periódica y respaldo local & Autor & Reentrenar con el último respaldo \\
+    R-04 & Debido a que el hosting se cotiza en dólares y el presupuesto en pesos, podría ocurrir que el costo supere lo previsto, lo que provocaría la suspensión del entorno de producción. & Recursos (externo) & Operación & 3 & 3 & \riesgoMedio{9} & Transferir: hosting administrado con plan gratuito de respaldo & Autor & Migrar a entorno gratuito degradado \\
+    R-05 & Debido a que el equipo es de una persona, podría ocurrir una enfermedad o sobrecarga laboral, lo que provocaría atrasos en las entregas. & Recursos & Durante & 2 & 4 & \riesgoMedio{8} & Aceptar: no hay reemplazo posible; se documenta el avance semanalmente & Autor & Solicitar prórroga a la cátedra con evidencia \\
+    R-06 & \completar{...} & \completar{...} & \completar{...} & \completar{} & \completar{} & \riesgoBajo{\completar{}} & \completar{...} & \completar{...} & \completar{...} \\
+\end{xltabular}
+\end{landscape}

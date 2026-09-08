@@ -1,0 +1,149 @@
+% =============================================================
+%  BIBLIOGRAFÍA
+%  Estilo: APA (biblatex-apa). Citas en el texto:
+%    \citep{clave}   -> (Breiman, 2001)
+%    \citet{clave}   -> Breiman (2001)
+%    \citep[p.~12]{clave}
+%
+%  Regla de la cátedra: toda referencia con datos completos
+%  (autor, título, año, revista/editorial, volumen y páginas o DOI/URL).
+%  Para recursos en línea, siempre urldate (fecha de consulta).
+%  Wikipedia y blogs restan puntos; preferir papers, libros y tesis.
+%  Verificar cada entrada en la fuente original (una cita inventada por
+%  una IA es una falta grave).
+%
+%  Gestor recomendado: Zotero o JabRef exportando a BibLaTeX.
+% =============================================================
+
+
+% ---- artículo de revista (con DOI) ----
+@article{breiman2001,
+  author  = {Breiman, Leo},
+  title   = {Random Forests},
+  journal = {Machine Learning},
+  year    = {2001},
+  volume  = {45},
+  number  = {1},
+  pages   = {5--32},
+  doi     = {10.1023/A:1010933404324},
+}
+
+@article{pedregosa2011,
+  author  = {Pedregosa, Fabian and Varoquaux, Ga{\"e}l and Gramfort, Alexandre and Michel, Vincent and Thirion, Bertrand and Grisel, Olivier and Blondel, Mathieu and Prettenhofer, Peter and Weiss, Ron and Dubourg, Vincent and Vanderplas, Jake and Passos, Alexandre and Cournapeau, David and Brucher, Matthieu and Perrot, Matthieu and Duchesnay, {\'E}douard},
+  title   = {Scikit-learn: Machine Learning in {Python}},
+  journal = {Journal of Machine Learning Research},
+  year    = {2011},
+  volume  = {12},
+  pages   = {2825--2830},
+  url     = {https://jmlr.org/papers/v12/pedregosa11a.html},
+}
+
+% ---- artículo en actas de congreso ----
+@inproceedings{chen2016,
+  author    = {Chen, Tianqi and Guestrin, Carlos},
+  title     = {{XGBoost}: A Scalable Tree Boosting System},
+  booktitle = {Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining},
+  year      = {2016},
+  pages     = {785--794},
+  publisher = {ACM},
+  address   = {San Francisco, CA, USA},
+  doi       = {10.1145/2939672.2939785},
+}
+
+@inproceedings{lundberg2017,
+  author    = {Lundberg, Scott M. and Lee, Su-In},
+  title     = {A Unified Approach to Interpreting Model Predictions},
+  booktitle = {Advances in Neural Information Processing Systems 30 (NIPS 2017)},
+  year      = {2017},
+  pages     = {4765--4774},
+  publisher = {Curran Associates},
+  url       = {https://papers.nips.cc/paper/7062-a-unified-approach-to-interpreting-model-predictions},
+}
+
+% ---- libros ----
+@book{sommerville2016,
+  author    = {Sommerville, Ian},
+  title     = {Software Engineering},
+  edition   = {10},
+  year      = {2016},
+  publisher = {Pearson},
+  address   = {Harlow},
+  isbn      = {978-0-13-394303-0},
+}
+
+@book{hernandezsampieri2014,
+  author    = {Hern{\'a}ndez Sampieri, Roberto and Fern{\'a}ndez Collado, Carlos and Baptista Lucio, Pilar},
+  title     = {Metodolog{\'i}a de la investigaci{\'o}n},
+  edition   = {6},
+  year      = {2014},
+  publisher = {McGraw-Hill},
+  address   = {M{\'e}xico D.F.},
+  isbn      = {978-1-4562-2396-0},
+}
+
+@book{pmi2021,
+  author    = {{Project Management Institute}},
+  title     = {A Guide to the Project Management Body of Knowledge ({PMBOK} Guide)},
+  edition   = {7},
+  year      = {2021},
+  publisher = {Project Management Institute},
+  address   = {Newtown Square, PA},
+  isbn      = {978-1-62825-664-2},
+}
+
+@book{nielsen1993,
+  author    = {Nielsen, Jakob},
+  title     = {Usability Engineering},
+  year      = {1993},
+  publisher = {Academic Press},
+  address   = {Boston},
+  isbn      = {978-0-12-518406-9},
+}
+
+% ---- tesis (indicar programa e institución) ----
+@thesis{funes2025,
+  author      = {Funes, Norman},
+  title       = {{CASSIE}: Comprehensive Analysis System for Sensing Imminent Ecosystem-changes},
+  type        = {Proyecto Final de Ingenier{\'i}a Inform{\'a}tica},
+  institution = {Universidad del Salvador, Facultad de Ingenier{\'i}a},
+  year        = {2025},
+  address     = {Buenos Aires},
+}
+
+% ---- documentación o sitio en línea (siempre con urldate) ----
+@online{postgresqldocs,
+  author  = {{PostgreSQL Global Development Group}},
+  title   = {{PostgreSQL} 16 Documentation},
+  year    = {2024},
+  url     = {https://www.postgresql.org/docs/16/},
+  urldate = {2026-03-10},
+}
+
+% ---- PLANTILLAS para otros tipos (descomentar y completar) ----
+%
+% @report{clave,
+%   author      = {{Instituto Nacional de Estad{\'i}stica y Censos}},
+%   title       = {T{\'i}tulo del informe},
+%   type        = {Informe t{\'e}cnico},
+%   institution = {INDEC},
+%   year        = {2025},
+%   url         = {https://...},
+%   urldate     = {2026-03-10},
+% }
+%
+% @software{clave,
+%   author  = {Apellido, Nombre},
+%   title   = {Nombre del repositorio o herramienta},
+%   version = {1.2.0},
+%   year    = {2026},
+%   url     = {https://github.com/usuario/repositorio},
+%   urldate = {2026-03-10},
+% }
+%
+% @misc{clave,
+%   author       = {Apellido, Nombre},
+%   title        = {T{\'i}tulo del recurso},
+%   howpublished = {Entrevista personal},
+%   year         = {2026},
+%   note         = {Realizada el 10 de marzo de 2026},
+% }
