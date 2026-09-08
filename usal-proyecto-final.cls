@@ -54,6 +54,9 @@
 \SetupKeyvalOptions{family=usal, prefix=usal@}
 \DeclareStringOption[spanish]{language}
 \DeclareBoolOption[true]{guias}
+%   pdfa=true|false            generar PDF/A-2b con pdfx (por defecto false:
+%                              compila más rápido; activar solo si lo piden)
+\DeclareBoolOption[false]{pdfa}
 \ProcessKeyvalOptions*
 
 % paquetes que deben cargarse temprano para evitar conflictos
@@ -99,18 +102,23 @@
 % 3. PAQUETES
 % =============================================================
 
-% -- PDF/A --
-% pdfx (que carga hyperref) debe ir ANTES que TikZ: si TikZ ya escribió
-% objetos en el PDF, pdfx no puede fijar la versión y da error.
-% Validar el PDF/A generado en https://www.pdfforge.org/online/en/validate-pdfa
-\RequirePackage{silence}
-\WarningFilter{pdfx}{Setting all color commands to rgb} % aviso esperado
-\RequirePackage[a-2b]{pdfx}
-% con LuaLaTeX pdfx deja \inputencodingname como \relax y eso rompe a
-% glossaries/datatool; se vuelve a dejar indefinido (UTF-8 nativo):
-\makeatletter
-\ifx\inputencodingname\relax \let\inputencodingname\@undefined \fi
-\makeatother
+% -- hyperref / PDF/A --
+% Con pdfa=true se usa pdfx (que carga hyperref) para generar PDF/A-2b.
+% Debe ir ANTES que TikZ: si TikZ ya escribió objetos en el PDF, pdfx no
+% puede fijar la versión y da error. Validar el resultado en
+% https://www.pdfforge.org/online/en/validate-pdfa
+\ifusal@pdfa
+    \RequirePackage{silence}
+    \WarningFilter{pdfx}{Setting all color commands to rgb} % aviso esperado
+    \RequirePackage[a-2b]{pdfx}
+    % con LuaLaTeX pdfx deja \inputencodingname como \relax y eso rompe a
+    % glossaries/datatool; se vuelve a dejar indefinido (UTF-8 nativo):
+    \makeatletter
+    \ifx\inputencodingname\relax \let\inputencodingname\@undefined \fi
+    \makeatother
+\else
+    \RequirePackage{hyperref}
+\fi
 
 \RequirePackage{url}
 \RequirePackage{graphicx}
@@ -690,8 +698,9 @@
 % 10. HIPERVÍNCULOS Y GLOSARIO
 % =============================================================
 
-% (pdfx/hyperref se cargan al principio de la sección 3)
+% (hyperref o pdfx se cargan al principio de la sección 3)
 \hypersetup{
+  unicode=true,
   colorlinks=true,
   citecolor=generalHyperColor,
   filecolor=black,

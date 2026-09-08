@@ -1,9 +1,11 @@
-# Configuración de latexmk: LuaLaTeX + biber + makeglossaries.
-# Compilar con:   latexmk main.tex
+# Configuración de latexmk: pdfLaTeX + biber + makeglossaries.
+# Compilar con:   latexmk main.tex          (pdfLaTeX, el más rápido)
+#                 latexmk -lualatex main.tex (LuaLaTeX, necesario con pdfa=true)
 # Limpiar con:    latexmk -C
-# Overleaf lee este archivo automáticamente.
+# Overleaf lee este archivo automáticamente; el compilador se elige en su menú.
 
-$pdf_mode = 4;            # 4 = lualatex
+$pdf_mode = 1;            # 1 = pdflatex
+$pdflatex = 'pdflatex -interaction=nonstopmode -file-line-error -synctex=1 %O %S';
 $lualatex = 'lualatex -interaction=nonstopmode -file-line-error -synctex=1 %O %S';
 $bibtex_use = 2;          # usa biber y borra .bbl al limpiar
 

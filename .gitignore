@@ -315,3 +315,8 @@ pdfa.xmpi
 figuras.zip
 *.zip
 _build/
+_t*/
+_lua/
+_pdf/
+_ov/
+*.log

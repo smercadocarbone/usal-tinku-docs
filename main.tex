@@ -1,15 +1,18 @@
-%!TEX TS-program = lualatex
+%!TEX TS-program = pdflatex
 %!TEX encoding = UTF-8 Unicode
 % =============================================================
 %   Proyecto Final de Ingeniería Informática — USAL
-%   Archivo principal. Compilar con LuaLaTeX (+ biber + makeglossaries).
-%   En Overleaf: Menú > Compiler > LuaLaTeX. El resto es automático.
+%   Archivo principal. Compilar con pdfLaTeX (+ biber + makeglossaries).
+%   En Overleaf: Menú > Compiler > pdfLaTeX. La primera compilación del
+%   plan gratuito puede cortarse a los 20 s: apretar Recompile otra vez
+%   y termina (queda caché). Después cada compilación tarda unos segundos.
 % =============================================================
 
 \documentclass[%
     language=spanish,   % spanish (por defecto) o english
     guias=true,         % true: muestra las cajas de guía de la cátedra
                         % false: las oculta (usar para la ENTREGA FINAL)
+    pdfa=false,         % true: genera PDF/A-2b (más lento; requiere LuaLaTeX)
 ]{usal-proyecto-final}
 
 

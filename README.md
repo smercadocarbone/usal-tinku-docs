@@ -15,8 +15,9 @@ que resume qué evalúa la cátedra.
 
 ## Compilar
 
-Compilador: **LuaLaTeX**. La bibliografía usa `biber` y el glosario
-`makeglossaries`; `latexmk` corre todo solo.
+Compilador: **pdfLaTeX** (LuaLaTeX también funciona, y es obligatorio con
+`pdfa=true`). La bibliografía usa `biber` y el glosario `makeglossaries`;
+`latexmk` corre todo solo.
 
 ```bash
 git clone https://github.com/Noorman999/usal-proyecto-final-template.git mi-tesis
@@ -24,10 +25,12 @@ cd mi-tesis
 latexmk main.tex
 ```
 
-En Overleaf: subir la carpeta como `.zip` y elegir LuaLaTeX en el menú.
-El plan gratuito corta la compilación a los 20 segundos, así que para el
-documento completo conviene compilar localmente (TeX Live + VS Code con
-LaTeX Workshop).
+**En Overleaf**: subir la carpeta como `.zip` y elegir pdfLaTeX en el menú
+(Menu → Compiler). El plan gratuito corta la compilación a los 20 segundos;
+la primera vez puede quedarse corta, pero deja archivos en caché: apretar
+*Recompile* de nuevo y termina. Las siguientes compilaciones tardan unos
+segundos. Si se corta seguido, compilar localmente (TeX Live + VS Code con
+LaTeX Workshop) no tiene límite.
 
 ## Estructura
 
@@ -81,5 +84,6 @@ El color principal del documento es `mainColor`, en la sección 3 de
 
 ## PDF/A
 
-La clase genera PDF/A-2b. Se puede validar en
-<https://www.pdfforge.org/online/en/validate-pdfa>.
+Con la opción de clase `pdfa=true` (y LuaLaTeX) el PDF sale en formato
+PDF/A-2b. Compila más lento; activarlo solo si lo piden. Se puede validar
+en <https://www.pdfforge.org/online/en/validate-pdfa>.
