@@ -34,7 +34,7 @@ LaTeX Workshop).
 | Archivo | Contenido |
 |---|---|
 | `main.tex` | Datos del trabajo y orden de los capítulos |
-| `preliminares/` | Resumen, abstract, agradecimientos, declaración de IA, glosario, siglas, símbolos |
+| `preliminares/` | Resumen, abstract, agradecimientos, declaración de IA, y las entradas del glosario, siglas y símbolos (se imprimen al final del documento) |
 | `capitulos/01` a `08` | Introducción · Metodología y procedimientos · Síntesis de la literatura consultada · Marco tecnológico · Justificación económica · Análisis de riesgos · Presentación de resultados · Implicancias, conclusiones y recomendaciones |
 | `refs.bib` | Bibliografía (estilo APA) |
 | `apendices/` | Encuesta de validación, entrevista, detalles técnicos |

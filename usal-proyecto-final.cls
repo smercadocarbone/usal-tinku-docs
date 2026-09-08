@@ -415,8 +415,9 @@
 
 % -- preliminares completos --
 % Orden: portada, 2.ª página, dedicatoria, agradecimientos, resumen,
-% abstract, declaración de IA, índice general, índice de figuras,
-% índice de tablas, glosario, siglas y símbolos.
+% abstract, declaración de IA, índice general, índice de figuras e
+% índice de tablas. El glosario, las siglas y los símbolos van al final
+% del documento (\glosarios en main.tex).
 \renewcommand{\frontmatter} {
     \pagenumbering{roman}
     \pagestyle{fancy}
@@ -447,8 +448,12 @@
     \listoftables
     }
     \cleardoublepage
+}
 
-    % glosario, siglas y símbolos
+% -- glosario, siglas y símbolos (van al final del documento) --
+\newcommand{\glosarios}{%
+    \cleardoublepage
+    \bookmarksetup{startatroot}
     \printglossary[type=main]
     \printglossary[type=\acronymtype]
     \printglossary[type=symbols]

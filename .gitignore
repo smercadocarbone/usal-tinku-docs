@@ -314,3 +314,4 @@ _t/
 pdfa.xmpi
 figuras.zip
 *.zip
+_build/
