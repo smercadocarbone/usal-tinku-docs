@@ -32,28 +32,341 @@ superficial, información irrelevante o redundante. Es uno de los
 capítulos más extensos (orientativo: 20 a 30 páginas).
 \end{guia}
 
-\completar{Desarrollo del capítulo.}
+\section{Estado del arte}\label{sec:estado-del-arte}
 
-\section{\completar{Nombre de la sección}}
+\subsection{Investigaciones nacionales}
 
-\completar{Texto.}
+\citet{torino2023}, en su tesis de maestría de la Universidad Torcuato
+Di Tella, desarrolló un modelo predictivo de deserción escolar para
+Argentina utilizando datos socioeconómicos y habitacionales de la
+Encuesta Permanente de Hogares, alcanzando un desempeño del 87,4\,\%
+bajo la métrica AUC-ROC. Un hallazgo relevante para este proyecto es que
+la autora señala la ausencia, a nivel nacional, de un sistema de
+seguimiento educativo que permita identificar tempranamente a los
+estudiantes en riesgo para brindarles un acompañamiento personalizado
+--la misma carencia estructural de personalización que \sistema{} busca
+atender desde el lado de la oferta de tutorías.
 
-\begin{table}[H]
-    \centering
-    \caption{Comparación de trabajos relevados (ejemplo de estructura)}
-    \label{tab:comparativa}
+Un estudio sobre ruralidad y educación en Argentina \citep{olea}
+cuantifica la brecha urbano-rural en la finalización del nivel
+secundario: mientras que en Tierra del Fuego la diferencia es inferior a
+10 puntos porcentuales, en provincias del norte del país --Chaco,
+Corrientes, Misiones, Santiago del Estero, Jujuy y Tucumán-- la brecha
+supera los 30 puntos porcentuales entre estudiantes urbanos y rurales de
+15 a 17 años. El mismo trabajo documenta que algunas jurisdicciones ya
+recurrieron históricamente a esquemas de ``escuelas mediadas por
+tecnología con docentes en las ciudades y estudiantes en sus localidades
+acompañados por tutores'' como estrategia para ampliar el acceso --un
+antecedente conceptual directo del modelo remoto que propone \sistema{}.
+
+Ambos antecedentes empíricos evidencian, por un lado, la necesidad
+crítica de implementar sistemas de seguimiento personalizado y, por el
+otro, validan estructuralmente la eficacia de los modelos mediados por
+tecnología para sortear las barreras de dispersión geográfica en el
+territorio nacional.
+
+\subsection{Investigaciones internacionales}
+
+Respecto del impacto de la tutoría personalizada, una revisión
+sistemática con meta-análisis de tres niveles \citep{sciencedirect2022}
+sintetizó evidencia experimental sobre tutoría privada y encontró
+tamaños de efecto de entre 0,42 y 0,67 sobre el rendimiento académico,
+con la región y la materia como las variables moderadoras más
+influyentes entre los trece factores analizados. En la misma dirección,
+un trabajo reciente sobre tutoría bajo demanda \citep{ondemand2026}
+sostiene que la tutoría es una de las intervenciones educativas más
+efectivas para mejorar los resultados de aprendizaje, superando en
+muchos casos a otras intervenciones como la reducción del tamaño de
+clase. Ambos antecedentes respaldan empíricamente la Variable~2 del
+marco teórico de este proyecto (sección~\ref{sec:variable2}).
+
+En el plano tecnológico, un trabajo de la Universidad de Ottawa
+\citep{isotropy2026} propuso un sistema de recomendación semántica de
+cursos universitarios basado en aprendizaje contrastivo sobre
+representaciones BERT, aplicado a un catálogo de más de 500 cursos de
+ingeniería. El antecedente es relevante porque identifica y corrige un
+problema técnico conocido de los \gls{embeddings} tradicionales --la
+anisotropía, que hace que las representaciones de distintos cursos
+resulten artificialmente similares entre sí-- y constituye el precedente
+más cercano encontrado al motor de \gls{matching} que \sistema{} plantea
+implementar sobre perfiles de alumnos y tutores. En la misma línea, un
+estudio publicado en el \emph{Journal of Applied Informatics and
+Computing} \citep{paperrec2025} implementó un sistema de recomendación de
+artículos científicos con sentence-transformers y similitud de coseno,
+validado con una prueba de usuario de 45 personas en la que el 95,5\,\%
+consideró relevantes las recomendaciones recibidas --un antecedente
+metodológico útil para diseñar la validación del propio motor de
+\sistema{}. Un tercer trabajo \citep{beefore2024} advierte que, hasta el
+momento, el uso de sentence-transformers en sistemas de recomendación se
+limita mayormente a generar información auxiliar para resolver el
+problema de arranque en frío, y no a operar como mecanismo central de
+recomendación --lo cual señala un espacio de aporte relativamente
+inexplorado que coincide con el uso que \sistema{} le daría a esta
+tecnología.
+
+Sobre los sistemas de reputación y confianza en plataformas bilaterales,
+un capítulo del libro \emph{Reengineering the Sharing Economy}
+\citep{reputation} desarrolla la teoría detrás de los mecanismos de
+reputación en mercados online y plantea como pregunta central de diseño
+si la reputación debe ser bidireccional --como en Airbnb-- o
+unidireccional --como en eBay o Amazon--, señalando que ambos
+marketplaces resuelven de forma distinta el problema de la información
+asimétrica entre las partes. Esta discusión respalda directamente la
+decisión de diseño de \sistema{} de implementar un sistema de
+calificación bidireccional entre alumnos y tutores.
+
+Finalmente, en cuanto a la viabilidad técnica de la tutoría virtual, un
+trabajo presentado en una conferencia de la ACM \citep{webrtc2025} sobre
+un sistema de enseñanza remota basado en \gls{webrtc} para cursos de
+inglés reportó, tras la optimización de la transmisión de audio y video
+y la implementación de mecanismos de redundancia multicanal, una tasa de
+pérdida de video de apenas 0,15\,\% y una latencia de pizarra de
+8,2~milisegundos en un entorno de red educativa --cifras que evidencian
+que es técnicamente viable sostener sesiones de videollamada estables
+incluso en condiciones de conectividad variable, tal como requiere la
+hipótesis central del proyecto.
+
+\subsection{Productos y plataformas similares}
+
+La tabla~\ref{tab:comparativa} sintetiza el relevamiento comercial de
+las cinco plataformas más representativas del sector.
+
+\begin{landscape}
     \small
-    \begin{tabularx}{\textwidth}{L L L L L}
+    \begin{xltabular}{\linewidth}{l L L L L L}
+        \caption{Comparación de plataformas de tutorías relevadas}
+        \label{tab:comparativa} \\
         \toprule
-        \tb{Trabajo} & \tb{Enfoque} & \tb{Datos} & \tb{Resultado} & \tb{Limitación} \\
+        \tb{Plataforma} & \tb{Modelo de matching} & \tb{Aula virtual integrada} & \tb{Pago dentro de la plataforma} & \tb{Verificación de tutores} & \tb{Alcance / foco geográfico} \\
         \midrule
-        \citet{breiman2001} & Ensamble de árboles & Benchmarks UCI & Menor error que árboles individuales & No aborda series temporales \\
-        \citet{chen2016} & Boosting escalable & Kaggle, Higgs & Mejor precisión y velocidad que alternativas & Requiere ajuste de hiperparámetros \\
-        \completar{...} & & & & \\
+        \endfirsthead
+        \toprule
+        \tb{Plataforma} & \tb{Modelo de matching} & \tb{Aula virtual integrada} & \tb{Pago dentro de la plataforma} & \tb{Verificación de tutores} & \tb{Alcance / foco geográfico} \\
+        \midrule
+        \endhead
         \bottomrule
-    \end{tabularx}
-\end{table}
+        \endfoot
+        Preply \citep{preply} & Filtros manuales (materia, precio, disponibilidad); sin \gls{matching} semántico & Sí, parcial (Preply Classroom, hoy limitada mayormente a tutores de inglés) & Sí, por suscripción -- comisión de 100\,\% en la primera clase y de 18\,\% a 33\,\% en las siguientes & Reseñas de alumnos + video de presentación del tutor & Global; sin foco en zonas de baja densidad de oferta \\
+        Wyzant \citep{wyzant} & Búsqueda por filtros & No nativa & Sí & Reseñas & Estados Unidos; más de 80.000 tutores y 4 millones de alumnos \\
+        Superprof \citep{superprof} & Ninguno -- el alumno contacta manualmente a cada profesor & No & No -- el pago se coordina fuera de la plataforma & Reseñas de alumnos & Global, incluida Argentina; sin comisión para el profesor \\
+        Tusclases \citep{tusclases} & Filtros (materia, precio, ubicación); sin \gls{matching} automático & No & No & Reseñas + título declarado por el profesor & España y Latinoamérica; portal líder en Argentina \\
+        profe.com \citep{profecom} & Asignación manual por parte de un equipo curado, no es un \gls{marketplace} abierto & Sí, con pizarra digital & Sí & Selección propia del equipo docente de la plataforma & España; sin presencia en Argentina \\
+    \end{xltabular}
+\end{landscape}
 
-\subsection{\completar{Nombre de la subsección}}
+Un dato relevante encontrado durante este relevamiento es que
+\citep{profecom} ya ofrece a las familias un panel de seguimiento
+con ``informes personalizados generados por IA con feedback detallado''
+sobre el progreso del alumno --el antecedente comercial más cercano
+encontrado al asistente conceptual post-sesión que \sistema{} plantea en
+su alcance (sección~\ref{sec:alcance}), aunque aplicado sobre un modelo
+de plantilla docente curada y no sobre un \gls{marketplace} abierto de
+tutores independientes.
 
-\completar{Texto.}
+\textbf{Síntesis.} Ninguna de las plataformas relevadas combina
+simultáneamente las cuatro piezas que propone \sistema{}: (1) un motor de
+\gls{matching} basado en similitud semántica en lugar de filtros
+manuales, (2) un aula virtual nativa disponible para todas las materias
+y no solo para determinados perfiles de tutor, (3) un modelo de pago
+protegido dentro de la plataforma, y (4) un foco explícito en ampliar la
+oferta hacia zonas geográficas donde hoy es escasa o inexistente. Los
+competidores de mayor escala en Argentina (Tusclases, Superprof)
+replican en esencia el modelo de directorio de contactos que el
+capítulo~\ref{cap:introduccion} describe como parte del problema
+--búsqueda por filtros, contacto manual, sin protección de pago--
+mientras que los competidores con aula virtual y pagos integrados
+(Preply) no tienen foco geográfico en el país ni resuelven el
+\gls{matching} de forma semántica. Ese espacio vacío es, en definitiva,
+el que este proyecto busca ocupar.
+
+\subsection{Oportunidades de diferenciación adicionales}
+
+A partir del relevamiento de la sección anterior, se identificaron
+cuatro funcionalidades que ninguna de las plataformas competidoras
+ofrece y que se proponen incorporar al alcance del proyecto: el sistema
+de detección de contenido inapropiado en tiempo real, la reputación con
+señales implícitas, el precio dinámico por poder adquisitivo regional y
+el modo de baja conectividad.
+
+\begin{description}
+    \item[Sistema de detección de contenido inapropiado en tiempo real
+    (``kill-switch'' de seguridad).] Ninguna de las plataformas relevadas
+    implementa moderación automática del contenido de la videollamada en
+    sí misma. Existe, sin embargo, un antecedente académico directo:
+    \citet{liang2013} desarrollaron SafeVchat, un sistema de detección
+    automática de contenido obsceno para servicios de videollamada
+    aleatoria, que combina múltiples detectores visuales mediante teoría
+    de Dempster-Shafer para decidir en tiempo real si un usuario debe ser
+    bloqueado. Reportaron que la combinación del sistema automático con
+    moderación humana redujo el contenido ofensivo del 33,08\,\% al
+    3,49\,\%. Dado que una porción significativa de los usuarios de
+    \sistema{} serán menores de edad, se propone un mecanismo que analice
+    localmente (\emph{edge computing}) los fotogramas mediante un modelo
+    de clasificación y que ante una detección positiva corte
+    automáticamente la transmisión y bloquee la cuenta preventivamente.
+    El mecanismo técnico completo, incluida la verificación de edad del
+    tutor mediante \gls{ocr} y DNI, se desarrolla en la
+    sección~\ref{sec:seguridad}.
+
+    \textbf{Salvedades a considerar:} ningún clasificador automático
+    tiene 0\,\% de falsos positivos/negativos; es una capa adicional, no
+    una garantía absoluta. El procesamiento en el dispositivo (por
+    ejemplo, TensorFlow.js) evita enviar video a un servidor, facilitando
+    el cumplimiento de la Ley de Protección de Datos Personales
+    (Ley~25.326). El proceso de reactivación manual debe contemplar la
+    notificación a un adulto responsable. Al ser un desarrollo complejo
+    (visión por computadora en tiempo real), debe evaluarse su viabilidad
+    dentro de los plazos del \gls{mvp}.
+
+    \item[Reputación con fricción reducida (señales implícitas).] La
+    literatura \citep{reputation} señala que las calificaciones
+    explícitas (estrellas) son propensas a sesgos. Se propone combinar
+    una acción mínima (reacción rápida) con señales de comportamiento
+    capturadas automáticamente: tasa de sesiones completadas,
+    puntualidad, y la tasa de recontratación del mismo tutor por parte
+    del mismo alumno (preferencia revelada).
+
+    \item[Precio dinámico por poder adquisitivo regional.] Se propone que
+    la plataforma sugiera un rango de precio de referencia ajustado al
+    poder adquisitivo de la provincia o localidad del alumno, calculado a
+    partir de los datos transaccionales de la plataforma, manteniendo la
+    decisión final en el tutor.
+
+    \item[Modo de baja conectividad.] Se propone una degradación
+    progresiva de calidad (video $\rightarrow$ solo audio
+    $\rightarrow$ mensajería de texto) ante caídas de ancho de banda,
+    sumado a la retención temporal de un buffer de video rotativo de 30
+    segundos, el cual se persiste y envía como evidencia únicamente si se
+    dispara el sistema de seguridad (kill-switch).
+\end{description}
+
+\subsection{Marco legal}
+
+El diseño de la relación contractual entre la plataforma, el adulto
+responsable y el menor se apoya en el sistema de capacidad progresiva
+del Código Civil y Comercial de la Nación, artículos 25 y 26, que
+establece que los adolescentes de entre 13 y 18 años tienen capacidad de
+ejercicio creciente, pero que los contratos que los comprometan
+patrimonialmente requieren la representación o el consentimiento de los
+progenitores según los artículos 682 y 690, salvo los de escasa cuantía
+de la vida cotidiana previstos en el artículo 684 bis, categoría en la
+que un paquete de clases particulares no encuadra. De ahí surge la
+decisión de que la cuenta contratante y pagadora sea siempre la del
+adulto responsable.
+
+El mismo criterio se refuerza con un antecedente impositivo: el modelo
+de retención que aplican plataformas comparables en Argentina, como
+Uber, Rappi, PedidosYa y Airbnb, donde AFIP obliga al agente de pago a
+retener hasta un 28\,\% de lo abonado a quien no esté inscripto en el
+régimen de Monotributo, funciona como antecedente directo de la
+estrategia de formalización tributaria de los tutores de \sistema{},
+desarrollada en el capítulo~\ref{cap:economica}. A esto se suma la
+jurisprudencia laboral argentina sobre la relación de dependencia
+encubierta de repartidores de plataformas de delivery, que constituye un
+antecedente de riesgo legal relevante para el vínculo entre \sistema{} y
+sus tutores, documentado como riesgo en el capítulo~\ref{cap:riesgos}.
+
+\section{Bases teóricas}\label{sec:bases-teoricas}
+
+\subsection{Variable 1: matching semántico e inteligencia artificial
+aplicada a sistemas de recomendación}\label{sec:variable1}
+
+El motor de \gls{matching} de \sistema{} se apoya conceptualmente en dos
+cuerpos teóricos: los sistemas de recomendación (\emph{recommender
+systems}), que buscan predecir la afinidad entre dos entidades a partir
+de sus atributos; y el procesamiento de lenguaje natural (\gls{nlp})
+aplicado a la representación semántica de texto mediante
+\gls{embeddings}. Un \gls{embeddings} es una representación vectorial de
+un texto en un espacio de alta dimensionalidad. Modelos como los
+sentence-transformers generan vectores a partir de oraciones completas,
+superando las búsquedas por palabras clave. Sobre este espacio,
+estructuras como FAISS (Facebook AI Similarity Search) permiten
+búsquedas de similitud eficientes.
+
+Como se detalló en la sección~\ref{sec:estado-del-arte}, el trabajo de
+la Universidad de Ottawa \citep{isotropy2026} validó esta técnica en la
+recomendación de cursos, corrigiendo el problema de anisotropía. Este
+antecedente es directamente aplicable a \sistema{}, donde los perfiles
+comparten un vocabulario acotado (materias, niveles). La literatura
+\citep{beefore2024} identifica que el uso de sentence-transformers como
+mecanismo central sigue siendo poco explorado, confirmando que la
+implementación de \sistema{} representa un aporte que excede la
+aplicación estándar.
+
+\subsection{Variable 2: acceso a educación personalizada y brecha de
+aprendizaje}\label{sec:variable2}
+
+La base teórica proviene de la investigación sobre enseñanza
+individualizada de Carroll \citep{carroll1963} y Bloom
+\citep{bloom1968, bloom1984}. Carroll planteó que el aprendizaje depende
+de la relación entre el tiempo necesario para dominar un contenido y el
+tiempo efectivamente destinado. Bloom desarrolló la teoría del
+\emph{mastery learning}, sosteniendo que la mayoría puede alcanzar
+niveles altos de dominio con instrucción personalizada.
+
+El aporte central es el ``problema de los 2 sigma'' \citep{bloom1984}:
+alumnos con tutoría individual rinden, en promedio, dos desviaciones
+estándar por encima de alumnos en instrucción grupal convencional. La
+propuesta de \sistema{} responde tecnológicamente a este problema: busca
+hacer que la tutoría individual sea accesible a escala, superando la
+barrera de disponibilidad geográfica. Esto es consistente con el
+meta-análisis de tutoría privada \citep{sciencedirect2022} y el trabajo
+sobre tutoría bajo demanda \citep{ondemand2026}, que la ubican entre las
+intervenciones más efectivas.
+
+\subsection{Relación entre las variables}
+
+El vínculo se explica a través de la teoría económica de los mercados
+bilaterales (\emph{two-sided markets}) \citep{rochet2006}. Un mercado
+bilateral conecta a dos grupos (alumnos y tutores) donde la participación
+de uno aumenta el valor para el otro. El mayor riesgo es el problema del
+\gls{coldstart}, señalado en el capítulo~\ref{cap:introduccion}.
+
+En un mercado geográficamente disperso (Variable~2), el problema del
+\gls{coldstart} se agrava. La función del \gls{matching} semántico
+(Variable~1) es el mecanismo que permite que esa masa crítica, aunque
+dispersa, se encuentre eficientemente a escala nacional. Al no depender
+de coincidencias exactas ni proximidad, el motor permite a \sistema{}
+operar como un único mercado denso. Esta es la hipótesis técnica que
+sostiene el proyecto.
+
+\section{Marco conceptual}
+
+\sistema{} se ubica dentro del sector \gls{edtech} y, específicamente, en
+los \gls{marketplace} educativos (dimensionado en el
+capítulo~\ref{cap:introduccion}).
+
+En el plano de la infraestructura, el proyecto se apoya en \gls{webrtc},
+un estándar abierto para comunicación en tiempo real en navegadores.
+Sobre este, \sistema{} utiliza LiveKit, un framework open-source que
+simplifica la implementación de salas escalables. Para sostener el estado
+en tiempo real de esas salas, se utiliza Redis (base de datos en memoria
+clave-valor), necesaria por sus exigencias de baja latencia.
+
+En el circuito de pagos, se apoya en un modelo de \gls{escrow}
+implementado a través de MercadoPago Marketplace, reteniendo los fondos
+hasta la realización de la clase, reduciendo el riesgo de fraude.
+
+Sobre la confianza, \sistema{} adopta un sistema de reputación
+bidireccional, respaldado por la literatura \citep{reputation}. Para
+medir la satisfacción general, se contempla el uso del \gls{nps}.
+Finalmente, el proyecto se desarrolla bajo un esquema de Scrum adaptado
+(capítulo~\ref{cap:metodologia}).
+
+\section{Entrevistas a especialistas}\label{sec:entrevistas}
+
+Se proponen dos perfiles de especialista complementarios cuyos guiones
+completos se transcriben en el apéndice~\ref{apx:entrevista}:
+\textbf{Perfil 1}, docente o gestor/a institucional, para indagar sobre
+el rol del apoyo escolar en la prevención de la repitencia, las
+diferencias urbanas-rurales en el acceso a tutorías y los recaudos
+pedagógicos y de seguridad de una tutoría virtual; y \textbf{Perfil 2},
+psicopedagogía / vínculo y seguridad con menores, para abordar el
+impacto vincular del acompañamiento personalizado, las señales de alerta
+en entornos remotos y los errores a evitar en el diseño del sistema de
+reputación.
+
+\textbf{[PENDIENTE:} una vez realizada la entrevista, se agregará acá la
+síntesis de los resultados con fecha, nombre, cargo y aporte de cada
+persona entrevistada. La evidencia detallada se conserva en el
+apéndice~\ref{apx:entrevista}\textbf{]}

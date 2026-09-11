@@ -27,19 +27,448 @@ creo'', oraciones de 15 a 22 palabras, sin palabras vacías
 ejemplo \citep{breiman2001}.
 \end{guia}
 
-\completar{Desarrollo del capítulo. Las secciones y subsecciones se
-organizan como resulte mejor para el proyecto.}
+\section{Introducción}\label{sec:intro-general}
 
-\section{\completar{Nombre de la sección}}
+Argentina es un país de geografías extremas. Entre sus más de 2,7
+millones de kilómetros cuadrados conviven la densidad metropolitana del
+Gran Buenos Aires con la soledad de la Puna jujeña, los valles
+catamarqueños, la estepa patagónica y los pequeños pueblos del interior
+profundo donde una escuela puede ser el único edificio público. En esos
+lugares, la educación formal llega --aunque con dificultades-- pero el
+apoyo académico extracurricular prácticamente no llega. Un alumno de
+quinto año de secundaria en San Antonio de los Cobres que necesita
+reforzar matemáticas antes de un examen de ingreso universitario no
+tiene, hoy, una opción realista de encontrar un tutor particular en su
+localidad. Su única alternativa sería viajar horas hasta la ciudad más
+cercana, un costo económico y logístico que la mayoría de las familias
+no puede sostener.
 
-\begin{ejemplo}[Ejemplo: forma de un objetivo general]
-Desarrollar un sistema de \completar{qué} para \completar{quién} en
-\completar{dónde}, que permita \completar{resultado medible} mediante
-\completar{enfoque o tecnología central}.
-\end{ejemplo}
+Pero el problema no se limita a la geografía. La educación tradicional,
+por su naturaleza institucional, opera bajo un modelo de enseñanza
+uniforme: el docente avanza al ritmo del grupo, con un programa fijo, en
+tiempos determinados. Este modelo, aunque necesario para garantizar la
+universalidad de la instrucción, tiene una desventaja estructural bien
+documentada: no todos los estudiantes aprenden los mismos contenidos al
+mismo tiempo ni de la misma manera. Un alumno que no comprende el
+concepto de función matemática en el momento en que se enseña en clase
+no tiene, dentro del sistema formal, un mecanismo inmediato de
+recuperación personalizada. Si ese alumno no cuenta con apoyo
+extraescolar, la brecha entre él y el resto del grupo se amplía
+progresivamente, con consecuencias que en muchos casos terminan en
+repitencia o abandono escolar.
 
-\completar{Texto.}
+Las clases particulares han sido históricamente la respuesta informal de
+la sociedad argentina a este problema. Sin embargo, este mercado opera
+en condiciones de notable fragmentación: la oferta de tutores se
+articula principalmente a través de redes de recomendación
+interpersonal, sin estándares de calidad verificables, sin transparencia
+en las transacciones y sin mecanismos formales de protección para
+ninguna de las partes. Si bien en los grandes centros urbanos --Buenos
+Aires, Córdoba, Rosario, Mendoza-- la oferta de tutores es
+relativamente abundante y accesible, y la plataforma puede ser utilizada
+también en esos contextos, el impacto diferencial de \sistema{} se
+proyecta especialmente en aquellos lugares donde esa oferta hoy es
+inexistente o insuficiente: pueblos de montaña, localidades del
+interior, zonas rurales. Es ahí donde un ecosistema digital puede
+cambiar la ecuación.
 
-\subsection{\completar{Nombre de la subsección}}
+En este contexto nace \sistema{}, cuyo nombre proviene de la lengua
+quechua --idioma originario presente en las provincias del Noroeste
+Argentino-- y significa \emph{encuentro} o \emph{punto de unión}. El
+término captura con precisión la misión del proyecto: construir el punto
+de encuentro digital entre quienes necesitan aprender y quienes tienen
+el conocimiento para enseñar, sin importar en qué rincón del país se
+encuentren. La conectividad a internet, incluso en zonas remotas, ha
+mejorado sustancialmente gracias a iniciativas de satelital de baja
+órbita como Starlink, que está siendo adoptada masivamente en
+localidades del interior argentino, ampliando de manera concreta la base
+de usuarios potenciales de la plataforma.
 
-\completar{Texto.}
+\sistema{} propone una plataforma digital de \gls{marketplace} educativo
+que centraliza en un único ecosistema la búsqueda de tutores, la
+reserva de sesiones, el dictado de clases virtuales y la gestión de
+pagos, incorporando \gls{ia} como eje diferenciador: un motor de
+\gls{matching} semántico que compatibiliza perfiles de alumnos y
+tutores, y herramientas de apoyo post-sesión que extienden el valor de
+cada clase más allá del tiempo de pantalla.
+
+\section{Planteo del problema}\label{sec:problema}
+
+El mercado de clases particulares en Argentina presenta tres problemas
+estructurales que este proyecto busca resolver:
+
+\begin{itemize}
+    \item \textbf{Informalidad y fragmentación de la oferta:} no existe en
+          la actualidad una plataforma nacional que centralice y
+          estandarice la oferta de tutores académicos. El proceso de
+          búsqueda depende casi exclusivamente de recomendaciones
+          informales, lo que dificulta la comparación objetiva entre
+          tutores y expone a las familias a una experiencia de
+          contratación sin garantías de calidad verificables, sin
+          transparencia en los precios y sin mecanismos formales de
+          protección para ninguna de las partes.
+    \item \textbf{Brecha geográfica en el acceso al apoyo escolar:} el
+          acceso a tutores especializados está fuertemente concentrado en
+          los grandes centros urbanos. Los estudiantes de localidades del
+          interior del país --pueblos pequeños, comunidades de montaña,
+          zonas rurales-- no cuentan con alternativas accesibles de apoyo
+          académico extracurricular. En muchos casos, encontrar un tutor
+          implicaría recorrer decenas o cientos de kilómetros, una opción
+          económica y logísticamente inviable para la mayoría de las
+          familias. Si bien las zonas urbanas también pueden beneficiarse
+          de la plataforma, es en estas regiones donde el impacto
+          potencial es mayor y la ausencia de alternativas es más
+          crítica.
+    \item \textbf{Desajuste entre el ritmo de enseñanza colectiva y el
+          aprendizaje individual:} el sistema educativo formal, por su
+          naturaleza grupal, no puede adaptarse al ritmo particular de
+          cada alumno. Estudiantes que no comprenden un tema en el
+          momento en que se enseña quedan progresivamente rezagados, sin
+          un mecanismo institucional de recuperación personalizada. La
+          tutoría particular es la herramienta más efectiva para cerrar
+          esta brecha, pero su acceso no es universal.
+\end{itemize}
+
+Estos tres factores generan un mercado subdesarrollado que no aprovecha
+el potencial existente: miles de docentes y graduados universitarios
+con capacidad y disposición para ofrecer tutorías, que no encuentran
+una plataforma que profesionalice y amplíe su alcance más allá de su
+entorno geográfico inmediato.
+
+\section{Hipótesis de investigación}\label{sec:hipotesis}
+
+\textbf{Hipótesis central.} La implementación de una plataforma digital
+de \gls{marketplace} educativo con capacidades de \gls{matching}
+inteligente basado en búsqueda semántica (\gls{nlp}) permitirá que
+estudiantes ubicados en zonas geográficas con escasez de tutores locales
+--incluyendo pueblos pequeños, comunidades de montaña y regiones
+rurales-- accedan a servicios de apoyo académico personalizado de
+calidad equivalente a la disponible en centros urbanos, al tiempo que
+generará oportunidades de ingreso para tutores en áreas con exceso de
+oferta relativa, contribuyendo a reducir la brecha de acceso al apoyo
+escolar en todo el territorio argentino.
+
+Esta hipótesis implica dos afirmaciones técnicas verificables al término
+del proyecto:
+
+\begin{enumerate}
+    \item El motor de \gls{matching} semántico produce recomendaciones de
+          tutores percibidas como relevantes por los usuarios, medido a
+          través de pruebas de usabilidad y métricas de aceptación de
+          sugerencias.
+    \item La plataforma es técnicamente capaz de conectar usuarios de
+          distintas provincias del país en sesiones de tutoría virtual en
+          tiempo real con calidad de comunicación aceptable, incluso en
+          contextos de conectividad variable.
+\end{enumerate}
+
+\section{Objetivos}\label{sec:objetivos}
+
+\subsection{Objetivo general}\label{sec:objetivo-general}
+
+Diseñar, desarrollar e implementar una plataforma digital de
+\gls{marketplace} educativo que conecte, a escala nacional, a
+estudiantes de nivel primario, secundario y universitario con tutores
+académicos calificados, mediante un sistema de \gls{matching} inteligente
+basado en \gls{ia}, un aula virtual integrada y un modelo de confianza
+verificable, con el fin de ampliar el acceso al apoyo escolar
+personalizado y profesionalizar el mercado de tutorías particulares en
+Argentina, con especial impacto en comunidades y regiones donde la
+oferta presencial de tutores es escasa o inexistente.
+
+\subsection{Objetivos específicos}\label{sec:objetivos-especificos}
+
+\begin{enumerate}
+    \item \textbf{OE1 --- Análisis del mercado y estado del arte:} relevar
+          el estado actual del mercado de tutorías en Argentina y
+          plataformas educativas similares a nivel global, identificando
+          brechas de funcionalidad y oportunidades de diferenciación
+          tecnológica.
+    \item \textbf{OE2 --- Diseño de arquitectura del sistema:} definir la
+          arquitectura técnica completa de \sistema{}, incluyendo modelo
+          de datos, contratos de \gls{api}, diseño \gls{ux} y flujos
+          operativos principales.
+    \item \textbf{OE3 --- Implementación del motor de \gls{matching}
+          \gls{ia}:} desarrollar e integrar el microservicio de
+          recomendación basado en \gls{embeddings} semánticos
+          (sentence-transformers + FAISS) para la sugerencia de tutores
+          compatibles, implementando un factor de ponderación o
+          multiplicador de puntaje (\emph{boost}) para aquellos perfiles
+          que hayan validado voluntariamente su \gls{cap}.
+    \item \textbf{OE4 --- Desarrollo del aula virtual (LiveKit):}
+          implementar el módulo de videollamada mediante
+          LiveKit/\gls{webrtc} integrado nativamente en la plataforma, con
+          gestión de estado de sala en tiempo real a través de Redis.
+    \item \textbf{OE5 --- Implementación del sistema de pagos:} integrar
+          la \gls{api} de MercadoPago Marketplace con modelo de
+          \gls{escrow} y comisión de plataforma.
+    \item \textbf{OE6 --- Desarrollo del módulo de \gls{ia} educativa:}
+          implementar el servicio de transcripción y resumen automático
+          de sesiones, y el asistente conversacional de repaso
+          conceptual.
+    \item \textbf{OE7 --- Implementación del sistema de reputación:}
+          desarrollar el sistema de calificaciones bidireccional
+          implementando un umbral mínimo de calificaciones para su
+          exposición pública como medida anti-manipulación.
+    \item \textbf{OE8 --- Validación funcional:} realizar pruebas de
+          aceptación de usuario (\gls{uat}) con un grupo piloto de tutores
+          y alumnos reales, midiendo usabilidad, confianza percibida y
+          satisfacción con el \gls{matching} propuesto.
+\end{enumerate}
+
+\section{Barreras e impedimentos}\label{sec:barreras}
+
+El análisis del problema revela un conjunto de barreras que explican por
+qué la solución propuesta no ha sido desarrollada previamente en el
+mercado argentino con el nivel de integración que \sistema{} propone:
+
+\begin{itemize}
+    \item \textbf{Barreras de verificación y onboarding:} aunque el
+          objetivo ideal incluye la validación automatizada de
+          antecedentes penales e identidad, los organismos competentes
+          (RENAPER, Registro Nacional de Reincidencia) no ofrecen
+          \gls{api} públicas. Esta restricción impide automatizar dicho
+          proceso en el \gls{mvp}. En consecuencia, la plataforma
+          centrará sus esfuerzos obligatorios de seguridad y confianza en
+          la rigurosa verificación de los antecedentes académicos.
+          Adicionalmente, para mitigar la barrera de verificación de
+          antecedentes penales, se habilitará su carga manual de forma
+          optativa, incentivando a los tutores mediante una mejora
+          algorítmica en su visibilidad. El proceso de registro básico
+          exigirá únicamente la demostración empírica de los
+          conocimientos del tutor mediante la presentación de historial
+          académico, títulos de grado o certificaciones pertinentes. Esta
+          estrategia no solo sortea el impedimento técnico estatal, sino
+          que alinea el sistema de admisión directamente con el objetivo
+          central de la plataforma: asegurar la excelencia académica del
+          apoyo escolar.
+    \item \textbf{Barrera de adopción cultural:} el mercado de tutorías
+          en Argentina opera bajo una lógica de confianza interpersonal
+          muy arraigada. La migración hacia una plataforma digital
+          requiere demostrar que la calidad y la seguridad del servicio
+          son equivalentes o superiores al modelo informal vigente.
+    \item \textbf{Barrera de conectividad:} aunque la cobertura de
+          internet ha mejorado sustancialmente --y tecnologías como
+          Starlink están siendo adoptadas masivamente en localidades del
+          interior argentino, llevando conectividad satelital de banda
+          ancha a zonas que antes carecían de ella-- sigue existiendo un
+          segmento de la población, especialmente en contextos de bajos
+          recursos, que no puede acceder a estos servicios ni cuenta con
+          dispositivos adecuados. Esta realidad puede limitar el alcance
+          efectivo de la plataforma en los contextos donde el impacto
+          social sería mayor, y debe ser considerada en el diseño de la
+          experiencia de usuario.
+    \item \textbf{Barrera de la masa crítica (\gls{coldstart}):} como todo
+          \gls{marketplace} bilateral, \sistema{} resulta más valioso
+          cuantos más tutores y alumnos lo utilizan. La estrategia de
+          lanzamiento deberá contemplar mecanismos de adquisición
+          simultánea de usuarios en ambos lados de la plataforma.
+    \item \textbf{Barrera técnica --- \gls{ia} en tiempo real:} la
+          transcripción y resumen automático de sesiones implica
+          procesamiento de audio post-sesión, lo que requiere gestión
+          eficiente de recursos computacionales para mantener costos
+          operativos controlados en la fase de \gls{mvp}.
+\end{itemize}
+
+\section{Relevancia del proyecto}\label{sec:relevancia}
+
+La relevancia de \sistema{} se articula en tres dimensiones
+complementarias:
+
+\textbf{Relevancia social.} Argentina presenta tasas de repitencia y
+abandono escolar que afectan especialmente a estudiantes en situaciones
+de vulnerabilidad educativa --entre ellos, quienes no logran seguir el
+ritmo de enseñanza colectivo y carecen de acceso a apoyo
+extracurricular. El acceso a tutoría personalizada y oportuna es uno de
+los factores protectores más eficaces contra la deserción escolar.
+\sistema{} busca extender ese acceso a estudiantes que hoy no pueden
+aprovecharlo, ya sea por razones geográficas, por desconocimiento de la
+oferta disponible, o por la ausencia de plataformas que concentren y
+estandaricen esa oferta.
+
+\textbf{Relevancia económica.} El mercado latinoamericano de tutorías
+online generó USD 637,3 millones en ingresos en 2023 y se proyecta un
+crecimiento anual compuesto del 16,6\,\% hasta 2030, según
+\citet{grandview2024}. A nivel global, el mercado de tutorías privadas
+fue valorado en USD 124,5 mil millones en 2024 y se proyecta alcanzar
+USD 238,5 mil millones hacia 2033, con una CAGR del 7,5\,\%
+\citep{researchmarkets2024}. En Argentina, el segmento opera en su
+mayoría de manera informal, sin registro de transacciones ni
+facturación formal. \sistema{} propone formalizar una porción de ese
+mercado, habilitando el cobro digital, generando historial de actividad
+y contribuyendo a la bancarización de los tutores.
+
+\textbf{Relevancia tecnológica.} El proyecto aplica tecnologías de
+\gls{ia} de vanguardia --\gls{embeddings} semánticos para
+\gls{matching}, modelos de lenguaje de gran escala (\gls{llm}) para
+asistencia educativa-- a un problema local concreto. Esta aplicación
+constituye un aporte original al estado del arte en plataformas
+educativas adaptativas en el contexto latinoamericano, diferenciándose
+de soluciones globales por su foco en las particularidades del sistema
+educativo y la geografía argentina.
+
+\section{Enfoque metodológico}\label{sec:enfoque}
+
+El proyecto se abordará desde una metodología de desarrollo ágil (Scrum
+adaptado) combinada con un proceso de investigación aplicada. Las etapas
+principales son:
+
+\begin{itemize}
+    \item \textbf{Investigación y relevamiento:} análisis del estado del
+          arte, entrevistas con tutores y alumnos potenciales,
+          relevamiento de plataformas competidoras (Preply, Wyzant,
+          Superprof, Tusclases).
+    \item \textbf{Diseño de arquitectura y \gls{ux}:} definición del modelo
+          de datos, diseño de wireframes y prototipos de alta fidelidad,
+          validación con usuarios.
+    \item \textbf{Desarrollo iterativo del \gls{mvp}:} implementación por
+          módulos funcionales con ciclos de revisión quincenales.
+    \item \textbf{Integración y pruebas:} pruebas unitarias, de integración
+          y de aceptación de usuario (\gls{uat}).
+    \item \textbf{Piloto y validación:} lanzamiento controlado con grupo
+          reducido de tutores y alumnos reales para validar la hipótesis
+          central.
+    \item \textbf{Documentación y presentación:} elaboración del informe
+          final y presentación del producto funcional.
+\end{itemize}
+
+\section{Alcance del proyecto}\label{sec:alcance}
+
+El presente proyecto abarca el diseño completo y la implementación
+funcional de la versión \gls{mvp} de \sistema{}. Este desarrollo
+comprende un frontend web estructurado como \gls{pwa}, el cual proveerá
+todas las interfaces de usuario necesarias para alumnos, tutores y
+administradores. El núcleo del sistema estará compuesto por un backend
+\gls{api} REST que expondrá todos los endpoints operativos, respaldado
+por una base de datos relacional en PostgreSQL para el modelo de datos
+principal y Redis para la gestión del estado en tiempo real. El backend
+se implementa en Java mediante el framework Spring Boot. Todo este
+ecosistema será desplegado sobre infraestructura cloud utilizando
+Supabase y Vercel, incluyendo la entrega de la documentación
+correspondiente a su arquitectura.
+
+A nivel funcional, la plataforma integrará un microservicio de
+\gls{matching} impulsado por \gls{ia} y un módulo de aula virtual
+soportado por la tecnología de LiveKit (\gls{webrtc}). El flujo
+económico estará cubierto mediante la integración con MercadoPago para
+la gestión de pagos bajo la modalidad de \gls{escrow}. Para potenciar la
+experiencia educativa, se implementará un módulo de resumen automático
+de sesiones utilizando un \gls{llm} (como GPT-4o o Gemini 2.0 Flash)
+que procesa audio nativamente. Adicionalmente, el \gls{mvp} contará con
+un sistema de calificaciones y reputación bidireccional, junto con un
+panel de administración básico para la gestión interna de la
+plataforma. La plataforma incluye, además, un portal de denuncias con
+verificación de veracidad, que ante cada denuncia preserva de forma
+automática la evidencia de la sesión correspondiente y deriva la
+resolución final a revisión manual.
+
+Por último, es importante delimitar que este proyecto no incluye ciertas
+características en su fase inicial. Quedan excluidos de este alcance:
+el desarrollo de aplicaciones móviles nativas; la integración
+automatizada mediante \gls{api} con sistemas estatales (requiriéndose en
+su lugar la carga y verificación manual del \gls{cap}); el desarrollo de
+un módulo de accesibilidad completo; la implementación de un modelo de
+suscripción premium; la posibilidad de extender la duración de una
+sesión de videollamada en curso mediante un cobro adicional; y la
+incorporación de tutores menores de edad. Todas estas iniciativas y
+funcionalidades no incluidas quedarán debidamente documentadas como
+propuestas para el trabajo a futuro.
+
+\section{Limitaciones}\label{sec:limitaciones}
+
+\begin{itemize}
+    \item \textbf{Límite de validación:} la validación de la hipótesis se
+          realizará con un grupo piloto acotado. Los resultados son
+          indicativos de la validez funcional del sistema, no
+          estadísticamente representativos del mercado total.
+    \item \textbf{Límite de verificación de tutores:} en el \gls{mvp}, la
+          verificación combina un chequeo automático de mayoría de edad
+          mediante reconocimiento óptico (\gls{ocr}) sobre la fecha de
+          nacimiento del DNI cargado, y una revisión manual final de la
+          autenticidad del documento y la correspondencia de los
+          certificados académicos declarados. La verificación
+          automatizada de antecedentes vía \gls{api} queda fuera de
+          alcance, reemplazándose por la exigencia y revisión manual
+          obligatoria del \gls{cap} tramitado por el tutor vía Mi
+          Argentina, con actualización anual; no debe confundirse con la
+          verificación de edad, que también se realiza.
+    \item \textbf{Límite de conectividad:} el servicio requiere conexión a
+          internet estable para el aula virtual. Si bien Starlink y otras
+          soluciones satelitales amplían el universo de usuarios
+          potenciales, persiste una porción de la población objetivo sin
+          acceso adecuado a dispositivos o conectividad.
+    \item \textbf{Límite del asistente \gls{ia}:} el asistente conceptual
+          opera sobre el resumen de la sesión y el conocimiento del modelo
+          subyacente. No tiene acceso a libros de texto o currículos
+          oficiales específicos del sistema educativo argentino.
+    \item \textbf{Límite geográfico del piloto:} la validación funcional
+          queda circunscripta al territorio argentino. La plataforma está
+          diseñada para escalar regionalmente, pero dicha expansión
+          excede el alcance de este trabajo.
+    \item \textbf{Límite de alineación curricular:} dado que el sistema
+          educativo argentino no tiene un diseño curricular único a nivel
+          nacional, un tutor de una jurisdicción puede no estar alineado
+          con los contenidos específicos que se enseñan en la escuela del
+          alumno en otra provincia. Esta limitación no invalida la
+          propuesta de valor de la plataforma, pero marca un límite real
+          de la personalización ofrecida.
+    \item \textbf{Límite de disponibilidad en fase de desarrollo:}
+          mientras se construye el \gls{mvp}, el backend se aloja en
+          infraestructura propia del desarrollador y no en un proveedor
+          cloud con garantías de disponibilidad, lo que implica un punto
+          único de falla hasta la migración planificada a un \gls{vps}
+          antes del piloto con usuarios reales, prevista para el
+          Sprint~11.
+\end{itemize}
+
+\section{Justificación}\label{sec:justificacion}
+
+La elección de \sistema{} como proyecto final de Ingeniería en
+Informática se fundamenta en la convergencia de tres elementos clave
+para un proyecto de calidad: aplicación en el mundo real, uso de
+tecnología innovadora y potencial de impacto social demostrable.
+
+El problema que \sistema{} aborda es real y urgente. La brecha en el
+acceso al apoyo escolar personalizado --acentuada por la geografía
+argentina y por la rigidez del modelo de enseñanza colectiva-- afecta a
+miles de estudiantes hoy. No se trata de un problema académico
+hipotético, sino de una necesidad concreta con consecuencias medibles en
+las tasas de repitencia y abandono escolar.
+
+La solución incorpora tecnologías emergentes de manera que genera valor
+diferencial concreto: no se intenta construir un modelo de \gls{ia}
+general, sino aplicar \gls{embeddings} semánticos y modelos de lenguaje a
+un problema de \gls{matching} y apoyo educativo específico. La \gls{ia}
+es un medio, no un fin en sí mismo.
+
+Finalmente, el nombre del proyecto encarna su justificación más
+profunda. \sistema{}, en quechua, designa el encuentro ritual entre
+comunidades de distintos lugares --un momento en que las diferencias
+geográficas se suspenden y el intercambio es posible. Eso es exactamente
+lo que la plataforma propone: hacer que la distancia entre el estudiante
+de una comunidad de montaña y el tutor especializado de una ciudad sea
+un dato irrelevante. Que el nombre de un idioma originario del Noroeste
+Argentino esté en el centro de un proyecto de ingeniería de sistemas es,
+en sí mismo, una declaración de intenciones sobre qué tipo de tecnología
+se quiere construir.
+
+\section{Recursos preliminares}\label{sec:recursos}
+
+\begin{table}[H]
+    \centering
+    \caption{Recursos preliminares del proyecto}
+    \label{tab:recursos}
+    \small
+    \begin{tabularx}{\textwidth}{l L}
+        \toprule
+        \tb{Categoría} & \tb{Detalle} \\
+        \midrule
+        Recursos humanos & 1 desarrollador full-stack (autor del proyecto). Tutores y alumnos para el grupo piloto de validación. \\
+        Infraestructura cloud & Vercel (plan Hobby) para el frontend, Supabase (plan gratuito) para la base de datos Postgres, Upstash (plan gratuito) para Redis, y backend alojado inicialmente en infraestructura propia mediante Coolify y Cloudflare Tunnel, con migración planificada a un \gls{vps} de entre 10 y 25 USD mensuales antes del piloto. Estimación de costo: USD 0 en fase de desarrollo, hasta \~{}25 USD/mes en la fase de piloto. \\
+        APIs externas & Para el motor de \gls{matching} semántico: sentence-transformers junto con FAISS, con procesamiento local y sin costo de \gls{api} por request. Para la transcripción y el resumen de sesión, y para el asistente conceptual: un \gls{llm} a confirmar entre GPT-4o y Gemini 2.0 Flash para la transcripción y resumen directo de audio, según relación costo-calidad al momento de la implementación (capítulos \ref{cap:marco-tecnologico} y \ref{cap:economica}). MercadoPago: sin costo fijo, comisión por transacción, con SDK oficial en Java. LiveKit Cloud: plan gratuito Build de 5.000 minutos de participante por mes. \\
+        Herramientas de desarrollo & OpenCode + Neovim (editor principal), GitHub (control de versiones), Figma (diseño \gls{ux}), Postman (testing \gls{api}), Jest (testing unitario). Todas en planes gratuitos o estudiantiles. \\
+        Tiempo estimado & 6 meses de desarrollo. Dedicación aproximada: 15--20 horas semanales. \\
+        Conocimientos previos & Desarrollo web full-stack (React para el frontend, Java con Spring Boot para el backend), bases de datos relacionales, fundamentos de \gls{ml}, integración de \gls{api} REST. \\
+        \bottomrule
+    \end{tabularx}
+\end{table}

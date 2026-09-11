@@ -91,7 +91,7 @@
 \def\usal@spanishname{spanish}
 \ifx\usal@language\usal@spanishname
   \RequirePackage[english,spanish]{babel}
-  \spanishplainpercent % \% sin espacio automático (evita errores en tablas)
+  \ifdefined\spanishplainpercent \spanishplainpercent \fi % \% sin espacio automático (evita errores en tablas)
 \else
   \RequirePackage[spanish,\usal@language]{babel}
 \fi

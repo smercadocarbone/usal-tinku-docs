@@ -29,54 +29,263 @@ Extensión orientativa: 6 a 10 páginas. Referencias habituales:
 para gestión.
 \end{guia}
 
-\completar{Desarrollo del capítulo.}
+\section{Introducción}
 
-\section{\completar{Nombre de la sección}}
+El presente capítulo describe el marco metodológico adoptado para el
+desarrollo de \sistema{}. En línea con los requisitos del proyecto
+final, la metodología se articula en dos dimensiones complementarias:
+la metodología de investigación, que define cómo se aborda el problema,
+se recolecta la información y se validan los resultados; y la
+metodología de gestión del proyecto, que establece cómo se organiza,
+planifica y ejecuta el trabajo de desarrollo a lo largo del tiempo
+disponible. Ambas dimensiones son necesarias y se retroalimentan: el
+proceso investigativo informa las decisiones de diseño técnico, mientras
+que el marco de gestión garantiza que esas decisiones se implementen de
+manera ordenada, dentro del alcance y los plazos establecidos.
 
-\completar{Texto.}
+\section{Tipo de investigación}
+
+El presente proyecto se enmarca dentro de la \textbf{investigación
+aplicada}. A diferencia de la investigación básica --orientada a la
+producción de conocimiento teórico sin aplicación inmediata-- la
+investigación aplicada parte de un problema real y concreto, y genera
+conocimiento con utilidad directa para resolverlo. En el caso de
+\sistema{}, el problema es la fragmentación e inaccesibilidad del
+mercado de tutorías académicas en Argentina, y el conocimiento generado
+se materializa en un artefacto funcional: una plataforma digital que
+conecta tutores y alumnos a escala nacional. El aporte original del
+proyecto reside en la aplicación de técnicas de \gls{matching} semántico
+basadas en \gls{ia} a un dominio educativo local, y en la integración de
+funcionalidades de tutoría virtual en un único ecosistema diseñado para
+las condiciones geográficas y de conectividad del territorio argentino.
+El enfoque es de carácter mixto: predominantemente cualitativo en la
+fase de relevamiento del problema y cuantitativo en la fase de
+validación.
+
+\section{Metodología de la investigación}
+
+La investigación se estructura siguiendo las etapas del proceso
+científico aplicado al desarrollo de sistemas de información.
+
+\subsection{Área temática}
+
+El área temática del proyecto se sitúa en la intersección entre el
+desarrollo de plataformas digitales de tipo \gls{marketplace}, la \gls{ia}
+aplicada al \gls{matching} de usuarios, y la tecnología educativa
+(\gls{edtech}).
+
+\subsection{Planteamiento del problema}
+
+El problema de investigación se formula como la ausencia de una
+plataforma nacional que centralice, estandarice y amplíe
+geográficamente el acceso al mercado de tutorías particulares en
+Argentina.
+
+\subsection{Delimitación de la investigación}
+
+La investigación se delimita a los objetivos específicos OE1 a OE8
+definidos en el capítulo~\ref{cap:introduccion}, con foco en el diseño e
+implementación del \gls{mvp} de \sistema{} para el mercado argentino.
+Quedan fuera del alcance investigativo los mercados regionales, la
+integración con organismos estatales y los módulos de accesibilidad y
+suscripción premium, los cuales se documentan como trabajo futuro.
+
+\subsection{Marco teórico}
+
+Se realizará una búsqueda sistemática de bibliografía académica y
+técnica sobre los temas centrales del proyecto, abarcando plataformas de
+\gls{marketplace} educativo, algoritmos de recomendación basados en
+\gls{embeddings} semánticos, sistemas de reputación en plataformas
+digitales, tecnología \gls{webrtc} aplicada a educación, y el contexto
+educativo argentino. Esta revisión se documenta en el
+capítulo~\ref{cap:marco-teorico}. Las fuentes a consultar incluyen
+artículos científicos, tesis de grado y posgrado, documentación técnica
+oficial, informes de mercado de organizaciones como Grand View Research
+y Research and Markets, y reportes del Ministerio de Educación de la
+Nación Argentina.
+
+\subsection{Diseño concreto de investigación}
+
+A partir de la información relevada, se definirá el diseño técnico del
+sistema, abarcando la arquitectura, el modelo de datos, los flujos de
+usuario y los contratos de \gls{api}. Esta etapa se documenta en el
+capítulo~\ref{cap:marco-tecnologico}.
+
+\subsection{Indicadores}
+
+Los indicadores principales para verificar la hipótesis central se
+resumen en la tabla~\ref{tab:indicadores}.
 
 \begin{table}[H]
     \centering
-    \caption{Indicadores del proyecto (ejemplo de estructura)}
+    \caption{Indicadores del proyecto}
     \label{tab:indicadores}
     \small
-    \begin{tabularx}{\textwidth}{l L L l l}
+    \begin{tabularx}{\textwidth}{l L L l}
         \toprule
-        \tb{ID} & \tb{Variable} & \tb{Indicador} & \tb{Umbral} & \tb{Fuente} \\
+        \tb{ID} & \tb{Variable} & \tb{Indicador} & \tb{Umbral} \\
         \midrule
-        I-01 & Calidad de la predicción & \gls{sym:f1} sobre el conjunto de prueba & $\geq 0{,}70$ & \citet{pedregosa2011} \\
-        I-02 & Tiempo de respuesta & Latencia p95 de la \gls{api} & $< 5$ s & Registros del servidor \\
-        I-03 & Usabilidad & Tareas completadas sin ayuda en prueba con usuarios & $\geq 80\,\%$ & \citet{nielsen1993} \\
+        I-01 & Aceptación del \gls{matching} & Tasa de aceptación de las sugerencias del motor por parte del alumno & $> 60\,\%$ de recomendaciones aceptadas en el piloto \\
+        I-02 & Calidad percibida de la sesión & Puntuación promedio otorgada por los alumnos en el cuestionario post-sesión (escala 1 a 5) & $\geq 4{,}0$ \\
+        I-03 & Cobertura geográfica del piloto & Sesiones completadas entre usuarios de provincias distintas & Al menos 1 sesión exitosa entre dos provincias, incluyendo una del interior \\
+        I-04 & Satisfacción y recomendación & \gls{nps} del piloto & Porcentaje positivo (promotores $>$ detractores) \\
         \bottomrule
     \end{tabularx}
 \end{table}
 
-\section{\completar{Nombre de la sección}}
+\subsection{Técnicas de recolección de datos}
 
-\completar{Texto.}
+Se implementarán técnicas cualitativas y cuantitativas para la
+recolección de datos primarios. La técnica cualitativa consistirá en
+entrevistas para validar el problema planteado, identificar puntos de
+dolor en el proceso de búsqueda y contratación, y relevar expectativas.
+La técnica cuantitativa se basará en encuestas de validación de demanda
+para cuantificar la frecuencia de uso de tutorías, los canales actuales
+de búsqueda y la disposición a utilizar y pagar por una plataforma
+centralizada.
+
+\subsection{Instrumentos de recolección de datos}
+
+Se utilizarán entrevistas semiestructuradas aplicadas a una muestra de
+al menos dos tutores particulares activos y cuatro alumnos o familias
+que hayan contratado tutorías, complementadas con un formulario breve en
+Google Forms orientado a estudiantes universitarios y familias con hijos
+en edad escolar, buscando un mínimo de 30 respuestas válidas. El guion
+de las entrevistas se transcribe en el apéndice~\ref{apx:entrevista} y
+la encuesta completa en el apéndice~\ref{apx:encuesta}.
+
+\subsection{Datos}
+
+Los datos a obtener consistirán en registros de audio provenientes de
+las entrevistas semiestructuradas y datos tabulares generados a partir
+de las respuestas numéricas y de selección múltiple del formulario
+digital.
+
+\subsection{Procesamiento de los datos}
+
+Las entrevistas serán grabadas con el consentimiento del entrevistado
+para luego ser transcritas en su totalidad y analizadas mediante
+codificación temática, mientras que los datos cuantitativos obtenidos de
+los formularios serán agrupados y tabulados para permitir un conteo y
+evaluación estadística de las métricas.
+
+\subsection{Análisis de los datos}
+
+Los datos recolectados durante el piloto funcional y la validación de
+demanda se analizarán en relación con los indicadores definidos,
+presentando los resultados estructurados en el
+capítulo~\ref{cap:resultados}.
+
+\subsection{Síntesis y conclusiones}
+
+La síntesis de los datos contrastados con los indicadores de validación
+evaluará el cumplimiento de la hipótesis central, presentando las
+conclusiones finales y las implicancias del proyecto en el
+capítulo~\ref{cap:conclusiones}.
+
+\section{Metodología de gestión del proyecto: Scrum adaptado}
+
+Para la planificación y ejecución del desarrollo de \sistema{} se adopta
+\textbf{Scrum adaptado a un contexto unipersonal}, siendo el marco ágil
+más apropiado dado que se cuenta con un único desarrollador, un conjunto
+de módulos técnicos bien delimitados y una fecha de entrega final fija.
+La metodología en cascada fue descartada porque asume que todos los
+requisitos pueden definirse con precisión al inicio y que las etapas son
+completamente secuenciales, lo cual choca con la necesidad de iteración
+en proyectos con \gls{ia} e integraciones complejas como LiveKit o
+\gls{api} externas. Kanban fue descartado como marco principal porque,
+aunque útil para tareas diarias, no provee la planificación por
+objetivos ni los hitos verificables exigidos por el cronograma
+académico.
+
+Scrum organiza el trabajo en \textbf{sprints de dos semanas} con
+objetivos concretos, revisión del incremento al final de cada ciclo y un
+backlog priorizado. En este contexto unipersonal, el desarrollador
+asume los roles de Product Owner, Scrum Master y Development Team,
+contando con el director del proyecto como stakeholder externo para la
+revisión académica. Los artefactos incluyen el Product Backlog, el
+Sprint Backlog y el Incremento, mientras que las ceremonias adaptadas
+comprenden la Sprint Planning de una hora al inicio de cada ciclo, un
+Daily Stand-up diario personal documentado en la bitácora de desarrollo,
+la Sprint Review y la Sprint Retrospective.
+
+\section{Gestión del proyecto: dimensiones clave}\label{sec:dimensiones}
+
+En línea con los criterios de evaluación del proyecto y el perfil
+directivo en Project Management Professional, se detallan las
+dimensiones principales de gestión:
+
+\begin{itemize}
+    \item \textbf{Alcance:} definido por los nueve módulos del \gls{mvp}
+          descritos en el capítulo~\ref{cap:introduccion}. Requiere
+          aprobación explícita cualquier funcionalidad adicional para el
+          control del alcance, apoyándose en el uso del Product Backlog,
+          el Sprint Backlog y los incrementos funcionales.
+    \item \textbf{Tiempos:} el proyecto se estructura en sprints de dos
+          semanas a lo largo de seis meses entre junio y noviembre de
+          2026, con una dedicación estimada de 15 a 20 horas semanales e
+          hitos académicos inamovibles, integrando las ceremonias del
+          marco ágil adoptado.
+    \item \textbf{Costos:} los costos operativos del \gls{mvp} se estiman
+          entre cero y cien dólares mensuales durante el desarrollo,
+          cubiertos mediante planes gratuitos y de bajo costo en la nube,
+          detallándose plenamente en el capítulo~\ref{cap:economica}.
+    \item \textbf{Riesgos:} el análisis detallado se presenta en el
+          capítulo~\ref{cap:riesgos}, contemplando factores como demoras
+          en la integración de \gls{api} externas, costos de modelos de
+          lenguaje superiores a los estimados y la dificultad para
+          reclutar usuarios para el piloto.
+    \item \textbf{Calidad:} cada módulo desarrollado debe superar pruebas
+          unitarias con una cobertura mínima del 70\,\%, además de
+          sortear una batería de pruebas de integración previas al
+          piloto, midiendo la calidad percibida mediante los indicadores
+          específicos de la investigación.
+    \item \textbf{Recursos:} un desarrollador full-stack con
+          conocimientos en React, Java con Spring Boot, Python y bases de
+          datos relacionales, junto al uso de herramientas tecnológicas de
+          soporte y la estructura de roles unipersonales descrita.
+    \item \textbf{Satisfacción de los interesados:} se medirá a través de
+          un sistema de calificaciones post-clase bidireccional para
+          mantener altos estándares de calidad, complementándose con el
+          análisis del \gls{nps} del grupo piloto para comprobar el grado
+          de utilidad percibida y la aplicabilidad de los resultados en
+          escenarios reales.
+\end{itemize}
+
+\section{Cronograma de entregables}
+
+El cronograma fue construido de atrás hacia adelante tomando como fecha
+límite el 28 de noviembre de 2026, fecha estimada de la presentación
+final, y distribuyendo los entregables académicos y los sprints de
+desarrollo de manera que cada capítulo se apoye en trabajo ya realizado
+(tabla~\ref{tab:hitos}).
 
 \begin{table}[H]
     \centering
-    \caption{Hitos y entregables del proyecto (calendario 2026 de la cátedra)}
+    \caption{Cronograma de entregables y sprints asociados}
     \label{tab:hitos}
     \small
-    \begin{tabularx}{\textwidth}{l L l l}
+    \begin{tabularx}{\textwidth}{L L L}
         \toprule
-        \tb{Hito} & \tb{Entregable} & \tb{Fecha} & \tb{Peso} \\
+        \tb{Hasta} & \tb{Entregable académico} & \tb{Sprints de desarrollo asociados} \\
         \midrule
-        H0 & Idea y resumen & \completar{fecha} & 10\,\% \\
-        H1 & Cap.~2 Metodología y procedimientos & 5/5/2026 & 5\,\% \\
-        H2 & Cap.~1 Introducción & 9/6/2026 & 5\,\% \\
-        H3 & Cap.~3 Síntesis de la literatura consultada & 28/7/2026 & 10\,\% \\
-        H4 & Cap.~4 Marco tecnológico & 25/8/2026 & 10\,\% \\
-        H5 & Cap.~5 Justificación económica & 15/9/2026 & 15\,\% \\
-        H6 & Cap.~6 Análisis de riesgos & 29/9/2026 & 5\,\% \\
-        H7 & Cap.~7 Presentación de resultados & 13/10/2026 & 5\,\% \\
-        H8 & Cap.~8 Conclusiones & 20/10/2026 & 5\,\% \\
-        H9 & Documento final, proyecto funcional y presentación & 17/11/2026 & 30\,\% \\
+        9 jun 2026 & Cap.~2 Metodología & Sprint 0: setup del entorno, estructura del repositorio, wireframes iniciales + spike/prototipo técnico (kill-switch) \\
+        28 jul 2026 & Cap.~3 Marco teórico & Sprints 1--2: autenticación y perfiles de usuario (backend + frontend) \\
+        18 ago 2026 & Cap.~4 Marco tecnológico & Sprints 3--4: motor de \gls{matching} IA + sistema de búsqueda y filtros \\
+        8 sep 2026 & Cap.~5 Justificación económica & Sprints 5--6: reservas + integración MercadoPago \\
+        22 sep 2026 & Cap.~6 Análisis de riesgos & Sprint 7: aula virtual (LiveKit + Redis) \\
+        13 oct 2026 & Cap.~7 Resultados & Sprints 8--9: módulo IA educativa + sistema de reputación \\
+        27 oct 2026 & Cap.~8 Conclusiones & Sprint 10: integración end-to-end, pruebas de sistema y correcciones \\
+        28 nov 2026 & Presentación final + producto funcional & Sprint 11: piloto con usuarios reales, análisis de resultados, documentación final \\
         \bottomrule
     \end{tabularx}
 \end{table}
+
+Cabe aclarar que Redis en el Sprint 7 cubre el estado propio de la
+aplicación --chat en tiempo real, límite de tasa de peticiones-- y no el
+estado interno de LiveKit, que al usarse en su modalidad Cloud queda
+gestionado del lado del proveedor sin intervención del backend. La
+figura~\ref{fig:gantt} muestra la línea de tiempo completa.
 
 \begin{figure}[H]
     \centering
@@ -89,21 +298,43 @@ para gestión.
         title label font=\small,
         bar/.append style={fill=mainColor!60, draw=none},
         milestone/.append style={fill=mainColor, draw=none},
-    ]{2026-03-16}{2026-11-20}
+    ]{2026-06-01}{2026-11-28}
         \gantttitlecalendar{month=shortname} \\
-        \ganttbar{Idea y resumen}{2026-03-16}{2026-04-10} \\
-        \ganttbar{Metodología}{2026-04-06}{2026-05-05} \\
-        \ganttbar{Introducción}{2026-05-06}{2026-06-09} \\
-        \ganttbar{Marco teórico}{2026-06-01}{2026-07-28} \\
-        \ganttbar{Marco tecnológico}{2026-07-01}{2026-08-25} \\
-        \ganttbar{Justif. económica}{2026-08-10}{2026-09-15} \\
-        \ganttbar{Riesgos}{2026-09-01}{2026-09-29} \\
-        \ganttbar{Desarrollo del sistema}{2026-06-15}{2026-10-10} \\
-        \ganttbar{Resultados}{2026-09-20}{2026-10-13} \\
-        \ganttbar{Conclusiones}{2026-10-05}{2026-10-20} \\
-        \ganttbar{Integración y revisión}{2026-10-21}{2026-11-16} \\
-        \ganttmilestone{Entrega final}{2026-11-17}
+        \ganttbar{Sprint 0 --- Setup}{2026-06-01}{2026-06-09} \\
+        \ganttbar{Sprints 1--2 --- Autenticación y perfiles}{2026-06-09}{2026-07-28} \\
+        \ganttbar{Sprints 3--4 --- Matching IA}{2026-07-28}{2026-08-18} \\
+        \ganttbar{Sprints 5--6 --- Reservas y pagos}{2026-08-18}{2026-09-08} \\
+        \ganttbar{Sprint 7 --- Aula virtual}{2026-09-08}{2026-09-22} \\
+        \ganttbar{Sprints 8--9 --- IA educativa y reputación}{2026-09-22}{2026-10-13} \\
+        \ganttbar{Sprint 10 --- Integración}{2026-10-13}{2026-10-27} \\
+        \ganttbar{Sprint 11 --- Piloto}{2026-10-27}{2026-11-27} \\
+        \ganttmilestone{Entrega final}{2026-11-28}
     \end{ganttchart}
-    \caption{Cronograma del proyecto (ejemplo con el ciclo lectivo 2026)}
+    \caption{Cronograma de sprints del proyecto (ciclo lectivo 2026)}
     \label{fig:gantt}
 \end{figure}
+
+\section{Herramientas de gestión y seguimiento}
+
+Para garantizar la trazabilidad del trabajo y la calidad del proceso, se
+implementarán diversas herramientas tecnológicas de soporte. Se
+utilizará \textbf{GitHub Projects} para la gestión del backlog y los
+sprints mediante tableros Kanban integrados al repositorio, donde cada
+issue representa una tarea del sprint backlog. El control de versiones
+se efectuará en GitHub mediante ramas de características y solicitudes
+de revisión antes de la integración a la rama principal. Asimismo, se
+mantendrá una bitácora de desarrollo en formato de texto simple
+actualizada al cierre de cada jornada para registrar avances y decisiones
+técnicas como parte del seguimiento diario.
+
+Para el diseño de interfaz se empleará Figma en la elaboración de
+prototipos de alta fidelidad, mientras que Postman servirá para la
+documentación y prueba de los endpoints de la \gls{api} REST, y Jest se
+configurará como marco de pruebas unitarias del frontend, mientras que
+JUnit 5 junto con Mockito cumplen ese rol en el backend Spring Boot,
+ambos integrados en el pipeline de integración continua mediante GitHub
+Actions. Para el despliegue, el backend se empaqueta como imagen Docker
+y se publica mediante Coolify, una plataforma de despliegue autoalojada
+que gestiona contenedores, certificados y variables de entorno de forma
+equivalente a un PaaS gestionado, alojada primero en infraestructura
+propia del desarrollador y migrada a un \gls{vps} antes del piloto.

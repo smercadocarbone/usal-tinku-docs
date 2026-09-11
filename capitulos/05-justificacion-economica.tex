@@ -26,59 +26,146 @@ Todo número con su origen: cotización, tarifa pública, estadística
 citada o estimación propia declarada como tal.
 \end{guia}
 
-\completar{Desarrollo del capítulo.}
+\section{Justificación institucional, legal, ambiental y social}
 
-\section{\completar{Nombre de la sección}}
+El desarrollo de \sistema{} se fundamenta en un impacto transversal
+comprobable:
 
-\completar{Texto.}
+\begin{itemize}
+    \item \textbf{Justificación social:} el proyecto busca democratizar el
+          acceso al apoyo escolar, eliminando las barreras geográficas
+          que afectan especialmente a estudiantes en comunidades rurales o
+          del interior del país. A su vez, propone formalizar el mercado
+          de tutorías particulares, el cual opera mayormente en la
+          informalidad.
+    \item \textbf{Justificación legal e impositiva:} el modelo de
+          contratación se apoya en el Código Civil y Comercial de la
+          Nación (artículos 25, 26, 682 y 690), exigiendo que la cuenta
+          pagadora pertenezca siempre a un adulto responsable para
+          resguardar patrimonialmente a los menores. En materia
+          impositiva, la retención de fondos vía MercadoPago Marketplace
+          funciona como un mecanismo de formalización tributaria (similar
+          a los esquemas de retención de AFIP para plataformas digitales),
+          mitigando además los riesgos de relación de dependencia laboral
+          encubierta. Asimismo, la plataforma aplica el principio de
+          minimización de datos para cumplir estrictamente con la Ley de
+          Protección de Datos Personales (Ley 25.326).
+    \item \textbf{Justificación institucional:} \sistema{} se desarrolla
+          como el proyecto final de la carrera de Ingeniería en
+          Informática, demostrando la aplicación de tecnologías de
+          vanguardia (\gls{ia} y \gls{webrtc}) para resolver una
+          problemática concreta del sistema educativo argentino.
+    \item \textbf{Justificación ambiental:} al centralizar el apoyo
+          académico en un ecosistema digital y virtual, se elimina la
+          necesidad de desplazamiento físico de alumnos y tutores,
+          reduciendo la huella de carbono asociada al transporte. A nivel
+          de infraestructura tecnológica, se prioriza la eficiencia
+          mediante servidores virtuales privados (\gls{vps}) de bajo
+          consumo.
+\end{itemize}
+
+\section{Alternativas consideradas y descartadas}
+
+Durante el diseño del modelo de negocio, se evaluaron distintas
+metodologías de intermediación presentes en plataformas globales de
+tutorías y gig economy:
+
+\begin{itemize}
+    \item \textbf{Suscripción mensual al estudiante (modelo Superprof):} se
+          descartó esta alternativa porque la imposición de una barrera de
+          entrada fija contradice el objetivo principal de reducir la
+          fricción económica para familias de bajo poder adquisitivo.
+          Adicionalmente, no genera un ingreso proporcional al valor
+          efectivo entregado en cada sesión.
+    \item \textbf{Comisión escalonada de alta retención (modelo Preply,
+          18\,\% a 33\,\%):} se descartó replicar bandas tarifarias
+          superiores al 18\,\%. Una comisión percibida como excesiva por
+          parte de la oferta incentiva la desintermediación (acuerdos de
+          pago por fuera de la plataforma tras el primer contacto), lo
+          cual erosiona los ingresos y vulnera el modelo de confianza y
+          seguridad diseñado.
+\end{itemize}
+
+\section{Modelo de monetización}
+
+El ingreso de \sistema{} proviene de una única fuente: una \textbf{comisión
+de plataforma del \comision{} sobre el precio de cada sesión}, descontada
+exclusivamente del pago que recibe el tutor. El ticket promedio de
+mercado se proyecta en \textbf{USD 7 por sesión}. El estudiante abona el
+precio final fijado por el docente, sin cargos de servicio adicionales
+visibles. Se excluyen explícitamente vías de ingreso como la publicidad,
+la venta de datos o las suscripciones premium durante la etapa de
+\gls{mvp}.
+
+\section{Estructura de costos e inversión}
+
+Los costos del proyecto se estructuran dividiendo la inversión inicial en
+desarrollo y los gastos operativos recurrentes (fijos y variables por
+transacción). La tabla~\ref{tab:inversion} resume ambos rubros.
 
 \begin{table}[H]
     \centering
-    \caption{Inversión inicial desglosada (ejemplo de estructura)}
+    \caption{Inversión inicial y costos recurrentes (en USD)}
     \label{tab:inversion}
     \small
-    \begin{tabularx}{\textwidth}{L r r r L}
+    \begin{tabularx}{\textwidth}{L L R l}
         \toprule
-        \tb{Concepto} & \tb{Cantidad} & \tb{Unitario (USD)} & \tb{Total (USD)} & \tb{Fuente} \\
+        \tb{Categoría} & \tb{Concepto} & \tb{Costo estimado} & \tb{Fuente} \\
         \midrule
-        Desarrollador full stack (meses) & 6 & \completar{2.500} & \completar{15.000} & \completar{encuesta salarial citada} \\
-        Científico de datos (meses) & 4 & \completar{...} & \completar{...} & \completar{...} \\
-        Diseño \gls{ux} (horas) & 80 & \completar{...} & \completar{...} & \completar{...} \\
-        Infraestructura inicial & 1 & \completar{...} & \completar{...} & \completar{tarifa pública del proveedor} \\
-        \midrule
-        \multicolumn{3}{r}{\tb{Total}} & \tb{\completar{...}} & \\
+        Inversión inicial & Desarrollo full-stack (1 perfil, 480 hs a USD 15/h) & 7.200 & Estimación propia por tarifa de mercado \\
+        Inversión inicial & Asesoría legal (privacidad de datos y TyC) & 800 & Cotización recibida \\
+        Costo fijo mensual & Servidor \gls{vps}, dominios y honorarios administrativos & 200/mes & \citep{lightnode2026} \\
+        Costo fijo mensual & Bases de datos y frontend (Supabase, Vercel) & 0 (planes gratuitos) & Tarifa pública \\
+        Costo fijo mensual & Tráfico de aula virtual (LiveKit Cloud, hasta 5.000 min/mes) & 0 (plan Build gratuito) & Tarifa pública \\
+        Costo variable & Procesamiento de pago (MercadoPago Marketplace) & Dedecido previo a la comisión & Tarifa pública \\
+        Costo variable & Procesamiento \gls{llm} (resumen automatizado vía API) & 0,03 por sesión & Tarifa pública del proveedor \\
         \bottomrule
     \end{tabularx}
 \end{table}
 
-\section{\completar{Nombre de la sección}}
+El rubro de infraestructura se justifica con el precio de mercado de un
+\gls{vps} de recursos medios de un proveedor local: un plan de
+8 vCore/16~GB cuesta \usd{158,7} mensuales, y los planes de entrada
+arrancan en \usd{7,71} mensuales \citep{lightnode2026}. A ese costo se le
+suman los dominios y los honorarios administrativos, por lo que el total
+de \usd{200} mensuales se adopta con criterio conservador.
 
-\completar{Texto.}
+\section{Flujo de fondos proyectado a 5 años}
+
+A partir del ticket promedio (USD 7) y la comisión del \comision{},
+\sistema{} percibe un ingreso bruto de USD 1,05 por transacción.
+Descontando el costo variable del modelo de lenguaje (USD 0,03), el
+margen neto asciende a \textbf{USD 1,02 por sesión}. La proyección asume
+un crecimiento gradual en la adopción de usuarios y volumen de sesiones a
+nivel nacional. La tabla~\ref{tab:flujo-caja} presenta el flujo
+resultante.
 
 \begin{table}[H]
     \centering
-    \caption{Flujo de caja proyectado por escenario, en USD (ejemplo de estructura)}
+    \caption{Flujo de caja proyectado por año (en USD)}
     \label{tab:flujo-caja}
     \small
     \begin{tabularx}{\textwidth}{l R R R R R R}
         \toprule
-        \tb{Escenario} & \tb{Año 0} & \tb{Año 1} & \tb{Año 2} & \tb{Año 3} & \tb{Año 4} & \tb{Año 5} \\
+        \tb{Concepto} & \tb{Año 0} & \tb{Año 1} & \tb{Año 2} & \tb{Año 3} & \tb{Año 4} & \tb{Año 5} \\
         \midrule
-        Pesimista & $-$\completar{...} & \completar{...} & \completar{...} & \completar{...} & \completar{...} & \completar{...} \\
-        Base      & $-$\completar{...} & \completar{...} & \completar{...} & \completar{...} & \completar{...} & \completar{...} \\
-        Optimista & $-$\completar{...} & \completar{...} & \completar{...} & \completar{...} & \completar{...} & \completar{...} \\
+        Volumen de sesiones & 0 & 3.000 & 8.000 & 18.000 & 30.000 & 50.000 \\
+        Ingreso neto (USD 1,02/sesión) & 0 & 3.060 & 8.160 & 18.360 & 30.600 & 51.000 \\
+        Costos fijos anuales & 0 & $-2.400$ & $-2.400$ & $-2.400$ & $-2.400$ & $-2.400$ \\
+        Inversión inicial & $-8.000$ & 0 & 0 & 0 & 0 & 0 \\
+        \midrule
+        \tb{Flujo neto} & \tb{$-8.000$} & \tb{660} & \tb{5.760} & \tb{15.960} & \tb{28.200} & \tb{48.600} \\
         \bottomrule
     \end{tabularx}
 \end{table}
 
-\begin{ejemplo}[Ejemplo: construcción de la tasa de descuento]
-La tasa de descuento \gls{sym:r} se construye sumando una tasa libre de
-riesgo (bono del Tesoro de EE.\,UU.\ a 10 años), el riesgo país (índice
-EMBI) y una prima por riesgo de proyecto en etapa temprana. Cada
-componente se cita con su fuente y fecha de consulta.
-\end{ejemplo}
+\section{Evaluación financiera del proyecto}
 
-El \gls{sym:van} se calcula como
+Para la evaluación del proyecto se definió una \textbf{tasa de descuento
+(costo de capital) del 15\,\% anual}, reflejando el costo de
+oportunidad estándar para desarrollos tecnológicos de riesgo moderado.
+
+\noindent El \gls{sym:van} se calcula como
 \begin{equation}
     \mathit{VAN} = -I_0 + \sum_{t=1}^{n} \frac{\gls{sym:fc}}{(1 + r)^{t}},
     \label{eq:van}
@@ -88,18 +175,60 @@ año $t$ y $r$ la tasa de descuento. La \gls{tir} es la tasa que anula el
 \gls{van}, y el período de repago es el primer año en que el flujo
 acumulado se vuelve positivo.
 
+\begin{itemize}
+    \item \textbf{\gls{van} (valor actual neto):} \usd{47709,49}. Al ser
+          mayor a cero, indica que el proyecto es económicamente viable y
+          genera valor por encima de la tasa de corte exigida.
+    \item \textbf{\gls{tir} (tasa interna de retorno):} 92,69\,\%. Supera
+          holgadamente la tasa de descuento del 15\,\%, demostrando una
+          alta rentabilidad sobre la inversión inicial unipersonal.
+    \item \textbf{Período de repago (payback):} el capital inicial nominal
+          se recupera durante el Año 3.
+    \item \textbf{Repago descontado:} ajustando los flujos por el valor
+          del dinero en el tiempo (tasa del 15\,\%), el punto de equilibrio
+          financiero se alcanza a mediados del Año 3.
+\end{itemize}
+
+\section{Análisis de sensibilidad y escenarios}
+
+Dada la dependencia del modelo hacia la tracción de usuarios, se evaluó
+la robustez financiera ante una fluctuación del volumen de la demanda,
+manteniendo los costos fijos inalterados. La
+tabla~\ref{tab:indicadores-financieros} resume los tres escenarios.
+
 \begin{table}[H]
     \centering
-    \caption{Indicadores financieros por escenario (ejemplo de estructura)}
+    \caption{Indicadores financieros por escenario}
     \label{tab:indicadores-financieros}
     \small
-    \begin{tabular}{l r r r}
+    \begin{tabular}{l r r}
         \toprule
-        \tb{Escenario} & \tb{VAN (USD)} & \tb{TIR} & \tb{Repago} \\
+        \tb{Escenario} & \tb{VAN (USD)} & \tb{TIR} \\
         \midrule
-        Pesimista & \completar{...} & \completar{...\,\%} & \completar{n} años \\
-        Base      & \completar{...} & \completar{...\,\%} & \completar{n} años \\
-        Optimista & \completar{...} & \completar{...\,\%} & \completar{n} años \\
+        Pesimista (--20\,\% de adopción) & 34.958,55 & 77,12\,\% \\
+        Base & 47.709,49 & 92,69\,\% \\
+        Optimista (+20\,\% de adopción) & 60.460,42 & 106,75\,\% \\
         \bottomrule
     \end{tabular}
 \end{table}
+
+\textbf{Escenario pesimista (--20\,\% de adopción):} si el volumen de
+sesiones es un 20\,\% inferior a la proyección base todos los años, el
+\gls{van} desciende a \usd{34958,55} y la \gls{tir} se ajusta a un
+77,12\,\%. El proyecto sigue siendo viable, demostrando resistencia a una
+penetración de mercado más lenta.
+
+\textbf{Escenario optimista (+20\,\% de adopción):} ante una adopción
+acelerada, apalancada por alianzas con instituciones u oferta satelital
+(Starlink), el \gls{van} se dispara a \usd{60460,42} con una \gls{tir}
+del 106,75\,\%.
+
+\section{Política de reembolsos y su costo real}
+
+Todo reembolso al estudiante se ejecuta de manera total a través de la
+\gls{api} de MercadoPago, nunca de forma parcial. Esta política tiene un
+costo real de cero para \sistema{}, ya que la pasarela reintegra su
+propia comisión de procesamiento junto con los fondos, evitando saldos
+negativos. Además, previene riesgos legales de retención indebida frente
+a la Ley de Defensa del Consumidor y reduce significativamente la
+exposición de la plataforma a contracargos.

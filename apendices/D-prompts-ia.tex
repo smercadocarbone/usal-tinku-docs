@@ -1,0 +1,61 @@
+%!TEX root = ../main.tex
+% APÉNDICE D — Registro de prompts utilizados con herramientas de IA
+% Se referencia desde preliminares/declaracion-ia.tex (\ref{apx:prompts}).
+
+\chapter{Prompts utilizados con herramientas de IA generativa}\label{apx:prompts}
+
+\begin{guia}
+Registro de los prompts más relevantes del trabajo, organizado por
+capítulo y tema. Para cada uno: el comando \instruccionIA (qué se le pidió
+a la herramienta) y su resultado \respuestaIA (lo que devolvió, ya
+revisado y editado por el autor). Se incluyen solo los prompts cuyo
+impacto en el documento fue significativo; el registro completo se
+conserva en la carpeta compartida con la cátedra (política de uso de IA,
+preliminares/declaracion-ia).
+\end{guia}
+
+\section{Criterios de registro}
+
+\begin{itemize}
+    \item \textbf{Trazabilidad}: cada entrada indica la herramienta y
+          versión utilizada y la fecha aproximada.
+    \item \textbf{Verificación}: toda cifra, cita o referencia sugerida
+          por la herramienta se confirmó en la fuente original antes de
+          incorporarla (regla 3 de la declaración de IA).
+    \item \textbf{Autoría}: las salidas se transcriben solo como
+          evidencia; el texto final del documento puede diferir por la
+          revisión y adaptación del autor.
+\end{itemize}
+
+\section{Asistencia en el marco teórico y estado del arte}
+
+\instruccionIA[1]{Resumí los argumentos principales de este paper sobre
+evaluación de tutores y ranking de compatibilidad en plataformas de
+tutoría en línea, en tres párrafos en español.}
+\respuestaIA[1]{(resumen devuelto por la herramienta, verificado contra
+el texto original)}
+
+\instruccionIA[2]{Compará los modelos de negocio, comisiones y esquemas de
+pago de Superprof, Preply, Wyzant y Tus Clases de manera tabular.}
+\respuestaIA[2]{(tabla devuelta, contrastada con las tarifas públicas de
+cada plataforma antes de usarse en \ref{tab:comparativa})}
+
+\section{Asistencia en la justificación económica}
+
+\instruccionIA[3]{Calculá el VAN a tasa 15\,\% y la TIR del flujo de caja
+[Año 0 ... Año 5] de esta tabla de volúmenes y costos.}
+\respuestaIA[3]{(cálculos devueltos; se replicaron de forma independiente
+en hoja de cálculo antes de incluirlos en \ref{tab:flujo-caja} y en la
+sección de indicadores)}
+
+\section{Asistencia en redacción y código}
+
+\instruccionIA[4]{Reescribí este párrafo en registro académico impersonal
+sin cambiar su contenido.}
+\respuestaIA[4]{(texto devuelto por la herramienta, luego editado)}
+
+\instruccionIA[5]{Generá el scaffolding de una clase Java de Spring Boot
+para el endpoint de reserva de una sesión, con validación de permisos por
+rol.}
+\respuestaIA[5]{(código devuelto, revisado y adaptado por el autor; las
+pruebas se escribieron a mano)}

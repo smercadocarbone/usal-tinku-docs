@@ -30,64 +30,381 @@ de cada elección tecnológica. Regla: nada ``porque sí''.
 \end{enumerate}
 \end{guia}
 
-\completar{Desarrollo del capítulo.}
+\section{Introducción}
 
-\section{\completar{Nombre de la sección}}
+Este capítulo documenta el \emph{cómo} de \sistema{}: las decisiones
+técnicas concretas mediante las cuales se traduce el problema planteado
+en el capítulo~\ref{cap:introduccion} y el marco conceptual del
+capítulo~\ref{cap:marco-teorico} en un sistema funcional y verificable.
+Cada elección tecnológica se justifica en función de tres criterios
+consistentes con las restricciones ya declaradas en el
+capítulo~\ref{cap:metodologia} (sección~\ref{sec:dimensiones}): un único
+desarrollador, un presupuesto operativo de entre 0 y 100 USD mensuales
+durante el desarrollo, y un plazo fijo de seis meses. Cuando existió una
+alternativa técnicamente superior pero incompatible con esas
+restricciones, se documenta también por qué fue descartada.
 
-\completar{Texto.}
+\section{Arquitectura del sistema}
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.85\textwidth]{example-image-a}
-    \caption{Diagrama de arquitectura del sistema (ejemplo de figura)}
-    \label{fig:arquitectura}
-\end{figure}
+\subsection{Estilo arquitectónico}
 
-\begin{ejemplo}[Ejemplo: decisión con alternativas]
-Se adoptó una arquitectura \completar{cliente-servidor en capas} porque
-\completar{el volumen de usuarios previsto y el equipo de una persona no
-justifican la complejidad operativa de microservicios}. Se evaluó
-\completar{alternativa} y se descartó porque \completar{motivo concreto}.
-\end{ejemplo}
+\sistema{} adopta una arquitectura \textbf{cliente-servidor en capas},
+con un backend propio que concentra la lógica de negocio y un conjunto
+de servicios externos especializados y desacoplados para las funciones
+que no forman parte del núcleo diferencial del producto: video (LiveKit
+Cloud), pagos (MercadoPago) e inteligencia artificial (proveedores de
+modelos de lenguaje y \gls{embeddings}). Se descartó una arquitectura de
+microservicios propios porque, para un equipo de un desarrollador y un
+\gls{mvp} de alcance acotado, la sobrecarga operativa de orquestar
+múltiples servicios propios (versionado independiente, comunicación
+entre servicios, observabilidad distribuida) no se justifica frente al
+beneficio --los ``servicios'' que sí están desacoplados (video, pagos,
+\gls{ia}) ya lo están porque se delegan a proveedores externos maduros,
+no porque \sistema{} los reimplemente como microservicios propios.
 
-\section{\completar{Nombre de la sección}}
+\subsection{Componentes y responsabilidades}
 
-\completar{Texto.}
+La tabla~\ref{tab:componentes} resume los ocho componentes del sistema y
+sus responsabilidades.
 
 \begin{table}[H]
     \centering
-    \caption{Stack tecnológico y alternativas evaluadas (ejemplo de estructura)}
-    \label{tab:stack}
+    \caption{Componentes del sistema y responsabilidades}
+    \label{tab:componentes}
     \small
-    \begin{tabularx}{\textwidth}{l l l L L}
+    \begin{tabularx}{\textwidth}{l L L}
         \toprule
-        \tb{Capa} & \tb{Tecnología} & \tb{Versión} & \tb{Justificación} & \tb{Alternativas descartadas} \\
+        \tb{Componente} & \tb{Responsabilidad} & \tb{Tecnología} \\
         \midrule
-        Frontend & \completar{framework} & \completar{x.y} & \completar{madurez, comunidad, conocimiento del equipo} & \completar{alternativa: motivo} \\
-        Backend & \completar{lenguaje/framework} & \completar{x.y} & \completar{...} & \completar{...} \\
-        Base de datos & \completar{motor} & \completar{x.y} & \completar{relacional por integridad referencial y consultas ad hoc} \citep{postgresqldocs} & \completar{NoSQL: sin necesidad de esquema flexible} \\
-        Modelo & \completar{librería} & \completar{x.y} & \completar{...} \citep{pedregosa2011} & \completar{...} \\
+        Cliente (\gls{pwa}) & Interfaz de usuario para alumno, tutor y adulto responsable; consume la \gls{api} REST del backend & React / Next.js \\
+        Backend \gls{api} REST & Lógica de negocio, autenticación y autorización por rol, orquestación de los servicios externos & Spring Boot (Java) \\
+        Base de datos relacional & Persistencia del modelo de datos principal (usuarios, reservas, pagos, calificaciones, denuncias) & PostgreSQL (Supabase) \\
+        Caché / estado en tiempo real & Sesiones, chat en tiempo real (pub/sub), rate limiting & Redis (Upstash) \\
+        Aula virtual & Transmisión de audio/video entre tutor y alumno & LiveKit Cloud (\gls{webrtc}) \\
+        Pasarela de pagos & Procesamiento de cobro vía Checkout Pro & MercadoPago (SDK oficial Java) \\
+        Servicios de \gls{ia} & \gls{matching} semántico, transcripción y resumen de sesión, asistente conceptual, kill-switch de seguridad & sentence-transformers + FAISS, \gls{llm} (GPT-4o o Gemini 2.0 Flash), clasificador on-device \\
+        Panel de administración & Moderación, resolución de denuncias, aprobación de tutores & Módulo interno del backend + vista en el frontend \\
         \bottomrule
     \end{tabularx}
 \end{table}
 
+\subsection{Flujo de datos}
+
+El cliente nunca se comunica directamente con los servicios externos con
+sus propias credenciales: todo pasa por el backend, que actúa como
+intermediario autenticado. El cliente autentica contra el backend
+mediante \gls{jwt} y consume la \gls{api} REST para las operaciones
+habituales --búsqueda de tutores, reservas, chat, calificaciones. Para
+el aula virtual, el backend genera un token de acceso de LiveKit con
+permisos acotados a la sala correspondiente y se lo entrega al cliente,
+que recién en ese momento se conecta directamente al servicio de LiveKit
+Cloud para el flujo de audio y video; este diseño evita que todo el
+tráfico de video circule por el propio backend, que no está dimensionado
+para soportarlo. Los pagos siguen una lógica equivalente: el backend
+crea la preferencia de pago contra la \gls{api} de MercadoPago y recibe
+notificaciones vía webhook cuando el estado del pago cambia, actualizando
+en consecuencia el estado de la reserva en la base de datos. El
+\gls{matching} y la \gls{ia} educativa, por su parte, se invocan de forma
+asincrónica --mediante colas o llamadas diferidas-- y el resultado se
+persiste sin bloquear al usuario mientras espera la respuesta de un
+modelo externo.
+
+\subsection{Diagrama de arquitectura}
+
+El diagrama muestra los ocho componentes de la tabla~\ref{tab:componentes}
+y sus conexiones: el cliente solo se comunica con Vercel (que sirve los
+archivos estáticos) y, a través de HTTPS, con el backend; el backend es
+el único componente que tiene credenciales para hablar con Supabase,
+Upstash, MercadoPago y los servicios de \gls{ia}; LiveKit Cloud es la
+única excepción, donde el cliente se conecta directamente una vez que el
+backend le entrega un token de corta duración.
+
 \begin{figure}[H]
     \centering
-    \begin{subfigure}[b]{0.48\textwidth}
-        \includegraphics[width=\textwidth]{example-image-a}
-        \caption{Pantalla de inicio}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.48\textwidth}
-        \includegraphics[width=\textwidth]{example-image-b}
-        \caption{Panel principal}
-    \end{subfigure}
-    \caption{Mockups de pantallas (ejemplo de figura compuesta)}
+    \completar{Insertar el diagrama de arquitectura en \texttt{figuras/arquitectura} (imagen PNG/vectorial).}
+    \includegraphics[width=0.85\textwidth]{example-image-a}
+    \caption{Diagrama de arquitectura del sistema}
+    \label{fig:arquitectura}
+\end{figure}
+
+\section{Prototipo / MVP construido}
+
+El alcance implementado y operativo frente al que todavía está simulado o
+mockeado se documenta en cada entrega: qué funcionalidades están activas
+(por ejemplo, registro, login o búsqueda de tutores) frente a las
+pantallas de flujo de pago sin integración real. A eso se suman capturas
+de pantalla de las vistas principales, un enlace al repositorio de
+código en GitHub (anexo~\ref{anx:repositorios}) con la estructura de
+carpetas documentada, una descripción de cómo se probó lo construido
+hasta el momento --pruebas manuales, \gls{uat} con usuarios del piloto,
+pruebas automatizadas-- junto con los resultados obtenidos, y las
+limitaciones puntuales del estado actual con los próximos pasos según el
+Sprint Backlog vigente.
+
+\completar{Completar con el estado del MVP al momento de la entrega.}
+
+\section{Stack de software}
+
+\subsection{Frontend}
+
+\begin{table}[H]
+    \centering
+    \caption{Frontend: decisión tecnológica}
+    \label{tab:stack-frontend}
+    \small
+    \begin{tabularx}{\textwidth}{l L}
+        \toprule
+        \tb{Ítem} & \tb{Detalle} \\
+        \midrule
+        Tecnología & React (o Next.js, a confirmar según necesidad de server-side rendering) \\
+        Por qué se eligió & Conocimiento previo del desarrollador (capítulo~\ref{cap:introduccion}, sección~\ref{sec:recursos}), ecosistema maduro, gran disponibilidad de componentes para formularios, calendarios y videollamada embebida \\
+        Alternativas evaluadas & Vue.js -- descartado por menor familiaridad del desarrollador, lo que hubiera consumido tiempo de aprendizaje no disponible en el cronograma de seis meses \\
+        Formato de despliegue & \gls{pwa}, consistente con la exclusión de app móvil nativa del alcance (capítulo~\ref{cap:introduccion}, sección~\ref{sec:alcance}) \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\subsection{Backend}\label{sec:stack-backend}
+
+\begin{table}[H]
+    \centering
+    \caption{Backend: decisión tecnológica}
+    \label{tab:stack-backend}
+    \small
+    \begin{tabularx}{\textwidth}{l L}
+        \toprule
+        \tb{Ítem} & \tb{Detalle} \\
+        \midrule
+        Tecnología & Java 21 + Spring Boot \\
+        Por qué se eligió & Framework ``batteries-included'' (seguridad, ORM, validación, manejo de excepciones ya resueltos) que reduce el riesgo de un desarrollador único investigando y ensamblando librerías sueltas bajo un cronograma fijo; alta disponibilidad de documentación y comunidad en español, relevante para un desarrollador sin experiencia previa profunda en ninguno de los lenguajes candidatos \\
+        Alternativas evaluadas & Go -- descartado pese a tener ventajas reales de footprint de memoria y simplicidad del lenguaje, porque su ecosistema requiere ensamblar manualmente router, ORM y librerías de autenticación, lo cual consume tiempo de decisión de arquitectura que un proyecto de 6 meses en solitario no puede permitirse. Node.js -- descartado como backend principal por preferirse la robustez de tipado y el ecosistema de seguridad de Spring frente a un desarrollador que tampoco tenía experiencia consolidada previa en ninguno de los dos \\
+        Autenticación & Spring Security + \gls{jwt} emitido y validado por el propio backend (no se delega la autenticación a Supabase Auth, dado que el modelo de roles de \sistema{} --adulto responsable, menor con permisos por acción, tutor, administrador-- requiere lógica de autorización granular propia que conviene mantener dentro del mismo framework que ya gestiona el resto de las reglas de negocio) \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\subsection{Datos}
+
+\begin{table}[H]
+    \centering
+    \caption{Capa de datos: decisión tecnológica}
+    \label{tab:stack-datos}
+    \small
+    \begin{tabularx}{\textwidth}{l L}
+        \toprule
+        \tb{Ítem} & \tb{Detalle} \\
+        \midrule
+        Motor relacional & PostgreSQL, gestionado por Supabase. Postgres es un motor relacional maduro con buen soporte de extensiones (por ejemplo, búsqueda por similitud vectorial vía pgvector, relevante para el motor de \gls{matching}); Supabase ofrece un plan gratuito suficiente para el \gls{mvp} y evita la administración manual de backups y actualizaciones del motor de base de datos \\
+        Detalle de conexión & El backend Spring Boot se conecta a través del pooler de Supabase (Supavisor) en modo sesión (puerto 5432), que se comporta como una conexión directa y es compatible con prepared statements de Hibernate sin configuración adicional. Se documenta como decisión explícita porque el modo transacción (puerto 6543) del mismo pooler no es compatible por defecto con el cacheo de prepared statements que usa Hibernate, y migrar a ese modo en el futuro requeriría desactivar esa característica en el driver JDBC \\
+        Caché / tiempo real & Redis, gestionado por Upstash (plan gratuito serverless por volumen de uso) -- usado para estado de chat en tiempo real y rate limiting, no para el estado interno de las salas de videollamada, que en el \gls{mvp} delega en LiveKit Cloud \\
+        Respaldo y migraciones & Backups automáticos de Supabase en su plan gestionado; migraciones de esquema versionadas con Flyway o Liquibase integradas al ciclo de despliegue de Spring Boot \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\section{Infraestructura y hosting}
+
+La tabla~\ref{tab:infra} resume dónde se aloja cada componente.
+
+\begin{table}[H]
+    \centering
+    \caption{Infraestructura y hosting de cada componente}
+    \label{tab:infra}
+    \small
+    \begin{tabularx}{\textwidth}{l L L}
+        \toprule
+        \tb{Componente} & \tb{Dónde se aloja} & \tb{Notas} \\
+        \midrule
+        Frontend (\gls{pwa}) & Vercel & Plan gratuito (Hobby) durante el desarrollo; CDN global sin configuración adicional \\
+        Backend (Spring Boot) & Fase de desarrollo: computadora propia del desarrollador, gestionada con Coolify (PaaS autoalojado) y expuesta a internet mediante Cloudflare Tunnel, sin necesidad de IP pública ni apertura de puertos. Fase de piloto (Sprint 11, capítulo~\ref{cap:metodologia}): migración a un \gls{vps} económico (por ejemplo, Hetzner, 10--25 USD/mes), reutilizando la misma configuración de Coolify & La migración de computadora propia a \gls{vps} no requiere reescribir la configuración de despliegue, dado que Coolify orquesta el mismo conjunto de contenedores Docker en ambos casos \\
+        Base de datos y Redis & Supabase y Upstash respectivamente & Servicios gestionados en la nube, independientes de dónde corra el backend \\
+        Aula virtual & LiveKit Cloud & Plan gratuito (Build): 5.000 minutos de participante por mes sin necesidad de tarjeta de crédito, equivalente a más de 40 horas de clases de 1 a 1 mensuales -- cobertura suficiente para el piloto. Se descartó el auto-hospedaje de LiveKit porque requiere una IP pública alcanzable por UDP para el protocolo \gls{webrtc}, algo que ni la computadora de desarrollo ni un \gls{vps} económico garantizan sin trabajo adicional de configuración de NAT/TURN \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+En cuanto a la escalabilidad: para el rango de tráfico esperado durante
+el \gls{mvp} y el piloto (capítulo~\ref{cap:metodologia}), un único
+\gls{vps} vertical (backend + base de datos si se optara por
+auto-alojarla) es suficiente. La estrategia de escalado horizontal
+--balanceador de carga con múltiples instancias, o eventualmente
+Kubernetes-- queda fuera del alcance de esta entrega y se documenta como
+trabajo futuro, condicionada a que el volumen de uso real lo justifique.
+
+Los costos por componente y por etapa (desarrollo, piloto, eventual
+escalado) se presentan en el capítulo~\ref{cap:economica}, consistente
+con el techo de 0--100 USD mensuales declarado en el
+capítulo~\ref{cap:metodologia}.
+
+\section{Modelo de datos}\label{sec:modelo-datos}
+
+El modelo se organiza alrededor de nueve entidades, cuyo detalle
+completo de atributos se documenta en el diccionario de datos que se
+incluye como apéndice técnico. \tb{Usuario} es la entidad base y define
+un rol (ADULTO, MENOR, TUTOR, ADMIN); un usuario con rol ADULTO puede,
+además de gestionar sus propios datos, tener uno o más perfiles de MENOR
+asociados como responsable. \tb{PerfilMenor} está vinculado a un Usuario
+con rol ADULTO y hereda una sesión propia, pero con permisos restringidos
+a nivel de endpoint: no puede iniciar pagos, aceptar acuerdos ni reservar
+con un tutor no autorizado previamente. \tb{PerfilTutor} concentra las
+credenciales académicas, la documentación de verificación (DNI,
+certificados), las materias, la disponibilidad y el precio de referencia,
+mientras que \tb{Certificado} representa cada documento cargado por el
+tutor --DNI, título, analítico, y opcionalmente el \gls{cap}-- con un
+estado de revisión (pendiente, aprobado manual, rechazado, y
+\texttt{en\_revision\_legal} exclusivo para el \gls{cap}). A nivel de
+integridad, la ausencia de un certificado de tipo \gls{cap} no bloqueará
+la activación del PerfilTutor ni la generación de una Reserva.
+
+\tb{Reserva} es el bloque horario entre un PerfilMenor/Usuario ADULTO y
+un PerfilTutor, con estados que recorren \texttt{pendiente\_pago},
+\texttt{confirmada}, \texttt{en\_curso}, \texttt{finalizada},
+\texttt{cancelada} o \texttt{no\_show}. \tb{Sesión} es la instancia de
+videollamada asociada a una Reserva, con referencia a la grabación cuando
+corresponde y al resumen generado por \gls{ia}; \tb{Pago} referencia la
+transacción de MercadoPago asociada a esa Reserva, con su estado de
+\gls{escrow}. Por último, \tb{Calificación} es bidireccional y se asocia
+a una Sesión finalizada, y \tb{Denuncia} se asocia a una Sesión o a un
+PerfilTutor/Usuario, con estado de revisión propio y una referencia a la
+evidencia preservada.
+
+\textbf{Relaciones clave:} un Usuario ADULTO $\rightarrow$ varios
+PerfilMenor; un PerfilTutor $\rightarrow$ varias Reserva; una Reserva
+$\rightarrow$ una Sesión (1 a 1) $\rightarrow$ un Pago (1 a 1)
+$\rightarrow$ cero o más Calificación y Denuncia.
+
+\textbf{Integridad:} se define una restricción de exclusión a nivel de
+base de datos (no solo validación de aplicación) para impedir dos Reserva
+superpuestas del mismo PerfilTutor o del mismo alumno, dado que una
+validación exclusivamente en el backend es vulnerable a condiciones de
+carrera cuando dos solicitudes llegan casi simultáneamente.
+
+El perfil de menor de edad no puede crear Reservas directamente ni
+acceder a flujos de pago; en su lugar, genera una \emph{Solicitud de
+Sesión} (entidad separada y no bloqueante) que el Adulto Responsable debe
+aprobar y abonar para convertirla en una Reserva transaccional. La
+duración de la Reserva se congela según la franja publicada por el tutor
+(entre 30 y 180 minutos), calculándose el monto final al prorratear el
+valor por hora fijado por el educador.
+
+Por normas estrictas de seguridad, el perfil de menor tiene inhabilitada
+la acción de generar Denuncias directamente desde su interfaz; cualquier
+reporte recae exclusivamente bajo la gestión de su Adulto Responsable. El
+rol ADMIN se divide lógicamente en dos dominios con colas operativas y
+permisos separados: \emph{Moderación y Seguridad} (alertas del
+kill-switch, credenciales, sanciones) y \emph{Soporte Financiero}
+(intervención manual en fallas de pago). El diccionario de datos
+completo se presenta en el apéndice~\ref{apx:tecnicos}.
+
+\section{Diseño y experiencia de usuario (UX/UI)}
+
+El onboarding de Términos y Condiciones reemplaza el documento de scroll
+continuo por un carrusel de cinco a seis tarjetas, cada una con un
+título, un párrafo breve sobre un punto de los términos y una
+ilustración; al final, un checkbox de aceptación explícita, desactivado
+por defecto, habilita la creación de la cuenta, que queda deshabilitada
+mientras el checkbox no se marca. La interfaz se diferencia según el rol:
+la de un PerfilMenor no muestra ni expone controles de las acciones
+reservadas al adulto --pago, gestión de acuerdos, contacto con tutores no
+autorizados--, y esa restricción opera tanto en el diseño de interfaz
+como en los permisos de la \gls{api}, no solo a nivel visual. El sistema
+contempla una degradación de la videollamada a chat de texto
+exclusivamente durante una sesión activa en caso de conectividad
+deficiente.
+
+En accesibilidad, el \gls{mvp} no incluye un módulo completo
+(capítulo~\ref{cap:introduccion}, sección~\ref{sec:alcance}), pero aplica
+buenas prácticas básicas: contraste adecuado, tamaños de fuente legibles
+y navegación con foco visible. La validación del diseño con usuarios se
+apoya en las entrevistas y encuestas ya definidas en el
+capítulo~\ref{cap:metodologia}, y en \gls{uat} con el grupo piloto
+(OE8).
+
+\begin{figure}[H]
+    \centering
+    \completar{Insertar los mockups de pantallas principales en \texttt{figuras/} (pantalla de inicio y panel principal).}
+    \includegraphics[width=0.85\textwidth]{example-image-b}
+    \caption{Mockups de pantallas principales}
     \label{fig:mockups}
 \end{figure}
 
-\begin{lstlisting}[language=Python, caption={Ejemplo de código fuente con resaltado}, label={lst:ejemplo}]
-def test_calcular_exposicion():
-    # exposición = probabilidad x impacto
-    assert calcular_exposicion(probabilidad=4, impacto=5) == 20
-\end{lstlisting}
+\section{Seguridad, calidad y despliegue}
+
+\subsection{Seguridad}\label{sec:seguridad}
+
+La autenticación se resuelve con \gls{jwt} emitido por el propio backend
+a través de Spring Security, con contraseñas almacenadas mediante hash
+bcrypt; no se utiliza Supabase Auth, por el motivo ya explicado en la
+sección~\ref{sec:stack-backend}. El control de accesos se basa en
+autorización por rol (ADULTO, MENOR, TUTOR, ADMIN) aplicada a nivel de
+cada endpoint del backend: el modelo de permisos por acción del rol MENOR
+(sección~\ref{sec:modelo-datos}) se implementa como reglas de
+autorización explícitas, no como una restricción de interfaz que pudiera
+sortearse llamando directamente a la \gls{api}. Toda la comunicación
+viaja cifrada mediante TLS entre el cliente y el backend y entre el
+backend y los servicios externos, con el cifrado en reposo de la base de
+datos delegado a Supabase.
+
+La verificación de tutores combina la carga de DNI y certificados
+académicos con la extracción automática de la fecha de nacimiento
+mediante \gls{ocr} (implementado con Tesseract vía Tess4J, ejecutado
+in-process en el propio backend para garantizar que las imágenes de los
+documentos nunca se envíen a servicios de terceros), que rechaza
+automáticamente el registro de cualquier tutor menor de 18 años, y una
+revisión manual final a cargo del rol ADMIN sobre la autenticidad del
+documento y la correspondencia de los certificados con las materias
+declaradas; incluye la verificación manual del \gls{cap} vigente,
+limitando la exclusión únicamente a la integración automatizada con el
+Estado.
+
+El kill-switch de seguridad, presentado como SafeVchat en la
+sección~\ref{sec:estado-del-arte} --donde se desarrolla el mecanismo
+técnico completo, incluida esta misma verificación de edad del tutor vía
+\gls{ocr} y DNI--, se apoya en un clasificador de contenido que corre
+localmente en el dispositivo (\emph{edge computing}, por ejemplo con
+TensorFlow.js) durante la videollamada; ante una detección positiva
+ejecuta dos acciones diferenciadas: si hay un menor presente, corta la
+transmisión y suspende preventivamente la cuenta de forma inmediata; si
+ambos participantes son adultos, el video del detectado se bloquea con un
+filtro de desenfoque y el sistema solicita confirmación a la contraparte
+antes de proceder al corte. El portal de denuncias sigue una lógica
+equivalente: al registrarse una denuncia, el sistema marca la grabación
+de la sesión correspondiente para retención extendida, fuera del ciclo
+normal de borrado, suspende preventivamente al usuario denunciado y
+deriva la resolución final a revisión humana del rol ADMIN, con acceso a
+la evidencia preservada.
+
+La protección de datos personales sigue la Ley 25.326, con especial
+cuidado en el procesamiento de video de menores y en la definición de una
+política de retención y baja de datos a solicitud del titular o su
+responsable.
+
+\subsection{Calidad y pruebas}
+
+Las pruebas unitarias del backend se implementan con JUnit 5 y Mockito,
+con una cobertura mínima del 70\,\% (capítulo~\ref{cap:metodologia}),
+mientras que las del frontend usan Jest, aplicable a la capa de
+React/Next.js --esto corrige la mención original de Jest como herramienta
+de testing ``general'' del capítulo~\ref{cap:metodologia}, dado que Jest
+es específico del ecosistema JavaScript y no aplica al backend Spring
+Boot, que usa JUnit y Mockito. Las pruebas de integración corren contra
+una base de datos de prueba con Testcontainers y Postgres antes de cada
+release al entorno de piloto, y las \gls{uat} se realizan con el grupo
+piloto, según lo definido en el capítulo~\ref{cap:metodologia} y el OE8.
+La documentación de la \gls{api} se mantiene en Postman. Las métricas
+evaluadas sobre el conjunto de prueba se reportan en el
+capítulo~\ref{cap:resultados}.
+
+\subsection{Despliegue}
+
+El control de versiones se lleva en GitHub, con ramas de feature y
+revisión antes de integrar a la rama principal. El pipeline de \gls{cicd}
+corre en GitHub Actions: ejecuta las pruebas automatizadas en cada pull
+request y, al integrarse a la rama principal, construye una imagen Docker
+del backend que se despliega automáticamente a la instancia de Coolify
+--computadora propia durante el desarrollo, \gls{vps} durante el
+piloto-- mediante un webhook de despliegue. El monitoreo del \gls{mvp} se
+limita a los paneles nativos de Coolify (estado del contenedor, uso de
+recursos) y a los paneles propios de LiveKit Cloud, Supabase y Upstash;
+un sistema de monitoreo unificado, como Grafana, queda fuera del alcance
+del \gls{mvp}.
