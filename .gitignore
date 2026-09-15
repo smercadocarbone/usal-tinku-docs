@@ -320,3 +320,6 @@ _lua/
 _pdf/
 _ov/
 *.log
+
+## macOS
+.DS_Store

@@ -26,6 +26,49 @@ Todo número con su origen: cotización, tarifa pública, estadística
 citada o estimación propia declarada como tal.
 \end{guia}
 
+\section{Alcance y método de la evaluación}
+
+Este capítulo presenta los beneficios tangibles e intangibles que se
+obtendrían con la puesta en marcha de \sistema{}, evaluados sobre un
+horizonte de cinco años mediante un análisis costo-beneficio. La
+secuencia metodológica es la siguiente: primero se cuantifican los
+costos (inversión inicial y gastos recurrentes post-lanzamiento), luego
+los beneficios (el ingreso por comisión y los ahorros e intangibles
+asociados), con ambos se construye el flujo de fondos proyectado y,
+finalmente, sobre ese mismo flujo se calculan los cuatro indicadores de
+evaluación: período de repago, repago descontado, \gls{van} y \gls{tir}.
+
+Los cuatro indicadores responden preguntas distintas y se leen en
+conjunto, tal como resume la tabla~\ref{tab:que-mide}. Ninguno reemplaza
+a los otros: el repago mide liquidez y exposición al riesgo, el \gls{van}
+mide creación de valor y la \gls{tir} mide rendimiento.
+
+\begin{table}[H]
+    \centering
+    \caption{Qué mide cada técnica de evaluación}
+    \label{tab:que-mide}
+    \small
+    \begin{tabularx}{\textwidth}{l L l L}
+        \toprule
+        \tb{Técnica} & \tb{Pregunta que responde} & \tb{Unidad} & \tb{Tasa de descuento} \\
+        \midrule
+        Período de repago  & ¿Cuándo recupero la inversión?            & años    & No la utiliza \\
+        Repago descontado  & ¿Cuándo la recupero en dinero de hoy?     & años    & La aplica \\
+        \gls{van}          & ¿Cuánto valor crea el proyecto?           & USD     & Es un dato de entrada \\
+        \gls{tir}          & ¿Qué rendimiento anual rinde?             & \% anual & Es el resultado \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+Todos los cálculos se apoyan en un modelo financiero parametrizado
+construido en planilla de cálculo, en el cual los indicadores están
+formulados con las funciones nativas \texttt{NPV} e \texttt{IRR}. Esto
+permite que al modificar cualquier supuesto de entrada —el ticket
+promedio, la comisión, las horas de desarrollo o el volumen de
+sesiones— los tres escenarios, el \gls{van} y la \gls{tir} se
+recalculen de forma inmediata. El modelo se incluye como anexo del
+presente trabajo.
+
 \section{Justificación institucional, legal, ambiental y social}
 
 El desarrollo de \sistema{} se fundamenta en un impacto transversal
@@ -60,168 +103,506 @@ comprobable:
           necesidad de desplazamiento físico de alumnos y tutores,
           reduciendo la huella de carbono asociada al transporte. A nivel
           de infraestructura tecnológica, se prioriza la eficiencia
-          mediante servidores virtuales privados (\gls{vps}) de bajo
-          consumo.
+          mediante servicios gestionados de bajo consumo, evitando el
+          aprovisionamiento permanente de servidores dedicados.
 \end{itemize}
 
-\section{Alternativas consideradas y descartadas}
+\section{Modelo de monetización y alternativas descartadas}
 
-Durante el diseño del modelo de negocio, se evaluaron distintas
-metodologías de intermediación presentes en plataformas globales de
-tutorías y gig economy:
+El ingreso de \sistema{} proviene de una única fuente: una
+\textbf{comisión de plataforma del \comision{} sobre el precio de cada
+sesión}, descontada exclusivamente del pago que recibe el tutor. El
+ticket promedio de mercado se proyecta en \textbf{USD 7 por sesión}. El
+estudiante abona el precio final fijado por el docente, sin cargos de
+servicio adicionales visibles. Se excluyen explícitamente vías de ingreso
+como la publicidad, la venta de datos o las suscripciones premium durante
+la etapa de \gls{mvp}.
+
+Durante el diseño del modelo de negocio se evaluaron y descartaron dos
+metodologías alternativas de intermediación:
 
 \begin{itemize}
     \item \textbf{Suscripción mensual al estudiante (modelo Superprof):} se
-          descartó esta alternativa porque la imposición de una barrera de
-          entrada fija contradice el objetivo principal de reducir la
-          fricción económica para familias de bajo poder adquisitivo.
+          descartó porque la imposición de una barrera de entrada fija
+          contradice el objetivo principal de reducir la fricción
+          económica para familias de bajo poder adquisitivo.
           Adicionalmente, no genera un ingreso proporcional al valor
           efectivo entregado en cada sesión.
-    \item \textbf{Comisión escalonada de alta retención (modelo Preply,
-          18\,\% a 33\,\%):} se descartó replicar bandas tarifarias
-          superiores al 18\,\%. Una comisión percibida como excesiva por
-          parte de la oferta incentiva la desintermediación (acuerdos de
-          pago por fuera de la plataforma tras el primer contacto), lo
-          cual erosiona los ingresos y vulnera el modelo de confianza y
-          seguridad diseñado.
+    \item \textbf{Comisión de alta retención en el extremo superior del
+          mercado (33\,\%):} se descartó replicar las bandas tarifarias
+          máximas de Preply. Una comisión percibida como excesiva
+          incentiva la desintermediación —acuerdos de pago por fuera de
+          la plataforma tras el primer contacto— lo cual erosiona los
+          ingresos y vulnera el modelo de confianza diseñado.
 \end{itemize}
 
-\section{Modelo de monetización}
+\subsection{Calibración de la comisión}
 
-El ingreso de \sistema{} proviene de una única fuente: una \textbf{comisión
-de plataforma del \comision{} sobre el precio de cada sesión}, descontada
-exclusivamente del pago que recibe el tutor. El ticket promedio de
-mercado se proyecta en \textbf{USD 7 por sesión}. El estudiante abona el
-precio final fijado por el docente, sin cargos de servicio adicionales
-visibles. Se excluyen explícitamente vías de ingreso como la publicidad,
-la venta de datos o las suscripciones premium durante la etapa de
-\gls{mvp}.
+La comisión del \comision{} no es un supuesto arbitrario sino el
+resultado de un análisis de punto de equilibrio. Una primera
+formulación del modelo adoptó una comisión del 15\,\%, valor que
+posiciona a la plataforma por debajo de toda la banda de Preply
+(18\,\% a 33\,\%). Sin embargo, al incorporar al modelo los costos
+financieros de la pasarela de pago y proyectar un volumen de demanda
+realista para un \gls{mvp}, esa comisión arrojaba un \gls{van} negativo
+en los tres escenarios: el margen resultante no alcanzaba a cubrir los
+costos fijos de operación.
 
-\section{Estructura de costos e inversión}
+La comisión se recalibró entonces al \comision{}, valor que continúa
+dentro de la banda de mercado vigente (18\,\% a 33\,\%) y por debajo de
+su extremo superior, pero que constituye el mínimo necesario para que el
+escenario base alcance un \gls{van} no negativo dentro del horizonte de
+cinco años. Se trata de una restricción del modelo que se declara
+explícitamente: por debajo del 27\,\%, y manteniendo el resto de los
+supuestos constantes, el proyecto no se justifica económicamente.
 
-Los costos del proyecto se estructuran dividiendo la inversión inicial en
-desarrollo y los gastos operativos recurrentes (fijos y variables por
-transacción). La tabla~\ref{tab:inversion} resume ambos rubros.
+\subsection{Unidad de cobro y duración de las sesiones}
+
+La plataforma admite sesiones de duración variable, con un mínimo
+facturable de 30 minutos y una duración estándar de 60 minutos. Esta
+distinción es económicamente relevante porque los costos variables de
+procesamiento de \gls{ia} (transcripción y resumen automatizado) escalan
+con la duración real del audio procesado, no con la cantidad de sesiones.
+Imputar un costo fijo por sesión sobrestimaría el costo de las clases
+cortas.
+
+Por tal motivo, el modelo calibra el costo de procesamiento por hora de
+audio y luego lo pondera según la mezcla esperada de duraciones. Asumiendo
+que un 30\,\% de las sesiones utiliza el mínimo de 30 minutos, la
+duración promedio ponderada resulta:
+
+\begin{equation}
+    \bar{d} = 60 \times (1 - 0{,}30) + 30 \times 0{,}30 = 51 \text{ minutos.}
+    \label{eq:duracion}
+\end{equation}
+
+El costo variable de \gls{ia} por sesión se obtiene entonces como el
+costo por hora multiplicado por $\bar{d}/60$, resultando en
+\usd{0{,}0255} por sesión en lugar de los \usd{0{,}03} que correspondería
+a una hora completa. El ticket promedio de USD 7, por su parte, se
+interpreta como el promedio ya ponderado sobre esa misma mezcla de
+duraciones y precios horarios.
+
+\section{Estructura de costos}
+
+\subsection{Inversión inicial}
+
+La inversión inicial corresponde a las erogaciones necesarias para llevar
+el \gls{mvp} a producción, concentradas en el semestre de desarrollo
+(Año 0). Se compone del costo del equipo de desarrollo valorizado a
+tarifas de mercado según el perfil, los costos administrativos de puesta
+en marcha y una reserva de contingencia. La
+tabla~\ref{tab:inversion} presenta el desglose.
 
 \begin{table}[H]
     \centering
-    \caption{Inversión inicial y costos recurrentes (en USD)}
+    \caption{Inversión inicial desglosada por rol y concepto (en USD)}
     \label{tab:inversion}
     \small
-    \begin{tabularx}{\textwidth}{L L R l}
+    \begin{tabularx}{\textwidth}{L L r r r}
         \toprule
-        \tb{Categoría} & \tb{Concepto} & \tb{Costo estimado} & \tb{Fuente} \\
+        \tb{Categoría} & \tb{Concepto} & \tb{Cant.} & \tb{Valor unit.} & \tb{Total} \\
         \midrule
-        Inversión inicial & Desarrollo full-stack (1 perfil, 480 hs a USD 15/h) & 7.200 & Estimación propia por tarifa de mercado \\
-        Inversión inicial & Asesoría legal (privacidad de datos y TyC) & 800 & Cotización recibida \\
-        Costo fijo mensual & Servidor \gls{vps}, dominios y honorarios administrativos & 200/mes & \citep{lightnode2026} \\
-        Costo fijo mensual & Bases de datos y frontend (Supabase, Vercel) & 0 (planes gratuitos) & Tarifa pública \\
-        Costo fijo mensual & Tráfico de aula virtual (LiveKit Cloud, hasta 5.000 min/mes) & 0 (plan Build gratuito) & Tarifa pública \\
-        Costo variable & Procesamiento de pago (MercadoPago Marketplace) & Dedecido previo a la comisión & Tarifa pública \\
-        Costo variable & Procesamiento \gls{llm} (resumen automatizado vía API) & 0,03 por sesión & Tarifa pública del proveedor \\
+        Personal       & Senior --- arquitectura, \gls{ia} y \gls{webrtc} & 192 hs & 50 & 9.600 \\
+        Personal       & Mid --- backend y pasarela de pagos              & 250 hs & 30 & 7.500 \\
+        Personal       & Junior --- frontend \gls{pwa} e interfaz         & 250 hs & 15 & 3.750 \\
+        Personal       & Junior --- \gls{uat} y pruebas                   & 120 hs & 15 & 1.800 \\
+        Infraestructura & Cloud de desarrollo (Supabase, Vercel, LiveKit) & 6 meses & 0 & 0 \\
+        Administrativo & Registro de dominio                              & 1 año  & 15 & 15 \\
+        Legal          & Asesoría en privacidad de datos y TyC            & único  & 800 & 800 \\
+        Riesgo         & Contingencia por imprevistos (10\,\% del desarrollo) & único & 2.265 & 2.265 \\
+        \midrule
+        \multicolumn{4}{l}{\tb{Total inversión inicial}} & \tb{25.730} \\
         \bottomrule
     \end{tabularx}
 \end{table}
 
-El rubro de infraestructura se justifica con el precio de mercado de un
-\gls{vps} de recursos medios de un proveedor local: un plan de
-8 vCore/16~GB cuesta \usd{158,7} mensuales, y los planes de entrada
-arrancan en \usd{7,71} mensuales \citep{lightnode2026}. A ese costo se le
-suman los dominios y los honorarios administrativos, por lo que el total
-de \usd{200} mensuales se adopta con criterio conservador.
+Las tarifas horarias por perfil (USD 50 para el rol senior, USD 30 para
+el semi-senior y USD 15 para los roles junior) se adoptan como estimación
+propia basada en valores de mercado para desarrollo remoto en la región,
+y se declaran como tal. Las horas asignadas a los perfiles mid y junior
+se dimensionaron considerando que el uso de servicios gestionados
+(Supabase como backend) y de bibliotecas de componentes reduce
+sustancialmente el trabajo de construcción desde cero.
 
-\section{Flujo de fondos proyectado a 5 años}
+La reserva de contingencia del 10\,\% sobre el costo de desarrollo se
+incorpora para absorber retrabajo, subestimación de horas y corrección
+tardía de defectos. Su inclusión responde a un criterio conservador: un
+presupuesto de desarrollo sin margen de imprevistos presenta un riesgo de
+desvío elevado.
 
-A partir del ticket promedio (USD 7) y la comisión del \comision{},
-\sistema{} percibe un ingreso bruto de USD 1,05 por transacción.
-Descontando el costo variable del modelo de lenguaje (USD 0,03), el
-margen neto asciende a \textbf{USD 1,02 por sesión}. La proyección asume
-un crecimiento gradual en la adopción de usuarios y volumen de sesiones a
-nivel nacional. La tabla~\ref{tab:flujo-caja} presenta el flujo
-resultante.
+La infraestructura durante el desarrollo se aprovisiona íntegramente sobre
+las capas gratuitas de los proveedores seleccionados, por lo que no
+genera erogación en el Año 0. Como referencia del costo alternativo,
+un \gls{vps} de recursos medios de un proveedor local (8 vCore/16~GB)
+cuesta \usd{158,7} mensuales y los planes de entrada arrancan en
+\usd{7,71} mensuales \citep{lightnode2026}; la arquitectura elegida
+evita esa erogación durante la etapa de construcción.
+
+\subsection{Costos recurrentes post-lanzamiento}
+
+Los costos operativos se proyectan mensualmente y se anualizan para el
+flujo de fondos. La tabla~\ref{tab:costos-fijos} muestra su evolución a
+lo largo del horizonte de evaluación.
 
 \begin{table}[H]
     \centering
-    \caption{Flujo de caja proyectado por año (en USD)}
+    \caption{Costos fijos mensuales post-lanzamiento (en USD)}
+    \label{tab:costos-fijos}
+    \small
+    \begin{tabularx}{\textwidth}{L L r r r r r}
+        \toprule
+        \tb{Categoría} & \tb{Concepto} & \tb{Año 1} & \tb{Año 2} & \tb{Año 3} & \tb{Año 4} & \tb{Año 5} \\
+        \midrule
+        Infraestructura & Servidores y base de datos       & 45    & 45    & 50    & 55    & 60 \\
+        Infraestructura & Transmisión de video (LiveKit)   & 60    & 60    & 65    & 70    & 75 \\
+        Infraestructura & Procesamiento \gls{llm} (base)   & 55    & 55    & 60    & 65    & 70 \\
+        Administrativo  & Honorarios contables             & 150   & 150   & 150   & 150   & 150 \\
+        Administrativo  & Renovación de dominio            & 1,25  & 1,25  & 1,25  & 1,25  & 1,25 \\
+        Comercial       & Adquisición de usuarios          & 40    & 50    & 60    & 70    & 80 \\
+        \midrule
+        \multicolumn{2}{l}{\tb{Total mensual}}             & \tb{351,25} & \tb{361,25} & \tb{386,25} & \tb{411,25} & \tb{436,25} \\
+        \multicolumn{2}{l}{\tb{Total anual}}               & \tb{4.215}  & \tb{4.335}  & \tb{4.635}  & \tb{4.935}  & \tb{5.235} \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+Dos decisiones de este cuadro merecen justificación explícita:
+
+\begin{itemize}
+    \item \textbf{Ausencia de equipo de soporte rentado.} El modelo no
+          incorpora personal técnico contratado dentro de los costos
+          fijos durante los cinco años proyectados. Un análisis de
+          sensibilidad sobre esta variable mostró que, con el volumen de
+          sesiones proyectado, sostener un equipo de soporte
+          —aun escalonando su incorporación— vuelve el proyecto
+          inviable en los tres escenarios. El mantenimiento correctivo y
+          evolutivo queda a cargo del equipo fundador. La incorporación
+          de soporte pago se difiere hasta que el volumen efectivo de
+          sesiones lo justifique, lo cual constituye una restricción
+          operativa declarada del modelo y no un supuesto de costo cero.
+    \item \textbf{Presupuesto de adquisición de usuarios.} Se incorpora
+          una partida de marketing, modesta pero creciente, dado que la
+          proyección de demanda no se sostiene por sí sola: un modelo que
+          proyecta captación de usuarios sin asignar presupuesto de
+          adquisición incurre en una inconsistencia interna.
+\end{itemize}
+
+\subsection{Costos variables por transacción}
+
+Además de los costos fijos, cada sesión concretada genera costos
+variables que se deducen del ingreso bruto. La
+tabla~\ref{tab:unit-economics} presenta la economía unitaria completa de
+una sesión promedio.
+
+\begin{table}[H]
+    \centering
+    \caption{Economía unitaria por sesión (en USD)}
+    \label{tab:unit-economics}
+    \small
+    \begin{tabularx}{\textwidth}{L L r}
+        \toprule
+        \tb{Concepto} & \tb{Cálculo} & \tb{Valor} \\
+        \midrule
+        Ticket promedio de la sesión          & Precio fijado por el tutor       & 7,0000 \\
+        Comisión bruta de plataforma          & Ticket $\times$ \comision{}      & 1,8900 \\
+        Costo variable de \gls{ia}            & Costo/hora $\times$ ($\bar{d}/60$) & $-0{,}0255$ \\
+        Costo de pasarela de pago             & Ticket $\times$ 6,04\,\%         & $-0{,}4228$ \\
+        \midrule
+        \tb{Margen neto por sesión}           &                                  & \tb{1,4417} \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+El costo de la pasarela de pago corresponde a la comisión de
+procesamiento de MercadoPago con dinero disponible de forma inmediata,
+incrementada por el IVA que grava dicha comisión. Es un costo real
+de cobranza y resulta conceptualmente distinto de la comisión de
+plataforma, que constituye el ingreso del proyecto. Su omisión en una
+formulación preliminar del modelo sobrestimaba el margen neto en
+aproximadamente un 40\,\%.
+
+Se reconoce además la existencia de fricción financiera adicional
+—retenciones de ingresos brutos, percepciones impositivas y
+contracargos— cuya magnitud depende de la jurisdicción y del
+comportamiento efectivo de los usuarios. No se cuantifica en el modelo
+base y se trata como una sensibilidad adicional sobre el margen, lo cual
+se declara como una restricción del análisis.
+
+\section{Beneficios del proyecto}
+
+El análisis costo-beneficio contempla tanto los beneficios directamente
+monetizables como aquellos que, sin traducirse en flujo de caja, inciden
+sobre la viabilidad del proyecto. La tabla~\ref{tab:beneficios} los
+sistematiza.
+
+\begin{table}[H]
+    \centering
+    \caption{Beneficios tangibles e intangibles del proyecto}
+    \label{tab:beneficios}
+    \small
+    \begin{tabularx}{\textwidth}{l L L}
+        \toprule
+        \tb{Tipo} & \tb{Beneficio} & \tb{Cuantificación} \\
+        \midrule
+        Tangible   & Ingreso por comisión sobre sesiones concretadas
+                   & \usd{1,4417} de margen neto por sesión; es la única fuente de ingreso del flujo \\
+        Tangible   & Ahorro en infraestructura por arquitectura serverless
+                   & Evita \usd{7,71} a \usd{158,7} mensuales de un \gls{vps} dedicado \citep{lightnode2026} \\
+        Tangible   & Ahorro en desplazamiento para alumnos y tutores
+                   & No se imputa al flujo del proyecto; es un excedente que capta el usuario \\
+        Intangible & Formalización tributaria del mercado de tutorías
+                   & Reduce exposición regulatoria y habilita escalabilidad institucional \\
+        Intangible & Trazabilidad y seguridad en la interacción con menores
+                   & Barrera de entrada frente a competidores informales \\
+        Intangible & Acceso a apoyo escolar en zonas sin oferta presencial
+                   & Impacto social; amplía el mercado direccionable \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+Únicamente el primer beneficio se incorpora al flujo de fondos. Los
+ahorros que captura el usuario final y los beneficios intangibles se
+declaran pero no se monetizan, con el fin de no sobrestimar la
+rentabilidad del proyecto.
+
+\section{Estimación de la demanda}
+
+La variable que tracciona los ingresos no es la cantidad de usuarios
+registrados sino el \textbf{volumen anual de sesiones concretadas}. Un
+usuario registrado que no reserva clases no genera ingreso alguno. La
+proyección se construye, por lo tanto, sobre alumnos activos —aquellos
+que efectivamente reservan— y una frecuencia de uso:
+
+\begin{equation}
+    \text{Sesiones anuales} = \text{Alumnos activos} \times \text{Clases por alumno por mes} \times 12.
+    \label{eq:sesiones}
+\end{equation}
+
+Se adopta una frecuencia de tres clases por alumno por mes, equivalente a
+menos de una clase semanal, criterio deliberadamente conservador para un
+servicio de apoyo escolar.
+
+La proyección de alumnos activos, presentada en la
+tabla~\ref{tab:demanda}, se define como un dato de entrada por año y por
+escenario, y no como una curva de crecimiento compuesto. Esta decisión
+metodológica es deliberada: las proyecciones estrictamente lineales o
+exponenciales constituyen un error frecuente en la evaluación de
+proyectos, ya que ignoran la estacionalidad del ciclo lectivo, la
+rotación de cohortes y el efecto acotado en el tiempo de las campañas de
+captación. Los valores adoptados oscilan entre años, reflejando ese
+comportamiento.
+
+\begin{table}[H]
+    \centering
+    \caption{Proyección de alumnos activos y sesiones anuales por escenario}
+    \label{tab:demanda}
+    \small
+    \begin{tabularx}{\textwidth}{L L r r r r r}
+        \toprule
+        \tb{Escenario} & \tb{Métrica} & \tb{Año 1} & \tb{Año 2} & \tb{Año 3} & \tb{Año 4} & \tb{Año 5} \\
+        \midrule
+        Pesimista & Alumnos activos  & 130 & 110 & 160 & 140 & 190 \\
+                  & Sesiones anuales & 4.680 & 3.960 & 5.760 & 5.040 & 6.840 \\
+        \addlinespace
+        Base      & Alumnos activos  & 200 & 260 & 210 & 290 & 250 \\
+                  & Sesiones anuales & 7.200 & 9.360 & 7.560 & 10.440 & 9.000 \\
+        \addlinespace
+        Optimista & Alumnos activos  & 280 & 420 & 340 & 480 & 400 \\
+                  & Sesiones anuales & 10.080 & 15.120 & 12.240 & 17.280 & 14.400 \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+El escenario pesimista refleja una plataforma que no logra consolidar
+retención: retrocede en el Año 2 y sus repuntes posteriores dependen de
+campañas puntuales. El escenario base describe una operación que oscila
+en una banda de entre 200 y 290 alumnos activos sin una tendencia
+sostenida de crecimiento. El optimista contempla mayor volatilidad, con
+picos apalancados por alianzas institucionales seguidos de caídas
+estacionales.
+
+\section{Tasa de descuento}
+
+La tasa de descuento resume el costo de inmovilizar capital en este
+proyecto en lugar de destinarlo a su mejor alternativa de riesgo
+comparable. Incorpora tres componentes: el rendimiento de una colocación
+alternativa, la cobertura frente a la pérdida de poder adquisitivo y una
+prima por el riesgo de que los flujos proyectados no se materialicen.
+
+Se adopta una \textbf{tasa de descuento del 15\,\% anual en dólares}.
+Dado que la totalidad del modelo está expresada en dólares
+estadounidenses, la tasa debe interpretarse como una tasa real en esa
+moneda y no incorpora la inflación en pesos. El valor refleja el costo de
+oportunidad de un desarrollo tecnológico temprano, sin ingresos
+históricos ni base de usuarios consolidada, categoría que exige primas de
+riesgo sensiblemente superiores a las de un activo financiero
+tradicional.
+
+El factor de descuento aplicado a cada año $t$ es $1/(1+0{,}15)^t$. La
+sensibilidad de los resultados frente a esta elección se examina en la
+sección~\ref{sec:sensibilidad}.
+
+\section{Flujo de fondos proyectado}
+
+El flujo de fondos cruza los ingresos derivados del volumen de sesiones
+contra los costos fijos anuales, imputando la inversión inicial
+íntegramente en el Año 0. Los ingresos netos de cada año se obtienen
+multiplicando las sesiones anuales por el margen neto unitario de
+\usd{1,4417}. La tabla~\ref{tab:flujo-caja} presenta el flujo del
+escenario base.
+
+\begin{table}[H]
+    \centering
+    \caption{Flujo de fondos proyectado --- escenario base (en USD)}
     \label{tab:flujo-caja}
     \small
-    \begin{tabularx}{\textwidth}{l R R R R R R}
+    \begin{tabularx}{\textwidth}{L R R R R R R}
         \toprule
         \tb{Concepto} & \tb{Año 0} & \tb{Año 1} & \tb{Año 2} & \tb{Año 3} & \tb{Año 4} & \tb{Año 5} \\
         \midrule
-        Volumen de sesiones & 0 & 3.000 & 8.000 & 18.000 & 30.000 & 50.000 \\
-        Ingreso neto (USD 1,02/sesión) & 0 & 3.060 & 8.160 & 18.360 & 30.600 & 51.000 \\
-        Costos fijos anuales & 0 & $-2.400$ & $-2.400$ & $-2.400$ & $-2.400$ & $-2.400$ \\
-        Inversión inicial & $-8.000$ & 0 & 0 & 0 & 0 & 0 \\
+        Sesiones anuales       & 0 & 7.200 & 9.360 & 7.560 & 10.440 & 9.000 \\
+        Ingreso neto           & 0 & 10.380 & 13.494 & 10.899 & 15.051 & 12.975 \\
+        Costos fijos anuales   & 0 & $-4.215$ & $-4.335$ & $-4.635$ & $-4.935$ & $-5.235$ \\
+        Inversión inicial      & $-25.730$ & 0 & 0 & 0 & 0 & 0 \\
         \midrule
-        \tb{Flujo neto} & \tb{$-8.000$} & \tb{660} & \tb{5.760} & \tb{15.960} & \tb{28.200} & \tb{48.600} \\
+        \tb{Flujo neto}        & \tb{$-25.730$} & \tb{6.165} & \tb{9.159} & \tb{6.264} & \tb{10.116} & \tb{7.740} \\
+        \tb{Flujo acumulado}   & \tb{$-25.730$} & \tb{$-19.565$} & \tb{$-10.405$} & \tb{$-4.141$} & \tb{5.975} & \tb{13.715} \\
+        \tb{Flujo descontado}  & \tb{$-25.730$} & \tb{5.361} & \tb{6.926} & \tb{4.119} & \tb{5.784} & \tb{3.848} \\
+        \tb{Acum.\ descontado} & \tb{$-25.730$} & \tb{$-20.369$} & \tb{$-13.443$} & \tb{$-9.324$} & \tb{$-3.540$} & \tb{308} \\
         \bottomrule
     \end{tabularx}
 \end{table}
 
-\section{Evaluación financiera del proyecto}
+La comparación entre las dos últimas filas ilustra el efecto del descuento:
+mientras el flujo acumulado nominal cambia de signo durante el Año 4, el
+acumulado descontado recién lo hace sobre el cierre del Año 5. Esa
+distancia es, precisamente, el precio del tiempo.
 
-Para la evaluación del proyecto se definió una \textbf{tasa de descuento
-(costo de capital) del 15\,\% anual}, reflejando el costo de
-oportunidad estándar para desarrollos tecnológicos de riesgo moderado.
+\section{Evaluación financiera}
 
-\noindent El \gls{sym:van} se calcula como
+\subsection{Formulación de los indicadores}
+
+El \gls{van} es la suma de todos los flujos del proyecto traídos al
+presente, incluida la inversión inicial:
+
 \begin{equation}
     \mathit{VAN} = -I_0 + \sum_{t=1}^{n} \frac{\gls{sym:fc}}{(1 + r)^{t}},
     \label{eq:van}
 \end{equation}
-donde $I_0$ es la inversión inicial, $FC_t$ el flujo de caja neto del
-año $t$ y $r$ la tasa de descuento. La \gls{tir} es la tasa que anula el
-\gls{van}, y el período de repago es el primer año en que el flujo
-acumulado se vuelve positivo.
 
-\begin{itemize}
-    \item \textbf{\gls{van} (valor actual neto):} \usd{47709,49}. Al ser
-          mayor a cero, indica que el proyecto es económicamente viable y
-          genera valor por encima de la tasa de corte exigida.
-    \item \textbf{\gls{tir} (tasa interna de retorno):} 92,69\,\%. Supera
-          holgadamente la tasa de descuento del 15\,\%, demostrando una
-          alta rentabilidad sobre la inversión inicial unipersonal.
-    \item \textbf{Período de repago (payback):} el capital inicial nominal
-          se recupera durante el Año 3.
-    \item \textbf{Repago descontado:} ajustando los flujos por el valor
-          del dinero en el tiempo (tasa del 15\,\%), el punto de equilibrio
-          financiero se alcanza a mediados del Año 3.
-\end{itemize}
+donde $I_0$ es la inversión inicial, $FC_t$ el flujo de fondos neto del
+período $t$, $r$ la tasa de descuento y $n$ la cantidad de períodos. El
+criterio de decisión es directo: si $\mathit{VAN} \geq 0$ el proyecto se
+acepta, porque rinde por encima de la tasa exigida; si
+$\mathit{VAN} < 0$ se rechaza, porque destruye valor frente a la
+alternativa.
 
-\section{Análisis de sensibilidad y escenarios}
+La \gls{tir} es el caso particular en que la tasa de corte hace que el
+\gls{van} sea exactamente cero:
 
-Dada la dependencia del modelo hacia la tracción de usuarios, se evaluó
-la robustez financiera ante una fluctuación del volumen de la demanda,
-manteniendo los costos fijos inalterados. La
-tabla~\ref{tab:indicadores-financieros} resume los tres escenarios.
+\begin{equation}
+    0 = -I_0 + \sum_{t=1}^{n} \frac{\gls{sym:fc}}{(1 + \mathit{TIR})^{t}}.
+    \label{eq:tir}
+\end{equation}
+
+No admite despeje algebraico directo, por lo que se resuelve por
+iteración numérica. Si la tasa de corte es menor o igual a la \gls{tir},
+el proyecto se acepta; si la supera, se rechaza o se renegocian sus
+condiciones.
+
+El período de repago es el lapso necesario para que el flujo acumulado
+alcance el valor cero. Se calcula de forma fraccionaria, interpolando
+dentro del año en que se produce el cambio de signo:
+
+\begin{equation}
+    \text{Repago} = m - 1 + \frac{\left| FA_{m-1} \right|}{FC_{m}},
+    \label{eq:repago}
+\end{equation}
+
+donde $FA_{m-1}$ es el flujo acumulado del último período negativo y
+$FC_m$ el flujo del período que revierte el signo. El repago descontado
+aplica la misma expresión sobre los flujos ya descontados.
+
+\subsection{Resultados}
+
+La tabla~\ref{tab:indicadores-financieros} resume los cuatro indicadores
+calculados sobre el flujo de fondos de cada escenario.
 
 \begin{table}[H]
     \centering
     \caption{Indicadores financieros por escenario}
     \label{tab:indicadores-financieros}
     \small
-    \begin{tabular}{l r r}
+    \begin{tabularx}{\textwidth}{L r r L L}
         \toprule
-        \tb{Escenario} & \tb{VAN (USD)} & \tb{TIR} \\
+        \tb{Escenario} & \tb{VAN (USD)} & \tb{TIR} & \tb{Repago simple} & \tb{Repago descontado} \\
         \midrule
-        Pesimista (--20\,\% de adopción) & 34.958,55 & 77,12\,\% \\
-        Base & 47.709,49 & 92,69\,\% \\
-        Optimista (+20\,\% de adopción) & 60.460,42 & 106,75\,\% \\
+        Pesimista & $-16.444$ & $-14{,}98$\,\% & No recupera en 5 años & No recupera en 5 años \\
+        Base      & 308       & 15{,}48\,\%    & 3,41 años             & 4,92 años \\
+        Optimista & 24.143    & 47{,}01\,\%    & 1,88 años             & 2,42 años \\
         \bottomrule
-    \end{tabular}
+    \end{tabularx}
 \end{table}
 
-\textbf{Escenario pesimista (--20\,\% de adopción):} si el volumen de
-sesiones es un 20\,\% inferior a la proyección base todos los años, el
-\gls{van} desciende a \usd{34958,55} y la \gls{tir} se ajusta a un
-77,12\,\%. El proyecto sigue siendo viable, demostrando resistencia a una
-penetración de mercado más lenta.
+La lectura de cada indicador es la siguiente:
 
-\textbf{Escenario optimista (+20\,\% de adopción):} ante una adopción
-acelerada, apalancada por alianzas con instituciones u oferta satelital
-(Starlink), el \gls{van} se dispara a \usd{60460,42} con una \gls{tir}
-del 106,75\,\%.
+\begin{itemize}
+    \item \textbf{\gls{van} del escenario base:} \usd{308}. Es positivo,
+          por lo que el proyecto crea valor por encima de la tasa exigida
+          del 15\,\% y se acepta. Ahora bien, el margen es mínimo sobre
+          una inversión de \usd{25.730}: el proyecto apenas cubre su
+          costo de capital, sin excedente relevante.
+    \item \textbf{\gls{tir} del escenario base:} 15,48\,\%. Supera a la
+          tasa de corte del 15\,\% por apenas 0,48 puntos porcentuales.
+          Ese diferencial es el margen de seguridad disponible: bastaría
+          que la tasa exigida subiera medio punto para que el proyecto
+          dejara de convenir.
+    \item \textbf{Período de repago:} 3,41 años en el escenario base. La
+          inversión nominal se recupera durante el Año 4, dentro del
+          horizonte de evaluación.
+    \item \textbf{Repago descontado:} 4,92 años. Medido en dinero de hoy,
+          el recupero se alcanza recién sobre el cierre del Año 5, es
+          decir, en el límite mismo del horizonte proyectado.
+\end{itemize}
+
+En el escenario pesimista los cuatro indicadores son concluyentes: con un
+\gls{van} de \usd{-16.444} y una \gls{tir} negativa, los flujos ni
+siquiera alcanzan a devolver el capital nominal invertido. El escenario
+optimista, en cambio, presenta holgura en las cuatro métricas.
+
+\section{Análisis de sensibilidad}\label{sec:sensibilidad}
+
+Los resultados de la sección anterior muestran que la viabilidad del
+proyecto no es robusta: depende críticamente de tres variables. El
+análisis de sensibilidad realizado sobre el modelo permite identificarlas
+y cuantificar su incidencia.
+
+\begin{itemize}
+    \item \textbf{Volumen de sesiones.} Es la variable de mayor impacto.
+          El punto de equilibrio operativo se obtiene dividiendo los
+          costos fijos anuales por el margen neto unitario: en el Año 1
+          se requieren $4.215 / 1{,}4417 \approx 2.924$ sesiones anuales
+          para cubrir los costos fijos, y en el Año 5 aproximadamente
+          3.631. Por debajo de ese umbral la operación genera pérdidas
+          antes de considerar la recuperación de la inversión.
+    \item \textbf{Comisión de plataforma.} Manteniendo el resto de los
+          supuestos, una comisión del 26\,\% arroja un \gls{van} de
+          aproximadamente \usd{-1.834} en el escenario base, y una del
+          23\,\% lo lleva a \usd{-7.872}. El \comision{} adoptado es, en
+          consecuencia, el valor mínimo compatible con la aceptación del
+          proyecto.
+    \item \textbf{Estructura de costos fijos.} La incorporación de un
+          equipo de soporte rentado —evaluada en una formulación previa
+          del modelo con perfiles junior, mid y senior incorporados de
+          forma escalonada— torna negativo el \gls{van} en los tres
+          escenarios. La operación con equipo fundador no es una
+          preferencia sino una condición de viabilidad en esta etapa.
+\end{itemize}
+
+Cabe señalar que la tasa de descuento afecta al \gls{van} y al repago
+descontado, pero no a la \gls{tir}, que depende exclusivamente del perfil
+de los flujos.
 
 \section{Política de reembolsos y su costo real}
 
@@ -232,3 +613,41 @@ propia comisión de procesamiento junto con los fondos, evitando saldos
 negativos. Además, previene riesgos legales de retención indebida frente
 a la Ley de Defensa del Consumidor y reduce significativamente la
 exposición de la plataforma a contracargos.
+
+\section{Conclusión de la evaluación económica}
+
+El proyecto se justifica económicamente, pero bajo condiciones
+estrictas que corresponde explicitar.
+
+En el escenario base, los cuatro indicadores apuntan en la misma
+dirección: el \gls{van} es positivo (\usd{308}), la \gls{tir} supera la
+tasa de corte (15,48\,\% frente a 15\,\%) y tanto el repago simple como
+el descontado se producen dentro del horizonte de cinco años. Conforme al
+criterio de decisión estándar, el proyecto se acepta. El escenario
+optimista confirma esa conclusión con holgura.
+
+Sin embargo, los márgenes del escenario base son estrechos y el escenario
+pesimista resulta claramente no viable. De ello se desprenden tres
+condiciones de viabilidad:
+
+\begin{enumerate}
+    \item \textbf{Sostener un volumen mínimo de aproximadamente 3.000
+          sesiones anuales}, umbral por debajo del cual la operación no
+          cubre siquiera sus costos fijos.
+    \item \textbf{Mantener la comisión en el \comision{}}, dado que
+          valores inferiores tornan negativo el \gls{van} con la
+          estructura de costos proyectada.
+    \item \textbf{Operar sin equipo de soporte rentado} durante el
+          horizonte evaluado, difiriendo esa incorporación hasta que el
+          volumen efectivo la justifique.
+\end{enumerate}
+
+Que el escenario pesimista no resulte viable no invalida el proyecto,
+sino que delimita con precisión el terreno en que debe moverse. Ante una
+tracción inferior a la proyectada, las alternativas disponibles no pasan
+por reducir costos —el margen de recorte ya está agotado— sino por
+revisar el modelo de negocio: segmentar la oferta por niveles de precio,
+incorporar modalidades de clase grupal que eleven el ingreso por hora de
+tutor, o explorar acuerdos institucionales que aporten volumen agregado.
+El análisis de riesgos del capítulo siguiente retoma estas
+contingencias.

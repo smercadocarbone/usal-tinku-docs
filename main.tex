@@ -62,6 +62,13 @@
 % índice general: 2 = hasta subsección (1.1.1 no se lista)
 \setcounter{tocdepth}{2}
 
+% evita títulos de sección huérfanos al pie de página
+\RequirePackage{needspace}
+\RequirePackage{etoolbox}
+\pretocmd{\section}{\Needspace{12\baselineskip}}{}{}
+\pretocmd{\subsection}{\Needspace{9\baselineskip}}{}{}
+\pretocmd{\subsubsection}{\Needspace{5\baselineskip}}{}{}
+
 %% Para imprimir solo la tapa con letra grande y sin marca de agua:
 %\begin{document}
 %    \makecover
@@ -70,6 +77,9 @@
 
 % =============================================================
 \begin{document}
+
+    % las páginas no se estiran para llenar (evita saltos de párrafo largos)
+    \raggedbottom
 
     % portada, agradecimientos, resumen, declaración de IA, índices
     \frontmatter
