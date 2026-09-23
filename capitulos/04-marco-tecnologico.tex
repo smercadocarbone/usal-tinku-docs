@@ -82,7 +82,7 @@ sus responsabilidades.
         Caché / estado en tiempo real & Sesiones, chat en tiempo real (pub/sub), rate limiting & Redis (Upstash) \\
         Aula virtual & Transmisión de audio/video entre tutor y alumno & LiveKit Cloud (\gls{webrtc}) \\
         Pasarela de pagos & Procesamiento de cobro vía Checkout Pro & MercadoPago (SDK oficial Java) \\
-        Servicios de \gls{ia} & \gls{matching} semántico, transcripción y resumen de sesión, asistente conceptual, kill-switch de seguridad & sentence-transformers + FAISS, \gls{llm} (GPT-4o o Gemini 2.0 Flash), clasificador on-device \\
+        Servicios de \gls{ia} & \gls{matching} semántico, transcripción y resumen de sesión, asistente conceptual, kill-switch de seguridad & sentence-transformers + pgvector, \gls{llm} (Gemini 3.5 Flash-Lite), clasificador on-device \\
         Panel de administración & Moderación, resolución de denuncias, aprobación de tutores & Módulo interno del backend + vista en el frontend \\
         \bottomrule
     \end{tabularx}
@@ -193,7 +193,8 @@ Sprint Backlog vigente.
         \toprule
         \tb{Ítem} & \tb{Detalle} \\
         \midrule
-        Motor relacional & PostgreSQL, gestionado por Supabase. Postgres es un motor relacional maduro con buen soporte de extensiones (por ejemplo, búsqueda por similitud vectorial vía pgvector, relevante para el motor de \gls{matching}); Supabase ofrece un plan gratuito suficiente para el \gls{mvp} y evita la administración manual de backups y actualizaciones del motor de base de datos \\
+        Motor relacional & PostgreSQL, gestionado por Supabase. Postgres es un motor relacional maduro con buen soporte de extensiones; Supabase ofrece un plan gratuito suficiente para el \gls{mvp} y evita la administración manual de backups y actualizaciones del motor de base de datos \\
+        Índice semántico & Extensión pgvector: los \gls{embeddings} de 384 dimensiones de cada perfil de tutor se guardan en una columna \texttt{vector(384)} y el servicio de \gls{matching} resuelve la búsqueda por similitud con una consulta a la base. Se descartó un índice FAISS en memoria del proceso Python porque obliga a reconstruir o restaurar el índice cada vez que el proceso se reinicia, mientras que con pgvector el índice persiste junto con el resto de los datos. A la escala del piloto, la latencia adicional de consultar la base es despreciable, porque la búsqueda se aplica sobre un subconjunto de candidatos ya filtrado por autorización \\
         Detalle de conexión & El backend Spring Boot se conecta a través del pooler de Supabase (Supavisor) en modo sesión (puerto 5432), que se comporta como una conexión directa y es compatible con prepared statements de Hibernate sin configuración adicional. Se documenta como decisión explícita porque el modo transacción (puerto 6543) del mismo pooler no es compatible por defecto con el cacheo de prepared statements que usa Hibernate, y migrar a ese modo en el futuro requeriría desactivar esa característica en el driver JDBC \\
         Caché / tiempo real & Redis, gestionado por Upstash (plan gratuito serverless por volumen de uso) -- usado para estado de chat en tiempo real y rate limiting, no para el estado interno de las salas de videollamada, que en el \gls{mvp} delega en LiveKit Cloud \\
         Respaldo y migraciones & Backups automáticos de Supabase en su plan gestionado; migraciones de esquema versionadas con Flyway o Liquibase integradas al ciclo de despliegue de Spring Boot \\
@@ -214,9 +215,10 @@ La tabla~\ref{tab:infra} resume dónde se aloja cada componente.
         \toprule
         \tb{Componente} & \tb{Dónde se aloja} & \tb{Notas} \\
         \midrule
-        Frontend (\gls{pwa}) & Vercel & Plan gratuito (Hobby) durante el desarrollo; CDN global sin configuración adicional \\
-        Backend (Spring Boot) & Fase de desarrollo: computadora propia del desarrollador, gestionada con Coolify (PaaS autoalojado) y expuesta a internet mediante Cloudflare Tunnel, sin necesidad de IP pública ni apertura de puertos. Fase de piloto (Sprint 11, capítulo~\ref{cap:metodologia}): migración a un \gls{vps} económico (por ejemplo, Hetzner, 10--25 USD/mes), reutilizando la misma configuración de Coolify & La migración de computadora propia a \gls{vps} no requiere reescribir la configuración de despliegue, dado que Coolify orquesta el mismo conjunto de contenedores Docker en ambos casos \\
+        Frontend (\gls{pwa}) & Vercel & Plan gratuito (Hobby) durante el desarrollo y plan Pro en operación comercial, porque el Hobby se limita al uso no comercial; CDN global sin configuración adicional \\
+        Backend (Spring Boot) & Fase de desarrollo: computadora propia del desarrollador, gestionada con Coolify (PaaS autoalojado) y expuesta a internet mediante Cloudflare Tunnel, sin necesidad de IP pública ni apertura de puertos. Fase de piloto (Sprint 11, capítulo~\ref{cap:metodologia}): migración a un \gls{vps} Basic de DigitalOcean de 2 vCPU y 4~GB (USD 24/mes), reutilizando la misma configuración de Coolify & La migración de computadora propia a \gls{vps} no requiere reescribir la configuración de despliegue, dado que Coolify orquesta el mismo conjunto de contenedores Docker en ambos casos. Los 4~GB alcanzan para Coolify, Spring Boot y el servicio de \gls{matching} porque las imágenes se construyen en GitHub Actions y no en el servidor. Se descartó Hetzner porque sus planes económicos no admiten nuevas órdenes y aumentó dos veces sus precios en 2026 \\
         Base de datos y Redis & Supabase y Upstash respectivamente & Servicios gestionados en la nube, independientes de dónde corra el backend \\
+        Audio del resumen opcional & Garage, almacenamiento compatible con S3 autoalojado en el mismo \gls{vps} & LiveKit Cloud sube el audio por HTTPS y el backend lo borra al obtener la transcripción, con un máximo de 24 horas. Se descartó MinIO porque su edición comunitaria fue archivada en febrero de 2026 y dejó de recibir parches de seguridad \\
         Aula virtual & LiveKit Cloud & Plan gratuito (Build): 5.000 minutos de participante por mes sin necesidad de tarjeta de crédito, equivalente a más de 40 horas de clases de 1 a 1 mensuales -- cobertura suficiente para el piloto. Se descartó el auto-hospedaje de LiveKit porque requiere una IP pública alcanzable por UDP para el protocolo \gls{webrtc}, algo que ni la computadora de desarrollo ni un \gls{vps} económico garantizan sin trabajo adicional de configuración de NAT/TURN \\
         \bottomrule
     \end{tabularx}
@@ -231,9 +233,10 @@ Kubernetes-- queda fuera del alcance de esta entrega y se documenta como
 trabajo futuro, condicionada a que el volumen de uso real lo justifique.
 
 Los costos por componente y por etapa (desarrollo, piloto, eventual
-escalado) se presentan en el capítulo~\ref{cap:economica}, consistente
-con el techo de 0--100 USD mensuales declarado en el
-capítulo~\ref{cap:metodologia}.
+escalado) se presentan en el capítulo~\ref{cap:economica}. El techo de
+0--100 USD mensuales declarado en el capítulo~\ref{cap:metodologia} rige
+para el desarrollo y el piloto; la operación comercial requiere planes
+pagos y se evalúa por separado en ese capítulo.
 
 \section{Modelo de datos}\label{sec:modelo-datos}
 
@@ -249,18 +252,19 @@ con un tutor no autorizado previamente. \tb{PerfilTutor} concentra las
 credenciales académicas, la documentación de verificación (DNI,
 certificados), las materias, la disponibilidad y el precio de referencia,
 mientras que \tb{Certificado} representa cada documento cargado por el
-tutor --DNI, título, analítico, y opcionalmente el \gls{cap}-- con un
-estado de revisión (pendiente, aprobado manual, rechazado, y
-\texttt{en\_revision\_legal} exclusivo para el \gls{cap}). A nivel de
-integridad, la ausencia de un certificado de tipo \gls{cap} no bloqueará
-la activación del PerfilTutor ni la generación de una Reserva.
+tutor --DNI, título, analítico y, para los tutores de menores, el
+\gls{cap}-- con un estado de revisión (pendiente, aprobado manual,
+rechazado y, solo para el \gls{cap}, en revisión legal). La credencial
+académica aprobada habilita al tutor en el \gls{matching}; para dictar
+clases a menores se requiere, además, un \gls{cap} aprobado y vigente.
 
 \tb{Reserva} es el bloque horario entre un PerfilMenor/Usuario ADULTO y
 un PerfilTutor, con estados que recorren \texttt{pendiente\_pago},
 \texttt{confirmada}, \texttt{en\_curso}, \texttt{finalizada},
 \texttt{cancelada} o \texttt{no\_show}. \tb{Sesión} es la instancia de
-videollamada asociada a una Reserva, con referencia a la grabación cuando
-corresponde y al resumen generado por \gls{ia}; \tb{Pago} referencia la
+videollamada asociada a una Reserva, con referencia a la grabación de
+audio y al resumen generado por \gls{ia} cuando se contrató el adicional
+de resumen; \tb{Pago} referencia la
 transacción de MercadoPago asociada a esa Reserva, con su estado de
 \gls{escrow}. Por último, \tb{Calificación} es bidireccional y se asocia
 a una Sesión finalizada, y \tb{Denuncia} se asocia a una Sesión o a un
@@ -352,9 +356,12 @@ documentos nunca se envíen a servicios de terceros), que rechaza
 automáticamente el registro de cualquier tutor menor de 18 años, y una
 revisión manual final a cargo del rol ADMIN sobre la autenticidad del
 documento y la correspondencia de los certificados con las materias
-declaradas; incluye la verificación manual del \gls{cap} vigente,
-limitando la exclusión únicamente a la integración automatizada con el
-Estado.
+declaradas. Para dictar clases a menores, el tutor debe presentar
+además un \gls{cap} vigente, que el rol ADMIN revisa de forma manual y
+que vence a los doce meses de su emisión. Una primera versión exigía el
+\gls{cap} a todos los tutores y se retiró (ADR-M1-02); se reincorpora
+acotada a los tutores de menores, por los motivos que analiza el
+capítulo~\ref{cap:riesgos}.
 
 El kill-switch de seguridad, presentado como SafeVchat en la
 sección~\ref{sec:estado-del-arte} --donde se desarrolla el mecanismo
@@ -366,12 +373,15 @@ ejecuta dos acciones diferenciadas: si hay un menor presente, corta la
 transmisión y suspende preventivamente la cuenta de forma inmediata; si
 ambos participantes son adultos, el video del detectado se bloquea con un
 filtro de desenfoque y el sistema solicita confirmación a la contraparte
-antes de proceder al corte. El portal de denuncias sigue una lógica
-equivalente: al registrarse una denuncia, el sistema marca la grabación
-de la sesión correspondiente para retención extendida, fuera del ciclo
+antes de proceder al corte. Como evidencia, el cliente mantiene un buffer
+de los últimos 30 segundos de la videollamada y lo sube al backend solo
+si el kill-switch se dispara; las sesiones no se graban de forma
+completa, salvo el audio de las que contrataron el adicional de resumen.
+El portal de denuncias sigue una lógica equivalente: al registrarse una
+denuncia, el sistema preserva la evidencia disponible --el fragmento del
+kill-switch, si existe, y la que aporta quien denuncia-- fuera del ciclo
 normal de borrado, suspende preventivamente al usuario denunciado y
-deriva la resolución final a revisión humana del rol ADMIN, con acceso a
-la evidencia preservada.
+deriva la resolución final a revisión humana del rol ADMIN.
 
 La protección de datos personales sigue la Ley 25.326, con especial
 cuidado en el procesamiento de video de menores y en la definición de una

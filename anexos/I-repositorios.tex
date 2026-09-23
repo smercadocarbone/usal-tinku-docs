@@ -10,10 +10,29 @@ manuales del proveedor. Para cada repositorio: enlace, tecnología,
 contenido y estado (activo, archivado).
 \end{guia}
 
-\completar{Repositorios.}
+El código fuente de \sistema{} se aloja en un único repositorio público
+de GitHub, organizado como monorepo.
 
-\section{\completar{Nombre del repositorio}}
+\section{usal-tinku}
 
-\prettygitlink{usuario/repositorio}
+\prettygitlink{smercadocarbone/usal-tinku}
 
-\completar{Descripción: qué contiene, tecnología, cómo ejecutarlo, licencia.}
+\textbf{Contenido.} El repositorio agrupa los tres componentes
+desplegables del sistema, cada uno en su propia carpeta y con su propio
+\texttt{README} de ejecución local:
+
+\begin{itemize}
+    \item \texttt{backend/}: \gls{api} REST en Java con Spring Boot,
+          organizada como monolito modular.
+    \item \texttt{matching-service/}: servicio de \gls{matching}
+          semántico en Python, único proceso separado del monolito.
+    \item \texttt{frontend/}: cliente \gls{pwa} en Next.js y React.
+\end{itemize}
+
+Se incluyen además la documentación de diseño (\texttt{docs/}), los
+flujos de integración continua (\texttt{.github/workflows/}) y un
+\texttt{docker-compose.yml} con la infraestructura local de desarrollo.
+
+\textbf{Estado.} Activo, en desarrollo durante el cursado de la materia.
+
+\completar{Licencia del repositorio (actualmente no declarada).}

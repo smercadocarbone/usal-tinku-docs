@@ -191,10 +191,8 @@ oferta presencial de tutores es escasa o inexistente.
     \item \textbf{OE3 --- Implementación del motor de \gls{matching}
           \gls{ia}:} desarrollar e integrar el microservicio de
           recomendación basado en \gls{embeddings} semánticos
-          (sentence-transformers + FAISS) para la sugerencia de tutores
-          compatibles, implementando un factor de ponderación o
-          multiplicador de puntaje (\emph{boost}) para aquellos perfiles
-          que hayan validado voluntariamente su \gls{cap}.
+          (sentence-transformers + pgvector) para la sugerencia de tutores
+          compatibles.
     \item \textbf{OE4 --- Desarrollo del aula virtual (LiveKit):}
           implementar el módulo de videollamada mediante
           LiveKit/\gls{webrtc} integrado nativamente en la plataforma, con
@@ -230,11 +228,13 @@ mercado argentino con el nivel de integración que \sistema{} propone:
           \gls{api} públicas. Esta restricción impide automatizar dicho
           proceso en el \gls{mvp}. En consecuencia, la plataforma
           centrará sus esfuerzos obligatorios de seguridad y confianza en
-          la rigurosa verificación de los antecedentes académicos.
-          Adicionalmente, para mitigar la barrera de verificación de
-          antecedentes penales, se habilitará su carga manual de forma
-          optativa, incentivando a los tutores mediante una mejora
-          algorítmica en su visibilidad. El proceso de registro básico
+          la rigurosa verificación de los antecedentes académicos. Para
+          dictar clases a menores, además, el tutor debe cargar un
+          \gls{cap} vigente, tramitado por él mismo, que se revisa de
+          forma manual. La exigencia se limita a los tutores de menores
+          para no sumar fricción al registro de quienes enseñan a
+          adultos, el recurso más escaso de la plataforma en su etapa
+          inicial (capítulo~\ref{cap:riesgos}). El proceso de registro básico
           exigirá únicamente la demostración empírica de los
           conocimientos del tutor mediante la presentación de historial
           académico, títulos de grado o certificaciones pertinentes. Esta
@@ -353,20 +353,23 @@ soportado por la tecnología de LiveKit (\gls{webrtc}). El flujo
 económico estará cubierto mediante la integración con MercadoPago para
 la gestión de pagos bajo la modalidad de \gls{escrow}. Para potenciar la
 experiencia educativa, se implementará un módulo de resumen automático
-de sesiones utilizando un \gls{llm} (como GPT-4o o Gemini 2.0 Flash)
-que procesa audio nativamente. Adicionalmente, el \gls{mvp} contará con
-un sistema de calificaciones y reputación bidireccional, junto con un
-panel de administración básico para la gestión interna de la
-plataforma. La plataforma incluye, además, un portal de denuncias con
-verificación de veracidad, que ante cada denuncia preserva de forma
-automática la evidencia de la sesión correspondiente y deriva la
-resolución final a revisión manual.
+de sesiones, que el alumno activa como adicional opcional en cada
+reserva, utilizando un \gls{llm} que procesa audio nativamente (Gemini
+3.5 Flash-Lite, capítulo~\ref{cap:economica}). Adicionalmente, el
+\gls{mvp} contará con un sistema de calificaciones y reputación
+bidireccional, junto con un panel de administración básico para la
+gestión interna de la plataforma. La plataforma incluye, además, un
+portal de denuncias con verificación de veracidad, que preserva la
+evidencia disponible --el fragmento capturado por el kill-switch y la
+aportada por quien denuncia-- y deriva la resolución final a revisión
+manual.
 
 Por último, es importante delimitar que este proyecto no incluye ciertas
 características en su fase inicial. Quedan excluidos de este alcance:
 el desarrollo de aplicaciones móviles nativas; la integración
-automatizada mediante \gls{api} con sistemas estatales (requiriéndose en
-su lugar la carga y verificación manual del \gls{cap}); el desarrollo de
+automatizada mediante \gls{api} con sistemas estatales (reemplazada por
+la carga y revisión manual del \gls{cap} para los tutores de menores); el
+desarrollo de
 un módulo de accesibilidad completo; la implementación de un modelo de
 suscripción premium; la posibilidad de extender la duración de una
 sesión de videollamada en curso mediante un cobro adicional; y la
@@ -388,10 +391,9 @@ propuestas para el trabajo a futuro.
           autenticidad del documento y la correspondencia de los
           certificados académicos declarados. La verificación
           automatizada de antecedentes vía \gls{api} queda fuera de
-          alcance, reemplazándose por la exigencia y revisión manual
-          obligatoria del \gls{cap} tramitado por el tutor vía Mi
-          Argentina, con actualización anual; no debe confundirse con la
-          verificación de edad, que también se realiza.
+          alcance; para dictar clases a menores se exige, en cambio, la
+          carga y revisión manual de un \gls{cap} vigente, con
+          actualización anual (capítulo~\ref{cap:riesgos}).
     \item \textbf{Límite de conectividad:} el servicio requiere conexión a
           internet estable para el aula virtual. Si bien Starlink y otras
           soluciones satelitales amplían el universo de usuarios
@@ -464,9 +466,9 @@ se quiere construir.
         \tb{Categoría} & \tb{Detalle} \\
         \midrule
         Recursos humanos & 1 desarrollador full-stack (autor del proyecto). Tutores y alumnos para el grupo piloto de validación. \\
-        Infraestructura cloud & Vercel (plan Hobby) para el frontend, Supabase (plan gratuito) para la base de datos Postgres, Upstash (plan gratuito) para Redis, y backend alojado inicialmente en infraestructura propia mediante Coolify y Cloudflare Tunnel, con migración planificada a un \gls{vps} de entre 10 y 25 USD mensuales antes del piloto. Estimación de costo: USD 0 en fase de desarrollo, hasta \~{}25 USD/mes en la fase de piloto. \\
-        APIs externas & Para el motor de \gls{matching} semántico: sentence-transformers junto con FAISS, con procesamiento local y sin costo de \gls{api} por request. Para la transcripción y el resumen de sesión, y para el asistente conceptual: un \gls{llm} a confirmar entre GPT-4o y Gemini 2.0 Flash para la transcripción y resumen directo de audio, según relación costo-calidad al momento de la implementación (capítulos \ref{cap:marco-tecnologico} y \ref{cap:economica}). MercadoPago: sin costo fijo, comisión por transacción, con SDK oficial en Java. LiveKit Cloud: plan gratuito Build de 5.000 minutos de participante por mes. \\
-        Herramientas de desarrollo & OpenCode + Neovim (editor principal), GitHub (control de versiones), Figma (diseño \gls{ux}), Postman (testing \gls{api}), Jest (testing unitario). Todas en planes gratuitos o estudiantiles. \\
+        Infraestructura cloud & Vercel (plan Hobby) para el frontend, Supabase (plan gratuito) para la base de datos Postgres, Upstash (plan gratuito) para Redis, y backend alojado inicialmente en infraestructura propia mediante Coolify y Cloudflare Tunnel, con migración planificada antes del piloto a un \gls{vps} de DigitalOcean de 4~GB (USD 24 mensuales). Estimación de costo: USD 0 en fase de desarrollo, \~{}25 USD/mes en la fase de piloto. En operación comercial, Vercel y Supabase pasan a sus planes pagos (capítulo~\ref{cap:economica}). \\
+        APIs externas & Para el motor de \gls{matching} semántico: sentence-transformers para generar los \gls{embeddings} y pgvector, extensión de PostgreSQL, para la búsqueda por similitud, con procesamiento propio y sin costo de \gls{api} por request. Para la transcripción y el resumen de sesión, y para el asistente conceptual: Gemini 3.5 Flash-Lite para la transcripción y resumen directo de audio, elegido por costo frente a GPT-4o y a Gemini 3.6 Flash; Gemini 2.0 Flash, candidato inicial, fue dado de baja en junio de 2026 (capítulos \ref{cap:marco-tecnologico} y \ref{cap:economica}). MercadoPago: sin costo fijo, comisión por transacción, con SDK oficial en Java. LiveKit Cloud: plan gratuito Build de 5.000 minutos de participante por mes. \\
+        Herramientas de desarrollo & OpenCode + Neovim (editor principal), GitHub (control de versiones), Figma (diseño \gls{ux}), Postman (testing \gls{api}), Jest (testing unitario). Herramientas de \gls{ia} generativa: OpenCode, Gemini, ChatGPT y Claude Code (capítulo~\ref{cap:metodologia}, sección~\ref{sec:desarrollo-ia}). \\
         Tiempo estimado & 6 meses de desarrollo. Dedicación aproximada: 15--20 horas semanales. \\
         Conocimientos previos & Desarrollo web full-stack (React para el frontend, Java con Spring Boot para el backend), bases de datos relacionales, fundamentos de \gls{ml}, integración de \gls{api} REST. \\
         \bottomrule

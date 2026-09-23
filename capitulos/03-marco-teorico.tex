@@ -279,9 +279,12 @@ aplicado a la representación semántica de texto mediante
 \gls{embeddings}. Un \gls{embeddings} es una representación vectorial de
 un texto en un espacio de alta dimensionalidad. Modelos como los
 sentence-transformers generan vectores a partir de oraciones completas,
-superando las búsquedas por palabras clave. Sobre este espacio,
-estructuras como FAISS (Facebook AI Similarity Search) permiten
-búsquedas de similitud eficientes.
+superando las búsquedas por palabras clave. Sobre este espacio, la
+búsqueda de los vectores más cercanos (\emph{k-nearest neighbors}) puede
+resolverse con índices en memoria, como FAISS (Facebook AI Similarity
+Search), o dentro de la propia base de datos, como la extensión pgvector
+de PostgreSQL. \sistema{} adopta pgvector, por los motivos que se
+detallan en el capítulo~\ref{cap:marco-tecnologico}.
 
 Como se detalló en la sección~\ref{sec:estado-del-arte}, el trabajo de
 la Universidad de Ottawa \citep{isotropy2026} validó esta técnica en la
