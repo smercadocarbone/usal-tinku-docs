@@ -1,0 +1,51 @@
+%!TEX root = ../main.tex
+% ANEXO II — Modelo financiero
+% Archivo: anexos/Presupuesto_y_Proyecciones_-_Proyecto_Tinku.xlsx
+
+\chapter{Modelo financiero}\label{anx:modelo-financiero}
+
+Los cálculos de la evaluación económica del
+capítulo~\ref{cap:economica} se realizan en una planilla de cálculo con
+parámetros editables, que se entrega junto con este documento en el
+siguiente archivo:
+
+\begin{center}
+    \path{Presupuesto_y_Proyecciones_-_Proyecto_Tinku.xlsx}
+\end{center}
+
+Todos los montos están expresados en dólares estadounidenses.
+
+\section{Estructura de la planilla}
+
+\begin{table}[H]
+    \centering
+    \caption{Hojas del modelo financiero}
+    \label{tab:hojas-modelo}
+    \small
+    \begin{tabularx}{\textwidth}{l L}
+        \toprule
+        \tb{Hoja} & \tb{Contenido} \\
+        \midrule
+        Inversión Inicial        & Inversión incremental del lanzamiento: horas y tarifa por perfil, dominio, asesoría legal y contingencia, más el costo hundido del \gls{mvp} a título informativo (tabla~\ref{tab:inversion}) \\
+        Gastos Post-lanzamiento  & Costos fijos mensuales por año: infraestructura, servidor de aplicación, video, asistente \gls{llm}, honorarios contables, dominio y marketing (tabla~\ref{tab:costos-fijos}) \\
+        Valor de Venta           & Comisión, precio por hora, duración promedio de las sesiones, ticket, costo de la pasarela, costo, precio y adopción del resumen opcional, y margen neto por sesión (tabla~\ref{tab:unit-economics}) \\
+        Estimación de Demanda    & Alumnos activos por año y escenario, y sesiones anuales resultantes (tabla~\ref{tab:demanda}) \\
+        VAN, TIR y Repago        & Tasa de descuento construida (tabla~\ref{tab:tasa}), flujo de fondos de los tres escenarios, \gls{van}, \gls{tir}, repago simple y descontado, y resumen comparativo (tablas~\ref{tab:flujo-caja} y~\ref{tab:indicadores-financieros}) \\
+        Gráficos                 & Flujo neto y flujo acumulado por escenario, y \gls{van} comparado \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\section{Supuestos editables}
+
+Los valores de entrada están separados de los cálculos: al modificar
+cualquiera de ellos se recalculan los tres escenarios. Los
+principales son la comisión de plataforma, el precio por hora, la
+proporción de sesiones de 30 minutos, el precio y la adopción del resumen opcional, las tarifas horarias por perfil,
+los alumnos activos por año, las clases por alumno por mes y la tasa de
+descuento. Cada supuesto documenta su origen en la columna de
+observaciones o en un comentario de la celda.
+
+Los indicadores se calculan con las funciones nativas \texttt{NPV} e
+\texttt{IRR}, y los períodos de repago con la interpolación de la
+ecuación~\eqref{eq:repago}.
