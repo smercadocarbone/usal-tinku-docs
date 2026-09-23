@@ -17,45 +17,106 @@ preliminares/declaracion-ia).
 \section{Criterios de registro}
 
 \begin{itemize}
-    \item \textbf{Trazabilidad}: cada entrada indica la herramienta y
-          versión utilizada y la fecha aproximada.
-    \item \textbf{Verificación}: toda cifra, cita o referencia sugerida
-          por la herramienta se confirmó en la fuente original antes de
-          incorporarla (regla 3 de la declaración de IA).
-    \item \textbf{Autoría}: las salidas se transcriben solo como
-          evidencia; el texto final del documento puede diferir por la
-          revisión y adaptación del autor.
+    \item \textbf{Alcance.} Se registran las instrucciones cuyo resultado
+          tuvo un impacto significativo en el sistema o en el documento.
+          Los prompts se transcriben con leves correcciones de redacción,
+          sin alterar su contenido.
+    \item \textbf{Verificación.} Para cada resultado se indica cómo se
+          verificó antes de incorporarlo.
+    \item \textbf{Autoría.} Las salidas se describen como evidencia; el
+          texto final del documento surge de la revisión y adaptación del
+          autor.
 \end{itemize}
 
-\section{Asistencia en el marco teórico y estado del arte}
+\section{Desarrollo del sistema}
 
-\instruccionIA[1]{Resumí los argumentos principales de este paper sobre
-evaluación de tutores y ranking de compatibilidad en plataformas de
-tutoría en línea, en tres párrafos en español.}
-\respuestaIA[1]{(resumen devuelto por la herramienta, verificado contra
-el texto original)}
+El desarrollo con OpenCode no se guió por prompts aislados, sino por
+instrucciones persistentes versionadas en el repositorio
+(anexo~\ref{anx:repositorios}): el archivo \texttt{AGENTS.md}, la
+Constitución, las especificaciones, los planes técnicos y la lista de
+tareas. Ese conjunto constituye el registro completo de lo que se le
+pidió al agente. Se transcriben dos de las reglas de \texttt{AGENTS.md}
+que más condicionaron el resultado.
 
-\instruccionIA[2]{Compará los modelos de negocio, comisiones y esquemas de
-pago de Superprof, Preply, Wyzant y Tus Clases de manera tabular.}
-\respuestaIA[2]{(tabla devuelta, contrastada con las tarifas públicas de
-cada plataforma antes de usarse en \ref{tab:comparativa})}
+\instruccionIA[1]{Ante dos soluciones que cumplen el mismo requisito, la
+más simple. No justifiques una decisión técnica con ``buena práctica
+genérica'': justificala contra un desarrollador y un presupuesto de
+USD 0 a 100 por mes, o no la tomes.}
+\respuestaIA[1]{Arquitectura de monolito modular con nueve módulos de
+dominio y un único proceso separado, el servicio de \gls{matching}.
+Verificación: cada desvío quedó documentado en un registro de decisión
+(ADR) validado por el autor.}
 
-\section{Asistencia en la justificación económica}
+\instruccionIA[2]{La rama del kill-switch con un menor presente nunca
+continúa la sesión ni le pregunta al menor si vio algo: corta
+directamente. Si una tarea deja dudas sobre cuál de los dos casos
+aplica, tratala como si hubiera un menor.}
+\respuestaIA[2]{Implementación del backend del kill-switch con dos ramas
+diferenciadas. Verificación: prueba de extremo a extremo de la rama de
+seguridad completa (sesión con menor, corte, suspensión, alerta y
+resolución del administrador).}
 
-\instruccionIA[3]{Calculá el VAN a tasa 15\,\% y la TIR del flujo de caja
-[Año 0 ... Año 5] de esta tabla de volúmenes y costos.}
-\respuestaIA[3]{(cálculos devueltos; se replicaron de forma independiente
-en hoja de cálculo antes de incluirlos en \ref{tab:flujo-caja} y en la
-sección de indicadores)}
+\section{Consultas de contraste}
 
-\section{Asistencia en redacción y código}
+Gemini y ChatGPT se consultaron de forma esporádica, como segunda y
+tercera opinión sobre decisiones puntuales. Sus respuestas no se
+incorporaron como texto al documento.
+\completar{Transcribir, si se conservaron, una o dos consultas
+representativas y la decisión que motivaron.}
 
-\instruccionIA[4]{Reescribí este párrafo en registro académico impersonal
-sin cambiar su contenido.}
-\respuestaIA[4]{(texto devuelto por la herramienta, luego editado)}
+\section{Elaboración del documento}
 
-\instruccionIA[5]{Generá el scaffolding de una clase Java de Spring Boot
-para el endpoint de reserva de una sesión, con validación de permisos por
-rol.}
-\respuestaIA[5]{(código devuelto, revisado y adaptado por el autor; las
-pruebas se escribieron a mano)}
+Los siguientes prompts se utilizaron con Claude Code durante la revisión
+y redacción de los capítulos~\ref{cap:economica} y~\ref{cap:riesgos} y de
+los apéndices.
+
+\instruccionIA[3]{Agregué los resultados de la encuesta y el Excel con el
+presupuesto y las proyecciones. Revisá si tengo que modificar algo en la
+tesis en función de esto y decime todo lo que falta completar.}
+\respuestaIA[3]{Detectó inconsistencias entre capítulos: un equipo de
+cuatro perfiles en la evaluación económica frente a un desarrollo
+unipersonal en el resto del documento, el costo del servidor de
+aplicación omitido, un precio de sesión sin respaldo frente a la
+disposición a pagar relevada, y diferencias entre el documento y el
+repositorio. Además, redactó el apéndice~\ref{apx:encuesta} a partir de
+los datos crudos. Verificación: cada inconsistencia se contrastó con el
+texto y el repositorio, y las frecuencias de la encuesta se recalcularon
+sobre el archivo original.}
+
+\instruccionIA[4]{Busquemos y analicemos empíricamente los costos de las
+plataformas con sus planes reales actuales, pensando qué es lo mejor para
+este caso.}
+\respuestaIA[4]{Relevamiento de las tarifas públicas de Supabase, Vercel,
+DigitalOcean, Hetzner, Upstash, LiveKit y los proveedores de \gls{llm}.
+Identificó la baja de Gemini 2.0 Flash y el costo de grabar el audio de
+las sesiones, no contemplado hasta entonces. Verificación: cada tarifa
+se consultó en la página oficial del proveedor, citada en el
+capítulo~\ref{cap:economica}.}
+
+\instruccionIA[5]{Toda la tesis debe estar en dólares. Si necesitás el
+tipo de cambio, usá el del BNA al cierre de la encuesta.}
+\respuestaIA[5]{Conversión de los rangos de la encuesta con la cotización
+vendedora del 9 de septiembre de 2026. Verificación: cotización
+contrastada en la fuente citada.}
+
+\instruccionIA[6]{Quiero saber si las horas con las que se calcula la
+inversión son realistas o no, y compararlas con lo que costó de verdad.}
+\respuestaIA[6]{Estimación del esfuerzo registrado con el método
+\emph{git-hours} y del esfuerzo tradicional con COCOMO, y propuesta de
+evaluar la inversión incremental bajo el criterio de costo hundido.
+Verificación: métricas recalculadas sobre el repositorio; la elección
+del criterio de evaluación fue del autor.}
+
+\instruccionIA[7]{Construí la tasa de descuento con fuentes reales.}
+\respuestaIA[7]{Tasa del 21,10\,\% por acumulación: tasa libre de riesgo,
+beta sectorial, prima de mercado y prima de riesgo país. Verificación:
+cada componente se consultó en su fuente primaria, citada en la
+tabla~\ref{tab:tasa}.}
+
+\instruccionIA[8]{Arrancá con el capítulo 6 siguiendo las indicaciones
+de la cátedra.}
+\respuestaIA[8]{Borrador del análisis de riesgos, con quince riesgos
+identificados a partir de la encuesta, el modelo financiero y el estado
+del repositorio. Verificación: cada riesgo se contrastó con la evidencia
+que cita, y se ajustaron los que contradecían decisiones de otros
+capítulos.}

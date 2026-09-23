@@ -149,8 +149,8 @@ centralizada.
 Se utilizarán entrevistas semiestructuradas aplicadas a una muestra de
 al menos dos tutores particulares activos y cuatro alumnos o familias
 que hayan contratado tutorías, complementadas con un formulario breve en
-Google Forms orientado a estudiantes universitarios y familias con hijos
-en edad escolar, buscando un mínimo de 30 respuestas válidas. El guion
+Tally orientado a alumnos, familias con hijos en edad escolar y tutores,
+buscando un mínimo de 30 respuestas válidas. El guion
 de las entrevistas se transcribe en el apéndice~\ref{apx:entrevista} y
 la encuesta completa en el apéndice~\ref{apx:encuesta}.
 
@@ -338,3 +338,56 @@ y se publica mediante Coolify, una plataforma de despliegue autoalojada
 que gestiona contenedores, certificados y variables de entorno de forma
 equivalente a un PaaS gestionado, alojada primero en infraestructura
 propia del desarrollador y migrada a un \gls{vps} antes del piloto.
+\section{Desarrollo asistido por inteligencia artificial}\label{sec:desarrollo-ia}
+
+La construcción del \gls{mvp} siguió un método dirigido por
+especificaciones, en el que la documentación precede al código y guía a
+un agente de programación basado en \gls{ia}. El método se organiza en
+cuatro niveles de documentos, todos versionados en el repositorio
+(anexo~\ref{anx:repositorios}):
+
+\begin{enumerate}
+    \item \textbf{Constitución.} Principios que gobiernan toda decisión
+          técnica: arquitectura de monolito modular, minimización de
+          datos, seguridad del menor como restricción principal y
+          preferencia por la solución más simple compatible con un único
+          desarrollador y un presupuesto acotado.
+    \item \textbf{Especificaciones por módulo.} Nueve documentos, uno por
+          módulo de dominio, con historias de usuario, requerimientos
+          funcionales y reglas de negocio.
+    \item \textbf{Planes técnicos.} Diez documentos que traducen cada
+          especificación en un modelo de datos, contratos de \gls{api} y
+          decisiones de implementación.
+    \item \textbf{Lista de tareas.} Una lista de verificación atómica,
+          que funciona como memoria persistente entre sesiones de trabajo:
+          cada tarea se marca como completada solo después de verificarse.
+\end{enumerate}
+
+Sobre esa base, en las primeras etapas del desarrollo la implementación
+se realizó con agentes de OpenCode. Un archivo de instrucciones
+persistentes (\texttt{AGENTS.md}), que el agente lee al iniciar cada
+sesión, fija las reglas de arquitectura, las condiciones de seguridad
+del menor y los casos en que una decisión exige un registro formal
+(\emph{Architecture Decision Record}, ADR). Ante un conflicto o una
+decisión no prevista, el agente debe detenerse y consultar, en lugar de
+decidir por su cuenta. Las decisiones resultantes se documentaron en
+catorce registros de decisión, validados por el autor. Además, se
+consultaron Gemini y ChatGPT de forma esporádica, como segunda y tercera
+opinión sobre decisiones puntuales.
+
+El control de calidad del código generado se apoyó en tres mecanismos:
+las pruebas automatizadas (455 casos de prueba en el backend, incluidas
+pruebas de extremo a extremo del flujo principal y de la rama de
+seguridad), la integración continua en GitHub Actions y la revisión de
+cada cambio antes de integrarlo a la rama principal.
+
+En las etapas posteriores, la documentación, el modelo financiero y la
+redacción de este trabajo se realizaron con asistencia de Claude Code. La
+declaración de uso de \gls{ia} detalla las herramientas y tareas, y el
+apéndice~\ref{apx:prompts} registra los prompts más relevantes.
+
+Este método tiene una consecuencia directa sobre el esfuerzo de
+desarrollo. El historial del repositorio registra unas 103 horas de
+trabajo para un código que un modelo de estimación tradicional sitúa en
+el orden de las 10.300 horas (capítulo~\ref{cap:economica},
+sección~\ref{sec:costo-mvp}).
