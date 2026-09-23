@@ -28,80 +28,394 @@ El sistema tiene que existir y andar: la entrega final incluye el
 proyecto funcional.
 \end{guia}
 
-\completar{Desarrollo del capítulo.}
+Este capítulo presenta los resultados del proyecto al 22 de septiembre
+de 2026: los requerimientos del sistema, su diseño y construcción, las
+pruebas técnicas, la validación con usuarios y la evaluación económica.
+Se informan tanto los resultados favorables como los desfavorables. Las
+pruebas de aceptación con usuarios reales corresponden al piloto del
+Sprint~11 (capítulo~\ref{cap:metodologia}); sus resultados se
+incorporarán al finalizarlo, y las secciones afectadas lo indican.
 
-\section{\completar{Nombre de la sección}}
+\section{Requerimientos}\label{sec:requerimientos}
 
-\completar{Texto.}
+\subsection{Requerimientos funcionales}
+
+Los requerimientos funcionales se especificaron por módulo, antes de
+implementarse, en las especificaciones del repositorio
+(capítulo~\ref{cap:metodologia}, sección~\ref{sec:desarrollo-ia}). Cada
+uno tiene un identificador, una descripción y criterios de aceptación
+expresados como escenarios verificables. La tabla~\ref{tab:rf} resume
+los 118 requerimientos por módulo y su estado de implementación.
 
 \begin{table}[H]
     \centering
-    \caption{Requerimientos funcionales (ejemplo de estructura)}
+    \caption{Requerimientos funcionales por módulo y estado de implementación}
     \label{tab:rf}
     \small
-    \begin{tabularx}{\textwidth}{l L L l L}
+    \begin{tabularx}{\textwidth}{l l r L}
         \toprule
-        \tb{ID} & \tb{Nombre} & \tb{Descripción} & \tb{Prioridad} & \tb{Criterio de aceptación} \\
+        \tb{Módulo} & \tb{Prefijo} & \tb{RF} & \tb{Estado} \\
         \midrule
-        RF-01 & Autenticación & El sistema permite registrarse e iniciar sesión con credenciales propias & Alta & Un usuario nuevo completa el registro y accede en menos de 2 minutos \\
-        RF-02 & \completar{...} & \completar{...} & \completar{...} & \completar{...} \\
+        M1 Identidad y perfiles   & FR-ID   & 19 & Implementado. Los requerimientos del \gls{cap} (FR-ID-021 a 025), retirados por ADR-M1-02, se reincorporan acotados a los tutores de menores \\
+        M2 Motor de \gls{matching} & FR-MATCH & 9  & Implementado \\
+        M3 Aula virtual           & FR-AULA & 10 & Implementado en el servidor; falta integrar el clasificador del kill-switch en el cliente (T-M3-06) \\
+        M4 Reservas y agenda      & FR-RES  & 20 & Implementado; falta integrar la selección dinámica de horarios en la interfaz \\
+        M5 Motor de pagos         & FR-PAG  & 16 & Implementado, con modo de operación sin cobro real (ADR-M5-01) \\
+        M6 Resumen automático     & FR-SUM  & 8  & Implementado sin proveedor: no genera resúmenes hasta integrar el \gls{llm} \\
+        M7 Reputación             & FR-REP  & 12 & Implementado \\
+        M8 Administración         & FR-ADM  & 8  & Implementado \\
+        M9 Denuncias y seguridad  & FR-SEC  & 16 & Implementado \\
+        \midrule
+        \multicolumn{2}{l}{\tb{Total}} & \tb{118} & \\
         \bottomrule
     \end{tabularx}
 \end{table}
 
+La prioridad de cada requerimiento y su criterio de aceptación
+detallado se encuentran en la especificación del módulo correspondiente
+(anexo~\ref{anx:repositorios}). La verificación funcional con usuarios se
+traza a los indicadores del capítulo~\ref{cap:metodologia}
+(tabla~\ref{tab:indicadores}): el \gls{matching} (M2) a la tasa de
+aceptación de sugerencias (I-01), el aula virtual (M3) a la calidad
+percibida (I-02) y a la cobertura geográfica (I-03), y la experiencia
+completa al \gls{nps} (I-04).
+
+\subsection{Requerimientos no funcionales}
+
+La tabla~\ref{tab:rnf} presenta los requerimientos no funcionales, que
+la Constitución del proyecto define como no negociables.
+
 \begin{table}[H]
     \centering
-    \caption{Requerimientos no funcionales (ejemplo de estructura)}
+    \caption{Requerimientos no funcionales}
     \label{tab:rnf}
     \small
-    \begin{tabularx}{\textwidth}{l L L l L}
+    \begin{tabularx}{\textwidth}{l l L L}
         \toprule
-        \tb{ID} & \tb{Atributo} & \tb{Descripción} & \tb{Prioridad} & \tb{Umbral medible} \\
+        \tb{ID} & \tb{Atributo} & \tb{Umbral medible} & \tb{Estado} \\
         \midrule
-        RNF-01 & Rendimiento & Tiempo de respuesta de las consultas principales & Alta & Latencia p95 menor a 5 s (indicador I-02) \\
-        RNF-02 & Calidad del modelo & Capacidad predictiva sobre datos no vistos & Alta & $F_1 \geq 0{,}70$ (indicador I-01) \\
-        RNF-03 & \completar{...} & \completar{...} & \completar{...} & \completar{...} \\
+        RNF-01 & Disponibilidad   & 95\,\% mensual durante el piloto & A medir en el piloto \\
+        RNF-02 & Seguridad        & TLS 1.2 o superior; contraseñas con bcrypt o argon2; registro de auditoría de toda acción de administración & Implementado; con hallazgos abiertos de la auditoría técnica (sección~\ref{sec:auditoria}) \\
+        RNF-03 & Privacidad       & Cumplimiento de la Ley 25.326, con especial cuidado en los datos de menores & Parcial: ver riesgo R-01 del capítulo~\ref{cap:riesgos} \\
+        RNF-04 & Rendimiento      & Latencia de videollamada menor a 200~ms; ajuste automático de calidad sin modo degradado visible & A medir en el piloto \\
+        RNF-05 & Mantenibilidad   & Sostenible por uno o dos desarrolladores, sin conocimiento tácito no documentado & Cumplido: especificaciones, planes y registros de decisión versionados \\
         \bottomrule
     \end{tabularx}
 \end{table}
 
-\section{\completar{Nombre de la sección}}
+\section{Diseño}
 
-\completar{Texto.}
+La arquitectura, el modelo de datos y las decisiones de diseño se
+documentan en el capítulo~\ref{cap:marco-tecnologico}. El resultado de
+esa etapa fue un monolito modular de nueve módulos de dominio, con un
+único proceso separado para el \gls{matching} y con los servicios de
+video, pagos e \gls{ia} delegados en proveedores externos
+(figura~\ref{fig:arquitectura}).
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.85\textwidth]{example-image-c}
-    \caption{Captura del sistema en funcionamiento (ejemplo de figura)}
-    \label{fig:captura}
-\end{figure}
+\completar{Insertar capturas reales de las pantallas principales:
+búsqueda de tutores, reserva, aula virtual y panel de administración.}
+
+\section{Construcción e integración}
+
+El sistema se construyó con el método dirigido por especificaciones
+descrito en el capítulo~\ref{cap:metodologia}. La
+tabla~\ref{tab:construccion} resume el resultado medido sobre el
+repositorio.
 
 \begin{table}[H]
     \centering
-    \caption{Resultados sobre el conjunto de prueba (ejemplo de estructura)}
-    \label{tab:metricas}
+    \caption{Métricas de construcción al 22 de septiembre de 2026}
+    \label{tab:construccion}
     \small
-    \begin{tabular}{l r r r r}
+    \begin{tabularx}{\textwidth}{L r}
         \toprule
-        \tb{Modelo} & \tb{Precisión} & \tb{Exhaustividad} & \tb{$F_1$} & \tb{Tiempo (s)} \\
+        \tb{Métrica} & \tb{Valor} \\
         \midrule
-        Línea de base & \completar{...} & \completar{...} & \completar{...} & \completar{...} \\
-        Modelo propuesto & \completar{...} & \completar{...} & \completar{...} & \completar{...} \\
+        Líneas de código de producción (Java, TypeScript, SQL y Python) & 24.110 \\
+        Migraciones de base de datos versionadas                         & 24 \\
+        Registros de decisión de arquitectura                           & 14 \\
+        Tareas completadas / pendientes                                  & 136 / 32 \\
+        Commits                                                          & 213 \\
+        Esfuerzo registrado (\emph{git-hours})                           & 103,2 horas \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+El listado~\ref{lst:puerto-resumen} muestra un fragmento representativo
+de la construcción: el puerto que aísla al proveedor de \gls{llm}. Su
+implementación por defecto rechaza toda solicitud (\emph{fail-closed}),
+de modo que ningún dato sale hacia un modelo externo mientras el
+proveedor no se integre formalmente. El comentario del propio código
+registra la tensión entre el envío directo de audio y la anonimización,
+que el capítulo~\ref{cap:riesgos} trata como el riesgo R-01.
+
+\begin{lstlisting}[language=Java, caption={Puerto del proveedor de \gls{llm} y su implementación \emph{fail-closed} (extracto)}, label={lst:puerto-resumen}]
+/**
+ * Anonimizacion (FR-SUM-005): transcriptAnonimizado ES lo que se
+ * envia [...] el audio crudo no es anonimizable antes de salir,
+ * asi que [...] el flujo manda solo el transcript ya limpio.
+ */
+public interface ResumenProveedor {
+    ResumenResultado generarResumen(ResumenRequest request);
+}
+
+@Component
+public class ResumenProveedorFailClosed implements ResumenProveedor {
+    @Override
+    public ResumenResultado generarResumen(ResumenRequest request) {
+        throw new ResumenProveedorNoConfiguradoException();
+    }
+}
+\end{lstlisting}
+
+\section{Pruebas técnicas}\label{sec:pruebas}
+
+\subsection{Pruebas automatizadas}
+
+El backend cuenta con 455 casos de prueba unitarios y de integración.
+Las pruebas de integración se ejecutan con Testcontainers contra una
+base PostgreSQL real, e incluyen dos pruebas de extremo a extremo sin
+simulaciones entre los módulos propios: el flujo principal completo
+(alta del adulto responsable y del menor, autorización del tutor,
+solicitud, reserva, pago, sesión, resumen y calificación) y la rama de
+seguridad (sesión con un menor, disparo del kill-switch, suspensión,
+alerta y resolución del administrador). La integración continua ejecuta
+en cada cambio las pruebas del backend y, en el frontend, el análisis
+estático y pruebas de extremo a extremo con Playwright; estas últimas
+todavía simulan la \gls{api}, lo que la auditoría registró como un
+hallazgo abierto. El servicio de \gls{matching} tiene 10 pruebas propias,
+pero aún no forma parte de la integración continua.
+
+\completar{Cobertura de código medida sobre el backend, contra el umbral
+del 70\,\% fijado en el capítulo~\ref{cap:metodologia}.}
+
+\subsection{Auditoría técnica}\label{sec:auditoria}
+
+El 21 de septiembre de 2026 se realizó una auditoría técnica del
+repositorio completo, que incluyó la ejecución de la suite de pruebas
+(383 casos en ese momento, todos exitosos).
+\completar{Quién realizó la auditoría y con qué método o herramienta.}
+La auditoría registró 36 hallazgos, que se gestionan en un registro con
+su estado; un hallazgo solo se da por cerrado con un cambio en el código
+y una prueba de regresión. La tabla~\ref{tab:auditoria} resume su estado
+al 22 de septiembre.
+
+\begin{table}[H]
+    \centering
+    \caption{Hallazgos de la auditoría técnica por severidad y estado}
+    \label{tab:auditoria}
+    \small
+    \begin{tabular}{l r r r}
+        \toprule
+        \tb{Severidad} & \tb{Hallazgos} & \tb{Cerrados} & \tb{Abiertos} \\
+        \midrule
+        Crítica & 7  & 7  & 0 \\
+        Alta    & 12 & 4  & 8 \\
+        Media   & 13 & 2  & 11 \\
+        Baja    & 4  & 1  & 3 \\
+        \midrule
+        \tb{Total} & \tb{36} & \tb{14} & \tb{22} \\
         \bottomrule
     \end{tabular}
 \end{table}
 
+Es el resultado más relevante de la etapa de pruebas. La auditoría
+concluyó que el proceso de desarrollo era disciplinado, pero que la
+implementación de los controles de seguridad era más débil de lo que la
+documentación sugería. Los siete hallazgos críticos afectaban
+directamente a la seguridad del menor y a la confianza, y ya fueron
+corregidos:
+
+\begin{itemize}
+    \item el kill-switch registraba el corte en la base de datos, pero no
+          cerraba la sala de video, que seguía activa;
+    \item los permisos de acceso a las salas de video otorgaban a los
+          participantes privilegios de administración;
+    \item el DNI del participante se usaba como identificador en la sala
+          de video y se mostraba en pantalla, incluido el de los menores;
+    \item la verificación de identidad por \gls{ocr} funcionaba con una
+          simulación activada por defecto;
+    \item cualquier participante podía disparar el kill-switch sin
+          aportar evidencia;
+    \item la credencial académica se aprobaba sin que el administrador
+          pudiera ver el documento;
+    \item el enlace de restablecimiento de contraseña se registraba en
+          claro en los logs.
+\end{itemize}
+
+Entre los hallazgos de severidad alta que siguen abiertos se destacan la
+ausencia de límites de intentos en los endpoints públicos, la falta de
+una infraestructura real de notificaciones, el servicio de
+\gls{matching} expuesto sin autenticación y una restricción de reservas
+que compara horarios idénticos en lugar de superpuestos. Su remediación
+forma parte de las tareas pendientes que dimensiona la inversión del
+capítulo~\ref{cap:economica}.
+
+Dos lecturas surgen de este resultado. La primera: 455 pruebas exitosas
+no garantizan la ausencia de defectos graves, porque las pruebas
+verifican lo que se especificó y no lo que se omitió; la revisión
+independiente detectó fallas que ninguna prueba cubría. La segunda: el
+desarrollo asistido por \gls{ia} acelera la construcción, pero no
+reemplaza la verificación; la auditoría fue el mecanismo que compensó
+esa diferencia.
+
+\subsection{Pruebas de aceptación}
+
+Las pruebas de aceptación con usuarios (\gls{uat}) se realizan en el
+piloto del Sprint~11, entre el 27 de octubre y el 27 de noviembre de
+2026, y miden los indicadores del capítulo~\ref{cap:metodologia}. Por los
+riesgos R-01, R-05 y R-10 del capítulo~\ref{cap:riesgos}, el piloto no
+incluye sesiones con menores mientras el kill-switch no esté integrado en
+el cliente y el \gls{cap} no se haya reincorporado.
+
 \begin{table}[H]
     \centering
-    \caption{Traducción de la retroalimentación en decisiones de diseño (ejemplo de estructura)}
+    \caption{Indicadores del piloto}
+    \label{tab:indicadores-piloto}
+    \small
+    \begin{tabularx}{\textwidth}{l L l l}
+        \toprule
+        \tb{ID} & \tb{Indicador} & \tb{Umbral} & \tb{Resultado} \\
+        \midrule
+        I-01 & Aceptación de las sugerencias del \gls{matching} & $> 60\,\%$ & \completar{pendiente} \\
+        I-02 & Calidad percibida de la sesión (escala 1 a 5)   & $\geq 4{,}0$ & \completar{pendiente} \\
+        I-03 & Sesiones entre provincias distintas, con una del interior & $\geq 1$ & \completar{pendiente} \\
+        I-04 & \gls{nps} del piloto                            & positivo & \completar{pendiente} \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\section{Validación con usuarios}
+
+\subsection{Encuesta de validación}
+
+La encuesta, aplicada a 88 personas entre el 28 de agosto y el 9 de
+septiembre de 2026, se detalla en el apéndice~\ref{apx:encuesta}. Sus
+resultados se contrastan con los supuestos del proyecto:
+
+\begin{itemize}
+    \item \textbf{El problema existe.} De quienes tomaron clases
+          particulares, el 70\,\% encontró al profesor por recomendación,
+          y las dificultades más mencionadas fueron saber si era bueno
+          (30\,\%) y la confianza (20\,\%). El resultado respalda el
+          diagnóstico de informalidad del capítulo~\ref{cap:introduccion}.
+    \item \textbf{La modalidad virtual es aceptada.} El 77,3\,\% tomaría
+          clases virtuales con un buen profesor, lo que respalda el
+          modelo remoto.
+    \item \textbf{La verificación genera confianza.} El 81,8\,\% confía más
+          en una plataforma con profesores verificados, que además fue la
+          función más valorada (58\,\%).
+    \item \textbf{La \gls{ia} se valora por su resultado, no como
+          etiqueta.} El 68,2\,\% querría que la plataforma le recomiende
+          el tutor más adecuado, pero solo el 5,7\,\% eligió ``\gls{ia} que
+          recomiende profesores'' entre las funciones importantes, el
+          último lugar. En cambio, el resumen automático, una función
+          basada en \gls{ia} descrita por su utilidad, fue la segunda más
+          valorada (56,8\,\%).
+    \item \textbf{El pago dentro de la plataforma no está asegurado.}
+          Solo el 35,2\,\% prefiere pagar dentro de una plataforma antes
+          que por transferencia, y el 34,1\,\% está en desacuerdo. Es el
+          resultado más desfavorable para el modelo de negocio.
+    \item \textbf{El precio es menor al supuesto originalmente.} La
+          mediana de la disposición a pagar es de \usd{4,56} por hora,
+          casi la mitad del precio que suponía la primera formulación del
+          modelo económico.
+\end{itemize}
+
+La encuesta tiene limitaciones que acotan estas conclusiones: la muestra
+no es probabilística, el 90,9\,\% de las respuestas proviene del AMBA y
+solo 9 corresponden a tutores.
+
+\subsection{Entrevistas a especialistas}
+
+\completar{Síntesis de las entrevistas (apéndice~\ref{apx:entrevista}):
+fecha, entrevistado, aportes principales y contraste con los resultados
+de la encuesta.}
+
+\subsection{Decisiones derivadas}
+
+La tabla~\ref{tab:feedback-decisiones} traduce los hallazgos en
+decisiones concretas.
+
+\begin{table}[H]
+    \centering
+    \caption{Traducción de los hallazgos en decisiones de diseño}
     \label{tab:feedback-decisiones}
     \small
     \begin{tabularx}{\textwidth}{l L L l}
         \toprule
         \tb{Fuente} & \tb{Hallazgo} & \tb{Decisión} & \tb{Estado} \\
         \midrule
-        Encuesta (n=\completar{..}) & \completar{El 60\,\% no encontró la función X} & \completar{Mover X al menú principal} & Implementado \\
-        Experto 1 & \completar{...} & \completar{...} & Planificado \\
+        Encuesta & Mediana de disposición a pagar de \usd{4,56} por hora & Precio del modelo y piso de \usd{4} por hora (capítulo~\ref{cap:economica}) & Aplicado \\
+        Encuesta & El resumen automático es la segunda función más valorada & Resumen como adicional opcional & Aplicado en el modelo \\
+        Encuesta & La \gls{ia} como etiqueta casi no se valora & Presentar las recomendaciones por su resultado, sin destacar la \gls{ia} & Planificado \\
+        Encuesta & Solo el 35,2\,\% prefiere pagar en la plataforma & Mitigación del riesgo R-02: valor exclusivo dentro de la plataforma & Planificado \\
+        Encuesta & 90,9\,\% de las respuestas del AMBA & Reencuesta dirigida al interior (riesgo R-08) & Planificado \\
+        Auditoría & 7 hallazgos críticos de seguridad & Corrección con prueba de regresión & Aplicado \\
+        Auditoría & 22 hallazgos abiertos & Incorporados a las tareas pendientes y a la inversión & En curso \\
+        Costos & El audio de la sesión no puede anonimizarse antes del \gls{llm} & Sin resumen en sesiones con menores (R-01) & Aplicado en el diseño \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\section{Contraste con el estado del arte}
+
+El capítulo~\ref{cap:marco-teorico} comparó las plataformas existentes
+(tabla~\ref{tab:comparativa}). Los resultados permiten contrastar la
+propuesta con ellas en tres ejes:
+
+\begin{itemize}
+    \item \textbf{\gls{matching}.} Las plataformas relevadas ofrecen
+          filtros manuales; \sistema{} implementa un motor de
+          \gls{matching} semántico con \gls{embeddings}. Su valor para
+          los usuarios queda sujeto al indicador I-01 del piloto.
+    \item \textbf{Aula y pagos integrados.} \sistema{} integra en un
+          mismo flujo la reserva, el aula virtual y el cobro con
+          \gls{escrow}, algo que las plataformas relevadas resuelven solo
+          de forma parcial.
+    \item \textbf{Seguridad del menor.} Es el diferencial más ambicioso y,
+          a la vez, el que la auditoría encontró más débil. Tras corregir
+          los hallazgos críticos, queda pendiente la integración del
+          kill-switch en el cliente y la reincorporación del \gls{cap}
+          obligatorio para los tutores de menores (riesgo R-10 del
+          capítulo~\ref{cap:riesgos}).
+\end{itemize}
+
+\section{Evaluación económica}
+
+La evaluación del capítulo~\ref{cap:economica}, con el precio relevado en
+la encuesta, la inversión incremental y una tasa de descuento del
+21,10\,\%, arroja un \gls{van} de \usd{3.496} y una \gls{tir} del
+52,06\,\% en el escenario base, con un repago descontado de 2,33 años.
+El escenario pesimista no resulta viable (\gls{van} de \usd{-5.468}). El
+resultado más relevante del proceso fue que la contrastación del modelo
+con datos primarios cambió la conclusión dos veces: el precio relevado
+tornó inviable la primera formulación, y la medición de la inversión
+real sobre el repositorio la volvió viable.
+
+\section{Síntesis}
+
+\begin{table}[H]
+    \centering
+    \caption{Síntesis de resultados}
+    \label{tab:sintesis-resultados}
+    \small
+    \begin{tabularx}{\textwidth}{L L}
+        \toprule
+        \tb{Resultados favorables} & \tb{Resultados desfavorables} \\
+        \midrule
+        Nueve módulos implementados, con 455 pruebas automatizadas &
+        36 hallazgos de auditoría, 22 todavía abiertos \\
+        Los 7 hallazgos críticos, corregidos con prueba de regresión &
+        Kill-switch sin integrar en el cliente \\
+        La encuesta respalda el problema, la modalidad virtual y la verificación &
+        Solo el 35,2\,\% prefiere pagar dentro de la plataforma \\
+        Escenarios base y optimista económicamente viables &
+        Escenario pesimista no viable \\
+        Esfuerzo de construcción muy inferior al de un desarrollo tradicional &
+        El resumen automático no funciona todavía y no puede ofrecerse a menores \\
+        Verificación de identidad, edad y credencial académica de los tutores &
+        \gls{cap} para tutores de menores pendiente de reincorporar \\
         \bottomrule
     \end{tabularx}
 \end{table}
