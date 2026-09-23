@@ -1,5 +1,6 @@
 %!TEX root = ../main.tex
 % APÉNDICE A — Encuesta de validación
+% Datos crudos: anexos/encuesta-tinku.csv (exportación del formulario).
 
 \chapter{Encuesta de validación}\label{apx:encuesta}
 
@@ -13,22 +14,269 @@ se analizan en el capítulo~\ref{cap:resultados}.
 
 \section{Introducción}
 
-\completar{Objetivo de la encuesta y qué se quería validar.}
+La encuesta constituye el instrumento cuantitativo de validación de
+demanda previsto en el capítulo~\ref{cap:metodologia}. Su objetivo fue
+contrastar con usuarios potenciales cuatro supuestos del proyecto:
+
+\begin{enumerate}
+    \item que la búsqueda de un tutor particular depende hoy de canales
+          informales y presenta fricciones concretas (confianza, calidad,
+          coordinación);
+    \item que alumnos y familias aceptarían la modalidad virtual y
+          valorarían la verificación de los tutores;
+    \item qué funciones de la plataforma se perciben como más
+          importantes, incluidas las basadas en \gls{ia};
+    \item la disposición a pagar por una clase de una hora y a hacerlo
+          dentro de la plataforma, supuesto sobre el que descansa el modelo
+          de ingresos del capítulo~\ref{cap:economica}.
+\end{enumerate}
 
 \section{Metodología}
 
-\completar{Diseño del cuestionario, población, canal de distribución,
-período de aplicación y cantidad de respuestas.}
+\begin{itemize}
+    \item \textbf{Instrumento:} cuestionario autoadministrado en línea
+          (Tally), de 14 preguntas cerradas: opción única, escala de 1
+          (menor acuerdo) a 5 (mayor acuerdo) y selección múltiple.
+    \item \textbf{Lógica condicional:} las preguntas 5 a 8 se muestran
+          solo a quienes responden ``Sí'' en la pregunta 4.
+    \item \textbf{Población objetivo:} alumnos, madres y padres de
+          alumnos, y tutores particulares residentes en Argentina.
+    \item \textbf{Muestreo:} no probabilístico, por conveniencia.
+          \completar{Canal de distribución (grupos de WhatsApp, redes
+          sociales, contactos personales, etc.).}
+    \item \textbf{Período de aplicación:} del 28 de agosto al 9 de
+          septiembre de 2026. El 87,5\,\% de las respuestas se registró
+          en los dos primeros días.
+    \item \textbf{Respuestas:} 88 respuestas válidas, sin duplicados por
+          identificador de respondente, por encima del mínimo de 30
+          fijado en el capítulo~\ref{cap:metodologia}.
+    \item \textbf{Moneda:} el cuestionario relevó los montos en pesos
+          argentinos. Para su análisis se convierten a dólares
+          estadounidenses, moneda de todo el trabajo, con la cotización
+          vendedora del Banco de la Nación Argentina al cierre de la
+          encuesta: \$1.535 por dólar el 9 de septiembre de 2026
+          \citep{bna2026}.
+    \item \textbf{Depuración:} un registro indicó no haber tomado clases
+          particulares pero completó dos preguntas del bloque condicional;
+          esas dos respuestas se excluyen del análisis de ese bloque.
+\end{itemize}
 
 \section{Presentación de la encuesta}
 
 \completar{Texto introductorio que vieron las personas participantes
-(propósito, anonimato, duración estimada).}
+(propósito, anonimato, duración estimada) y, dado que respondieron
+menores de 18 años, cómo se obtuvo o se solicitó el consentimiento de
+su adulto responsable.}
 
 \section{Cuestionario}
 
+\textbf{Bloque 1 --- Perfil.}
+
 \begin{enumerate}
-    \item \completar{Pregunta 1 (tipo: opción única).}
-    \item \completar{Pregunta 2 (tipo: escala 1--5).}
-    \item \completar{Pregunta 3 (tipo: abierta).}
+    \item Edad (opción única): Menor de 18 / 18--25 / 26--40 / Más de 40.
+    \item Provincia (opción única).
+    \item Rol (opción única): Alumno / Padre/Madre / Tutor.
 \end{enumerate}
+
+\textbf{Bloque 2 --- Experiencia previa.}
+
+\begin{enumerate}[resume]
+    \item ¿Tomaste clases particulares durante los últimos años? (Sí / No)
+    \item ¿Cuántas veces? (Una / 2--5 / Más de cinco)
+    \item ¿Cómo encontraste al profesor? (Recomendación / Google /
+          Superprof / Redes / Otro)
+    \item ¿Cuánto tardaste? (1--3 días / Una semana / Más de una semana)
+    \item ¿Qué fue lo más difícil? (Encontrar profesor / Saber si era
+          bueno / Comparar precios / Coordinar horarios / Confianza)
+\end{enumerate}
+
+\textbf{Bloque 3 --- Actitudes (escala de 1 a 5).}
+
+\begin{enumerate}[resume]
+    \item Me gustaría que una plataforma me recomendara automáticamente
+          el tutor más adecuado.
+    \item Tomaría clases virtuales si el profesor fuera bueno.
+    \item Me genera confianza una plataforma con profesores verificados.
+    \item Preferiría pagar dentro de una plataforma antes que por
+          transferencia.
+\end{enumerate}
+
+\textbf{Bloque 4 --- Funciones y precio.}
+
+\begin{enumerate}[resume]
+    \item ¿Cuáles de estas funciones considera más importantes?
+          (selección múltiple): Videollamada integrada / Pago seguro /
+          Profesores verificados / Calificaciones / \gls{ia} que
+          recomiende profesores / Chat / Agenda / Recordatorios / Resumen
+          automático de la clase.
+    \item ¿Cuánto estaría dispuesto a pagar por una clase de una hora?
+          (opción única): hasta \usd{1,95} / \usd{1,95} a \usd{3,26} /
+          \usd{3,26} a \usd{5,86} / \usd{5,86} o más. Las opciones se
+          presentaron en pesos argentinos: ``Hasta \$3000'', ``\$3000 a
+          \$5000'', ``\$5000 a \$9000'' y ``\$9000 o más''.
+\end{enumerate}
+
+\section{Resultados descriptivos}
+
+Esta sección presenta las frecuencias de cada pregunta. Su
+interpretación y su contraste con los supuestos del proyecto se
+desarrollan en el capítulo~\ref{cap:resultados}.
+
+\subsection{Perfil de la muestra}
+
+\begin{table}[H]
+    \centering
+    \caption{Perfil de las personas encuestadas ($n = 88$)}
+    \label{tab:encuesta-perfil}
+    \small
+    \begin{tabularx}{\textwidth}{l L r r}
+        \toprule
+        \tb{Variable} & \tb{Categoría} & \tb{Frecuencia} & \tb{\%} \\
+        \midrule
+        Rol       & Alumno                         & 50 & 56,8 \\
+                  & Padre/Madre                    & 29 & 33,0 \\
+                  & Tutor                          &  9 & 10,2 \\
+        \addlinespace
+        Edad      & Menor de 18                    & 11 & 12,5 \\
+                  & 18--25                         & 24 & 27,3 \\
+                  & 26--40                         & 23 & 26,1 \\
+                  & Más de 40                      & 30 & 34,1 \\
+        \addlinespace
+        Provincia & Buenos Aires                   & 72 & 81,8 \\
+                  & Ciudad Autónoma de Buenos Aires &  8 &  9,1 \\
+                  & Resto del país (7 provincias)  &  8 &  9,1 \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+Las respuestas del resto del país corresponden a Corrientes (2),
+Córdoba, Chaco, Entre Ríos, San Juan, Santa Cruz y Santa Fe (1 cada una).
+
+\subsection{Experiencia previa con clases particulares}
+
+El 22,7\,\% de la muestra (20 personas) tomó clases particulares en los
+últimos años. La tabla~\ref{tab:encuesta-experiencia} resume las
+respuestas de ese subgrupo.
+
+\begin{table}[H]
+    \centering
+    \caption{Experiencia de búsqueda de quienes tomaron clases particulares ($n = 20$)}
+    \label{tab:encuesta-experiencia}
+    \small
+    \begin{tabularx}{\textwidth}{l L r r}
+        \toprule
+        \tb{Pregunta} & \tb{Respuesta} & \tb{Frecuencia} & \tb{\%} \\
+        \midrule
+        Cantidad de veces        & Una                & 3  & 15,0 \\
+                                 & 2--5               & 7  & 35,0 \\
+                                 & Más de cinco       & 10 & 50,0 \\
+        \addlinespace
+        Canal de búsqueda        & Recomendación      & 14 & 70,0 \\
+                                 & Google             & 2  & 10,0 \\
+                                 & Superprof          & 1  &  5,0 \\
+                                 & Otro               & 3  & 15,0 \\
+        \addlinespace
+        Tiempo hasta encontrarlo & 1--3 días          & 9  & 45,0 \\
+                                 & Una semana         & 6  & 30,0 \\
+                                 & Más de una semana  & 5  & 25,0 \\
+        \addlinespace
+        Mayor dificultad         & Saber si era bueno & 6  & 30,0 \\
+                                 & Confianza          & 4  & 20,0 \\
+                                 & Coordinar horarios & 4  & 20,0 \\
+                                 & Comparar precios   & 3  & 15,0 \\
+                                 & Encontrar profesor & 3  & 15,0 \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\subsection{Actitudes hacia la plataforma}
+
+\begin{table}[H]
+    \centering
+    \caption{Grado de acuerdo con las afirmaciones del bloque 3 ($n = 88$, escala 1 a 5)}
+    \label{tab:encuesta-likert}
+    \small
+    \begin{tabularx}{\textwidth}{L r r r r}
+        \toprule
+        \tb{Afirmación} & \tb{Media} & \tb{\% 4--5} & \tb{\% 3} & \tb{\% 1--2} \\
+        \midrule
+        Me genera confianza una plataforma con profesores verificados       & 4,24 & 81,8 &  6,8 & 11,4 \\
+        Tomaría clases virtuales si el profesor fuera bueno                 & 4,15 & 77,3 &  6,8 & 15,9 \\
+        Me gustaría que una plataforma me recomendara el tutor más adecuado & 4,07 & 68,2 & 22,7 &  9,1 \\
+        Preferiría pagar dentro de una plataforma antes que por transferencia & 3,07 & 35,2 & 30,7 & 34,1 \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\subsection{Funciones valoradas}
+
+\begin{table}[H]
+    \centering
+    \caption{Funciones consideradas más importantes (selección múltiple, $n = 88$)}
+    \label{tab:encuesta-funciones}
+    \small
+    \begin{tabular}{l r r}
+        \toprule
+        \tb{Función} & \tb{Menciones} & \tb{\% de encuestados} \\
+        \midrule
+        Profesores verificados            & 51 & 58,0 \\
+        Resumen automático de la clase    & 50 & 56,8 \\
+        Pago seguro                       & 43 & 48,9 \\
+        Videollamada integrada            & 42 & 47,7 \\
+        Agenda                            & 25 & 28,4 \\
+        Chat                              & 21 & 23,9 \\
+        Recordatorios                     & 21 & 23,9 \\
+        Calificaciones                    & 12 & 13,6 \\
+        \gls{ia} que recomiende profesores &  5 &  5,7 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\subsection{Disposición a pagar}
+
+\begin{table}[H]
+    \centering
+    \caption{Disposición a pagar por una clase de una hora, en USD ($n = 88$)}
+    \label{tab:encuesta-precio}
+    \small
+    \begin{tabular}{l r r r}
+        \toprule
+        \tb{Rango (USD)} & \tb{Frecuencia} & \tb{\%} & \tb{\% acumulado} \\
+        \midrule
+        Hasta 1,95      &  9 & 10,2 &  10,2 \\
+        1,95 a 3,26     & 19 & 21,6 &  31,8 \\
+        3,26 a 5,86     & 32 & 36,4 &  68,2 \\
+        5,86 o más      & 28 & 31,8 & 100,0 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+Interpolando dentro del rango que la contiene, la mediana de la
+disposición a pagar es de \usd{4,56} por hora. La distribución es
+similar entre quienes tomaron clases particulares (35\,\% en el rango
+superior, $n = 20$) y quienes no lo hicieron (31\,\%, $n = 68$).
+
+\section{Limitaciones del instrumento}
+
+\begin{itemize}
+    \item \textbf{Representatividad:} la muestra es no probabilística y
+          sus resultados son indicativos, no extrapolables al mercado
+          nacional.
+    \item \textbf{Sesgo geográfico:} el 90,9\,\% de las respuestas
+          proviene de la provincia de Buenos Aires y de la Ciudad
+          Autónoma de Buenos Aires. Las zonas del interior y rurales, en
+          las que el capítulo~\ref{cap:introduccion} ubica el mayor
+          impacto del proyecto, están subrepresentadas.
+    \item \textbf{Lado de la oferta:} solo 9 respuestas corresponden a
+          tutores, por lo que la encuesta valida principalmente el lado
+          de la demanda.
+    \item \textbf{Experiencia previa:} el 77,3\,\% no tomó clases
+          particulares en los últimos años, por lo que las preguntas
+          actitudinales reflejan en su mayoría intenciones y no conductas
+          observadas.
+    \item \textbf{Precio:} la disposición a pagar se relevó en rangos de
+          pesos argentinos y para una clase de una hora. Su expresión en
+          dólares depende del tipo de cambio de una única fecha, y el
+          rango superior es abierto, por lo que no permite estimar cuánto
+          por encima de \usd{5,86} pagaría ese 31,8\,\%.
+\end{itemize}
