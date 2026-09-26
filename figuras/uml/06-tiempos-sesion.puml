@@ -1,0 +1,58 @@
+@startuml 06-tiempos-sesion
+!include _estilo.iuml
+title Diagrama de tiempos — Clase de 60 minutos (T = 0 es el horario de inicio; eje en minutos)
+scale 5 as 40 pixels
+
+robust "Reserva" as R
+robust "Sesión de Aprendizaje" as S
+concise "Sala LiveKit" as L
+concise "Tutor" as TU
+concise "Estudiante" as ES
+robust "Transacción (escrow)" as TX
+
+@-30
+R is pendiente_pago
+S is sin_sesion
+L is "sin sala"
+TU is "fuera"
+ES is "fuera"
+TX is sin_pago
+
+@-25
+R is confirmada
+S is no_iniciada
+TX is retenido_escrow
+
+@-5
+L is "sala creada"
+
+@-1
+TU is "conectado"
+
+@2
+ES is "conectado"
+S is en_curso
+
+@10
+L is "sala activa (no-show descartado)"
+
+@60
+TU is "fuera"
+ES is "fuera"
+
+@65
+L is "cerrada"
+S is finalizada
+R is finalizada
+
+
+@75
+
+TX@-30 <-> @-25 : pago ≤ 15 min
+L@-5 <-> @10 : ventana de ingreso (T−5 a T+10)
+L@60 <-> @65 : tolerancia de corte (+5)
+
+TX@65 <-> @75 : se fija liberarAt = fin + 24 h
+
+highlight 10 to 11 #FDECEA;line:DimGrey : T+10 no-show
+@enduml

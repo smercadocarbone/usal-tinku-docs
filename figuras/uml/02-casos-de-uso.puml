@@ -1,0 +1,92 @@
+@startuml 02-casos-de-uso
+!include _estilo.iuml
+left to right direction
+title Diagrama de casos de uso — Plataforma Tinku
+
+actor "Visitante" as Vis
+actor "Usuario registrado" as Usr
+actor "Estudiante adulto" as Est
+actor "Adulto Responsable" as AR
+actor "Estudiante menor" as Men
+actor "Tutor" as Tut
+actor "Administrador" as Adm
+actor "MercadoPago" as MP <<sistema>>
+actor "LiveKit" as LK <<sistema>>
+actor "Proveedor LLM" as LLM <<sistema>>
+
+Est -|> Usr
+AR -|> Usr
+Men -|> Usr
+Tut -|> Usr
+
+rectangle "Tinku" {
+  usecase "Registrarse\n(verificación de DNI por OCR)" as UC1
+  usecase "Iniciar sesión /\nrecuperar contraseña" as UC2
+  usecase "Buscar tutores\n(matching semántico)" as UC3
+  usecase "Ver perfil público del tutor" as UC4
+  usecase "Dar de alta un menor a cargo" as UC5
+  usecase "Autorizar tutor para un menor" as UC6
+  usecase "Solicitar sesión" as UC7
+  usecase "Aprobar solicitud de sesión" as UC8
+  usecase "Reservar clase" as UC9
+  usecase "Pagar reserva (escrow)" as UC10
+  usecase "Reprogramar / cancelar reserva" as UC11
+  usecase "Participar en el aula virtual" as UC12
+  usecase "Activar kill-switch de seguridad" as UC13
+  usecase "Consultar resumen de la clase" as UC14
+  usecase "Calificar sesión" as UC15
+  usecase "Presentar denuncia" as UC16
+  usecase "Presentar descargo" as UC17
+  usecase "Cargar credenciales académicas\ny antecedentes penales" as UC18
+  usecase "Publicar disponibilidad\n(franjas horarias)" as UC19
+  usecase "Configurar tarifa y cuenta\nde cobro (OAuth MP)" as UC20
+  usecase "Declarar materias y temas" as UC21
+  usecase "Revisar credenciales y CAP" as UC22
+  usecase "Resolver denuncias y alertas\n(sancionar)" as UC23
+  usecase "Gestionar colas financieras\n(pagos fallidos, reembolsos)" as UC24
+  usecase "Gestionar tickets de soporte" as UC25
+  usecase "Monitorear salud de\ninfraestructura" as UC26
+}
+
+Vis --> UC1
+Vis --> UC3
+Vis --> UC4
+Usr --> UC2
+Usr --> UC16
+Usr --> UC17
+Est --> UC3
+Est --> UC9
+Est --> UC11
+Est --> UC12
+Est --> UC14
+Est --> UC15
+AR --> UC5
+AR --> UC6
+AR --> UC8
+AR --> UC9
+AR --> UC11
+AR --> UC14
+AR --> UC15
+Men --> UC7
+Men --> UC12
+Men --> UC13
+Tut --> UC18
+Tut --> UC19
+Tut --> UC20
+Tut --> UC21
+Tut --> UC12
+Tut --> UC11
+Adm --> UC22
+Adm --> UC23
+Adm --> UC24
+Adm --> UC25
+Adm --> UC26
+
+UC8 ..> UC9 : <<include>>
+UC9 ..> UC10 : <<include>>
+UC12 <.. UC13 : <<extend>>
+UC15 ..> UC12 : <<precondición>>
+UC10 -- MP
+UC12 -- LK
+UC14 -- LLM
+@enduml

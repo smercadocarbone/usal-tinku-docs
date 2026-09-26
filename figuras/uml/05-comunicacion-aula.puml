@@ -1,0 +1,35 @@
+@startuml 05-comunicacion-aula
+!include _estilo.iuml
+title Diagrama de comunicación — Ingreso al aula virtual y cierre de la clase
+left to right direction
+
+actor "Tutor" as T
+actor "Estudiante" as E
+rectangle ":Frontend" as FE
+rectangle ":SesionController" as SC
+rectangle ":SesionService" as SS
+rectangle ":LiveKitService" as LKS
+rectangle "LiveKit Cloud" as LK
+rectangle ":LiveKitWebhookService" as LWS
+rectangle ":CorteAutomaticoJob" as CJ
+rectangle ":EscrowService" as ES
+rectangle ":ResumenService" as RSU
+database ":PostgreSQL" as DB
+
+T -- FE : "1: abrir aula\n1a: publicar audio/video"
+E -- FE : "2: abrir aula"
+FE -- SC : "3: POST /sesiones/{id}/token"
+SC -- SS : "4: obtenerToken(usuario, id)"
+SS -- LKS : "5: generarToken(sala, identidad)"
+SS -- DB : "6: leer sesión y reserva"
+FE -- LK : "7: conectar(token JWT)"
+LK -- LWS : "8: participant_joined (webhook)\n11: participant_left"
+LWS -- DB : "9: sesión → en_curso,\njoinedAt, conectado"
+LWS -- SS : "10: cancelarNoShow(id)"
+CJ -- SS : "12: ejecutarCorteAutomatico(id)"
+SS -- LKS : "13: cerrar sala"
+SS -- ES : "14: SesionFinalizadaEvent"
+SS -- RSU : "15: SesionFinalizadaEvent"
+ES -- DB : "16: liberarAt = fin + 24 h"
+RSU -- DB : "17: crear ResumenSesion (pendiente)"
+@enduml

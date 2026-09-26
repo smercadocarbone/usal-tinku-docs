@@ -1,0 +1,40 @@
+@startuml 03b-maquina-estados-sesion
+!include _estilo.iuml
+title Diagrama de máquina de estados — Sesión de Aprendizaje y Transacción (escrow)
+
+state "SesionAprendizaje" as SA {
+  state "no_iniciada" as NI
+  state "en_curso" as EC
+  state "finalizada" as FI
+  state "interrumpida" as IN
+  state "finalizada_anticipada" as FA
+  [*] --> NI : reserva.confirmada /\nprogramarSesion()
+  NI --> EC : primer join (webhook LiveKit)\n/ inicioReal = ahora
+  NI --> FA : T+10 [falta al menos uno]\n/ no-show
+  EC --> FI : finalizar() / corte [≥ 50 %]
+  EC --> IN : corte automático [< 50 %]
+  IN --> FA : [par roto antes del fin agendado]
+  EC --> FI : kill-switch (rama adultos\nconfirmada o rama menor)
+  FI --> [*]
+  IN --> [*]
+  FA --> [*]
+}
+
+state "Transaccion (EstadoTransaccion)" as TX {
+  state "retenido_escrow" as RE
+  state "liberado" as LI
+  state "reembolsado" as RB
+  state "pausado_denuncia" as PD
+  state "pausado_alerta" as PA
+  [*] --> RE : pago aprobado
+  RE --> LI : fin + 24 h / no-show del estudiante
+  RE --> RB : interrumpida / no-show tutor o doble /\ncancelación ≥ 24 h o por el tutor
+  RE --> PD : denuncia.registrada
+  RE --> PA : kill-switch
+  PD --> LI : denuncia infundada
+  PD --> RB : denuncia fundada
+  PA --> RB : alerta.resuelta
+  LI --> [*]
+  RB --> [*]
+}
+@enduml

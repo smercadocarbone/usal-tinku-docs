@@ -1,0 +1,59 @@
+@startuml 04-secuencia-reserva-pago
+!include _estilo.iuml
+autonumber
+title Diagrama de secuencia — Reserva directa y pago con escrow (MercadoPago)
+
+actor "Estudiante" as E
+participant "Frontend\n(Next.js)" as FE
+participant "ReservaController" as RC
+participant "ReservaService" as RS
+participant "PagoController" as PC
+participant "PagoService" as PS
+participant "MercadoPago" as MP
+participant "MercadoPagoWebhook\nController" as WH
+participant "EscrowService" as ES
+participant "SesionService\n(M3)" as SS
+database "PostgreSQL" as DB
+
+E -> FE : elige tutor, horario y\n"con resumen"
+FE -> RC : POST /api/reservas
+RC -> RS : crearDirecta(pagador, request)
+RS -> RS : validar capacidad, ventana ≥15 min,\nfranja, tarifa, cobro del tutor
+RS -> DB : INSERT reserva (pendiente_pago,\nprecio congelado)
+RS -> RS : agendar timeout de pago (15 min)
+RS --> RC : Reserva
+RC --> FE : 201 ReservaResponse
+FE -> PC : POST /api/pagos/preferencia
+PC -> PS : generarPreferencia(usuario, reservaId)
+PS -> PS : exigir pagador y calcular comisión
+PS -> MP : crearPreferencia(monto, marketplace_fee,\nexternal_reference = reservaId)
+MP --> PS : preferenceId, initPoint
+PS -> DB : registrar preferencia (conciliación)
+PS --> FE : initPoint
+FE -> MP : redirigir al checkout
+E -> MP : paga
+MP ->> WH : POST /api/webhooks/mercadopago\n(firmado)
+WH -> WH : verificar firma HMAC
+WH -> ES : procesarPagoAprobado(mpPaymentId)
+ES -> MP : GET /v1/payments/{id}
+MP --> ES : aprobado, monto, external_reference
+ES -> DB : SELECT reserva FOR UPDATE
+alt reserva pendiente_pago y monto coincide
+  ES -> DB : INSERT transaccion (retenido_escrow)
+  ES -> RS : confirmarPagoSimulado(reservaId)
+  RS -> DB : UPDATE reserva → confirmada
+  RS -> RS : cancelar timeout de pago
+  RS ->> SS : ReservaConfirmadaEvent
+  SS -> DB : INSERT sesion (no_iniciada)
+  SS -> SS : agendar jobs T−5, T+10, fin+5
+else reserva ya no está pendiente
+  ES -> MP : reembolsar pago tardío
+else monto distinto
+  ES --> WH : PagoInconsistenteException (fail-closed)
+end
+WH --> MP : 200 OK
+MP --> FE : retorno (back_url)
+FE -> PC : POST /api/pagos/confirmar-retorno
+PC -> ES : confirmarDesdeRetorno() (idempotente)
+FE --> E : "Reserva confirmada"
+@enduml

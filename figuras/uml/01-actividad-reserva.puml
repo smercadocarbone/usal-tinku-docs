@@ -1,0 +1,73 @@
+@startuml 01-actividad-reserva
+!include _estilo.iuml
+title Diagrama de actividad — Ciclo de una clase: búsqueda, reserva, pago, sesión y cierre
+
+|Estudiante / Adulto Responsable|
+start
+:Buscar tutor (texto libre, materia, nivel);
+|Tinku (backend)|
+:M2: filtrar candidatos (autorizados,\nno suspendidos) y pedir ranking\nsemántico al matching-service;
+|Estudiante / Adulto Responsable|
+:Elegir tutor y horario disponible;
+if (¿El beneficiario es menor?) then (sí)
+  :El menor crea una Solicitud de Sesión;
+  :El Adulto Responsable la aprueba;
+else (no)
+  :Reserva directa del Estudiante adulto;
+endif
+|Tinku (backend)|
+:M4: validar ventana (≥15 min), franja,\ntarifa y cuenta de cobro del tutor;
+:Crear Reserva en **pendiente_pago**\n(timeout de 15 min);
+if (¿Pasarela habilitada?) then (sí)
+  :M5: generar preferencia MercadoPago\n(monto congelado + comisión);
+  |Estudiante / Adulto Responsable|
+  :Pagar en MercadoPago;
+  |Tinku (backend)|
+  if (¿Pago aprobado en 15 min\ny monto coincide?) then (no)
+    :Reserva **cancelada** por timeout;
+    stop
+  else (sí)
+    :Transacción en **retenido_escrow**;
+  endif
+else (no — bypass)
+  :Transacción simulada en escrow;
+endif
+:Reserva **confirmada**\n(evento reserva.confirmada);
+:M3: agendar jobs T−5 (sala), T+10 (no-show),\nfin+5 (corte) y crear sala LiveKit;
+fork
+  |Tutor|
+  :Unirse a la sala;
+fork again
+  |Estudiante / Adulto Responsable|
+  :Unirse a la sala;
+end fork
+|Tinku (backend)|
+if (¿Ambos entraron antes de T+10?) then (no)
+  :No-show: liberar al tutor (faltó el estudiante)\no reembolsar (faltó el tutor / ambos);
+  stop
+else (sí)
+  :Sesión **en_curso**;
+endif
+|Tutor|
+:Dictar la clase por videollamada;
+|Tinku (backend)|
+:Finalizar (manual o corte automático);
+if (¿Duración efectiva ≥ 50 %?) then (no)
+  :Sesión interrumpida → reembolso total;
+  stop
+else (sí)
+  :Sesión **finalizada**;
+endif
+fork
+  :M5: liberar escrow al tutor\n(fin + 24 h, menos comisión);
+fork again
+  if (¿Resumen contratado?) then (sí)
+    :M6: transcribir, anonimizar\ny resumir con LLM;
+  else (no)
+  endif
+fork again
+  |Estudiante / Adulto Responsable|
+  :Calificar al tutor (M7);
+end fork
+stop
+@enduml

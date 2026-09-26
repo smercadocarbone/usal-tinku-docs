@@ -1,0 +1,63 @@
+@startuml 07-vision-interacciones
+!include _estilo.iuml
+title Diagrama de visión general de interacciones — De la búsqueda al cierre de la clase
+
+start
+partition "ref: Buscar tutores (sd Matching)" {
+  :Frontend → BusquedaController → MatchingOrquestador;
+  :MatchingOrquestador → matching-service POST /match;
+}
+if (¿Beneficiario menor?) then (sí)
+  partition "ref: Solicitud de sesión (sd Solicitud)" {
+    :Menor → SolicitudController (crear);
+    :Adulto Responsable → aprobar → ReservaService.aprobarSolicitud();
+  }
+else (no)
+  partition "ref: Reserva directa (sd Reserva)" {
+    :Estudiante → ReservaController → ReservaService.crearDirecta();
+  }
+endif
+partition "ref: Pago con escrow (sd Pago — Fig. secuencia)" {
+  :PagoService → MercadoPago (preferencia);
+  :Webhook → EscrowService.procesarPagoAprobado();
+}
+if (¿Pago aprobado en 15 min?) then (no)
+  :sd Timeout: ReservaTimeoutPagoJob → cancelar;
+  stop
+endif
+partition "ref: Ingreso al aula (Fig. comunicación)" {
+  :CrearSalaJob (T−5) → LiveKit;
+  :Participantes → token → LiveKit → webhook join;
+}
+if (¿Par completo en T+10?) then (no)
+  partition "ref: No-show" {
+    :NoShowJob → SesionService.ejecutarNoShow();
+    :EscrowService libera o reembolsa;
+  }
+  stop
+endif
+if (¿Kill-switch activado?) then (sí)
+  partition "ref: Kill-switch (sd Seguridad)" {
+    :SesionController → SesionService.ejecutarKillswitch();
+    :EscrowService → pausado_alerta; AlertaSeguridad → Admin;
+  }
+  stop
+endif
+partition "ref: Cierre (sd Corte automático)" {
+  :CorteAutomaticoJob o finalizar() → SesionFinalizadaEvent;
+}
+fork
+  partition "ref: Liberación de escrow" {
+    :LiberacionEscrowJob (fin + 24 h) → MercadoPago;
+  }
+fork again
+  partition "ref: Resumen automático" {
+    :ResumenService → transcript → anonimizar → LLM;
+  }
+fork again
+  partition "ref: Calificación" {
+    :CalificacionController → CalificacionService;
+  }
+end fork
+stop
+@enduml

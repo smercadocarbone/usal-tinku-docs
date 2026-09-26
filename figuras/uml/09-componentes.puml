@@ -1,0 +1,85 @@
+@startuml 09-componentes
+!include _estilo.iuml
+title Diagrama de componentes — Arquitectura de Tinku (monolito modular + servicio de matching)
+
+actor "Usuario\n(navegador)" as U
+cloud "Cloudflare\n(Tunnel + HTTPS)" as CF
+
+node "VPS (Coolify / Docker Compose)" {
+  component "cloudflared" as CFD
+  component "Frontend\nNext.js (React, TS)" as FE <<contenedor>>
+
+  package "Backend — Spring Boot (monolito modular)" as BE {
+    component "config / security\n(JWT, CORS)" as SEC
+    component "identidad (M1)\nregistro, OCR DNI, credenciales" as M1
+    component "matching (M2)\nbúsqueda, temas" as M2
+    component "aula (M3)\nsesiones, LiveKit, kill-switch" as M3
+    component "reservas (M4)\nfranjas, solicitudes, reservas" as M4
+    component "pagos (M5)\nescrow, MP, liberación" as M5
+    component "resumen (M6)\ntranscript, anonimización, LLM" as M6
+    component "reputacion (M7)\ncalificaciones, señales" as M7
+    component "admin (M8)\ncolas, tickets, notificaciones" as M8
+    component "seguridad (M9)\ndenuncias, alertas, sanciones" as M9
+    component "shared\nNotificador, EnviadorEmail" as SH
+    component "Quartz Scheduler\n(jobs)" as QZ
+    portin "REST /api" as API
+    portin "Webhooks" as WHP
+  }
+
+  component "matching-service\nPython FastAPI\n(sentence-transformers)" as MS <<contenedor>>
+  database "PostgreSQL 16\n+ pgvector" as DB
+  component "backup\n(pg dump cifrado)" as BK
+}
+
+cloud "Servicios externos" {
+  component "MercadoPago\n(pagos, OAuth)" as MP
+  component "LiveKit Cloud\n(WebRTC)" as LK
+  component "Proveedor LLM /\nTranscripción" as LLM
+  component "Resend\n(email)" as RS
+  storage "Cloudflare R2\n(S3)" as R2
+}
+
+interface "REST + X-Matching-Token" as I_MS
+interface "JDBC" as I_JDBC
+
+U --> CF
+CF --> CFD
+CFD --> FE : tinku.site
+CFD --> API : api.tinku.site
+FE --> API : REST/JSON (JWT)
+API --> SEC
+SEC --> M1
+SEC --> M2
+SEC --> M3
+SEC --> M4
+SEC --> M5
+SEC --> M6
+SEC --> M7
+SEC --> M8
+SEC --> M9
+
+M2 --> I_MS
+I_MS - MS
+MS --> DB : embeddings (pgvector)
+BE --> I_JDBC
+I_JDBC - DB
+QZ ..> M3 : sala / no-show / corte
+QZ ..> M5 : liberación / conciliación
+QZ ..> M6 : reintentos / purga audio
+
+M4 ..> M3 : eventos reserva.*
+M3 ..> M5 : eventos sesion.*
+M3 ..> M6 : sesion.finalizada
+M9 ..> M5 : denuncia.* / alerta.*
+M7 ..> M2 : señales de reputación
+
+M5 --> MP : preferencias, pagos,\nreembolsos
+MP --> WHP : webhook pagos
+M3 --> LK : salas, tokens
+LK --> WHP : webhook join/leave
+M6 --> LLM : transcript + resumen
+SH --> RS : emails
+BK --> DB
+BK --> R2 : backup diario
+FE --> LK : WebRTC (token)
+@enduml

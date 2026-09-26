@@ -1,0 +1,212 @@
+@startuml 08-clases
+!include _estilo.iuml
+title Diagrama de clases — Modelo de dominio de Tinku (entidades principales)
+hide empty methods
+
+package "identidad (M1)" {
+  enum TipoUsuario {
+    ADULTO
+    MENOR
+    TUTOR
+  }
+  enum EstadoCuenta {
+    ACTIVA
+    SUSPENDIDA
+    BAJA
+  }
+  class Usuario {
+    - id : UUID
+    - dni : String
+    - nombre : String
+    - apellido : String
+    - fechaNacimiento : LocalDate
+    - tipo : TipoUsuario
+    - capacidadEstudiante : boolean
+    - capacidadAdultoResponsable : boolean
+    - email : String
+    - passwordHash : String
+    - estadoCuenta : EstadoCuenta
+    - activoParaMatching : boolean
+    - aceptaMenores : boolean
+    - bio : String
+  }
+  class CredencialAcademica {
+    - id : UUID
+    - tipo : TipoCredencial
+    - estado : EstadoCredencial
+  }
+  class CertificadoAntecedentesPenales {
+    - estado : EstadoCap
+    - venceEl : LocalDate
+  }
+  class AutorizacionTutor {
+    - noConfiable : boolean
+  }
+  class ConsentimientoMenor
+}
+
+package "matching (M2)" {
+  class PerfilTutorMatching {
+    - tutorId : UUID
+    - embedding : vector(384)
+  }
+  class Tema {
+    - id : String
+    - nombre : String
+  }
+  class BusquedaGuardada {
+    - texto : String
+  }
+}
+
+package "reservas (M4)" {
+  enum EstadoReserva {
+    PENDIENTE_PAGO
+    CONFIRMADA
+    EN_CURSO
+    FINALIZADA
+    CANCELADA
+    NO_SHOW_ESTUDIANTE
+    NO_SHOW_TUTOR
+    NO_SHOW_DOBLE
+  }
+  class Reserva {
+    - id : UUID
+    - horario : Instant
+    - duracionMinutos : Integer
+    - horarioFin : Instant
+    - precio : BigDecimal
+    - resumenContratado : boolean
+    - precioAdicionalResumen : BigDecimal
+    - estado : EstadoReserva
+    - motivoCancelacion : MotivoCancelacion
+    + montoTotal() : BigDecimal
+    + definirHorario(Instant, int)
+  }
+  class SolicitudSesion {
+    - horarioPropuesto : Instant
+    - duracionMinutos : Integer
+    - estado : EstadoSolicitud
+  }
+  class FranjaDisponibilidad {
+    - inicio : Instant
+    - fin : Instant
+  }
+}
+
+package "pagos (M5)" {
+  enum EstadoTransaccion {
+    RETENIDO_ESCROW
+    LIBERADO
+    REEMBOLSADO
+    PAUSADO_DENUNCIA
+    PAUSADO_ALERTA
+  }
+  class Transaccion {
+    - id : UUID
+    - mpPaymentId : String
+    - montoBruto : BigDecimal
+    - comisionPlataforma : BigDecimal
+    - estado : EstadoTransaccion
+    - liberarAt : Instant
+    - intentosLiberacion : int
+    - enBypass : boolean
+    - montoAdicionalResumen : BigDecimal
+  }
+  class TarifaTutor {
+    - precioHora : BigDecimal
+  }
+  class CuentaMpTutor {
+    - accessToken : cifrado
+    - estado : EstadoCuentaMp
+  }
+}
+
+package "aula (M3)" {
+  class SesionAprendizaje {
+    - id : UUID
+    - livekitRoomId : String
+    - estado : String
+    - tutorJoinedAt : Instant
+    - estudianteJoinedAt : Instant
+    - inicioReal : Instant
+    - finReal : Instant
+    - duracionEfectivaSegundos : Integer
+    - duracionAgendadaSegundos : Integer
+    - audioReferencia : String
+  }
+}
+
+package "resumen (M6)" {
+  class ResumenSesion {
+    - estado : String
+    - transcriptAnonimizado : String
+    - resumenFinal : String
+    - intentos : int
+  }
+}
+
+package "reputacion (M7)" {
+  class Calificacion {
+    - direccion : String
+    - estrellas : Short
+    - comentario : String
+    - editableHasta : Instant
+  }
+}
+
+package "seguridad (M9)" {
+  class Denuncia {
+    - motivo : MotivoDenuncia
+    - estado : EstadoDenuncia
+    - descargoVenceAt : Instant
+    - prioridadAlta : boolean
+  }
+  class AlertaSeguridad {
+    - rama : String
+    - clipUrl : String
+    - estado : String
+  }
+  class Sancion {
+    - tipo : TipoSancion
+    - origen : OrigenSancion
+    - diasSuspension : Integer
+    - vigenteHasta : Instant
+  }
+}
+
+Usuario --> TipoUsuario
+Usuario --> EstadoCuenta
+Usuario "0..*" --> "0..1" Usuario : adultoResponsable >
+Usuario "1 tutor" *-- "0..*" CredencialAcademica
+Usuario "1 tutor" *-- "0..*" CertificadoAntecedentesPenales
+AutorizacionTutor "*" --> "3" Usuario : adulto, menor, tutor >
+ConsentimientoMenor "*" --> "1" Usuario
+
+PerfilTutorMatching "1" -- "1 tutor" Usuario
+PerfilTutorMatching "*" o-- "*" Tema
+BusquedaGuardada "*" --> "1" Usuario
+
+Reserva "*" --> "3" Usuario : pagador, beneficiario, tutor >
+Reserva "0..1" --> "0..1 origen" SolicitudSesion
+Reserva --> EstadoReserva
+SolicitudSesion "*" --> "1 menor" Usuario
+FranjaDisponibilidad "*" --> "1 tutor" Usuario
+
+Transaccion "0..1" --> "1" Reserva
+Transaccion --> EstadoTransaccion
+TarifaTutor "0..1" -- "1 tutor" Usuario
+CuentaMpTutor "0..1" -- "1 tutor" Usuario
+
+SesionAprendizaje "0..1" --> "1" Reserva
+ResumenSesion "0..1" --> "1" SesionAprendizaje
+Calificacion "0..2" --> "1" SesionAprendizaje
+Calificacion "*" --> "1 autor" Usuario
+
+Denuncia "*" --> "0..1" SesionAprendizaje
+Denuncia "*" --> "2" Usuario : denunciante, denunciado >
+AlertaSeguridad "*" --> "1" SesionAprendizaje
+Sancion "*" --> "1 sancionado" Usuario
+Sancion "*" --> "0..1" Denuncia
+Sancion "*" --> "0..1" AlertaSeguridad
+@enduml

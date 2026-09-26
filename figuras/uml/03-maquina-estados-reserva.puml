@@ -1,0 +1,50 @@
+@startuml 03-maquina-estados-reserva
+!include _estilo.iuml
+title Diagrama de máquina de estados — Reserva (EstadoReserva)
+
+[*] --> PendientePago : crearDirecta() /\naprobarSolicitud()
+
+state "pendiente_pago" as PendientePago
+state "confirmada" as Confirmada
+state "finalizada" as Finalizada
+state "cancelada" as Cancelada
+state "No-show" as NoShow {
+  state "no_show_estudiante" as NSE
+  state "no_show_tutor" as NST
+  state "no_show_doble" as NSD
+}
+
+PendientePago --> Confirmada : pago aprobado (webhook MP /\nretorno / bypass)\n/ ReservaConfirmadaEvent
+PendientePago --> Cancelada : timeout 15 min\n[sin pago]
+PendientePago --> Cancelada : cancelar()\n[pagador o tutor]
+
+Confirmada --> Confirmada : reprogramar()\n[≥ 24 h antes]\n/ ReservaReprogramadaEvent
+Confirmada --> Cancelada : cancelar() / reprogramar() [< 24 h]\n/ ReservaCanceladaEvent
+Confirmada --> Cancelada : sanción, baja de menor\no CAP vencido
+Confirmada --> NSE : T+10 [solo entró el tutor]
+Confirmada --> NST : T+10 [solo entró el estudiante]
+Confirmada --> NSD : T+10 [no entró nadie]
+
+Confirmada --> Finalizada : finalizar() / corte automático\n[duración ≥ 50 %] / SesionFinalizadaEvent
+Confirmada --> Finalizada : corte [< 50 %]\n/ SesionInterrumpidaEvent (reembolso)
+Confirmada --> Finalizada : kill-switch confirmado\n/ escrow pausado por alerta
+
+Finalizada --> [*]
+Cancelada --> [*]
+NoShow --> [*]
+
+note right of Confirmada
+  Escrow retenido en MercadoPago
+  (Transaccion.retenido_escrow).
+  Mientras la clase transcurre, la Reserva
+  sigue confirmada: el estado "en vivo"
+  (no_iniciada → en_curso) lo lleva la
+  SesionAprendizaje (ver figura siguiente).
+  El valor en_curso del enum queda reservado.
+end note
+note right of Cancelada
+  Requiere MotivoCancelacion.
+  ≥24 h o cancela el tutor → reembolso;
+  <24 h y cancela el pagador → se libera al tutor.
+end note
+@enduml
