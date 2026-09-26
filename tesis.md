@@ -485,7 +485,7 @@ La tabla~[§tab:componentes] resume los ocho componentes del sistema y sus respo
 | Caché / estado en tiempo real | Sesiones, chat en tiempo real (pub/sub), rate limiting | Redis (Upstash) |
 | Aula virtual | Transmisión de audio/video entre tutor y alumno | LiveKit Cloud (WebRTC) |
 | Pasarela de pagos | Procesamiento de cobro vía Checkout Pro | MercadoPago (SDK oficial Java) |
-| Servicios de IA | matching semántico, transcripción y resumen de sesión, asistente conceptual, kill-switch de seguridad | sentence-transformers + FAISS, LLM (GPT-4o o Gemini 2.0 Flash), clasificador on-device |
+| Servicios de IA | matching semántico, transcripción y resumen de sesión, asistente conceptual, kill-switch de seguridad | sentence-transformers + FAISS, LLM GPT-4o (resumen) y gpt-4o-mini-transcribe (transcripción), clasificador on-device |
 | Panel de administración | Moderación, resolución de denuncias, aprobación de tutores | Módulo interno del backend + vista en el frontend |
 
 ### Flujo de datos
@@ -516,7 +516,7 @@ Sprint Backlog vigente.
 
 | **Ítem** | **Detalle** |
 | --- | --- |
-| Tecnología | React (o Next.js, a confirmar según necesidad de server-side rendering) |
+| Tecnología | Next.js 16 + React 19 (App Router), elegido por el posicionamiento en buscadores de los perfiles públicos de tutores |
 | Por qué se eligió | Conocimiento previo del desarrollador (capítulo~[§cap:introduccion], sección~[§sec:recursos]), ecosistema maduro, gran disponibilidad de componentes para formularios, calendarios y videollamada embebida |
 | Alternativas evaluadas | Vue.js – descartado por menor familiaridad del desarrollador, lo que hubiera consumido tiempo de aprendizaje no disponible en el cronograma de seis meses |
 | Formato de despliegue | PWA, consistente con la exclusión de app móvil nativa del alcance (capítulo~[§cap:introduccion], sección~[§sec:alcance]) |
@@ -527,7 +527,7 @@ Sprint Backlog vigente.
 
 | **Ítem** | **Detalle** |
 | --- | --- |
-| Tecnología | Java 21 + Spring Boot |
+| Tecnología | Java 21 + Spring Boot 4.1.1 (la rama 3.5 dejó de recibir parches gratuitos el 30/06/2026) |
 | Por qué se eligió | Framework “batteries-included” (seguridad, ORM, validación, manejo de excepciones ya resueltos) que reduce el riesgo de un desarrollador único investigando y ensamblando librerías sueltas bajo un cronograma fijo; alta disponibilidad de documentación y comunidad en español, relevante para un desarrollador sin experiencia previa profunda en ninguno de los lenguajes candidatos |
 | Alternativas evaluadas | Go – descartado pese a tener ventajas reales de footprint de memoria y simplicidad del lenguaje, porque su ecosistema requiere ensamblar manualmente router, ORM y librerías de autenticación, lo cual consume tiempo de decisión de arquitectura que un proyecto de 6 meses en solitario no puede permitirse. Node.js – descartado como backend principal por preferirse la robustez de tipado y el ecosistema de seguridad de Spring frente a un desarrollador que tampoco tenía experiencia consolidada previa en ninguno de los dos |
 | Autenticación | Spring Security + JWT emitido y validado por el propio backend (no se delega la autenticación a Supabase Auth, dado que el modelo de roles de Tinku –adulto responsable, menor con permisos por acción, tutor, administrador– requiere lógica de autorización granular propia que conviene mantener dentro del mismo framework que ya gestiona el resto de las reglas de negocio) |
@@ -590,13 +590,38 @@ Por normas estrictas de seguridad, el perfil de menor tiene inhabilitada la acci
 
 ## Diseño y experiencia de usuario (UX/UI)
 
-El onboarding de Términos y Condiciones reemplaza el documento de scroll continuo por un carrusel de cinco a seis tarjetas, cada una con un título, un párrafo breve sobre un punto de los términos y una ilustración; al final, un checkbox de aceptación explícita, desactivado por defecto, habilita la creación de la cuenta, que queda deshabilitada mientras el checkbox no se marca. La interfaz se diferencia según el rol: la de un PerfilMenor no muestra ni expone controles de las acciones reservadas al adulto –pago, gestión de acuerdos, contacto con tutores no autorizados–, y esa restricción opera tanto en el diseño de interfaz como en los permisos de la API, no solo a nivel visual. El sistema contempla una degradación de la videollamada a chat de texto exclusivamente durante una sesión activa en caso de conectividad deficiente.
+El onboarding de Términos y Condiciones reemplaza el documento de scroll continuo por un paso propio del registro, “Cómo funciona Tinku”, con los puntos clave de los términos –incluido el funcionamiento de la plataforma– presentados como tarjetas: cada una tiene un título corto y grande, un párrafo breve y una ilustración al costado que representa el concepto. Los puntos cubren que Tinku conecta pero no dicta las clases, la verificación de identidad, que las recomendaciones son una ayuda y no una garantía, el pago retenido hasta después de la clase, la protección de los menores, que las clases no se graban salvo el audio del resumen contratado, y la minimización de datos. El tutor ve un conjunto propio, escrito desde su lado: que es independiente y fija su precio, la verificación de su identidad y de su formación contra registros oficiales, la foto obligatoria, cómo y cuándo cobra, los requisitos para dar clases a menores, la grabación del audio solo si habilita el resumen, y cómo se construye su reputación. Los plazos que se citan salen de la Tabla de Tiempos, nunca escritos a mano. Al final, un checkbox de aceptación explícita, desactivado por defecto, habilita el paso siguiente. La foto de perfil del tutor es obligatoria: sin ella no aparece en búsquedas ni recomendaciones, porque alumnos y familias tienen que ver con quién toman clase. La interfaz se diferencia según el rol: la de un PerfilMenor no muestra ni expone controles de las acciones reservadas al adulto –pago, gestión de acuerdos, contacto con tutores no autorizados–, y esa restricción opera tanto en el diseño de interfaz como en los permisos de la API, no solo a nivel visual. El sistema contempla una degradación de la videollamada a chat de texto exclusivamente durante una sesión activa en caso de conectividad deficiente.
 
 En accesibilidad, el MVP no incluye un módulo completo
 (capítulo~[§cap:introduccion], sección~[§sec:alcance]), pero aplica buenas prácticas básicas: contraste adecuado, tamaños de fuente legibles y navegación con foco visible. La validación del diseño con usuarios se apoya en las entrevistas y encuestas ya definidas en el capítulo~[§cap:metodologia], y en UAT con el grupo piloto
 (OE8).
 
 <!-- Figura: Mockups de pantallas principales -->
+
+## Decisiones incorporadas durante la implementación
+
+Durante la construcción del MVP se tomaron decisiones que precisan o corrigen lo planteado en las secciones anteriores. Cada una quedó registrada como decisión de arquitectura (ADR) en el repositorio del sistema (anexo~[§anx:repositorios]).
+
+**Tabla:** Decisiones incorporadas durante la implementación
+
+| **Tema** | **Decisión y motivo** |
+| --- | --- |
+| Proveedor de LLM | GPT-4o para el resumen, en lugar de la alternativa Gemini 2.0 Flash; solo recibe el texto ya anonimizado. La transcripción usa gpt-4o-mini-transcribe por costo (ADR-M6-03) |
+| Resumen automático | Pasa a ser un adicional pago que se contrata al reservar. Si el resumen no se puede generar, se reembolsa solo el adicional |
+| Grabación | Única excepción a no grabar (enmienda de la Constitución del proyecto, v2.4): solo audio, solo con el adicional, nunca con menores, con consentimiento de ambas partes y borrado al transcribir (24 horas como máximo). La graba el navegador del tutor porque la grabación del lado del servidor de LiveKit (Egress) incluye solo 60 minutos gratuitos por mes (ADR-M3-04) |
+| Especialidades del tutor | El tutor declara de una a tres especialidades (materia y nivel máximo) además de sus temas; cada una se muestra como *verificada* (respaldada por una credencial aprobada contra un registro oficial) o *declarada*. Los tutores con especialidades solo declaradas aparecen en las búsquedas, marcados como tales (ADR-M1-06) |
+| Recomendaciones | Las puntuaciones funcionan como un sistema de recomendación, no como un aval: ordenan los resultados combinando la similitud semántica con lo buscado y las calificaciones de otros usuarios, y un tutor nuevo arranca sin calificaciones. La decisión de con quién aprender es siempre del alumno o de su adulto responsable |
+| Verificación de credenciales | Triaje automático que descarta lo inválido y prepara la consulta, más la decisión del rol ADMIN contra el registro oficial; la máquina decide lo que *no* es un título válido, pero lo que sí lo es solo lo prueba el registro (ADR-M1-06) |
+| Foto de perfil del tutor | Obligatoria: sin foto el tutor no aparece en búsquedas ni recomendaciones |
+| Catálogo de contenidos | El catálogo de temas sigue siendo cerrado y curado (el tutor solo elige temas de ahí), pero es *vivo*: se actualiza de forma continua con lo que se busca y todavía no está. Para eso se cuentan, de forma agregada, los temas buscados sin un tutor que los dé: un contador por tema, sin datos de quién buscó, sin las búsquedas de menores y con un máximo de 500 temas. El rol ADMIN solo ve los temas pedidos varias veces, agrupados por área, y los incorpora al catálogo (ADR-M2-04) |
+| Búsqueda sin coincidencia exacta | Si nadie enseña exactamente lo que se buscó, el sistema reconoce el área del tema (materia y nivel del tema del catálogo más parecido) y recomienda tutores de esa área, aclarando que es una recomendación y no una coincidencia exacta (ADR-M2-04) |
+| Orden de los resultados | La similitud semántica se calcula contra cada tema del tutor, no contra todos juntos, para que quien enseña muchos temas no quede relegado (ADR-M2-03). La reputación solo desempata entre tutores de relevancia parecida, y los resultados por debajo de un mínimo de relevancia no se muestran (ADR-M2-02) |
+| Términos y Condiciones | Paso propio del registro con los puntos clave en tarjetas (título, párrafo breve e ilustración) y aceptación explícita |
+| CAP | Obligatorio y vigente solo para dar clases a menores; un tutor que enseña solo a adultos no lo necesita. Al vencer, se cancelan sus clases futuras con menores con reembolso total |
+| Versiones | Spring Boot 4.1.1 y Next.js 16.3.6, para mantener parches de seguridad durante el piloto |
+
+Queda abierta una decisión con impacto en el cobro: el reparto automático de la comisión de MercadoPago (*split* de marketplace) exige que cada cobro se genere con las credenciales del propio tutor, obtenidas por OAuth
+[mpmarketplace]. Hasta implementarlo, el dinero ingresa a la cuenta de la plataforma y la liquidación al tutor debe resolverse por separado.
 
 ## Seguridad, calidad y despliegue
 
@@ -605,12 +630,13 @@ En accesibilidad, el MVP no incluye un módulo completo
 La autenticación se resuelve con JWT emitido por el propio backend a través de Spring Security, con contraseñas almacenadas mediante hash bcrypt; no se utiliza Supabase Auth, por el motivo ya explicado en la sección~[§sec:stack-backend]. El control de accesos se basa en autorización por rol (ADULTO, MENOR, TUTOR, ADMIN) aplicada a nivel de cada endpoint del backend: el modelo de permisos por acción del rol MENOR
 (sección~[§sec:modelo-datos]) se implementa como reglas de autorización explícitas, no como una restricción de interfaz que pudiera sortearse llamando directamente a la API. Toda la comunicación viaja cifrada mediante TLS entre el cliente y el backend y entre el backend y los servicios externos, con el cifrado en reposo de la base de datos delegado a Supabase.
 
-La verificación de tutores combina la carga de DNI y certificados académicos con la extracción automática de la fecha de nacimiento mediante OCR (implementado con Tesseract vía Tess4J, ejecutado in-process en el propio backend para garantizar que las imágenes de los documentos nunca se envíen a servicios de terceros), que rechaza automáticamente el registro de cualquier tutor menor de 18 años, y una revisión manual final a cargo del rol ADMIN sobre la autenticidad del documento y la correspondencia de los certificados con las materias declaradas; incluye la verificación manual del CAP vigente, limitando la exclusión únicamente a la integración automatizada con el
-Estado.
+La verificación de tutores combina la carga de DNI y certificados académicos con la extracción automática de la fecha de nacimiento mediante OCR (implementado con Tesseract vía Tess4J, ejecutado in-process en el propio backend para garantizar que las imágenes de los documentos nunca se envíen a servicios de terceros), que rechaza automáticamente el registro de cualquier tutor menor de 18 años. La credencial académica no se da por buena por el archivo –un PDF se falsifica en minutos–, sino por el registro oficial que la respalda: el
+Registro Público de Graduados Universitarios para títulos universitarios desde 2012 [rpgu], el Registro Federal de Egreso (ReFE) con el código QR de Mi Argentina para títulos secundarios y superiores digitales desde noviembre de 2023 [refe], el validador de SIU-Guaraní para certificados de alumno regular y los buscadores de cada colegio para las matrículas. Como ninguno de esos registros ofrece una API pública, la verificación combina un triaje automático –rechazo inmediato de lo que claramente no es un título, lectura por OCR del nombre para compararlo con el del DNI, y control de que el enlace de verificación pertenezca a un dominio oficial– con la decisión final del rol ADMIN, que consulta el registro y registra cómo verificó y qué especialidades del tutor cubre esa credencial (sección~[§sec:decisiones-implementacion]).
+Incluye además la verificación manual del CAP vigente para quienes dan clases a menores.
 
 El kill-switch de seguridad, presentado como SafeVchat en la sección~[§sec:estado-del-arte] –donde se desarrolla el mecanismo técnico completo, incluida esta misma verificación de edad del tutor vía
 OCR y DNI–, se apoya en un clasificador de contenido que corre localmente en el dispositivo (*edge computing*, por ejemplo con
-TensorFlow.js) durante la videollamada; ante una detección positiva ejecuta dos acciones diferenciadas: si hay un menor presente, corta la transmisión y suspende preventivamente la cuenta de forma inmediata; si ambos participantes son adultos, el video del detectado se bloquea con un filtro de desenfoque y el sistema solicita confirmación a la contraparte antes de proceder al corte. El portal de denuncias sigue una lógica equivalente: al registrarse una denuncia, el sistema marca la grabación de la sesión correspondiente para retención extendida, fuera del ciclo normal de borrado, suspende preventivamente al usuario denunciado y deriva la resolución final a revisión humana del rol ADMIN, con acceso a la evidencia preservada.
+TensorFlow.js) durante la videollamada; ante una detección positiva ejecuta dos acciones diferenciadas: si hay un menor presente, corta la transmisión y suspende preventivamente la cuenta de forma inmediata; si ambos participantes son adultos, el video del detectado se bloquea con un filtro de desenfoque y el sistema solicita confirmación a la contraparte antes de proceder al corte. El portal de denuncias sigue una lógica equivalente: como las clases no se graban, la evidencia es el fragmento de treinta segundos del buffer local del kill-switch, que se sube solo ante un disparo y se conserva hasta la resolución; al registrarse una denuncia, el sistema suspende preventivamente al usuario denunciado y deriva la resolución final a revisión humana del rol ADMIN, con acceso a la evidencia preservada.
 
 La protección de datos personales sigue la Ley 25.326, con especial cuidado en el procesamiento de video de menores y en la definición de una política de retención y baja de datos a solicitud del titular o su responsable.
 
@@ -629,6 +655,24 @@ corre en GitHub Actions: ejecuta las pruebas automatizadas en cada pull request 
 
 # Capítulo 5: Justificación económica
 
+## Alcance y método de la evaluación
+
+Este capítulo presenta los beneficios tangibles e intangibles que se obtendrían con la puesta en marcha de Tinku, evaluados sobre un horizonte de cinco años mediante un análisis costo-beneficio. La secuencia metodológica es la siguiente: primero se cuantifican los costos (inversión inicial y gastos recurrentes post-lanzamiento), luego los beneficios (el ingreso por comisión y los ahorros e intangibles asociados), con ambos se construye el flujo de fondos proyectado y, finalmente, sobre ese mismo flujo se calculan los cuatro indicadores de evaluación: período de repago, repago descontado, VAN y TIR.
+
+Los cuatro indicadores responden preguntas distintas y se leen en conjunto, tal como resume la tabla~[§tab:que-mide]. Ninguno reemplaza a los otros: el repago mide liquidez y exposición al riesgo, el VAN
+mide creación de valor y la TIR mide rendimiento.
+
+**Tabla:** Qué mide cada técnica de evaluación
+
+| **Técnica** | **Pregunta que responde** | **Unidad** | **Tasa de descuento** |
+| --- | --- | --- | --- |
+| Período de repago | ¿Cuándo recupero la inversión? | años | No la utiliza |
+| Repago descontado | ¿Cuándo la recupero en dinero de hoy? | años | La aplica |
+| VAN | ¿Cuánto valor crea el proyecto? | USD | Es un dato de entrada |
+| TIR | ¿Qué rendimiento anual rinde? | % anual | Es el resultado |
+
+Todos los cálculos se apoyan en un modelo financiero parametrizado construido en planilla de cálculo, en el cual los indicadores están formulados con las funciones nativas ‘NPV‘ e ‘IRR‘. Esto permite que al modificar cualquier supuesto de entrada —el ticket promedio, la comisión, las horas de desarrollo o el volumen de sesiones— los tres escenarios, el VAN y la TIR se recalculen de forma inmediata. El modelo se incluye como anexo del presente trabajo.
+
 ## Justificación institucional, legal, ambiental y social
 
 El desarrollo de Tinku se fundamenta en un impacto transversal comprobable:
@@ -639,99 +683,258 @@ El desarrollo de Tinku se fundamenta en un impacto transversal comprobable:
           Protección de Datos Personales (Ley 25.326).
 - **Justificación institucional:** Tinku se desarrolla como el proyecto final de la carrera de Ingeniería en
           Informática, demostrando la aplicación de tecnologías de vanguardia (IA y WebRTC) para resolver una problemática concreta del sistema educativo argentino.
-- **Justificación ambiental:** al centralizar el apoyo académico en un ecosistema digital y virtual, se elimina la necesidad de desplazamiento físico de alumnos y tutores, reduciendo la huella de carbono asociada al transporte. A nivel de infraestructura tecnológica, se prioriza la eficiencia mediante servidores virtuales privados (VPS) de bajo consumo.
+- **Justificación ambiental:** al centralizar el apoyo académico en un ecosistema digital y virtual, se elimina la necesidad de desplazamiento físico de alumnos y tutores, reduciendo la huella de carbono asociada al transporte. A nivel de infraestructura tecnológica, se prioriza la eficiencia mediante servicios gestionados de bajo consumo, evitando el aprovisionamiento permanente de servidores dedicados.
 
-## Alternativas consideradas y descartadas
+## Modelo de monetización y alternativas descartadas
 
-Durante el diseño del modelo de negocio, se evaluaron distintas metodologías de intermediación presentes en plataformas globales de tutorías y gig economy:
+El ingreso de Tinku proviene de una única fuente: una
+**comisión de plataforma del 27 % sobre el precio de cada sesión**, descontada exclusivamente del pago que recibe el tutor. El ticket promedio de mercado se proyecta en **USD 7 por sesión**. El estudiante abona el precio final fijado por el docente, sin cargos de servicio adicionales visibles. Se excluyen explícitamente vías de ingreso como la publicidad, la venta de datos o las suscripciones premium durante la etapa de MVP.
 
-- **Suscripción mensual al estudiante (modelo Superprof):** se descartó esta alternativa porque la imposición de una barrera de entrada fija contradice el objetivo principal de reducir la fricción económica para familias de bajo poder adquisitivo.
+Durante el diseño del modelo de negocio se evaluaron y descartaron dos metodologías alternativas de intermediación:
+
+- **Suscripción mensual al estudiante (modelo Superprof):** se descartó porque la imposición de una barrera de entrada fija contradice el objetivo principal de reducir la fricción económica para familias de bajo poder adquisitivo.
           Adicionalmente, no genera un ingreso proporcional al valor efectivo entregado en cada sesión.
-- **Comisión escalonada de alta retención (modelo Preply,
-          18 % a 33 %):** se descartó replicar bandas tarifarias superiores al 18 %. Una comisión percibida como excesiva por parte de la oferta incentiva la desintermediación (acuerdos de pago por fuera de la plataforma tras el primer contacto), lo cual erosiona los ingresos y vulnera el modelo de confianza y seguridad diseñado.
+- **Comisión de alta retención en el extremo superior del mercado (33 %):** se descartó replicar las bandas tarifarias máximas de Preply. Una comisión percibida como excesiva incentiva la desintermediación —acuerdos de pago por fuera de la plataforma tras el primer contacto— lo cual erosiona los ingresos y vulnera el modelo de confianza diseñado.
 
-## Modelo de monetización
+### Calibración de la comisión
 
-El ingreso de Tinku proviene de una única fuente: una **comisión de plataforma del 15 % sobre el precio de cada sesión**, descontada exclusivamente del pago que recibe el tutor. El ticket promedio de mercado se proyecta en **USD 7 por sesión**. El estudiante abona el precio final fijado por el docente, sin cargos de servicio adicionales visibles. Se excluyen explícitamente vías de ingreso como la publicidad, la venta de datos o las suscripciones premium durante la etapa de
-MVP.
+La comisión del 27 % no es un supuesto arbitrario sino el resultado de un análisis de punto de equilibrio. Una primera formulación del modelo adoptó una comisión del 15 %, valor que posiciona a la plataforma por debajo de toda la banda de Preply
+(18 % a 33 %). Sin embargo, al incorporar al modelo los costos financieros de la pasarela de pago y proyectar un volumen de demanda realista para un MVP, esa comisión arrojaba un VAN negativo en los tres escenarios: el margen resultante no alcanzaba a cubrir los costos fijos de operación.
 
-## Estructura de costos e inversión
+La comisión se recalibró entonces al 27 %, valor que continúa dentro de la banda de mercado vigente (18 % a 33 %) y por debajo de su extremo superior, pero que constituye el mínimo necesario para que el escenario base alcance un VAN no negativo dentro del horizonte de cinco años. Se trata de una restricción del modelo que se declara explícitamente: por debajo del 27 %, y manteniendo el resto de los supuestos constantes, el proyecto no se justifica económicamente.
 
-Los costos del proyecto se estructuran dividiendo la inversión inicial en desarrollo y los gastos operativos recurrentes (fijos y variables por transacción). La tabla~[§tab:inversion] resume ambos rubros.
+### Unidad de cobro y duración de las sesiones
 
-**Tabla:** Inversión inicial y costos recurrentes (en USD)
+La plataforma admite sesiones de duración variable, con un mínimo facturable de 30 minutos y una duración estándar de 60 minutos. Esta distinción es económicamente relevante porque los costos variables de procesamiento de IA (transcripción y resumen automatizado) escalan con la duración real del audio procesado, no con la cantidad de sesiones.
+Imputar un costo fijo por sesión sobrestimaría el costo de las clases cortas.
 
-| **Categoría** | **Concepto** | **Costo estimado** | **Fuente** |
-| --- | --- | --- | --- |
-| Inversión inicial | Desarrollo full-stack (1 perfil, 480 hs a USD 15/h) | 7.200 | Estimación propia por tarifa de mercado |
-| Inversión inicial | Asesoría legal (privacidad de datos y TyC) | 800 | Cotización recibida |
-| Costo fijo mensual | Servidor VPS, dominios y honorarios administrativos | 200/mes | [lightnode2026] |
-| Costo fijo mensual | Bases de datos y frontend (Supabase, Vercel) | 0 (planes gratuitos) | Tarifa pública |
-| Costo fijo mensual | Tráfico de aula virtual (LiveKit Cloud, hasta 5.000 min/mes) | 0 (plan Build gratuito) | Tarifa pública |
-| Costo variable | Procesamiento de pago (MercadoPago Marketplace) | Dedecido previo a la comisión | Tarifa pública |
-| Costo variable | Procesamiento LLM (resumen automatizado vía API) | 0,03 por sesión | Tarifa pública del proveedor |
+Por tal motivo, el modelo calibra el costo de procesamiento por hora de audio y luego lo pondera según la mezcla esperada de duraciones. Asumiendo que un 30 % de las sesiones utiliza el mínimo de 30 minutos, la duración promedio ponderada resulta:
 
-El rubro de infraestructura se justifica con el precio de mercado de un
-VPS de recursos medios de un proveedor local: un plan de
-8 vCore/16~GB cuesta USD~158,7 mensuales, y los planes de entrada arrancan en USD~7,71 mensuales [lightnode2026]. A ese costo se le suman los dominios y los honorarios administrativos, por lo que el total de USD~200 mensuales se adopta con criterio conservador.
+    d = 60 (1 - 0{,}30) + 30 0{,}30 = 51  minutos.
 
-## Flujo de fondos proyectado a 5 años
+El costo variable de IA por sesión se obtiene entonces como el costo por hora multiplicado por $d/60$, resultando en
+USD~0{,0255} por sesión en lugar de los USD~0{,03} que correspondería a una hora completa. El ticket promedio de USD 7, por su parte, se interpreta como el promedio ya ponderado sobre esa misma mezcla de duraciones y precios horarios.
 
-A partir del ticket promedio (USD 7) y la comisión del 15 %,
-Tinku percibe un ingreso bruto de USD 1,05 por transacción.
-Descontando el costo variable del modelo de lenguaje (USD 0,03), el margen neto asciende a **USD 1,02 por sesión**. La proyección asume un crecimiento gradual en la adopción de usuarios y volumen de sesiones a nivel nacional. La tabla~[§tab:flujo-caja] presenta el flujo resultante.
+## Estructura de costos
 
-**Tabla:** Flujo de caja proyectado por año (en USD)
+### Inversión inicial
+
+La inversión inicial corresponde a las erogaciones necesarias para llevar el MVP a producción, concentradas en el semestre de desarrollo
+(Año 0). Se compone del costo del equipo de desarrollo valorizado a tarifas de mercado según el perfil, los costos administrativos de puesta en marcha y una reserva de contingencia. La tabla~[§tab:inversion] presenta el desglose.
+
+**Tabla:** Inversión inicial desglosada por rol y concepto (en USD)
+
+| **Categoría** | **Concepto** | **Cant.** | **Valor unit.** | **Total** |
+| --- | --- | --- | --- | --- |
+| Personal | Senior — arquitectura, IA y WebRTC | 192 hs | 50 | 9.600 |
+| Personal | Mid — backend y pasarela de pagos | 250 hs | 30 | 7.500 |
+| Personal | Junior — frontend PWA e interfaz | 250 hs | 15 | 3.750 |
+| Personal | Junior — UAT y pruebas | 120 hs | 15 | 1.800 |
+| Infraestructura | Cloud de desarrollo (Supabase, Vercel, LiveKit) | 6 meses | 0 | 0 |
+| Administrativo | Registro de dominio | 1 año | 15 | 15 |
+| Legal | Asesoría en privacidad de datos y TyC | único | 800 | 800 |
+| Riesgo | Contingencia por imprevistos (10 % del desarrollo) | único | 2.265 | 2.265 |
+| **Total inversión inicial** | **25.730** |  |  |  |
+
+Las tarifas horarias por perfil (USD 50 para el rol senior, USD 30 para el semi-senior y USD 15 para los roles junior) se adoptan como estimación propia basada en valores de mercado para desarrollo remoto en la región, y se declaran como tal. Las horas asignadas a los perfiles mid y junior se dimensionaron considerando que el uso de servicios gestionados
+(Supabase como backend) y de bibliotecas de componentes reduce sustancialmente el trabajo de construcción desde cero.
+
+La reserva de contingencia del 10 % sobre el costo de desarrollo se incorpora para absorber retrabajo, subestimación de horas y corrección tardía de defectos. Su inclusión responde a un criterio conservador: un presupuesto de desarrollo sin margen de imprevistos presenta un riesgo de desvío elevado.
+
+La infraestructura durante el desarrollo se aprovisiona íntegramente sobre las capas gratuitas de los proveedores seleccionados, por lo que no genera erogación en el Año 0. Como referencia del costo alternativo, un VPS de recursos medios de un proveedor local (8 vCore/16~GB) cuesta USD~158,7 mensuales y los planes de entrada arrancan en
+USD~7,71 mensuales [lightnode2026]; la arquitectura elegida evita esa erogación durante la etapa de construcción.
+
+### Costos recurrentes post-lanzamiento
+
+Los costos operativos se proyectan mensualmente y se anualizan para el flujo de fondos. La tabla~[§tab:costos-fijos] muestra su evolución a lo largo del horizonte de evaluación.
+
+**Tabla:** Costos fijos mensuales post-lanzamiento (en USD)
+
+| **Categoría** | **Concepto** | **Año 1** | **Año 2** | **Año 3** | **Año 4** | **Año 5** |
+| --- | --- | --- | --- | --- | --- | --- |
+| Infraestructura | Servidores y base de datos | 45 | 45 | 50 | 55 | 60 |
+| Infraestructura | Transmisión de video (LiveKit) | 60 | 60 | 65 | 70 | 75 |
+| Infraestructura | Procesamiento LLM (base) | 55 | 55 | 60 | 65 | 70 |
+| Administrativo | Honorarios contables | 150 | 150 | 150 | 150 | 150 |
+| Administrativo | Renovación de dominio | 1,25 | 1,25 | 1,25 | 1,25 | 1,25 |
+| Comercial | Adquisición de usuarios | 40 | 50 | 60 | 70 | 80 |
+| **Total mensual** | **351,25** | **361,25** | **386,25** | **411,25** | **436,25** |  |
+| **Total anual** | **4.215** | **4.335** | **4.635** | **4.935** | **5.235** |  |
+
+Dos decisiones de este cuadro merecen justificación explícita:
+
+- **Ausencia de equipo de soporte rentado.** El modelo no incorpora personal técnico contratado dentro de los costos fijos durante los cinco años proyectados. Un análisis de sensibilidad sobre esta variable mostró que, con el volumen de sesiones proyectado, sostener un equipo de soporte
+          —aun escalonando su incorporación— vuelve el proyecto inviable en los tres escenarios. El mantenimiento correctivo y evolutivo queda a cargo del equipo fundador. La incorporación de soporte pago se difiere hasta que el volumen efectivo de sesiones lo justifique, lo cual constituye una restricción operativa declarada del modelo y no un supuesto de costo cero.
+- **Presupuesto de adquisición de usuarios.** Se incorpora una partida de marketing, modesta pero creciente, dado que la proyección de demanda no se sostiene por sí sola: un modelo que proyecta captación de usuarios sin asignar presupuesto de adquisición incurre en una inconsistencia interna.
+
+### Costos variables por transacción
+
+Además de los costos fijos, cada sesión concretada genera costos variables que se deducen del ingreso bruto. La tabla~[§tab:unit-economics] presenta la economía unitaria completa de una sesión promedio.
+
+**Tabla:** Economía unitaria por sesión (en USD)
+
+| **Concepto** | **Cálculo** | **Valor** |
+| --- | --- | --- |
+| Ticket promedio de la sesión | Precio fijado por el tutor | 7,0000 |
+| Comisión bruta de plataforma | Ticket $$ 27 % | 1,8900 |
+| Costo variable de IA | Costo/hora $$ ($d/60$) | $-0{,}0255$ |
+| Costo de pasarela de pago | Ticket $$ 6,04 % | $-0{,}4228$ |
+| **Margen neto por sesión** |  | **1,4417** |
+
+El costo de la pasarela de pago corresponde a la comisión de procesamiento de MercadoPago con dinero disponible de forma inmediata, incrementada por el IVA que grava dicha comisión. Es un costo real de cobranza y resulta conceptualmente distinto de la comisión de plataforma, que constituye el ingreso del proyecto. Su omisión en una formulación preliminar del modelo sobrestimaba el margen neto en aproximadamente un 40 %.
+
+Se reconoce además la existencia de fricción financiera adicional
+—retenciones de ingresos brutos, percepciones impositivas y contracargos— cuya magnitud depende de la jurisdicción y del comportamiento efectivo de los usuarios. No se cuantifica en el modelo base y se trata como una sensibilidad adicional sobre el margen, lo cual se declara como una restricción del análisis.
+
+## Beneficios del proyecto
+
+El análisis costo-beneficio contempla tanto los beneficios directamente monetizables como aquellos que, sin traducirse en flujo de caja, inciden sobre la viabilidad del proyecto. La tabla~[§tab:beneficios] los sistematiza.
+
+**Tabla:** Beneficios tangibles e intangibles del proyecto
+
+| **Tipo** | **Beneficio** | **Cuantificación** |
+| --- | --- | --- |
+| Tangible | Ingreso por comisión sobre sesiones concretadas | USD~1,4417 de margen neto por sesión; es la única fuente de ingreso del flujo |
+| Tangible | Ahorro en infraestructura por arquitectura serverless | Evita USD~7,71 a USD~158,7 mensuales de un VPS dedicado [lightnode2026] |
+| Tangible | Ahorro en desplazamiento para alumnos y tutores | No se imputa al flujo del proyecto; es un excedente que capta el usuario |
+| Intangible | Formalización tributaria del mercado de tutorías | Reduce exposición regulatoria y habilita escalabilidad institucional |
+| Intangible | Trazabilidad y seguridad en la interacción con menores | Barrera de entrada frente a competidores informales |
+| Intangible | Acceso a apoyo escolar en zonas sin oferta presencial | Impacto social; amplía el mercado direccionable |
+
+Únicamente el primer beneficio se incorpora al flujo de fondos. Los ahorros que captura el usuario final y los beneficios intangibles se declaran pero no se monetizan, con el fin de no sobrestimar la rentabilidad del proyecto.
+
+## Estimación de la demanda
+
+La variable que tracciona los ingresos no es la cantidad de usuarios registrados sino el **volumen anual de sesiones concretadas**. Un usuario registrado que no reserva clases no genera ingreso alguno. La proyección se construye, por lo tanto, sobre alumnos activos —aquellos que efectivamente reservan— y una frecuencia de uso:
+
+    Sesiones anuales = Alumnos activos Clases por alumno por mes 12.
+
+Se adopta una frecuencia de tres clases por alumno por mes, equivalente a menos de una clase semanal, criterio deliberadamente conservador para un servicio de apoyo escolar.
+
+La proyección de alumnos activos, presentada en la tabla~[§tab:demanda], se define como un dato de entrada por año y por escenario, y no como una curva de crecimiento compuesto. Esta decisión metodológica es deliberada: las proyecciones estrictamente lineales o exponenciales constituyen un error frecuente en la evaluación de proyectos, ya que ignoran la estacionalidad del ciclo lectivo, la rotación de cohortes y el efecto acotado en el tiempo de las campañas de captación. Los valores adoptados oscilan entre años, reflejando ese comportamiento.
+
+**Tabla:** Proyección de alumnos activos y sesiones anuales por escenario
+
+| **Escenario** | **Métrica** | **Año 1** | **Año 2** | **Año 3** | **Año 4** | **Año 5** |
+| --- | --- | --- | --- | --- | --- | --- |
+| Pesimista | Alumnos activos | 130 | 110 | 160 | 140 | 190 |
+|  | Sesiones anuales | 4.680 | 3.960 | 5.760 | 5.040 | 6.840 |
+|  | Sesiones anuales | 7.200 | 9.360 | 7.560 | 10.440 | 9.000 |
+|  | Sesiones anuales | 10.080 | 15.120 | 12.240 | 17.280 | 14.400 |
+
+El escenario pesimista refleja una plataforma que no logra consolidar retención: retrocede en el Año 2 y sus repuntes posteriores dependen de campañas puntuales. El escenario base describe una operación que oscila en una banda de entre 200 y 290 alumnos activos sin una tendencia sostenida de crecimiento. El optimista contempla mayor volatilidad, con picos apalancados por alianzas institucionales seguidos de caídas estacionales.
+
+## Tasa de descuento
+
+La tasa de descuento resume el costo de inmovilizar capital en este proyecto en lugar de destinarlo a su mejor alternativa de riesgo comparable. Incorpora tres componentes: el rendimiento de una colocación alternativa, la cobertura frente a la pérdida de poder adquisitivo y una prima por el riesgo de que los flujos proyectados no se materialicen.
+
+Se adopta una **tasa de descuento del 15 % anual en dólares**.
+Dado que la totalidad del modelo está expresada en dólares estadounidenses, la tasa debe interpretarse como una tasa real en esa moneda y no incorpora la inflación en pesos. El valor refleja el costo de oportunidad de un desarrollo tecnológico temprano, sin ingresos históricos ni base de usuarios consolidada, categoría que exige primas de riesgo sensiblemente superiores a las de un activo financiero tradicional.
+
+El factor de descuento aplicado a cada año $t$ es $1/(1+0{,}15)^t$. La sensibilidad de los resultados frente a esta elección se examina en la sección~[§sec:sensibilidad].
+
+## Flujo de fondos proyectado
+
+El flujo de fondos cruza los ingresos derivados del volumen de sesiones contra los costos fijos anuales, imputando la inversión inicial íntegramente en el Año 0. Los ingresos netos de cada año se obtienen multiplicando las sesiones anuales por el margen neto unitario de
+USD~1,4417. La tabla~[§tab:flujo-caja] presenta el flujo del escenario base.
+
+**Tabla:** Flujo de fondos proyectado — escenario base (en USD)
 
 | **Concepto** | **Año 0** | **Año 1** | **Año 2** | **Año 3** | **Año 4** | **Año 5** |
 | --- | --- | --- | --- | --- | --- | --- |
-| Volumen de sesiones | 0 | 3.000 | 8.000 | 18.000 | 30.000 | 50.000 |
-| Ingreso neto (USD 1,02/sesión) | 0 | 3.060 | 8.160 | 18.360 | 30.600 | 51.000 |
-| Costos fijos anuales | 0 | $-2.400$ | $-2.400$ | $-2.400$ | $-2.400$ | $-2.400$ |
-| Inversión inicial | $-8.000$ | 0 | 0 | 0 | 0 | 0 |
-| **Flujo neto** | **$-8.000$** | **660** | **5.760** | **15.960** | **28.200** | **48.600** |
+| Sesiones anuales | 0 | 7.200 | 9.360 | 7.560 | 10.440 | 9.000 |
+| Ingreso neto | 0 | 10.380 | 13.494 | 10.899 | 15.051 | 12.975 |
+| Costos fijos anuales | 0 | $-4.215$ | $-4.335$ | $-4.635$ | $-4.935$ | $-5.235$ |
+| Inversión inicial | $-25.730$ | 0 | 0 | 0 | 0 | 0 |
+| **Flujo neto** | **$-25.730$** | **6.165** | **9.159** | **6.264** | **10.116** | **7.740** |
+| **Flujo acumulado** | **$-25.730$** | **$-19.565$** | **$-10.405$** | **$-4.141$** | **5.975** | **13.715** |
+| **Flujo descontado** | **$-25.730$** | **5.361** | **6.926** | **4.119** | **5.784** | **3.848** |
+| **Acum. descontado** | **$-25.730$** | **$-20.369$** | **$-13.443$** | **$-9.324$** | **$-3.540$** | **308** |
 
-## Evaluación financiera del proyecto
+La comparación entre las dos últimas filas ilustra el efecto del descuento: mientras el flujo acumulado nominal cambia de signo durante el Año 4, el acumulado descontado recién lo hace sobre el cierre del Año 5. Esa distancia es, precisamente, el precio del tiempo.
 
-Para la evaluación del proyecto se definió una **tasa de descuento
-(costo de capital) del 15 % anual**, reflejando el costo de oportunidad estándar para desarrollos tecnológicos de riesgo moderado.
+## Evaluación financiera
 
- El VAN se calcula como
+### Formulación de los indicadores
+
+El VAN es la suma de todos los flujos del proyecto traídos al presente, incluida la inversión inicial:
 
     VAN = -I_0 + _{t=1}^{n} FC_t{(1 + r)^{t}},
 
-donde $I_0$ es la inversión inicial, $FC_t$ el flujo de caja neto del año $t$ y $r$ la tasa de descuento. La TIR es la tasa que anula el
-VAN, y el período de repago es el primer año en que el flujo acumulado se vuelve positivo.
+donde $I_0$ es la inversión inicial, $FC_t$ el flujo de fondos neto del período $t$, $r$ la tasa de descuento y $n$ la cantidad de períodos. El criterio de decisión es directo: si $VAN 0$ el proyecto se acepta, porque rinde por encima de la tasa exigida; si
+$VAN < 0$ se rechaza, porque destruye valor frente a la alternativa.
 
-- **VAN (valor actual neto):** USD~47709,49. Al ser mayor a cero, indica que el proyecto es económicamente viable y genera valor por encima de la tasa de corte exigida.
-- **TIR (tasa interna de retorno):** 92,69 %. Supera holgadamente la tasa de descuento del 15 %, demostrando una alta rentabilidad sobre la inversión inicial unipersonal.
-- **Período de repago (payback):** el capital inicial nominal se recupera durante el Año 3.
-- **Repago descontado:** ajustando los flujos por el valor del dinero en el tiempo (tasa del 15 %), el punto de equilibrio financiero se alcanza a mediados del Año 3.
+La TIR es el caso particular en que la tasa de corte hace que el
+VAN sea exactamente cero:
 
-## Análisis de sensibilidad y escenarios
+    0 = -I_0 + _{t=1}^{n} FC_t{(1 + TIR)^{t}}.
 
-Dada la dependencia del modelo hacia la tracción de usuarios, se evaluó la robustez financiera ante una fluctuación del volumen de la demanda, manteniendo los costos fijos inalterados. La tabla~[§tab:indicadores-financieros] resume los tres escenarios.
+No admite despeje algebraico directo, por lo que se resuelve por iteración numérica. Si la tasa de corte es menor o igual a la TIR, el proyecto se acepta; si la supera, se rechaza o se renegocian sus condiciones.
+
+El período de repago es el lapso necesario para que el flujo acumulado alcance el valor cero. Se calcula de forma fraccionaria, interpolando dentro del año en que se produce el cambio de signo:
+
+    Repago = m - 1 + | FA_{m-1 |}{FC_{m}},
+
+donde $FA_{m-1}$ es el flujo acumulado del último período negativo y
+$FC_m$ el flujo del período que revierte el signo. El repago descontado aplica la misma expresión sobre los flujos ya descontados.
+
+### Resultados
+
+La tabla~[§tab:indicadores-financieros] resume los cuatro indicadores calculados sobre el flujo de fondos de cada escenario.
 
 **Tabla:** Indicadores financieros por escenario
 
-| **Escenario** | **VAN (USD)** | **TIR** |
-| --- | --- | --- |
-| Pesimista (–20 % de adopción) | 34.958,55 | 77,12 % |
-| Base | 47.709,49 | 92,69 % |
-| Optimista (+20 % de adopción) | 60.460,42 | 106,75 % |
+| **Escenario** | **VAN (USD)** | **TIR** | **Repago simple** | **Repago descontado** |
+| --- | --- | --- | --- | --- |
+| Pesimista | $-16.444$ | $-14{,}98$ % | No recupera en 5 años | No recupera en 5 años |
+| Base | 308 | 15{,}48 % | 3,41 años | 4,92 años |
+| Optimista | 24.143 | 47{,}01 % | 1,88 años | 2,42 años |
 
-**Escenario pesimista (–20 % de adopción):** si el volumen de sesiones es un 20 % inferior a la proyección base todos los años, el
-VAN desciende a USD~34958,55 y la TIR se ajusta a un
-77,12 %. El proyecto sigue siendo viable, demostrando resistencia a una penetración de mercado más lenta.
+La lectura de cada indicador es la siguiente:
 
-**Escenario optimista (+20 % de adopción):** ante una adopción acelerada, apalancada por alianzas con instituciones u oferta satelital
-(Starlink), el VAN se dispara a USD~60460,42 con una TIR
-del 106,75 %.
+- **VAN del escenario base:** USD~308. Es positivo, por lo que el proyecto crea valor por encima de la tasa exigida del 15 % y se acepta. Ahora bien, el margen es mínimo sobre una inversión de USD~25.730: el proyecto apenas cubre su costo de capital, sin excedente relevante.
+- **TIR del escenario base:** 15,48 %. Supera a la tasa de corte del 15 % por apenas 0,48 puntos porcentuales.
+          Ese diferencial es el margen de seguridad disponible: bastaría que la tasa exigida subiera medio punto para que el proyecto dejara de convenir.
+- **Período de repago:** 3,41 años en el escenario base. La inversión nominal se recupera durante el Año 4, dentro del horizonte de evaluación.
+- **Repago descontado:** 4,92 años. Medido en dinero de hoy, el recupero se alcanza recién sobre el cierre del Año 5, es decir, en el límite mismo del horizonte proyectado.
+
+En el escenario pesimista los cuatro indicadores son concluyentes: con un
+VAN de USD~-16.444 y una TIR negativa, los flujos ni siquiera alcanzan a devolver el capital nominal invertido. El escenario optimista, en cambio, presenta holgura en las cuatro métricas.
+
+## Análisis de sensibilidad
+
+Los resultados de la sección anterior muestran que la viabilidad del proyecto no es robusta: depende críticamente de tres variables. El análisis de sensibilidad realizado sobre el modelo permite identificarlas y cuantificar su incidencia.
+
+- **Volumen de sesiones.** Es la variable de mayor impacto.
+          El punto de equilibrio operativo se obtiene dividiendo los costos fijos anuales por el margen neto unitario: en el Año 1
+          se requieren $4.215 / 1{,}4417 2.924$ sesiones anuales para cubrir los costos fijos, y en el Año 5 aproximadamente
+          3.631. Por debajo de ese umbral la operación genera pérdidas antes de considerar la recuperación de la inversión.
+- **Comisión de plataforma.** Manteniendo el resto de los supuestos, una comisión del 26 % arroja un VAN de aproximadamente USD~-1.834 en el escenario base, y una del
+          23 % lo lleva a USD~-7.872. El 27 % adoptado es, en consecuencia, el valor mínimo compatible con la aceptación del proyecto.
+- **Estructura de costos fijos.** La incorporación de un equipo de soporte rentado —evaluada en una formulación previa del modelo con perfiles junior, mid y senior incorporados de forma escalonada— torna negativo el VAN en los tres escenarios. La operación con equipo fundador no es una preferencia sino una condición de viabilidad en esta etapa.
+
+Cabe señalar que la tasa de descuento afecta al VAN y al repago descontado, pero no a la TIR, que depende exclusivamente del perfil de los flujos.
 
 ## Política de reembolsos y su costo real
 
 Todo reembolso al estudiante se ejecuta de manera total a través de la
 API de MercadoPago, nunca de forma parcial. Esta política tiene un costo real de cero para Tinku, ya que la pasarela reintegra su propia comisión de procesamiento junto con los fondos, evitando saldos negativos. Además, previene riesgos legales de retención indebida frente a la Ley de Defensa del Consumidor y reduce significativamente la exposición de la plataforma a contracargos.
+
+## Conclusión de la evaluación económica
+
+El proyecto se justifica económicamente, pero bajo condiciones estrictas que corresponde explicitar.
+
+En el escenario base, los cuatro indicadores apuntan en la misma dirección: el VAN es positivo (USD~308), la TIR supera la tasa de corte (15,48 % frente a 15 %) y tanto el repago simple como el descontado se producen dentro del horizonte de cinco años. Conforme al criterio de decisión estándar, el proyecto se acepta. El escenario optimista confirma esa conclusión con holgura.
+
+Sin embargo, los márgenes del escenario base son estrechos y el escenario pesimista resulta claramente no viable. De ello se desprenden tres condiciones de viabilidad:
+
+- **Sostener un volumen mínimo de aproximadamente 3.000
+          sesiones anuales**, umbral por debajo del cual la operación no cubre siquiera sus costos fijos.
+- **Mantener la comisión en el 27 %**, dado que valores inferiores tornan negativo el VAN con la estructura de costos proyectada.
+- **Operar sin equipo de soporte rentado** durante el horizonte evaluado, difiriendo esa incorporación hasta que el volumen efectivo la justifique.
+
+Que el escenario pesimista no resulte viable no invalida el proyecto, sino que delimita con precisión el terreno en que debe moverse. Ante una tracción inferior a la proyectada, las alternativas disponibles no pasan por reducir costos —el margen de recorte ya está agotado— sino por revisar el modelo de negocio: segmentar la oferta por niveles de precio, incorporar modalidades de clase grupal que eleven el ingreso por hora de tutor, o explorar acuerdos institucionales que aporten volumen agregado.
+El análisis de riesgos del capítulo siguiente retoma estas contingencias.
 
 # Capítulo 6: Análisis de riesgos
 
@@ -1027,3 +1230,6 @@ usuario/repositorio
 * `[tusclases]` *Tusclases. Tusclases -- Clases particulares en Argentina (s. f.). https://www.tusclases.com.ar/*
 * `[profecom]` *profe.com. profe.com -- Clases particulares online (s. f.). https://www.profe.com/*
 * `[lightnode2026]` *LightNode. Hosting VPS en Argentina (VDS) con CPU dedicado y precios por hora (s. f.). https://go.lightnode.com/es/argentina-vds*
+* `[rpgu]` *Ministerio de Capital Humano. Dirección Nacional de Gestión Universitaria. Registro Público de Graduados Universitarios (2026). https://registrograduados.siu.edu.ar/*
+* `[refe]` *Ministerio de Capital Humano. Dirección de Validez Nacional de Títulos y Estudios. Registro Federal de Egreso (ReFE) (2026). https://www.argentina.gob.ar/educacion/direccion-de-validez-nacional-de-titulos-y-estudios/registro-federal-de-egreso-refe*
+* `[mpmarketplace]` *Mercado Pago. Integrar checkout en marketplace (2026). https://www.mercadopago.com.br/developers/en/docs/checkout-pro/how-tos/integrate-marketplace*

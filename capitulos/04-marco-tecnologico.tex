@@ -82,7 +82,7 @@ sus responsabilidades.
         Caché / estado en tiempo real & Sesiones, chat en tiempo real (pub/sub), rate limiting & Redis (Upstash) \\
         Aula virtual & Transmisión de audio/video entre tutor y alumno & LiveKit Cloud (\gls{webrtc}) \\
         Pasarela de pagos & Procesamiento de cobro vía Checkout Pro & MercadoPago (SDK oficial Java) \\
-        Servicios de \gls{ia} & \gls{matching} semántico, transcripción y resumen de sesión, asistente conceptual, kill-switch de seguridad & sentence-transformers + FAISS, \gls{llm} (GPT-4o o Gemini 2.0 Flash), clasificador on-device \\
+        Servicios de \gls{ia} & \gls{matching} semántico, transcripción y resumen de sesión, asistente conceptual, kill-switch de seguridad & sentence-transformers + FAISS, \gls{llm} GPT-4o (resumen) y gpt-4o-mini-transcribe (transcripción), clasificador on-device \\
         Panel de administración & Moderación, resolución de denuncias, aprobación de tutores & Módulo interno del backend + vista en el frontend \\
         \bottomrule
     \end{tabularx}
@@ -155,7 +155,7 @@ Sprint Backlog vigente.
         \toprule
         \tb{Ítem} & \tb{Detalle} \\
         \midrule
-        Tecnología & React (o Next.js, a confirmar según necesidad de server-side rendering) \\
+        Tecnología & Next.js 16 + React 19 (App Router), elegido por el posicionamiento en buscadores de los perfiles públicos de tutores \\
         Por qué se eligió & Conocimiento previo del desarrollador (capítulo~\ref{cap:introduccion}, sección~\ref{sec:recursos}), ecosistema maduro, gran disponibilidad de componentes para formularios, calendarios y videollamada embebida \\
         Alternativas evaluadas & Vue.js -- descartado por menor familiaridad del desarrollador, lo que hubiera consumido tiempo de aprendizaje no disponible en el cronograma de seis meses \\
         Formato de despliegue & \gls{pwa}, consistente con la exclusión de app móvil nativa del alcance (capítulo~\ref{cap:introduccion}, sección~\ref{sec:alcance}) \\
@@ -174,7 +174,7 @@ Sprint Backlog vigente.
         \toprule
         \tb{Ítem} & \tb{Detalle} \\
         \midrule
-        Tecnología & Java 21 + Spring Boot \\
+        Tecnología & Java 21 + Spring Boot 4.1.1 (la rama 3.5 dejó de recibir parches gratuitos el 30/06/2026) \\
         Por qué se eligió & Framework ``batteries-included'' (seguridad, ORM, validación, manejo de excepciones ya resueltos) que reduce el riesgo de un desarrollador único investigando y ensamblando librerías sueltas bajo un cronograma fijo; alta disponibilidad de documentación y comunidad en español, relevante para un desarrollador sin experiencia previa profunda en ninguno de los lenguajes candidatos \\
         Alternativas evaluadas & Go -- descartado pese a tener ventajas reales de footprint de memoria y simplicidad del lenguaje, porque su ecosistema requiere ensamblar manualmente router, ORM y librerías de autenticación, lo cual consume tiempo de decisión de arquitectura que un proyecto de 6 meses en solitario no puede permitirse. Node.js -- descartado como backend principal por preferirse la robustez de tipado y el ecosistema de seguridad de Spring frente a un desarrollador que tampoco tenía experiencia consolidada previa en ninguno de los dos \\
         Autenticación & Spring Security + \gls{jwt} emitido y validado por el propio backend (no se delega la autenticación a Supabase Auth, dado que el modelo de roles de \sistema{} --adulto responsable, menor con permisos por acción, tutor, administrador-- requiere lógica de autorización granular propia que conviene mantener dentro del mismo framework que ya gestiona el resto de las reglas de negocio) \\
@@ -298,11 +298,25 @@ completo se presenta en el apéndice~\ref{apx:tecnicos}.
 \section{Diseño y experiencia de usuario (UX/UI)}
 
 El onboarding de Términos y Condiciones reemplaza el documento de scroll
-continuo por un carrusel de cinco a seis tarjetas, cada una con un
-título, un párrafo breve sobre un punto de los términos y una
-ilustración; al final, un checkbox de aceptación explícita, desactivado
-por defecto, habilita la creación de la cuenta, que queda deshabilitada
-mientras el checkbox no se marca. La interfaz se diferencia según el rol:
+continuo por un paso propio del registro, ``Cómo funciona \sistema{}'', con
+los puntos clave de los términos --incluido el funcionamiento de la
+plataforma-- presentados como tarjetas: cada una tiene un título corto y
+grande, un párrafo breve y una ilustración al costado que representa el
+concepto. Los puntos cubren que \sistema{} conecta pero no dicta las
+clases, la verificación de identidad, que las recomendaciones son una ayuda
+y no una garantía, el pago retenido hasta después de la clase, la
+protección de los menores, que las clases no se graban salvo el audio del
+resumen contratado, y la minimización de datos. El tutor ve un conjunto propio, escrito
+desde su lado: que es independiente y fija su precio, la verificación de su
+identidad y de su formación contra registros oficiales, la foto
+obligatoria, cómo y cuándo cobra, los requisitos para dar clases a menores,
+la grabación del audio solo si habilita el resumen, y cómo se construye su
+reputación. Los plazos
+que se citan salen de la Tabla de Tiempos, nunca escritos a mano. Al final,
+un checkbox de aceptación explícita, desactivado por defecto, habilita el
+paso siguiente. La foto de perfil del tutor es obligatoria: sin ella no
+aparece en búsquedas ni recomendaciones, porque alumnos y familias tienen
+que ver con quién toman clase. La interfaz se diferencia según el rol:
 la de un PerfilMenor no muestra ni expone controles de las acciones
 reservadas al adulto --pago, gestión de acuerdos, contacto con tutores no
 autorizados--, y esa restricción opera tanto en el diseño de interfaz
@@ -327,6 +341,45 @@ capítulo~\ref{cap:metodologia}, y en \gls{uat} con el grupo piloto
     \label{fig:mockups}
 \end{figure}
 
+\section{Decisiones incorporadas durante la implementación}\label{sec:decisiones-implementacion}
+
+Durante la construcción del \gls{mvp} se tomaron decisiones que precisan o
+corrigen lo planteado en las secciones anteriores. Cada una quedó
+registrada como decisión de arquitectura (ADR) en el repositorio del
+sistema (anexo~\ref{anx:repositorios}).
+
+\begin{table}[H]
+    \centering
+    \caption{Decisiones incorporadas durante la implementación}
+    \label{tab:decisiones-implementacion}
+    \small
+    \begin{tabularx}{\textwidth}{p{3.4cm} L}
+        \toprule
+        \tb{Tema} & \tb{Decisión y motivo} \\
+        \midrule
+        Proveedor de \gls{llm} & GPT-4o para el resumen, en lugar de la alternativa Gemini 2.0 Flash; solo recibe el texto ya anonimizado. La transcripción usa gpt-4o-mini-transcribe por costo (ADR-M6-03) \\
+        Resumen automático & Pasa a ser un adicional pago que se contrata al reservar. Si el resumen no se puede generar, se reembolsa solo el adicional \\
+        Grabación & Única excepción a no grabar (enmienda de la Constitución del proyecto, v2.4): solo audio, solo con el adicional, nunca con menores, con consentimiento de ambas partes y borrado al transcribir (24 horas como máximo). La graba el navegador del tutor porque la grabación del lado del servidor de LiveKit (Egress) incluye solo 60 minutos gratuitos por mes (ADR-M3-04) \\
+        Especialidades del tutor & El tutor declara de una a tres especialidades (materia y nivel máximo) además de sus temas; cada una se muestra como \emph{verificada} (respaldada por una credencial aprobada contra un registro oficial) o \emph{declarada}. Los tutores con especialidades solo declaradas aparecen en las búsquedas, marcados como tales (ADR-M1-06) \\
+        Recomendaciones & Las puntuaciones funcionan como un sistema de recomendación, no como un aval: ordenan los resultados combinando la similitud semántica con lo buscado y las calificaciones de otros usuarios, y un tutor nuevo arranca sin calificaciones. La decisión de con quién aprender es siempre del alumno o de su adulto responsable \\
+        Verificación de credenciales & Triaje automático que descarta lo inválido y prepara la consulta, más la decisión del rol ADMIN contra el registro oficial; la máquina decide lo que \emph{no} es un título válido, pero lo que sí lo es solo lo prueba el registro (ADR-M1-06) \\
+        Foto de perfil del tutor & Obligatoria: sin foto el tutor no aparece en búsquedas ni recomendaciones \\
+        Catálogo de contenidos & El catálogo de temas sigue siendo cerrado y curado (el tutor solo elige temas de ahí), pero es \emph{vivo}: se actualiza de forma continua con lo que se busca y todavía no está. Para eso se cuentan, de forma agregada, los temas buscados sin un tutor que los dé: un contador por tema, sin datos de quién buscó, sin las búsquedas de menores y con un máximo de 500 temas. El rol ADMIN solo ve los temas pedidos varias veces, agrupados por área, y los incorpora al catálogo (ADR-M2-04) \\
+        Búsqueda sin coincidencia exacta & Si nadie enseña exactamente lo que se buscó, el sistema reconoce el área del tema (materia y nivel del tema del catálogo más parecido) y recomienda tutores de esa área, aclarando que es una recomendación y no una coincidencia exacta (ADR-M2-04) \\
+        Orden de los resultados & La similitud semántica se calcula contra cada tema del tutor, no contra todos juntos, para que quien enseña muchos temas no quede relegado (ADR-M2-03). La reputación solo desempata entre tutores de relevancia parecida, y los resultados por debajo de un mínimo de relevancia no se muestran (ADR-M2-02) \\
+        Términos y Condiciones & Paso propio del registro con los puntos clave en tarjetas (título, párrafo breve e ilustración) y aceptación explícita \\
+        \gls{cap} & Obligatorio y vigente solo para dar clases a menores; un tutor que enseña solo a adultos no lo necesita. Al vencer, se cancelan sus clases futuras con menores con reembolso total \\
+        Versiones & Spring Boot 4.1.1 y Next.js 16.3.6, para mantener parches de seguridad durante el piloto \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+Queda abierta una decisión con impacto en el cobro: el reparto automático
+de la comisión de MercadoPago (\emph{split} de marketplace) exige que cada
+cobro se genere con las credenciales del propio tutor, obtenidas por OAuth
+\citep{mpmarketplace}. Hasta implementarlo, el dinero ingresa a la cuenta
+de la plataforma y la liquidación al tutor debe resolverse por separado.
+
 \section{Seguridad, calidad y despliegue}
 
 \subsection{Seguridad}\label{sec:seguridad}
@@ -349,12 +402,23 @@ académicos con la extracción automática de la fecha de nacimiento
 mediante \gls{ocr} (implementado con Tesseract vía Tess4J, ejecutado
 in-process en el propio backend para garantizar que las imágenes de los
 documentos nunca se envíen a servicios de terceros), que rechaza
-automáticamente el registro de cualquier tutor menor de 18 años, y una
-revisión manual final a cargo del rol ADMIN sobre la autenticidad del
-documento y la correspondencia de los certificados con las materias
-declaradas; incluye la verificación manual del \gls{cap} vigente,
-limitando la exclusión únicamente a la integración automatizada con el
-Estado.
+automáticamente el registro de cualquier tutor menor de 18 años. La
+credencial académica no se da por buena por el archivo --un PDF se
+falsifica en minutos--, sino por el registro oficial que la respalda: el
+Registro Público de Graduados Universitarios para títulos universitarios
+desde 2012 \citep{rpgu}, el Registro Federal de Egreso (ReFE) con el
+código QR de Mi Argentina para títulos secundarios y superiores digitales
+desde noviembre de 2023 \citep{refe}, el validador de SIU-Guaraní para
+certificados de alumno regular y los buscadores de cada colegio para las
+matrículas. Como ninguno de esos registros ofrece una \gls{api} pública, la
+verificación combina un triaje automático --rechazo inmediato de lo que
+claramente no es un título, lectura por \gls{ocr} del nombre para
+compararlo con el del DNI, y control de que el enlace de verificación
+pertenezca a un dominio oficial-- con la decisión final del rol ADMIN, que
+consulta el registro y registra cómo verificó y qué especialidades del
+tutor cubre esa credencial (sección~\ref{sec:decisiones-implementacion}).
+Incluye además la verificación manual del \gls{cap} vigente para quienes
+dan clases a menores.
 
 El kill-switch de seguridad, presentado como SafeVchat en la
 sección~\ref{sec:estado-del-arte} --donde se desarrolla el mecanismo
@@ -367,9 +431,10 @@ transmisión y suspende preventivamente la cuenta de forma inmediata; si
 ambos participantes son adultos, el video del detectado se bloquea con un
 filtro de desenfoque y el sistema solicita confirmación a la contraparte
 antes de proceder al corte. El portal de denuncias sigue una lógica
-equivalente: al registrarse una denuncia, el sistema marca la grabación
-de la sesión correspondiente para retención extendida, fuera del ciclo
-normal de borrado, suspende preventivamente al usuario denunciado y
+equivalente: como las clases no se graban, la evidencia es el fragmento de
+treinta segundos del buffer local del kill-switch, que se sube solo ante un
+disparo y se conserva hasta la resolución; al registrarse una denuncia, el
+sistema suspende preventivamente al usuario denunciado y
 deriva la resolución final a revisión humana del rol ADMIN, con acceso a
 la evidencia preservada.
 
