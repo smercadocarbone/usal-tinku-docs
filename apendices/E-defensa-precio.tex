@@ -25,14 +25,19 @@ cada profesor declara. El resultado fue:
         \toprule
         \tb{Indicador} & \tb{Valor} \\
         \midrule
-        Avisos relevados (suma / promedio) & 414 \\
+        Avisos relevados                    & 414 \\
         Suma de precios horarios            & \$5.544.467 \\
         Precio horario promedio             & \$13.392,43 \\
+        Mediana                             & \$12.000 \\
+        Primer y tercer cuartil             & \$8.000 y \$18.000 \\
+        Mínimo y máximo                     & \$1.990 y \$60.000 \\
+        Avisos en modalidad online          & 387 (93\,\%) \\
         \bottomrule
     \end{tabularx}
 \end{table}
 
-Este promedio funciona como precio de referencia de mercado: es lo que
+El detalle de los 414 avisos se conserva en
+\texttt{apendices/superprof-precios.csv}. Este promedio funciona como precio de referencia de mercado: es lo que
 hoy cobra un profesor particular en la plataforma líder, contra lo cual
 compite la oferta de \sistema{}.
 
@@ -69,8 +74,10 @@ manteniendo el resto de los supuestos del escenario base.
     \item Son precios \emph{pedidos} por los profesores, no pagados por los
           alumnos; los avisos pueden incluir descuentos o primeras clases
           gratis.
-    \item El promedio es sensible a valores extremos. Conviene respaldarlo
-          también con la mediana y los cuartiles del mismo relevamiento.
+    \item 36 avisos figuran a \$1.990 por hora, probablemente un precio
+          promocional o de entrada. Excluyéndolos, el promedio sube a
+          \$14.478 y la mediana a \$14.000. Se adopta el promedio completo
+          por ser el más conservador.
     \item El tipo de cambio es un parámetro del modelo, no un dato: la
           inflación en pesos erosiona el precio en dólares entre
           relevamientos.
