@@ -5,9 +5,8 @@
 
 \begin{guia}
 Respalda el ticket promedio del Cap.~\ref{cap:economica}. Las cifras del
-relevamiento son las informadas por el autor; las conversiones a dólares
-dependen de un tipo de cambio que debe fijarse antes de incorporar estos
-valores al capítulo.
+relevamiento son las informadas por el autor; el ticket resultante ya está
+incorporado al capítulo.
 \end{guia}
 
 \section{Relevamiento}
@@ -45,28 +44,39 @@ compite la oferta de \sistema{}.
 
 El ticket del modelo es un promedio ya ponderado por la mezcla de
 duraciones (Ec.~\ref{eq:duracion}, $\bar{d}=51$ minutos), por lo que el
-precio horario se multiplica por $51/60 = 0{,}85$ antes de usarse. Con
-el margen unitario $m(T) = T\,(0{,}27 - 0{,}0604) - 0{,}0255$, la
-tabla~\ref{tab:sens-precio} muestra el efecto según el tipo de cambio,
-manteniendo el resto de los supuestos del escenario base.
+precio horario se multiplica por $51/60 = 0{,}85$ y se convierte a dólares
+al tipo de cambio de \$1.535 por USD (Ec.~\ref{eq:ticket}), el que fija
+el piso tarifario de la plataforma. El resultado es un ticket de
+\usd{7,42}, con un margen neto por sesión de \usd{1,5297} a la comisión
+del \comision{}.
+
+El tipo de cambio es un parámetro del modelo. La
+tabla~\ref{tab:sens-precio} muestra cómo cambian el ticket, los puntos de
+equilibrio y los indicadores del escenario base si se usara otro valor,
+manteniendo el resto de los supuestos.
 
 \begin{table}[H]
     \centering
-    \caption{Efecto del nuevo precio de referencia (tipos de cambio ilustrativos)}
+    \caption{Sensibilidad del escenario base al tipo de cambio}
     \label{tab:sens-precio}
     \small
     \begin{tabularx}{\textwidth}{r r r r r r r}
         \toprule
-        \tb{ARS/USD} & \tb{USD/h} & \tb{Ticket} & \tb{Margen} & \tb{Sesiones eq.\ Año 1} & \tb{Sesiones eq.\ Año 5} & \tb{VAN base} \\
+        \tb{ARS/USD} & \tb{Ticket} & \tb{Margen} & \tb{Sesiones eq.\ Año 1} & \tb{Sesiones eq.\ Año 5} & \tb{VAN (USD)} & \tb{TIR} \\
         \midrule
-        1.400 & 9,57 & 8,13 & 1,68 & 2.511 & 3.118 & 7.125 \\
-        1.500 & 8,93 & 7,59 & 1,57 & 2.693 & 3.345 & 3.858 \\
-        1.600 & 8,37 & 7,11 & 1,47 & 2.876 & 3.572 &   999 \\
+        1.400 & 8,13 & 1,68 & 2.511 & 3.119 &  7.118 & 25,66\,\% \\
+        \tb{1.535} & \tb{7,42} & \tb{1,53} & \tb{2.755} & \tb{3.422} & \tb{2.839} & \tb{19,37\,\%} \\
+        1.700 & 6,70 & 1,38 & 3.057 & 3.797 & $-1.499$ & 12,61\,\% \\
+        1.900 & 5,99 & 1,23 & 3.427 & 4.256 & $-5.779$ & 5,41\,\% \\
         \midrule
-        \multicolumn{2}{l}{Modelo vigente} & 7,00 & 1,44 & 2.924 & 3.631 & 308 \\
+        \multicolumn{1}{l}{USD 7 (previo)} & 7,00 & 1,44 & 2.924 & 3.631 & 308 & 15,48\,\% \\
         \bottomrule
     \end{tabularx}
 \end{table}
+
+Cuanto más pesos cuesta el dólar, menos dólares equivale el precio local
+y peor resulta el modelo: por encima de aproximadamente \$1.640 por USD el
+\gls{van} del escenario base pasa a ser negativo.
 
 \section{Limitaciones}
 
