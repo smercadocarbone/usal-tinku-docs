@@ -47,7 +47,7 @@ duraciones (Ec.~\ref{eq:duracion}, $\bar{d}=51$ minutos), por lo que el
 precio horario se multiplica por $51/60 = 0{,}85$ y se convierte a dólares
 al tipo de cambio de \$1.535 por USD (Ec.~\ref{eq:ticket}), el que fija
 el piso tarifario de la plataforma. El resultado es un ticket de
-\usd{7,42}, con un margen neto por sesión de \usd{1,5297} a la comisión
+\usd{7,42}, con un margen neto por sesión de \usd{1,5552} a la comisión
 del \comision{}.
 
 El tipo de cambio es un parámetro del modelo. La
@@ -64,18 +64,18 @@ manteniendo el resto de los supuestos.
         \toprule
         \tb{ARS/USD} & \tb{Ticket} & \tb{Margen} & \tb{Sesiones eq.\ Año 1} & \tb{Sesiones eq.\ Año 5} & \tb{VAN (USD)} & \tb{TIR} \\
         \midrule
-        1.400 & 8,13 & 1,68 & 2.511 & 3.119 &  7.118 & 25,66\,\% \\
-        \tb{1.535} & \tb{7,42} & \tb{1,53} & \tb{2.755} & \tb{3.422} & \tb{2.839} & \tb{19,37\,\%} \\
-        1.700 & 6,70 & 1,38 & 3.057 & 3.797 & $-1.499$ & 12,61\,\% \\
-        1.900 & 5,99 & 1,23 & 3.427 & 4.256 & $-5.779$ & 5,41\,\% \\
+        1.400 & 8,13 & 1,70 & 2.474 & 3.072 &  7.851 & 26,70\,\% \\
+        \tb{1.535} & \tb{7,42} & \tb{1,56} & \tb{2.710} & \tb{3.366} & \tb{3.573} & \tb{20,47\,\%} \\
+        1.700 & 6,70 & 1,40 & 3.001 & 3.728 & $-767$ & 13,79\,\% \\
+        1.900 & 5,99 & 1,26 & 3.357 & 4.170 & $-5.045$ & 6,69\,\% \\
         \midrule
-        \multicolumn{1}{l}{USD 7 (previo)} & 7,00 & 1,44 & 2.924 & 3.631 & 308 & 15,48\,\% \\
+        \multicolumn{1}{l}{Modelo previo (USD 7, IA por sesión)} & 7,00 & 1,44 & 2.924 & 3.631 & 308 & 15,48\,\% \\
         \bottomrule
     \end{tabularx}
 \end{table}
 
 Cuanto más pesos cuesta el dólar, menos dólares equivale el precio local
-y peor resulta el modelo: por encima de aproximadamente \$1.640 por USD el
+y peor resulta el modelo: por encima de aproximadamente \$1.670 por USD el
 \gls{van} del escenario base pasa a ser negativo.
 
 \section{Limitaciones}
