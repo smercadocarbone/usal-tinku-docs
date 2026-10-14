@@ -1,0 +1,94 @@
+%!TEX root = ../main.tex
+% APÉNDICE E — Defensa del ticket promedio (relevamiento de precios en Superprof)
+
+\chapter{Defensa del precio: relevamiento de tarifas en Superprof}\label{apx:precio}
+
+\begin{guia}
+Respalda el ticket promedio del Cap.~\ref{cap:economica}. Las cifras del
+relevamiento son las informadas por el autor; el ticket resultante ya está
+incorporado al capítulo.
+\end{guia}
+
+\section{Relevamiento}
+
+Se relevaron los avisos de apoyo escolar publicados en el sitio de
+Superprof Argentina \citep{superprof}, registrando el precio por hora que
+cada profesor declara. El resultado fue:
+
+\begin{table}[H]
+    \centering
+    \caption{Resultado del relevamiento (pesos argentinos por hora)}
+    \label{tab:relevamiento-superprof}
+    \small
+    \begin{tabularx}{\textwidth}{L r}
+        \toprule
+        \tb{Indicador} & \tb{Valor} \\
+        \midrule
+        Avisos relevados                    & 414 \\
+        Suma de precios horarios            & \$5.544.467 \\
+        Precio horario promedio             & \$13.392,43 \\
+        Mediana                             & \$12.000 \\
+        Primer y tercer cuartil             & \$8.000 y \$18.000 \\
+        Mínimo y máximo                     & \$1.990 y \$60.000 \\
+        Avisos en modalidad online          & 387 (93\,\%) \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+El detalle de los 414 avisos se conserva en
+\texttt{apendices/superprof-precios.csv}. Este promedio funciona como precio de referencia de mercado: es lo que
+hoy cobra un profesor particular en la plataforma líder, contra lo cual
+compite la oferta de \sistema{}.
+
+\section{Traslado al ticket promedio}
+
+El ticket del modelo es un promedio ya ponderado por la mezcla de
+duraciones (Ec.~\ref{eq:duracion}, $\bar{d}=51$ minutos), por lo que el
+precio horario se multiplica por $51/60 = 0{,}85$ y se convierte a dólares
+al tipo de cambio de \$1.535 por USD (Ec.~\ref{eq:ticket}), el que fija
+el piso tarifario de la plataforma. El resultado es un ticket de
+\usd{7,42}, con un margen neto por sesión de \usd{1,5552} a la comisión
+del \comision{}.
+
+El tipo de cambio es un parámetro del modelo. La
+tabla~\ref{tab:sens-precio} muestra cómo cambian el ticket, los puntos de
+equilibrio y los indicadores del escenario base si se usara otro valor,
+manteniendo el resto de los supuestos.
+
+\begin{table}[H]
+    \centering
+    \caption{Sensibilidad del escenario base al tipo de cambio}
+    \label{tab:sens-precio}
+    \small
+    \begin{tabularx}{\textwidth}{r r r r r r r}
+        \toprule
+        \tb{ARS/USD} & \tb{Ticket} & \tb{Margen} & \tb{Sesiones eq.\ Año 1} & \tb{Sesiones eq.\ Año 5} & \tb{VAN (USD)} & \tb{TIR} \\
+        \midrule
+        1.400 & 8,13 & 1,70 & 2.474 & 3.072 &  7.851 & 26,70\,\% \\
+        \tb{1.535} & \tb{7,42} & \tb{1,56} & \tb{2.710} & \tb{3.366} & \tb{3.573} & \tb{20,47\,\%} \\
+        1.700 & 6,70 & 1,40 & 3.001 & 3.728 & $-767$ & 13,79\,\% \\
+        1.900 & 5,99 & 1,26 & 3.357 & 4.170 & $-5.045$ & 6,69\,\% \\
+        \midrule
+        \multicolumn{1}{l}{Modelo previo (USD 7, IA por sesión)} & 7,00 & 1,44 & 2.924 & 3.631 & 308 & 15,48\,\% \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+Cuanto más pesos cuesta el dólar, menos dólares equivale el precio local
+y peor resulta el modelo: por encima de aproximadamente \$1.670 por USD el
+\gls{van} del escenario base pasa a ser negativo.
+
+\section{Limitaciones}
+
+\begin{itemize}
+    \item Son precios \emph{pedidos} por los profesores, no pagados por los
+          alumnos; los avisos pueden incluir descuentos o primeras clases
+          gratis.
+    \item 36 avisos figuran a \$1.990 por hora, probablemente un precio
+          promocional o de entrada. Excluyéndolos, el promedio sube a
+          \$14.478 y la mediana a \$14.000. Se adopta el promedio completo
+          por ser el más conservador.
+    \item El tipo de cambio es un parámetro del modelo, no un dato: la
+          inflación en pesos erosiona el precio en dólares entre
+          relevamientos.
+\end{itemize}

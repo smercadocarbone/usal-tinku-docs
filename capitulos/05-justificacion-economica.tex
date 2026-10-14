@@ -112,8 +112,9 @@ comprobable:
 El ingreso de \sistema{} proviene de una única fuente: una
 \textbf{comisión de plataforma del \comision{} sobre el precio de cada
 sesión}, descontada exclusivamente del pago que recibe el tutor. El
-ticket promedio de mercado se proyecta en \textbf{USD 7 por sesión}. El
-estudiante abona el precio final fijado por el docente, sin cargos de
+ticket promedio se fija en \textbf{USD 7,42 por sesión}, derivado del
+relevamiento de precios de Superprof descripto en la
+sección~\ref{sec:origen-ticket}. El estudiante abona el precio final fijado por el docente, sin cargos de
 servicio adicionales visibles. Se excluyen explícitamente vías de ingreso
 como la publicidad, la venta de datos o las suscripciones premium durante
 la etapa de \gls{mvp}.
@@ -136,6 +137,28 @@ metodologías alternativas de intermediación:
           ingresos y vulnera el modelo de confianza diseñado.
 \end{itemize}
 
+\subsection{Origen del ticket promedio}\label{sec:origen-ticket}
+
+El ticket no es un supuesto: se obtuvo relevando 414 avisos de apoyo
+escolar publicados en Superprof Argentina \citep{superprof}, la
+plataforma de referencia del segmento. La suma de los precios horarios
+declarados fue de \$5.544.467 y el promedio de \$13.392,43 por hora
+(mediana \$12.000; detalle en el apéndice~\ref{apx:precio}). Como el
+modelo trabaja con una duración media de 51 minutos por sesión
+(ecuación~\ref{eq:duracion}), el precio horario se pondera por
+$51/60 = 0{,}85$ y se convierte a dólares al tipo de cambio de
+\$1.535 por USD, el mismo que fija el piso tarifario de la plataforma
+(BNA, 09/09/2026; estimación propia declarada como tal):
+
+\begin{equation}
+    \text{Ticket} = \frac{13.392{,}43 \times 0{,}85}{1.535} = \usd{7{,}42}.
+    \label{eq:ticket}
+\end{equation}
+
+El tipo de cambio es un parámetro del modelo y no un dato: la
+sensibilidad del resultado frente a él se presenta en el
+apéndice~\ref{apx:precio}.
+
 \subsection{Calibración de la comisión}
 
 La comisión del \comision{} no es un supuesto arbitrario sino el
@@ -150,10 +173,13 @@ costos fijos de operación.
 
 La comisión se recalibró entonces al \comision{}, valor que continúa
 dentro de la banda de mercado vigente (18\,\% a 33\,\%) y por debajo de
-su extremo superior, pero que constituye el mínimo necesario para que el
-escenario base alcance un \gls{van} no negativo dentro del horizonte de
-cinco años. Se trata de una restricción del modelo que se declara
-explícitamente: por debajo del 27\,\%, y manteniendo el resto de los
+su extremo superior. Con el ticket de USD 7 originalmente supuesto, ese
+valor era el mínimo necesario para que el escenario base alcanzara un
+\gls{van} no negativo. Con el ticket actualizado a USD 7,42 el umbral
+baja a aproximadamente el 25,7\,\%, por lo que el \comision{} se
+mantiene como una comisión con margen de seguridad de poco más de un
+punto porcentual. Es una restricción del modelo que se declara
+explícitamente: por debajo de ese umbral, y manteniendo el resto de los
 supuestos constantes, el proyecto no se justifica económicamente.
 
 \subsection{Unidad de cobro y duración de las sesiones}
@@ -166,22 +192,123 @@ con la duración real del audio procesado, no con la cantidad de sesiones.
 Imputar un costo fijo por sesión sobrestimaría el costo de las clases
 cortas.
 
-Por tal motivo, el modelo calibra el costo de procesamiento por hora de
-audio y luego lo pondera según la mezcla esperada de duraciones. Asumiendo
-que un 30\,\% de las sesiones utiliza el mínimo de 30 minutos, la
-duración promedio ponderada resulta:
+Por tal motivo, el modelo parametriza el costo de \gls{ia} por minuto
+de audio y no por sesión. Asumiendo que un 30\,\% de las sesiones utiliza
+el mínimo de 30 minutos, la duración promedio ponderada resulta:
 
 \begin{equation}
     \bar{d} = 60 \times (1 - 0{,}30) + 30 \times 0{,}30 = 51 \text{ minutos.}
     \label{eq:duracion}
 \end{equation}
 
-El costo variable de \gls{ia} por sesión se obtiene entonces como el
-costo por hora multiplicado por $\bar{d}/60$, resultando en
-\usd{0{,}0255} por sesión en lugar de los \usd{0{,}03} que correspondería
-a una hora completa. El ticket promedio de USD 7, por su parte, se
-interpreta como el promedio ya ponderado sobre esa misma mezcla de
-duraciones y precios horarios.
+El ticket promedio de \usd{7,42} se interpreta como el promedio ya
+ponderado sobre esa misma mezcla de duraciones y precios horarios. El
+procesamiento de \gls{ia} ya no se imputa a cada sesión: pasó a ser un
+servicio opcional que el estudiante contrata y que se cobra aparte, tal
+como se describe a continuación.
+
+\subsection{Resumen automático como adicional opcional}\label{sec:adicional-resumen}
+
+Al reservar una clase, quien paga puede sumar un resumen automático de la
+sesión (transcripción y síntesis por \gls{ia}). Es un servicio opcional,
+disponible solo en clases entre adultos y con el consentimiento de ambas
+partes, y su precio se fija a costo más un 50\,\%:
+
+\begin{equation}
+    P_{\text{resumen}}(d) = 1{,}50 \times C_{\text{IA}}(d),
+    \qquad
+    C_{\text{IA}}(d) = c_{t}\,d + c_{e}\,\tau\,d + c_{s}\,\sigma,
+    \label{eq:precio-resumen}
+\end{equation}
+
+donde $d$ es la duración de la clase en minutos, de modo que el precio
+\textbf{crece con la duración} y no es un monto fijo. Los parámetros, con
+su fuente, son los de la tabla~\ref{tab:parametros-ia}.
+
+\begin{table}[H]
+    \centering
+    \caption{Parámetros del costo de \gls{ia} del resumen}
+    \label{tab:parametros-ia}
+    \small
+    \begin{tabularx}{\textwidth}{l L r}
+        \toprule
+        \tb{Parámetro} & \tb{Origen} & \tb{Valor} \\
+        \midrule
+        $c_t$ --- transcripción (por minuto)
+          & Tarifa de lista de \texttt{gpt-4o-mini-transcribe}, estimada en USD 0,003 por minuto \citep{openaitranscribe2026}
+          & 0,0030 \\
+        $c_e$ --- entrada del LLM (por token)
+          & Tarifa de lista de GPT-4o: USD 2,50 por millón de tokens \citep{openaipricing2026}
+          & $2{,}5\times10^{-6}$ \\
+        $\tau$ --- tokens de transcripción por minuto
+          & Estimación propia: unos 13.000 tokens por hora de clase (10.000 a 15.000 según el diseño del módulo)
+          & 217 \\
+        $c_s$ --- salida del LLM (por token)
+          & Tarifa de lista de GPT-4o: USD 10,00 por millón de tokens \citep{openaipricing2026}
+          & $1\times10^{-5}$ \\
+        $\sigma$ --- tokens de salida y de instrucciones
+          & Estimación propia: resumen de cinco puntos (unos 800 tokens) más instrucciones fijas
+          & 840 \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+Con esos valores, el costo de \gls{ia} es de unos USD 0,22 por hora de clase,
+de los cuales unos USD 0,18 corresponden a la transcripción. La
+tabla~\ref{tab:precio-resumen} muestra el precio resultante según la
+duración, convertido al tipo de cambio de \$1.535 por USD y redondeado
+hacia arriba a la decena de pesos. La columna final es lo que le queda a
+la plataforma después de la comisión de la pasarela (6,04\,\% sobre el
+precio cobrado, incluido el adicional).
+
+\begin{table}[H]
+    \centering
+    \caption{Costo y precio del resumen según la duración de la clase}
+    \label{tab:precio-resumen}
+    \small
+    \begin{tabularx}{\textwidth}{r r r r r}
+        \toprule
+        \tb{Duración} & \tb{Costo de IA (USD)} & \tb{Precio (USD)} & \tb{Precio (ARS)} & \tb{Neto de pasarela (USD)} \\
+        \midrule
+        30 min  & 0,1147 & 0,1720 &   270 & 0,0469 \\
+        51 min (promedio) & 0,1890 & 0,2835 &   440 & 0,0774 \\
+        60 min  & 0,2209 & 0,3313 &   510 & 0,0904 \\
+        90 min  & 0,3272 & 0,4907 &   760 & 0,1339 \\
+        120 min & 0,4334 & 0,6501 & 1.000 & 0,1774 \\
+        180 min & 0,6459 & 0,9688 & 1.490 & 0,2644 \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+Tres consecuencias de este diseño son relevantes para la evaluación:
+
+\begin{itemize}
+    \item \textbf{No es una fuente de ingreso relevante.} El adicional se
+          fija a costo más un 50\,\%, y una vez descontada la pasarela deja
+          USD 0,077 por resumen de duración promedio. Si, a modo de
+          referencia, uno de cada cinco estudiantes lo contratara en el
+          escenario base, el aporte sería de unos USD 135 anuales. Por eso
+          \textbf{no se incorpora al flujo de fondos}: su función es
+          ofrecer el servicio sin que el costo de \gls{ia} recaiga sobre
+          las sesiones que no lo usan.
+    \item \textbf{El costo de \gls{ia} sale de la economía unitaria de la
+          sesión.} En la formulación anterior se imputaban USD 0,0255 a
+          cada sesión, calculados con un costo de USD 0,03 por hora que la
+          investigación de tarifas no respalda (el costo vigente es unas
+          siete veces mayor). Al pasar a cobrarse aparte y en proporción
+          a la duración, las sesiones sin resumen no cargan costo de
+          \gls{ia} y el margen unitario base sube en esa cantidad.
+    \item \textbf{Riesgo de falla.} Si el resumen no llega a generarse, el
+          adicional se reembolsa íntegro, pero el costo de transcripción
+          ya incurrido no se recupera. No se cuantifica en el modelo base
+          y se declara como una restricción del análisis; su magnitud es
+          de centavos de dólar por incidente.
+\end{itemize}
+
+Las tarifas de lista se verificaron en fuentes secundarias y en la
+documentación del proveedor, y deben contrastarse con la página oficial de
+precios antes de fijar el monto definitivo, ya que se expresan en dólares y
+pueden cambiar.
 
 \section{Estructura de costos}
 
@@ -304,12 +431,11 @@ una sesión promedio.
         \toprule
         \tb{Concepto} & \tb{Cálculo} & \tb{Valor} \\
         \midrule
-        Ticket promedio de la sesión          & Precio fijado por el tutor       & 7,0000 \\
-        Comisión bruta de plataforma          & Ticket $\times$ \comision{}      & 1,8900 \\
-        Costo variable de \gls{ia}            & Costo/hora $\times$ ($\bar{d}/60$) & $-0{,}0255$ \\
-        Costo de pasarela de pago             & Ticket $\times$ 6,04\,\%         & $-0{,}4228$ \\
+        Ticket promedio de la sesión          & Precio fijado por el tutor       & 7,4200 \\
+        Comisión bruta de plataforma          & Ticket $\times$ \comision{}      & 2,0034 \\
+        Costo de pasarela de pago             & Ticket $\times$ 6,04\,\%         & $-0{,}4482$ \\
         \midrule
-        \tb{Margen neto por sesión}           &                                  & \tb{1,4417} \\
+        \tb{Margen neto por sesión}           &                                  & \tb{1,5552} \\
         \bottomrule
     \end{tabularx}
 \end{table}
@@ -320,7 +446,7 @@ incrementada por el IVA que grava dicha comisión. Es un costo real
 de cobranza y resulta conceptualmente distinto de la comisión de
 plataforma, que constituye el ingreso del proyecto. Su omisión en una
 formulación preliminar del modelo sobrestimaba el margen neto en
-aproximadamente un 40\,\%.
+aproximadamente un 29\,\% (0,4482 sobre 1,5552).
 
 Se reconoce además la existencia de fricción financiera adicional
 —retenciones de ingresos brutos, percepciones impositivas y
@@ -346,7 +472,7 @@ sistematiza.
         \tb{Tipo} & \tb{Beneficio} & \tb{Cuantificación} \\
         \midrule
         Tangible   & Ingreso por comisión sobre sesiones concretadas
-                   & \usd{1,4417} de margen neto por sesión; es la única fuente de ingreso del flujo \\
+                   & \usd{1,5552} de margen neto por sesión; es la única fuente de ingreso del flujo \\
         Tangible   & Ahorro en infraestructura por arquitectura serverless
                    & Evita \usd{7,71} a \usd{158,7} mensuales de un \gls{vps} dedicado \citep{lightnode2026} \\
         Tangible   & Ahorro en desplazamiento para alumnos y tutores
@@ -449,7 +575,7 @@ El flujo de fondos cruza los ingresos derivados del volumen de sesiones
 contra los costos fijos anuales, imputando la inversión inicial
 íntegramente en el Año 0. Los ingresos netos de cada año se obtienen
 multiplicando las sesiones anuales por el margen neto unitario de
-\usd{1,4417}. La tabla~\ref{tab:flujo-caja} presenta el flujo del
+\usd{1,5552}. La tabla~\ref{tab:flujo-caja} presenta el flujo del
 escenario base.
 
 \begin{table}[H]
@@ -462,21 +588,21 @@ escenario base.
         \tb{Concepto} & \tb{Año 0} & \tb{Año 1} & \tb{Año 2} & \tb{Año 3} & \tb{Año 4} & \tb{Año 5} \\
         \midrule
         Sesiones anuales       & 0 & 7.200 & 9.360 & 7.560 & 10.440 & 9.000 \\
-        Ingreso neto           & 0 & 10.380 & 13.494 & 10.899 & 15.051 & 12.975 \\
+        Ingreso neto           & 0 & 11.198 & 14.557 & 11.758 & 16.237 & 13.997 \\
         Costos fijos anuales   & 0 & $-4.215$ & $-4.335$ & $-4.635$ & $-4.935$ & $-5.235$ \\
         Inversión inicial      & $-25.730$ & 0 & 0 & 0 & 0 & 0 \\
         \midrule
-        \tb{Flujo neto}        & \tb{$-25.730$} & \tb{6.165} & \tb{9.159} & \tb{6.264} & \tb{10.116} & \tb{7.740} \\
-        \tb{Flujo acumulado}   & \tb{$-25.730$} & \tb{$-19.565$} & \tb{$-10.405$} & \tb{$-4.141$} & \tb{5.975} & \tb{13.715} \\
-        \tb{Flujo descontado}  & \tb{$-25.730$} & \tb{5.361} & \tb{6.926} & \tb{4.119} & \tb{5.784} & \tb{3.848} \\
-        \tb{Acum.\ descontado} & \tb{$-25.730$} & \tb{$-20.369$} & \tb{$-13.443$} & \tb{$-9.324$} & \tb{$-3.540$} & \tb{308} \\
+        \tb{Flujo neto}        & \tb{$-25.730$} & \tb{6.983} & \tb{10.222} & \tb{7.123} & \tb{11.302} & \tb{8.762} \\
+        \tb{Flujo acumulado}   & \tb{$-25.730$} & \tb{$-18.747$} & \tb{$-8.525$} & \tb{$-1.402$} & \tb{9.900} & \tb{18.662} \\
+        \tb{Flujo descontado}  & \tb{$-25.730$} & \tb{6.072} & \tb{7.729} & \tb{4.683} & \tb{6.462} & \tb{4.356} \\
+        \tb{Acum.\ descontado} & \tb{$-25.730$} & \tb{$-19.658$} & \tb{$-11.929$} & \tb{$-7.245$} & \tb{$-783$} & \tb{3.573} \\
         \bottomrule
     \end{tabularx}
 \end{table}
 
 La comparación entre las dos últimas filas ilustra el efecto del descuento:
 mientras el flujo acumulado nominal cambia de signo durante el Año 4, el
-acumulado descontado recién lo hace sobre el cierre del Año 5. Esa
+acumulado descontado recién lo hace durante el Año 5. Esa
 distancia es, precisamente, el precio del tiempo.
 
 \section{Evaluación financiera}
@@ -538,9 +664,9 @@ calculados sobre el flujo de fondos de cada escenario.
         \toprule
         \tb{Escenario} & \tb{VAN (USD)} & \tb{TIR} & \tb{Repago simple} & \tb{Repago descontado} \\
         \midrule
-        Pesimista & $-16.444$ & $-14{,}98$\,\% & No recupera en 5 años & No recupera en 5 años \\
-        Base      & 308       & 15{,}48\,\%    & 3,41 años             & 4,92 años \\
-        Optimista & 24.143    & 47{,}01\,\%    & 1,88 años             & 2,42 años \\
+        Pesimista & $-14.499$ & $-10{,}57$\,\% & No recupera en 5 años & No recupera en 5 años \\
+        Base      & 3.573     & 20{,}47\,\%    & 3,12 años             & 4,18 años \\
+        Optimista & 29.284    & 53{,}06\,\%    & 1,74 años             & 2,13 años \\
         \bottomrule
     \end{tabularx}
 \end{table}
@@ -548,33 +674,35 @@ calculados sobre el flujo de fondos de cada escenario.
 La lectura de cada indicador es la siguiente:
 
 \begin{itemize}
-    \item \textbf{\gls{van} del escenario base:} \usd{308}. Es positivo,
+    \item \textbf{\gls{van} del escenario base:} \usd{3.573}. Es positivo,
           por lo que el proyecto crea valor por encima de la tasa exigida
-          del 15\,\% y se acepta. Ahora bien, el margen es mínimo sobre
-          una inversión de \usd{25.730}: el proyecto apenas cubre su
-          costo de capital, sin excedente relevante.
-    \item \textbf{\gls{tir} del escenario base:} 15,48\,\%. Supera a la
-          tasa de corte del 15\,\% por apenas 0,48 puntos porcentuales.
-          Ese diferencial es el margen de seguridad disponible: bastaría
-          que la tasa exigida subiera medio punto para que el proyecto
-          dejara de convenir.
-    \item \textbf{Período de repago:} 3,41 años en el escenario base. La
+          del 15\,\% y se acepta: además de recuperar la inversión y
+          rendir el 15\,\% anual, deja un excedente equivalente a
+          aproximadamente el 14\,\% de la inversión de \usd{25.730},
+          expresado en dinero de hoy. El excedente es positivo pero
+          acotado.
+    \item \textbf{\gls{tir} del escenario base:} 20,47\,\%. Supera a la
+          tasa de corte del 15\,\% por 5,47 puntos porcentuales. Ese
+          diferencial es el margen de seguridad: la tasa exigida podría
+          subir hasta casi el 20,5\,\% antes de que el proyecto dejara
+          de convenir.
+    \item \textbf{Período de repago:} 3,12 años en el escenario base. La
           inversión nominal se recupera durante el Año 4, dentro del
           horizonte de evaluación.
-    \item \textbf{Repago descontado:} 4,92 años. Medido en dinero de hoy,
-          el recupero se alcanza recién sobre el cierre del Año 5, es
-          decir, en el límite mismo del horizonte proyectado.
+    \item \textbf{Repago descontado:} 4,18 años. Medido en dinero de hoy,
+          el recupero se alcanza durante el Año 5, dentro del horizonte
+          proyectado aunque cerca de su final.
 \end{itemize}
 
 En el escenario pesimista los cuatro indicadores son concluyentes: con un
-\gls{van} de \usd{-16.444} y una \gls{tir} negativa, los flujos ni
+\gls{van} de \usd{-14.499} y una \gls{tir} negativa, los flujos ni
 siquiera alcanzan a devolver el capital nominal invertido. El escenario
 optimista, en cambio, presenta holgura en las cuatro métricas.
 
 \section{Análisis de sensibilidad}\label{sec:sensibilidad}
 
 Los resultados de la sección anterior muestran que la viabilidad del
-proyecto no es robusta: depende críticamente de tres variables. El
+proyecto no es robusta: depende críticamente de cuatro variables. El
 análisis de sensibilidad realizado sobre el modelo permite identificarlas
 y cuantificar su incidencia.
 
@@ -582,22 +710,35 @@ y cuantificar su incidencia.
     \item \textbf{Volumen de sesiones.} Es la variable de mayor impacto.
           El punto de equilibrio operativo se obtiene dividiendo los
           costos fijos anuales por el margen neto unitario: en el Año 1
-          se requieren $4.215 / 1{,}4417 \approx 2.924$ sesiones anuales
+          se requieren $4.215 / 1{,}5552 \approx 2.710$ sesiones anuales
           para cubrir los costos fijos, y en el Año 5 aproximadamente
-          3.631. Por debajo de ese umbral la operación genera pérdidas
-          antes de considerar la recuperación de la inversión.
+          3.366. Por debajo de ese umbral la operación genera pérdidas
+          antes de considerar la recuperación de la inversión. Para que
+          el \gls{van} del escenario base no sea negativo, el promedio
+          anual de sesiones no puede caer por debajo de unas 8.020, un
+          8\,\% menos que las 8.712 del escenario base.
     \item \textbf{Comisión de plataforma.} Manteniendo el resto de los
-          supuestos, una comisión del 26\,\% arroja un \gls{van} de
-          aproximadamente \usd{-1.834} en el escenario base, y una del
-          23\,\% lo lleva a \usd{-7.872}. El \comision{} adoptado es, en
-          consecuencia, el valor mínimo compatible con la aceptación del
-          proyecto.
+          supuestos, el \gls{van} del escenario base se anula con una
+          comisión de aproximadamente 25,3\,\%. Con 25\,\% es de
+          \usd{-695}, con 23\,\% de \usd{-4.961} y con 21\,\% de
+          \usd{-9.228}; con 26\,\% resulta de \usd{1.438}. El \comision{}
+          adoptado queda así poco más de un punto porcentual por encima
+          del mínimo compatible con la aceptación del proyecto.
+    \item \textbf{Ticket promedio.} Con la comisión en \comision{}, el
+          \gls{van} del escenario base se anula con un ticket de
+          aproximadamente \usd{6,83}, apenas por debajo del USD 7 con
+          que se había proyectado originalmente. Como el ticket depende del
+          tipo de cambio, el resultado es sensible a él (apéndice~\ref{apx:precio}).
     \item \textbf{Estructura de costos fijos.} La incorporación de un
           equipo de soporte rentado —evaluada en una formulación previa
           del modelo con perfiles junior, mid y senior incorporados de
           forma escalonada— torna negativo el \gls{van} en los tres
-          escenarios. La operación con equipo fundador no es una
-          preferencia sino una condición de viabilidad en esta etapa.
+          escenarios. Con el ticket actualizado, el escenario base podría
+          absorber como máximo un soporte de unos \usd{90} mensuales
+          constantes durante los cinco años antes de que el \gls{van} se
+          anule, lo que alcanza para una dedicación parcial y no para un
+          equipo. La operación con equipo fundador sigue siendo una
+          condición de viabilidad en esta etapa.
 \end{itemize}
 
 Cabe señalar que la tasa de descuento afecta al \gls{van} y al repago
@@ -620,8 +761,8 @@ El proyecto se justifica económicamente, pero bajo condiciones
 estrictas que corresponde explicitar.
 
 En el escenario base, los cuatro indicadores apuntan en la misma
-dirección: el \gls{van} es positivo (\usd{308}), la \gls{tir} supera la
-tasa de corte (15,48\,\% frente a 15\,\%) y tanto el repago simple como
+dirección: el \gls{van} es positivo (\usd{3.573}), la \gls{tir} supera la
+tasa de corte (20,47\,\% frente a 15\,\%) y tanto el repago simple como
 el descontado se producen dentro del horizonte de cinco años. Conforme al
 criterio de decisión estándar, el proyecto se acepta. El escenario
 optimista confirma esa conclusión con holgura.
@@ -631,15 +772,18 @@ pesimista resulta claramente no viable. De ello se desprenden tres
 condiciones de viabilidad:
 
 \begin{enumerate}
-    \item \textbf{Sostener un volumen mínimo de aproximadamente 3.000
-          sesiones anuales}, umbral por debajo del cual la operación no
-          cubre siquiera sus costos fijos.
-    \item \textbf{Mantener la comisión en el \comision{}}, dado que
-          valores inferiores tornan negativo el \gls{van} con la
-          estructura de costos proyectada.
-    \item \textbf{Operar sin equipo de soporte rentado} durante el
-          horizonte evaluado, difiriendo esa incorporación hasta que el
-          volumen efectivo la justifique.
+    \item \textbf{Sostener un volumen mínimo de entre 2.710 (Año 1) y
+          3.366 (Año 5) sesiones anuales}, umbral por debajo del cual la
+          operación no cubre siquiera sus costos fijos, y de unas 8.020
+          sesiones anuales en promedio para que el \gls{van} no sea
+          negativo.
+    \item \textbf{Mantener la comisión cerca del \comision{}}, dado que
+          por debajo de aproximadamente 25,3\,\% el \gls{van} se
+          vuelve negativo con la estructura de costos proyectada.
+    \item \textbf{Operar sin equipo de soporte rentado}, o con una
+          dedicación parcial que no supere unos \usd{90} mensuales,
+          durante el horizonte evaluado, difiriendo la incorporación de un
+          equipo hasta que el volumen efectivo la justifique.
 \end{enumerate}
 
 Que el escenario pesimista no resulte viable no invalida el proyecto,
