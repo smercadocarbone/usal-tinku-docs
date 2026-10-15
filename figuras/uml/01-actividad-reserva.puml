@@ -1,0 +1,76 @@
+@startuml 01-actividad-reserva
+!include _estilo.iuml
+title Diagrama de actividad — Ciclo de una clase: búsqueda, reserva, pago, sesión y cierre
+
+|Estudiante / Adulto Responsable|
+start
+:Buscar tutor (texto libre, materia, nivel);
+|Tinku (backend)|
+:M2: filtrar candidatos (autorizados, no suspendidos,\nCAP vigente si el alumno es menor) y pedir\nel ranking semántico al motor de matching;
+|Estudiante / Adulto Responsable|
+:Elegir tutor, horario y duración (30 a 180 min);
+if (¿La clase la pide un menor?) then (sí)
+  :El menor crea una Solicitud de Sesión;
+  :El Adulto Responsable la aprueba;
+else (no)
+  :Reserva directa del Estudiante adulto\no del Adulto Responsable para su menor;
+endif
+|Tinku (backend)|
+:M4: validar ventana mínima, franja, tutor reservable\ny cuenta de MercadoPago del tutor conectada (OAuth);
+:Crear Reserva en **pendiente_pago**\n(precio congelado; vence a los 15 min);
+if (¿Pasarela habilitada?) then (sí)
+  :M5: crear preferencia con el token del tutor\n(marketplace_fee = comisión de Tinku);
+  |Estudiante / Adulto Responsable|
+  :Pagar en MercadoPago\n(el dinero entra a la cuenta del tutor);
+  |Tinku (backend)|
+  if (¿Pago aprobado antes del vencimiento\ny monto = precio congelado?) then (no)
+    :Reserva **cancelada** (timeout_pago);
+    stop
+  else (sí)
+    :Transacción en **retenido_escrow**\n(ventana lógica de reembolso);
+  endif
+else (no — modo bypass)
+  :Transacción simulada en escrow;
+endif
+:Reserva **confirmada**\n(ReservaConfirmadaEvent);
+:M3: crear Sesión **no_iniciada** y agendar en Quartz:\nsala (T−5), no-show (T+10), corte (fin + 5);
+fork
+  |Tutor|
+  :Unirse a la sala;
+fork again
+  |Estudiante / Adulto Responsable|
+  :Unirse a la sala;
+end fork
+|Tinku (backend)|
+if (¿Entraron ambos antes de T+10?) then (no)
+  :No-show: se libera al tutor (faltó el alumno)\no se reembolsa (faltó el tutor o ambos);
+  stop
+else (sí)
+  :Sesión **en_curso**\n(desde el primer ingreso);
+endif
+|Tutor|
+:Dictar la clase por videollamada\n(clasificador del kill-switch activo en el navegador);
+|Tinku (backend)|
+if (¿Cómo termina?) then (botón Finalizar)
+  :Sesión **finalizada**;
+else (corte automático en fin + 5)
+  if (¿Duración efectiva ≥ 50 %?) then (no)
+    :Sesión interrumpida → reembolso total;
+    stop
+  else (sí)
+    :Sesión **finalizada**;
+  endif
+endif
+fork
+  :M5: a las 24 h del fin cierra la ventana\nde escrow → Transacción **liberado**;
+fork again
+  if (¿Adicional de resumen contratado?\n(solo entre adultos)) then (sí)
+    :M6: transcribir el audio, anonimizar\ny resumir el texto con GPT-4o;
+  else (no)
+  endif
+fork again
+  |Estudiante / Adulto Responsable|
+  :Calificar al tutor (M7);
+end fork
+stop
+@enduml

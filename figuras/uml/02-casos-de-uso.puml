@@ -1,0 +1,98 @@
+@startuml 02-casos-de-uso
+!include _estilo.iuml
+left to right direction
+title Diagrama de casos de uso — Plataforma Tinku
+
+actor "Visitante" as Vis
+actor "Usuario registrado" as Usr
+actor "Estudiante adulto" as Est
+actor "Adulto Responsable" as AR
+actor "Estudiante menor" as Men
+actor "Tutor" as Tut
+actor "Admin\nModeración y Seguridad" as AdmM
+actor "Admin\nSoporte Financiero" as AdmF
+actor "MercadoPago" as MP <<sistema>>
+actor "LiveKit Cloud" as LK <<sistema>>
+actor "OpenAI" as OAI <<sistema>>
+
+Est -|> Usr
+AR -|> Usr
+Men -|> Usr
+Tut -|> Usr
+
+rectangle "Tinku" {
+  usecase "Registrarse\n(verificación de DNI por OCR)" as UC1
+  usecase "Iniciar sesión /\nrecuperar contraseña" as UC2
+  usecase "Buscar tutores\n(matching semántico)" as UC3
+  usecase "Dar de alta un menor a cargo" as UC5
+  usecase "Autorizar tutor para un menor" as UC6
+  usecase "Solicitar sesión" as UC7
+  usecase "Aprobar solicitud de sesión" as UC8
+  usecase "Reservar clase o paquete mensual" as UC9
+  usecase "Pagar reserva" as UC10
+  usecase "Reprogramar / cancelar reserva" as UC11
+  usecase "Participar en el aula virtual" as UC12
+  usecase "Kill-switch: detección automática\nen el navegador" as UC13
+  usecase "Confirmar detección\n(rama entre adultos)" as UC13b
+  usecase "Consultar resumen de la clase" as UC14
+  usecase "Calificar sesión" as UC15
+  usecase "Presentar denuncia" as UC16
+  usecase "Presentar descargo" as UC17
+  usecase "Cargar credencial académica\ny CAP (para dar clases a menores)" as UC18
+  usecase "Publicar disponibilidad\n(franjas horarias)" as UC19
+  usecase "Fijar tarifa y conectar\nMercadoPago (OAuth)" as UC20
+  usecase "Declarar materias y temas" as UC21
+  usecase "Revisar credenciales y CAP" as UC22
+  usecase "Resolver denuncias y alertas\n(sancionar)" as UC23
+  usecase "Gestionar colas financieras\n(pagos fallidos, reembolsos)" as UC24
+  usecase "Gestionar tickets de soporte\ny salud de infraestructura" as UC25
+}
+
+Vis --> UC1
+Usr --> UC2
+Est --> UC3
+AR --> UC3
+Men --> UC3
+Est --> UC9
+Est --> UC11
+Est --> UC12
+Est --> UC13b
+Est --> UC14
+Est --> UC15
+Est --> UC16
+Est --> UC17
+AR --> UC5
+AR --> UC6
+AR --> UC8
+AR --> UC9
+AR --> UC11
+AR --> UC15
+AR --> UC16
+AR --> UC17
+Men --> UC7
+Men --> UC12
+Tut --> UC18
+Tut --> UC19
+Tut --> UC20
+Tut --> UC21
+Tut --> UC12
+Tut --> UC11
+Tut --> UC13b
+Tut --> UC15
+Tut --> UC16
+Tut --> UC17
+AdmM --> UC22
+AdmM --> UC23
+AdmF --> UC24
+AdmM --> UC25
+AdmF --> UC25
+
+UC8 ..> UC9 : <<include>>
+UC9 ..> UC10 : <<include>>
+UC12 <.. UC13 : <<extend>>
+UC13 <.. UC13b : <<extend>>
+UC10 -- MP
+UC20 -- MP
+UC12 -- LK
+UC14 -- OAI
+@enduml

@@ -22,17 +22,64 @@ permitido, con condiciones:
 \end{enumerate}
 \end{guia}
 
-\begin{ejemplo}
-Se reconoce el uso de \completar{herramienta y versión} para
-\completar{tareas: revisión de redacción, generación de código de prueba,
-resumen de papers, etc.}. Todas las salidas fueron revisadas, verificadas
-y adaptadas por el autor, que asume la responsabilidad total sobre el
-contenido de este documento.
 
-\instruccionIA[1]{Reescribí este párrafo en registro académico impersonal
-sin cambiar su contenido.}
-\respuestaIA[1]{(texto devuelto por la herramienta, luego editado)}
-\end{ejemplo}
+En este trabajo se utilizaron herramientas de inteligencia artificial
+generativa tanto en el desarrollo del sistema como en la elaboración del
+documento. La tabla~\ref{tab:herramientas-ia} resume cada herramienta y
+las tareas que asistió; el registro de las instrucciones más relevantes
+se presenta en el apéndice~\ref{apx:prompts}.
 
-\completar{Declaración propia: herramientas utilizadas, tareas asistidas
-y cómo se verificaron los resultados.}
+\begin{table}[H]
+    \centering
+    \caption{Herramientas de IA generativa utilizadas}
+    \label{tab:herramientas-ia}
+    \small
+    \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{4.2cm} L}
+        \toprule
+        \tb{Herramienta} & \tb{Tareas asistidas} \\
+        \midrule
+        OpenCode (modelo Big Pickle) & Implementación del código del \gls{mvp} a partir de la Constitución, las especificaciones, los planes técnicos y la lista de tareas redactados previamente, en las primeras etapas del desarrollo \\
+        Claude Code (Claude Opus 5, Claude Opus 5.5 y Claude Sonnet 5) & En el sistema: implementación de código y de pruebas automatizadas, redacción de especificaciones y de registros de decisión que el autor validó, y pruebas exploratorias sobre el despliegue. En el documento: revisión de la consistencia, relevamiento de tarifas y fuentes, recálculo del modelo financiero, alineación del texto con el sistema implementado y redacción asistida de capítulos y apéndices \\
+        Gemini (Gemini 3.1 Pro) & Consultas esporádicas, como segunda opinión sobre decisiones puntuales \\
+        ChatGPT (modelo predeterminado) & Consultas esporádicas, como tercera mirada sobre decisiones puntuales \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+La magnitud de la asistencia queda registrada en el historial de los
+repositorios (anexo~\ref{anx:repositorios}). Al 14 de octubre de 2026,
+129 de los 482 commits de la rama principal del repositorio del sistema
+figuran con autor ``Claude'', entre ellos 76 de los 196 que modifican
+pruebas automatizadas; en el repositorio de la tesis, al 15 de octubre de
+2026, 13 de sus 24 commits. Los commits registrados a nombre del autor
+también pueden contener código generado con asistencia, en particular
+con OpenCode, que no firma sus cambios.
+
+El uso se rigió por los siguientes criterios:
+
+\begin{itemize}
+    \item \textbf{Autoría.} La definición del problema, la arquitectura,
+          el alcance, los criterios de evaluación y las decisiones del
+          proyecto son del autor. Las herramientas propusieron
+          alternativas, código y redacciones; la elección entre ellas fue
+          siempre del autor, y las decisiones de arquitectura se
+          documentaron como registros de decisión validados por él.
+    \item \textbf{Verificación.} Toda tarifa, cotización y dato de
+          mercado se confirmó en la fuente original, que se cita en cada
+          caso. Los indicadores financieros se reprodujeron con un cálculo
+          independiente a partir de los parámetros declarados en el
+          anexo~\ref{anx:modelo-financiero} antes de incluirlos en el
+          texto. El código se verificó con las pruebas automatizadas, la
+          integración continua, una auditoría técnica y pruebas sobre el
+          despliegue real (capítulo~\ref{cap:resultados}); cada cambio se
+          integró a la rama principal después de la revisión del autor.
+    \item \textbf{Trazabilidad.} Las instrucciones con las que se
+          desarrolló el sistema están versionadas en el propio
+          repositorio (\texttt{AGENTS.md}, la Constitución, las
+          especificaciones y la lista de tareas). Los prompts más
+          relevantes de la elaboración del documento se registran en el
+          apéndice~\ref{apx:prompts}.
+    \item \textbf{Comprensión.} El autor leyó, revisó y adaptó todo el
+          contenido asistido, y asume la responsabilidad total sobre el
+          contenido de este documento.
+\end{itemize}

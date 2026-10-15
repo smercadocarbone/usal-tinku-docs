@@ -1,0 +1,39 @@
+@startuml 05-comunicacion-aula
+!include _estilo.iuml
+title Diagrama de comunicación — Aula virtual: ingreso, kill-switch y cierre de la clase
+left to right direction
+
+actor "Tutor" as T
+actor "Estudiante" as E
+rectangle ":Frontend\n(clasificador NSFWJS)" as FE
+rectangle ":SesionController" as SC
+rectangle ":SesionService" as SS
+rectangle ":LiveKitService" as LKS
+rectangle "LiveKit Cloud" as LK
+rectangle ":LiveKitWebhookService" as LWS
+rectangle ":CierreSalaService" as CS
+rectangle ":CorteAutomaticoJob" as CJ
+rectangle ":EscrowService" as ES
+rectangle ":ResumenService" as RSU
+database ":PostgreSQL" as DB
+
+T -- FE : "1: abrir aula"
+E -- FE : "2: abrir aula"
+FE -- SC : "3: POST /sesiones/{id}/token\n(clasificador listo)"
+SC -- SS : "4: obtenerToken(usuario, id, clasificadorListo)"
+SS -- LKS : "5: generarTokenParticipante()"
+SS -- DB : "6: leer sesión y reserva"
+FE -- LK : "7: conectar(token JWT)"
+LK -- LWS : "8: participant_joined (webhook)\n11: participant_left"
+LWS -- DB : "9: sesión → en_curso,\njoinedAt, conectado"
+LWS -- SS : "10: cancelarNoShow(id)"
+FE -- SC : "K1: POST /sesiones/{id}/killswitch\n(detección del clasificador)"
+SC -- SS : "K2: ejecutarKillswitch()"
+SS -- CS : "K3: cerrar sala\n(rama menor o adultos confirmada)"
+CS -- LKS : "K4: eliminarSala()"
+CJ -- SS : "12: ejecutarCorteAutomatico(id)"
+SS -- ES : "13: SesionFinalizadaEvent /\nSesionKillswitch*Event"
+SS -- RSU : "14: SesionFinalizadaEvent"
+ES -- DB : "15: liberarAt = fin + 24 h\no pausado_alerta"
+RSU -- DB : "16: crear ResumenSesion (pendiente)\nsi se contrató el adicional"
+@enduml

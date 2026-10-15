@@ -1,0 +1,64 @@
+@startuml 07-vision-interacciones
+!include _estilo.iuml
+title Diagrama de visión general de interacciones — De la búsqueda al cierre de la clase
+
+start
+partition "ref: Buscar tutores (sd Matching)" {
+  :Frontend → BusquedaController → MatchingOrquestador;
+  :MatchingOrquestador → motor de matching POST /match;
+}
+if (¿La clase la pide un menor?) then (sí)
+  partition "ref: Solicitud de sesión (sd Solicitud)" {
+    :Menor → SolicitudController (crear);
+    :Adulto Responsable → aprobar → ReservaService.aprobarSolicitud();
+  }
+else (no)
+  partition "ref: Reserva directa (sd Reserva)" {
+    :Estudiante o Adulto Responsable → ReservaController → ReservaService.crearDirecta();
+  }
+endif
+partition "ref: Pago (sd Pago — Fig. secuencia)" {
+  :PagoService → MercadoPago (preferencia con el token del tutor);
+  :Webhook / retorno / conciliación → EscrowService.procesarPagoAprobado();
+}
+if (¿Pago aprobado en 15 min?) then (no)
+  :sd Timeout: ReservaTimeoutPagoJob → cancelar;
+  stop
+endif
+partition "ref: Ingreso al aula (Fig. comunicación)" {
+  :CrearSalaJob (T−5) → LiveKit;
+  :Participantes → token → LiveKit → webhook de ingreso;
+}
+if (¿Par completo en T+10?) then (no)
+  partition "ref: No-show" {
+    :NoShowJob → SesionService.ejecutarNoShow();
+    :EscrowService libera o reembolsa;
+  }
+  stop
+endif
+if (¿El kill-switch corta la clase?\n(con menor: al detectar; entre adultos: si la contraparte\nconfirma en 5 min; si no, la clase sigue)) then (sí)
+  partition "ref: Kill-switch (sd Seguridad)" {
+    :SesionController → SesionService.ejecutarKillswitch();
+    :CierreSalaService → LiveKit (cierra la sala);
+    :EscrowService → pausado_alerta; AlertaSeguridad → revisión del Admin;
+  }
+  stop
+endif
+partition "ref: Cierre (sd Corte automático)" {
+  :CorteAutomaticoJob o finalizar() → SesionFinalizadaEvent;
+}
+fork
+  partition "ref: Cierre de la ventana de escrow" {
+    :LiberacionEscrowJob (fin + 24 h) → verifica en MercadoPago\nque el pago siga aprobado → liberado;
+  }
+fork again
+  partition "ref: Resumen automático (adicional entre adultos)" {
+    :ResumenService → transcripción → anonimización → GPT-4o;
+  }
+fork again
+  partition "ref: Calificación" {
+    :CalificacionController → CalificacionService;
+  }
+end fork
+stop
+@enduml
