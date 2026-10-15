@@ -23,16 +23,21 @@ Se reconoce el uso de *herramienta y versión* para
 
 Este proyecto nace como una red a lo largo del país, con una posibilidad de expandirse, para conectar el aprendizaje y el conocimiento, elevando la tradición del apoyo escolar en los hogares argentinos y brindándoles nuevas herramientas. La iniciativa busca facilitarle a cualquier estudiante, desde el nivel primario hasta el universitario, encontrar el apoyo académico ideal, permitiendo que el saber circule sin barreras geográficas o físicas.
 
-Actualmente, el mercado de clases particulares opera de manera muy fragmentada. Si bien la utilización de redes de vínculos entre personas genera confianza, tiene un alcance muy limitado y se restringe a entornos geográficos inmediatos. El proyecto centraliza la oferta en un ecosistema digital donde la búsqueda, la reserva y los pagos conviven en un solo sitio. Esto profesionaliza la labor docente y ofrece a las familias un entorno transparente para potenciar los resultados escolares.
+Actualmente, el mercado de clases particulares opera de manera muy fragmentada. Si bien la utilización de redes de vínculos entre personas genera confianza, tiene un alcance muy limitado y se restringe a entornos geográficos inmediatos. El proyecto centraliza la oferta en un ecosistema digital donde la búsqueda, la reserva, las clases virtuales y los pagos conviven en un solo sitio. Esto profesionaliza la labor docente y ofrece a las familias un entorno transparente para potenciar los resultados escolares.
 
-Un pilar central es el diseño de un modelo de confianza para el resguardo de los alumnos. Se plantea como objetivo deseado la implementación de procesos de certificación que idealmente incluyan validación de identidad, títulos y antecedentes de los tutores. Esta meta busca garantizar que el vínculo educativo sea seguro y cumpla con estándares de excelencia verificables.
+Un pilar central es el modelo de confianza para el resguardo de los alumnos, en especial de los menores de edad. La identidad de cada usuario se verifica leyendo su documento nacional de identidad en el propio servidor, las credenciales académicas de los tutores se revisan manualmente y quien quiera enseñar a menores debe presentar un certificado de antecedentes penales vigente. Durante cada clase, un clasificador de contenido que corre en el navegador actúa como corte de emergencia: si hay un menor presente, interrumpe la sesión de inmediato. El menor tiene cuenta propia, pero los pagos, las autorizaciones y las denuncias quedan a cargo de su adulto responsable.
 
-Finalmente, el proyecto apunta a expandir el alcance de muchos profesionales y a facilitar el acceso al apoyo escolar personalizado mediante una plataforma digital con reputación dinámica y aulas virtuales integradas. Al poner en valor la labor de los tutores y formalizar el sector, este proyecto se posiciona como una infraestructura esencial para conectar a los estudiantes con educadores calificados, superando las barreras geográficas y generando un sustento económico para estos últimos. El impacto de esta solución se observará en la eficiencia del motor de matching, la estabilidad de las conexiones remotas y el nivel de satisfacción de los usuarios.
+La inteligencia artificial se aplica donde aporta valor concreto: un motor de matching semántico compara lo que el alumno busca con los temas que enseña cada tutor, y un resumen automático de la clase se ofrece como adicional opcional, solo entre adultos y con el consentimiento de ambos. Al poner en valor la labor de los tutores, formalizar el sector y sumar reputación dinámica y aulas virtuales integradas, el proyecto se posiciona como una infraestructura para conectar a los estudiantes con educadores calificados, superando las barreras geográficas y generando un sustento económico para estos últimos. El impacto de esta solución se observará en la eficiencia del motor de matching, la estabilidad de las conexiones remotas y el nivel de satisfacción de los usuarios.
 
 ## Abstract (English)
 
-Tinku is a digital educational marketplace platform designed to connect
-Argentine primary, secondary, and university students with qualified academic tutors, virtually and without geographical restrictions. The system centralizes the search, booking, delivery, and payment of private lessons within a single digital ecosystem. It incorporates artificial intelligence for personalized student-tutor matching and the automatic generation of session summaries. The platform seeks to democratize access to academic support, formalize independent teaching work, and contribute to reducing school dropout rates nationwide.
+This project was born as a nationwide network, with room to expand, to connect learning and knowledge, elevating the tradition of academic support in Argentine homes and giving it new tools. The initiative seeks to make it easy for any student, from primary school to university, to find the right academic support, allowing knowledge to flow without geographical or physical barriers.
+
+Today, the private tutoring market is highly fragmented. Although relying on personal networks builds trust, its reach is very limited and confined to the immediate geographical surroundings. The project centralizes the offer in a digital ecosystem where search, booking, virtual lessons, and payments coexist in a single place. This professionalizes teaching work and offers families a transparent environment to improve school results.
+
+A central pillar is the trust model that safeguards students, especially minors. Each user's identity is verified by reading their national identity document on the platform's own server, tutors' academic credentials are reviewed manually, and anyone who wants to teach minors must submit a valid criminal record certificate. During every lesson, a content classifier running in the browser acts as an emergency cut-off: if a minor is present, it ends the session immediately. Minors have their own account, but payments, authorizations, and reports are handled by their responsible adult.
+
+Artificial intelligence is applied where it adds concrete value: a semantic matching engine compares what the student is looking for with the topics each tutor teaches, and an automatic lesson summary is offered as an optional add-on, only between adults and with the consent of both. By valuing tutors' work, formalizing the sector, and adding dynamic reputation and integrated virtual classrooms, the project positions itself as an infrastructure that connects students with qualified educators, overcoming geographical barriers and providing the latter with a source of income. The impact of this solution will be observed in the efficiency of the matching engine, the stability of remote connections, and user satisfaction.
 
 # Capítulo 1: Introducción
 
@@ -50,7 +55,7 @@ Aires, Córdoba, Rosario, Mendoza– la oferta de tutores es relativamente abund
 En este contexto nace Tinku, cuyo nombre proviene de la lengua quechua –idioma originario presente en las provincias del Noroeste
 Argentino– y significa *encuentro* o *punto de unión*. El término captura con precisión la misión del proyecto: construir el punto de encuentro digital entre quienes necesitan aprender y quienes tienen el conocimiento para enseñar, sin importar en qué rincón del país se encuentren. La conectividad a internet, incluso en zonas remotas, ha mejorado sustancialmente gracias a iniciativas de satelital de baja órbita como Starlink, que está siendo adoptada masivamente en localidades del interior argentino, ampliando de manera concreta la base de usuarios potenciales de la plataforma.
 
-Tinku propone una plataforma digital de marketplace educativo que centraliza en un único ecosistema la búsqueda de tutores, la reserva de sesiones, el dictado de clases virtuales y la gestión de pagos, incorporando IA como eje diferenciador: un motor de matching semántico que compatibiliza perfiles de alumnos y tutores, y herramientas de apoyo post-sesión que extienden el valor de cada clase más allá del tiempo de pantalla.
+Tinku propone una plataforma digital de marketplace educativo que centraliza en un único ecosistema la búsqueda de tutores, la reserva de sesiones, el dictado de clases virtuales y la gestión de pagos, incorporando IA como eje diferenciador: un motor de matching semántico que compara lo que el alumno busca con los temas que enseña cada tutor, un clasificador de contenido que protege la clase en el propio navegador (*kill-switch*) y un resumen automático de la sesión, ofrecido como adicional opcional para las clases entre adultos, que extiende el valor de cada clase más allá del tiempo de pantalla.
 
 ## Planteo del problema
 
@@ -82,19 +87,32 @@ Argentina, con especial impacto en comunidades y regiones donde la oferta presen
 ### Objetivos específicos
 
 - **OE1 — Análisis del mercado y estado del arte:** relevar el estado actual del mercado de tutorías en Argentina y plataformas educativas similares a nivel global, identificando brechas de funcionalidad y oportunidades de diferenciación tecnológica.
-- **OE2 — Diseño de arquitectura del sistema:** definir la arquitectura técnica completa de Tinku, incluyendo modelo de datos, contratos de API, diseño UX y flujos operativos principales.
+- **OE2 — Diseño de arquitectura del sistema:** definir la arquitectura técnica completa de Tinku –un monolito modular organizado en los nueve módulos del alcance
+          (sección~[§sec:alcance])–, incluyendo modelo de datos, contratos de API, diseño UX y flujos operativos principales.
 - **OE3 — Implementación del motor de matching
-          IA:** desarrollar e integrar el microservicio de recomendación basado en embeddings semánticos semánticos
-          (sentence-transformers + FAISS) para la sugerencia de tutores compatibles, implementando un factor de ponderación o multiplicador de puntaje (*boost*) para aquellos perfiles que hayan validado voluntariamente su CAP.
+          IA:** desarrollar e integrar el servicio de recomendación basado en embeddings semánticos semánticos (sentence-transformers, con el índice vectorial en pgvector dentro de la misma base
+          PostgreSQL) que compara la búsqueda del alumno con cada uno de los temas del catálogo elegidos por el tutor, y que a un menor solo le muestra tutores con CAP aprobado y vigente.
 - **OE4 — Desarrollo del aula virtual (LiveKit):**
           implementar el módulo de videollamada mediante
-          LiveKit/WebRTC integrado nativamente en la plataforma, con gestión de estado de sala en tiempo real a través de Redis.
-- **OE5 — Implementación del sistema de pagos:** integrar la API de MercadoPago Marketplace con modelo de escrow y comisión de plataforma.
+          LiveKit/WebRTC integrado nativamente en la plataforma, junto con el *kill-switch* de seguridad: un clasificador de contenido que corre en el navegador de cada participante sobre el video que recibe.
+- **OE5 — Implementación del sistema de pagos:** integrar
+          MercadoPago Marketplace de modo que cada tutor cobre en su propia cuenta, conectada por OAuth, la plataforma perciba su comisión sobre cada cobro y conserve, durante el escrow de 24 horas posterior a la sesión, la posibilidad de reembolsar.
 - **OE6 — Desarrollo del módulo de IA educativa:**
-          implementar el servicio de transcripción y resumen automático de sesiones, y el asistente conversacional de repaso conceptual.
+          implementar el resumen automático de sesiones como adicional pago y opcional, disponible solo en clases entre adultos que lo contratan y con el consentimiento de ambas partes: se graba únicamente el audio, se transcribe, se anonimiza y el
+          LLM recibe solo el texto.
 - **OE7 — Implementación del sistema de reputación:**
           desarrollar el sistema de calificaciones bidireccional implementando un umbral mínimo de calificaciones para su exposición pública como medida anti-manipulación.
-- **OE8 — Validación funcional:** realizar pruebas de aceptación de usuario (UAT) con un grupo piloto de tutores y alumnos reales, midiendo usabilidad, confianza percibida y satisfacción con el matching propuesto.
+- **OE8 — Validación funcional:** realizar pruebas de aceptación de usuario (UAT) con un grupo piloto de tutores y alumnos reales –adultos mientras las clases con menores permanezcan deshabilitadas (sección~[§sec:limitaciones])–, midiendo usabilidad, confianza percibida y satisfacción con el matching propuesto.
+
+**Objetivos reformulados durante la implementación..**  Cuatro objetivos específicos se redactaron antes de que se tomaran las decisiones que los afectan, y se reformularon para describir el sistema construido. Cada cambio queda registrado como ADR en el repositorio del sistema
+(anexo~[§anx:repositorios]) y se resume en la sección~[§sec:decisiones-implementacion]:
+
+- **OE3.** El diseño inicial preveía un índice FAISS en memoria y un multiplicador de puntaje (*boost*) para los tutores que validaran voluntariamente su CAP. El índice pasó a pgvector para tener una sola base y ningún índice en memoria que reconstruir (ADR-M2-01), y el puntaje de cada tutor es la máxima similitud con cada uno de sus temas, para que quien enseña muchos temas no quede relegado (ADR-M2-03). El
+          CAP dejó de ser un incentivo de posicionamiento: un requisito de seguridad del menor no puede depender de que el tutor lo quiera cumplir, por lo que pasó a ser obligatorio y vigente, pero solo para enseñar a menores (ADR-M1-04).
+- **OE4.** El estado de sala en Redis se descartó: el estado de la sala vive en LiveKit y en PostgreSQL, y el límite de tasa de peticiones se lleva en la memoria del único proceso del backend, con lo que se opera una dependencia menos
+          (ADR-000-04).
+- **OE5.** El escrow se concebía como una retención de fondos en una cuenta de la plataforma. Para no recaudar fondos de terceros, el dinero ingresa directamente a la cuenta del tutor y el escrow es una ventana lógica de 24 horas en la que la plataforma puede reembolsar (ADR-M5-02).
+- **OE6.** El resumen se planteaba como un servicio general que procesaba el audio directamente en el LLM, y el objetivo incluía un asistente conversacional de repaso conceptual. Grabar audio es la única excepción a la regla de no grabar del proyecto y solo se admite entre adultos, con el adicional contratado y el consentimiento de ambos (ADR-M3-04); el audio no puede anonimizarse antes de salir del servidor, por lo que se transcribe primero y el LLM recibe solo texto anonimizado (ADR-M6-03). El asistente conversacional salió del alcance: el MVP quedó cerrado en nueve módulos y ninguno lo contiene, de modo que incorporarlo exigiría una enmienda explícita de los principios del proyecto (Constitución del proyecto, Art.~VI). Se documenta como trabajo futuro.
 
 ## Barreras e impedimentos
 
@@ -102,13 +120,16 @@ El análisis del problema revela un conjunto de barreras que explican por qué l
 
 - **Barreras de verificación y onboarding:** aunque el objetivo ideal incluye la validación automatizada de antecedentes penales e identidad, los organismos competentes
           (RENAPER, Registro Nacional de Reincidencia) no ofrecen
-          API públicas. Esta restricción impide automatizar dicho proceso en el MVP. En consecuencia, la plataforma centrará sus esfuerzos obligatorios de seguridad y confianza en la rigurosa verificación de los antecedentes académicos.
-          Adicionalmente, para mitigar la barrera de verificación de antecedentes penales, se habilitará su carga manual de forma optativa, incentivando a los tutores mediante una mejora algorítmica en su visibilidad. El proceso de registro básico exigirá únicamente la demostración empírica de los conocimientos del tutor mediante la presentación de historial académico, títulos de grado o certificaciones pertinentes. Esta estrategia no solo sortea el impedimento técnico estatal, sino que alinea el sistema de admisión directamente con el objetivo central de la plataforma: asegurar la excelencia académica del apoyo escolar.
+          API públicas. Esta restricción impide automatizar dicho proceso en el MVP. En consecuencia, la plataforma centra sus esfuerzos de seguridad y confianza en la verificación propia del DNI –mayoría de edad, nombre y unicidad, leídos por OCR en el propio servidor– y en la rigurosa verificación de los antecedentes académicos. Para mitigar la barrera de verificación de antecedentes penales, el
+          CAP se carga de forma manual y es obligatorio y vigente
+          (doce meses desde su emisión) para todo tutor que quiera dar clases a menores; lo revisa una persona con el rol de
+          Moderación y Seguridad. Los tutores que solo enseñan a adultos no lo cargan, lo que evita pedir un dato sensible que ninguna regla de esas clases necesita. En el diseño inicial se preveía un CAP optativo que mejorara la visibilidad del tutor; se descartó porque dejaba la protección del menor librada a la voluntad del tutor (ADR-M1-04). Más allá del CAP, el registro exige la demostración empírica de los conocimientos del tutor mediante la presentación de historial académico, títulos de grado o certificaciones pertinentes. Esta estrategia no solo sortea el impedimento técnico estatal, sino que alinea el sistema de admisión directamente con el objetivo central de la plataforma: asegurar la excelencia académica del apoyo escolar.
 - **Barrera de adopción cultural:** el mercado de tutorías en Argentina opera bajo una lógica de confianza interpersonal muy arraigada. La migración hacia una plataforma digital requiere demostrar que la calidad y la seguridad del servicio son equivalentes o superiores al modelo informal vigente.
 - **Barrera de conectividad:** aunque la cobertura de internet ha mejorado sustancialmente –y tecnologías como
           Starlink están siendo adoptadas masivamente en localidades del interior argentino, llevando conectividad satelital de banda ancha a zonas que antes carecían de ella– sigue existiendo un segmento de la población, especialmente en contextos de bajos recursos, que no puede acceder a estos servicios ni cuenta con dispositivos adecuados. Esta realidad puede limitar el alcance efectivo de la plataforma en los contextos donde el impacto social sería mayor, y debe ser considerada en el diseño de la experiencia de usuario.
 - **Barrera de la masa crítica (arranque en frío):** como todo marketplace bilateral, Tinku resulta más valioso cuantos más tutores y alumnos lo utilizan. La estrategia de lanzamiento deberá contemplar mecanismos de adquisición simultánea de usuarios en ambos lados de la plataforma.
-- **Barrera técnica — IA en tiempo real:** la transcripción y resumen automático de sesiones implica procesamiento de audio post-sesión, lo que requiere gestión eficiente de recursos computacionales para mantener costos operativos controlados en la fase de MVP.
+- **Barrera técnica — IA en tiempo real:** la transcripción y resumen automático de sesiones implica procesamiento de audio post-sesión, lo que requiere gestión eficiente de recursos computacionales para mantener costos operativos controlados en la fase de MVP. Por eso el resumen se ofrece como adicional pago cuyo precio cubre el costo de los modelos según la duración de la clase
+          (ADR-M5-06), y el *kill-switch* clasifica el video en el navegador de cada participante, sin costo de servidor ni envío de imágenes.
 
 ## Relevancia del proyecto
 
@@ -122,8 +143,9 @@ Tinku busca extender ese acceso a estudiantes que hoy no pueden aprovecharlo, ya
 USD 238,5 mil millones hacia 2033, con una CAGR del 7,5 %
 [researchmarkets2024]. En Argentina, el segmento opera en su mayoría de manera informal, sin registro de transacciones ni facturación formal. Tinku propone formalizar una porción de ese mercado, habilitando el cobro digital, generando historial de actividad y contribuyendo a la bancarización de los tutores.
 
-**Relevancia tecnológica.** El proyecto aplica tecnologías de
-IA de vanguardia –embeddings semánticos semánticos para matching, modelos de lenguaje de gran escala (LLM) para asistencia educativa– a un problema local concreto. Esta aplicación constituye un aporte original al estado del arte en plataformas educativas adaptativas en el contexto latinoamericano, diferenciándose de soluciones globales por su foco en las particularidades del sistema educativo y la geografía argentina.
+**Relevancia tecnológica.** El proyecto aplica a un problema local concreto tecnologías de IA de vanguardia: embeddings semánticos semánticos para el matching, modelos de lenguaje de gran escala
+(LLM) para el resumen de las sesiones y un clasificador de contenido que corre en el navegador para proteger a los participantes.
+Esta aplicación constituye un aporte original al estado del arte en plataformas educativas adaptativas en el contexto latinoamericano, diferenciándose de soluciones globales por su foco en las particularidades del sistema educativo y la geografía argentina.
 
 ## Enfoque metodológico
 
@@ -132,34 +154,56 @@ El proyecto se abordará desde una metodología de desarrollo ágil (Scrum adapt
 - **Investigación y relevamiento:** análisis del estado del arte, entrevistas con tutores y alumnos potenciales, relevamiento de plataformas competidoras (Preply, Wyzant,
           Superprof, Tusclases).
 - **Diseño de arquitectura y UX:** definición del modelo de datos, diseño de wireframes y prototipos de alta fidelidad, validación con usuarios.
-- **Desarrollo iterativo del MVP:** implementación por módulos funcionales con ciclos de revisión quincenales.
-- **Integración y pruebas:** pruebas unitarias, de integración y de aceptación de usuario (UAT).
-- **Piloto y validación:** lanzamiento controlado con grupo reducido de tutores y alumnos reales para validar la hipótesis central.
+- **Desarrollo iterativo del MVP:** implementación por módulos funcionales con una revisión del incremento al cierre de cada sprint.
+- **Integración y pruebas:** pruebas unitarias, de integración, E2E y de aceptación de usuario (UAT).
+- **Piloto y validación:** lanzamiento controlado con grupo reducido de tutores y alumnos reales –adultos, mientras las clases con menores sigan deshabilitadas– para validar la hipótesis central.
 - **Documentación y presentación:** elaboración del informe final y presentación del producto funcional.
 
 ## Alcance del proyecto
 
-El presente proyecto abarca el diseño completo y la implementación funcional de la versión MVP de Tinku. Este desarrollo comprende un frontend web estructurado como PWA, el cual proveerá todas las interfaces de usuario necesarias para alumnos, tutores y administradores. El núcleo del sistema estará compuesto por un backend
-API REST que expondrá todos los endpoints operativos, respaldado por una base de datos relacional en PostgreSQL para el modelo de datos principal y Redis para la gestión del estado en tiempo real. El backend se implementa en Java mediante el framework Spring Boot. Todo este ecosistema será desplegado sobre infraestructura cloud utilizando
-Supabase y Vercel, incluyendo la entrega de la documentación correspondiente a su arquitectura.
+El presente proyecto abarca el diseño completo y la implementación funcional de la versión MVP de Tinku. Este desarrollo comprende un frontend web estructurado como PWA, el cual proveerá todas las interfaces de usuario necesarias para alumnos, tutores y administradores. El núcleo del sistema es un backend API
+REST implementado en Java con el framework Spring Boot y organizado como un *monolito modular*: un único proceso dividido en nueve módulos de dominio con límites claros: (1)~Identidad y
+Perfiles, (2)~Motor de matching, (3)~Aula Virtual, (4)~Reservas y
+Agenda, (5)~Motor de Pagos, (6)~Resumen Automático, (7)~Calificaciones y Reputación, (8)~Panel de Administración y (9)~Denuncias y Seguridad.
+Los módulos se comunican con llamadas síncronas dentro del mismo proceso y con eventos de dominio en memoria, sin intermediario de mensajes, y los plazos de negocio (escrow, cancelaciones, aprobaciones, *kill-switch*) se programan con Quartz persistido en la base, para que sobrevivan a un reinicio. La única pieza propia que corre como proceso aparte es el motor de matching, escrito en
+Python, que es la excepción explícita a la regla del monolito. El modelo de datos reside en una base relacional PostgreSQL que también guarda los vectores semánticos mediante la extensión pgvector; no se utiliza
+Redis (ADR-000-04).
 
-A nivel funcional, la plataforma integrará un microservicio de matching impulsado por IA y un módulo de aula virtual soportado por la tecnología de LiveKit (WebRTC). El flujo económico estará cubierto mediante la integración con MercadoPago para la gestión de pagos bajo la modalidad de escrow. Para potenciar la experiencia educativa, se implementará un módulo de resumen automático de sesiones utilizando un LLM (como GPT-4o o Gemini 2.0 Flash) que procesa audio nativamente. Adicionalmente, el MVP contará con un sistema de calificaciones y reputación bidireccional, junto con un panel de administración básico para la gestión interna de la plataforma. La plataforma incluye, además, un portal de denuncias con verificación de veracidad, que ante cada denuncia preserva de forma automática la evidencia de la sesión correspondiente y deriva la resolución final a revisión manual.
+Todo el ecosistema se despliega en un servidor propio administrado con
+Coolify: cuatro contenedores (base de datos, motor de matching, backend y frontend) cuyas imágenes construye GitHub Actions, publicados en internet a través de Cloudflare Tunnel y con una copia de seguridad diaria y cifrada de la base en Cloudflare R2. En el diseño inicial se preveía repartir el sistema entre Supabase (base de datos), Vercel
+(frontend) y Upstash (Redis); se abandonó porque el plan gratuito de
+Vercel no admite uso comercial y porque concentrar todo en un solo servidor mantiene el costo dentro del presupuesto de cero a cien dólares mensuales con una sola operación que atender (ADR-000-07). El proyecto incluye la documentación correspondiente a su arquitectura.
 
-Por último, es importante delimitar que este proyecto no incluye ciertas características en su fase inicial. Quedan excluidos de este alcance: el desarrollo de aplicaciones móviles nativas; la integración automatizada mediante API con sistemas estatales (requiriéndose en su lugar la carga y verificación manual del CAP); el desarrollo de un módulo de accesibilidad completo; la implementación de un modelo de suscripción premium; la posibilidad de extender la duración de una sesión de videollamada en curso mediante un cobro adicional; y la incorporación de tutores menores de edad. Todas estas iniciativas y funcionalidades no incluidas quedarán debidamente documentadas como propuestas para el trabajo a futuro.
+A nivel funcional, la plataforma integra el servicio de matching semántico y un módulo de aula virtual soportado por la tecnología de
+LiveKit (WebRTC), con un *kill-switch* de seguridad que clasifica el video en el navegador: con un menor presente corta la clase sin preguntar; entre adultos oculta el video y pide confirmación a la contraparte. El flujo económico se cubre mediante la integración con MercadoPago Marketplace: cada tutor conecta su propia cuenta por
+OAuth, el dinero de la clase ingresa a esa cuenta, la plataforma percibe su comisión sobre cada cobro y el escrow es una ventana de 24 horas posterior a la sesión durante la cual la plataforma puede reembolsar. La integración usa un cliente HTTP propio, sin el
+SDK oficial. Para potenciar la experiencia educativa, el
+MVP ofrece un resumen automático de la sesión como adicional pago y opcional, solo para clases entre adultos y con el consentimiento de ambos: se graba únicamente el audio, que se borra al transcribirse (24 horas como máximo); la transcripción se anonimiza y el resumen lo genera GPT-4o a partir de ese texto. Si el resumen falla, se reembolsa el adicional. Adicionalmente, el MVP cuenta con un sistema de calificaciones y reputación bidireccional, junto con un panel de administración para la gestión interna de la plataforma. El módulo de denuncias permite que un usuario adulto denuncie una sesión o a otro usuario –el menor lo hace a través de su adulto responsable–, con un motivo de una lista cerrada y evidencia opcional que aporta quien denuncia. La identidad del denunciante no se revela, el denunciado dispone de 48 horas para presentar su descargo y, mientras el caso está abierto, se pausa la liberación del pago de esa sesión; la resolución final queda a cargo de una persona con el rol de
+Moderación y Seguridad. La plataforma no preserva evidencia de la sesión ante una denuncia porque no graba las clases (el audio del resumen se borra al transcribirse): el único registro de video es el fragmento de 30 segundos que el *kill-switch* sube cuando se dispara, ya que guardar más contradiría el principio de minimización de datos del proyecto.
+
+Por último, es importante delimitar que este proyecto no incluye ciertas características en su fase inicial. Quedan excluidos de este alcance: el desarrollo de aplicaciones móviles nativas; la integración automatizada mediante API con sistemas estatales (requiriéndose en su lugar la carga y revisión manual del CAP de los tutores que enseñan a menores, cuya verificación de firma digital queda diferida); el desarrollo de un módulo de accesibilidad completo; la implementación de un modelo de suscripción premium; la posibilidad de extender la duración de una sesión de videollamada en curso mediante un cobro adicional; la incorporación de tutores menores de edad; y el asistente conversacional de repaso conceptual, que el planteo original incluía en el objetivo OE6 y que quedó fuera porque el alcance del MVP está cerrado en los nueve módulos enumerados (Constitución del proyecto,
+Art.~VI). Todas estas iniciativas y funcionalidades no incluidas quedan documentadas como propuestas para el trabajo a futuro.
 
 ## Limitaciones
 
 - **Límite de validación:** la validación de la hipótesis se realizará con un grupo piloto acotado. Los resultados son indicativos de la validez funcional del sistema, no estadísticamente representativos del mercado total.
-- **Límite de verificación de tutores:** en el MVP, la verificación combina un chequeo automático de mayoría de edad mediante reconocimiento óptico (OCR) sobre la fecha de nacimiento del DNI cargado, y una revisión manual final de la autenticidad del documento y la correspondencia de los certificados académicos declarados. La verificación automatizada de antecedentes vía API queda fuera de alcance, reemplazándose por la exigencia y revisión manual obligatoria del CAP tramitado por el tutor vía Mi
-          Argentina, con actualización anual; no debe confundirse con la verificación de edad, que también se realiza.
+- **Límite de piloto sin menores:** aunque el sistema está diseñado para alumnos desde el nivel primario, el piloto corre sin clases con menores. Una opción de configuración
+          (‘tinku.menores.sesiones-habilitadas‘) vale
+          ‘false‘ por defecto y, mientras tanto, el sistema rechaza toda reserva o solicitud de sesión cuyo beneficiario sea un menor. Solo se habilita cuando estén cerrados el
+          *kill-switch* en el cliente y el CAP de los tutores de menores: al momento de esta redacción el CAP está implementado y al *kill-switch* en el cliente le resta su prueba de punta a punta contra el servicio de video real, entre otras tareas previas al encendido. Se prefirió demorar las clases con menores antes que habilitarlas sin todas sus protecciones (Constitución del proyecto, Art.~II). En consecuencia, la validación del piloto no cubre el flujo con menores.
+- **Límite de verificación de tutores:** en el MVP, la identidad se verifica con reconocimiento óptico de caracteres
+          (OCR) sobre el DNI, ejecutado con Tesseract en el propio servidor: controla la mayoría de edad, el nombre y que el documento no esté ya registrado. La imagen no sale del servidor ni se conserva, y no hay revisión manual del
+          DNI, por lo que se acepta el riesgo de una lectura errónea en fotos de baja calidad (ADR-M1-01, ADR-M1-08). La revisión manual existe para la credencial académica y para el
+          CAP. La verificación automatizada de antecedentes vía
+          API queda fuera de alcance; la reemplaza la exigencia y revisión manual del CAP tramitado por el tutor vía Mi
+          Argentina, obligatorio y vigente (doce meses desde su emisión) solo para dar clases a menores. Se acepta el riesgo residual de un certificado adulterado o mal evaluado, ya que la verificación de su firma digital queda diferida.
 - **Límite de conectividad:** el servicio requiere conexión a internet estable para el aula virtual. Si bien Starlink y otras soluciones satelitales amplían el universo de usuarios potenciales, persiste una porción de la población objetivo sin acceso adecuado a dispositivos o conectividad.
-- **Límite del asistente IA:** el asistente conceptual opera sobre el resumen de la sesión y el conocimiento del modelo subyacente. No tiene acceso a libros de texto o currículos oficiales específicos del sistema educativo argentino.
+- **Límite del resumen automático:** el resumen existe solo para las clases entre adultos que contratan el adicional y en las que ambas partes aceptaron la grabación de audio; las clases con un menor nunca se graban ni se resumen. El resumen opera sobre la transcripción anonimizada de la sesión y el conocimiento del modelo subyacente, sin acceso a libros de texto o currículos oficiales del sistema educativo argentino, y depende de un proveedor externo: sin la configuración del proveedor, el sistema no lo genera.
 - **Límite geográfico del piloto:** la validación funcional queda circunscripta al territorio argentino. La plataforma está diseñada para escalar regionalmente, pero dicha expansión excede el alcance de este trabajo.
 - **Límite de alineación curricular:** dado que el sistema educativo argentino no tiene un diseño curricular único a nivel nacional, un tutor de una jurisdicción puede no estar alineado con los contenidos específicos que se enseñan en la escuela del alumno en otra provincia. Esta limitación no invalida la propuesta de valor de la plataforma, pero marca un límite real de la personalización ofrecida.
-- **Límite de disponibilidad en fase de desarrollo:**
-          mientras se construye el MVP, el backend se aloja en infraestructura propia del desarrollador y no en un proveedor cloud con garantías de disponibilidad, lo que implica un punto único de falla hasta la migración planificada a un VPS
-          antes del piloto con usuarios reales, prevista para el
-          Sprint~11.
+- **Límite de disponibilidad:** todo el sistema –base de datos, motor de matching, backend y frontend– corre en un único servidor propio, ubicado en un domicilio y sin dirección
+          IP fija, y no en un proveedor con garantías de disponibilidad.
+          Es un punto único de falla aceptado para el piloto: un corte de luz o de internet deja la plataforma fuera de línea mientras dure. Se mitiga con la copia de seguridad diaria y cifrada fuera del servidor y con un procedimiento de restauración documentado en el manual de operación, y la decisión se revisa si crece la operación (ADR-000-07). El plan original preveía migrar a un VPS alquilado antes del piloto; se optó por concentrar todo en el servidor existente por simplicidad operativa y costo.
 
 ## Justificación
 
@@ -182,9 +226,9 @@ Argentino esté en el centro de un proyecto de ingeniería de sistemas es, en s�
 | **Categoría** | **Detalle** |
 | --- | --- |
 | Recursos humanos | 1 desarrollador full-stack (autor del proyecto). Tutores y alumnos para el grupo piloto de validación. |
-| Infraestructura cloud | Vercel (plan Hobby) para el frontend, Supabase (plan gratuito) para la base de datos Postgres, Upstash (plan gratuito) para Redis, y backend alojado inicialmente en infraestructura propia mediante Coolify y Cloudflare Tunnel, con migración planificada a un VPS de entre 10 y 25 USD mensuales antes del piloto. Estimación de costo: USD 0 en fase de desarrollo, hasta  25 USD/mes en la fase de piloto. |
-| APIs externas | Para el motor de matching semántico: sentence-transformers junto con FAISS, con procesamiento local y sin costo de API por request. Para la transcripción y el resumen de sesión, y para el asistente conceptual: un LLM a confirmar entre GPT-4o y Gemini 2.0 Flash para la transcripción y resumen directo de audio, según relación costo-calidad al momento de la implementación (capítulos [§cap:marco-tecnologico] y [§cap:economica]). MercadoPago: sin costo fijo, comisión por transacción, con SDK oficial en Java. LiveKit Cloud: plan gratuito Build de 5.000 minutos de participante por mes. |
-| Herramientas de desarrollo | OpenCode + Neovim (editor principal), GitHub (control de versiones), Figma (diseño UX), Postman (testing API), Jest (testing unitario). Todas en planes gratuitos o estudiantiles. |
+| Infraestructura | Servidor propio ya existente, administrado con Coolify, con cuatro contenedores (PostgreSQL con pgvector, motor de matching, backend y frontend) publicados mediante Cloudflare Tunnel; imágenes construidas por GitHub Actions y publicadas en el registro de contenedores de GitHub; copia de seguridad diaria y cifrada de la base en Cloudflare R2 (capa gratuita, 14 días de retención). Sin costo de alquiler de hosting; el presupuesto de infraestructura se mantiene entre USD 0 y 100 mensuales. El plan original (Vercel, Supabase, Upstash y migración a un VPS de 10 a 25 USD mensuales antes del piloto) se reemplazó por esta topología (ADR-000-07, sección~[§sec:alcance]). |
+| Servicios externos | Motor de matching semántico: sentence-transformers (modelo ‘paraphrase-multilingual-MiniLM-L12-v2‘, vectores de 384 dimensiones) con el índice en pgvector, con procesamiento local y sin costo de API por consulta. Resumen de sesión: transcripción con ‘gpt-4o-mini-transcribe‘ (ADR-M3-04) y resumen con GPT-4o sobre el texto anonimizado (ADR-M6-03), con un costo que cubre el precio del adicional (capítulos [§cap:marco-tecnologico] y [§cap:economica]). MercadoPago: sin costo fijo, comisión por transacción, integrado con un cliente HTTP propio y conexión OAuth de cada tutor. LiveKit Cloud: plan gratuito Build de 5.000 minutos de participante por mes. Resend (plan gratuito) para el correo transaccional (ADR-000-06). OCR con Tesseract local, sin servicio externo. |
+| Herramientas de desarrollo | OpenCode + Neovim (editor principal), GitHub y GitHub Actions (control de versiones e integración continua), Figma (diseño UX), JUnit 5 con Testcontainers (pruebas del backend contra PostgreSQL real), Playwright con axe-core (pruebas E2E y de accesibilidad del frontend), pytest (motor de matching) y JaCoCo (medición de cobertura). La mención original de Jest se reemplazó porque las pruebas del frontend se resolvieron con Playwright. Todas en planes gratuitos o estudiantiles. |
 | Tiempo estimado | 6 meses de desarrollo. Dedicación aproximada: 15–20 horas semanales. |
 | Conocimientos previos | Desarrollo web full-stack (React para el frontend, Java con Spring Boot para el backend), bases de datos relacionales, fundamentos de ML, integración de API REST. |
 
@@ -219,7 +263,9 @@ Argentina.
 
 La investigación se delimita a los objetivos específicos OE1 a OE8
 definidos en el capítulo~[§cap:introduccion], con foco en el diseño e implementación del MVP de Tinku para el mercado argentino.
-Quedan fuera del alcance investigativo los mercados regionales, la integración con organismos estatales y los módulos de accesibilidad y suscripción premium, los cuales se documentan como trabajo futuro.
+Quedan fuera del alcance investigativo los mercados regionales, la integración con organismos estatales, los módulos de accesibilidad y suscripción premium y el asistente conversacional de repaso conceptual
+(sección~[§sec:alcance]), los cuales se documentan como trabajo futuro. El piloto se realiza sin clases con menores
+(sección~[§sec:limitaciones]), por lo que la validación no cubre ese flujo.
 
 ### Marco teórico
 
@@ -276,7 +322,8 @@ Para la planificación y ejecución del desarrollo de Tinku se adopta
 La metodología en cascada fue descartada porque asume que todos los requisitos pueden definirse con precisión al inicio y que las etapas son completamente secuenciales, lo cual choca con la necesidad de iteración en proyectos con IA e integraciones complejas como LiveKit o
 API externas. Kanban fue descartado como marco principal porque, aunque útil para tareas diarias, no provee la planificación por objetivos ni los hitos verificables exigidos por el cronograma académico.
 
-Scrum organiza el trabajo en **sprints de dos semanas** con objetivos concretos, revisión del incremento al final de cada ciclo y un backlog priorizado. En este contexto unipersonal, el desarrollador asume los roles de Product Owner, Scrum Master y Development Team, contando con el director del proyecto como stakeholder externo para la revisión académica. Los artefactos incluyen el Product Backlog, el
+Scrum organiza el trabajo en **sprints** con objetivos concretos, revisión del incremento al final de cada ciclo y un backlog priorizado.
+La duración de los sprints no es fija: se ajustó a los hitos académicos del cronograma y varía entre algo más de una semana y alrededor de un mes, según el bloque de trabajo (figura~[§fig:gantt]). En este contexto unipersonal, el desarrollador asume los roles de Product Owner, Scrum Master y Development Team, contando con el director del proyecto como stakeholder externo para la revisión académica. Los artefactos incluyen el Product Backlog, el
 Sprint Backlog y el Incremento, mientras que las ceremonias adaptadas comprenden la Sprint Planning de una hora al inicio de cada ciclo, un
 Daily Stand-up diario personal documentado en la bitácora de desarrollo, la Sprint Review y la Sprint Retrospective.
 
@@ -285,12 +332,18 @@ Daily Stand-up diario personal documentado en la bitácora de desarrollo, la Spr
 En línea con los criterios de evaluación del proyecto y el perfil directivo en Project Management Professional, se detallan las dimensiones principales de gestión:
 
 - **Alcance:** definido por los nueve módulos del MVP
-          descritos en el capítulo~[§cap:introduccion]. Requiere aprobación explícita cualquier funcionalidad adicional para el control del alcance, apoyándose en el uso del Product Backlog, el Sprint Backlog y los incrementos funcionales.
-- **Tiempos:** el proyecto se estructura en sprints de dos semanas a lo largo de seis meses entre junio y noviembre de
-          2026, con una dedicación estimada de 15 a 20 horas semanales e hitos académicos inamovibles, integrando las ceremonias del marco ágil adoptado.
-- **Costos:** los costos operativos del MVP se estiman entre cero y cien dólares mensuales durante el desarrollo, cubiertos mediante planes gratuitos y de bajo costo en la nube, detallándose plenamente en el capítulo~[§cap:economica].
+          descritos en el capítulo~[§cap:introduccion]
+          (sección~[§sec:alcance]): Identidad y Perfiles, Motor de matching, Aula Virtual, Reservas y Agenda, Motor de Pagos,
+          Resumen Automático, Calificaciones y Reputación, Panel de
+          Administración, y Denuncias y Seguridad. Cualquier funcionalidad adicional requiere una enmienda explícita de los principios del proyecto (Constitución del proyecto, Art.~VI), y toda decisión técnica que se aparte de lo planificado se registra como ADR en el repositorio del sistema
+          (anexo~[§anx:repositorios]). El control del alcance se apoya, además, en el Product Backlog, el Sprint Backlog y los incrementos funcionales.
+- **Tiempos:** el proyecto se estructura en sprints de duración variable a lo largo de seis meses entre junio y noviembre de 2026, con una dedicación estimada de 15 a 20 horas semanales e hitos académicos inamovibles, integrando las ceremonias del marco ágil adoptado.
+- **Costos:** los costos operativos del MVP se estiman entre cero y cien dólares mensuales durante el desarrollo, cubiertos mediante un servidor propio y planes gratuitos de los servicios externos, detallándose plenamente en el capítulo~[§cap:economica].
 - **Riesgos:** el análisis detallado se presenta en el capítulo~[§cap:riesgos], contemplando factores como demoras en la integración de API externas, costos de modelos de lenguaje superiores a los estimados y la dificultad para reclutar usuarios para el piloto.
-- **Calidad:** cada módulo desarrollado debe superar pruebas unitarias con una cobertura mínima del 70 %, además de sortear una batería de pruebas de integración previas al piloto, midiendo la calidad percibida mediante los indicadores específicos de la investigación.
+- **Calidad:** cada historia de usuario de las especificaciones de los módulos se ejercita con al menos una prueba de integración de punta a punta, y los casos borde que cada especificación resuelve son casos de prueba obligatorios.
+          El backend se prueba con JUnit 5 y Testcontainers contra una base PostgreSQL real; el frontend, con pruebas E2E en
+          Playwright y controles de accesibilidad con axe-core; el motor de matching, con pytest. Las suites corren en integración continua en cada cambio, y una prueba E2E nocturna recorre el camino crítico contra la base, el motor de matching y el backend reales. La planificación original fijaba una cobertura mínima del 70 % por módulo; durante la implementación se optó por medir primero la cobertura de líneas con JaCoCo, sin un umbral que corte la compilación, y decidir el umbral con el valor medido (ADR-000-05). Al
+          14 de octubre de 2026 el backend contaba con 661 pruebas y una cobertura de líneas del 85,6 %. La calidad percibida se mide mediante los indicadores específicos de la investigación.
 - **Recursos:** un desarrollador full-stack con conocimientos en React, Java con Spring Boot, Python y bases de datos relacionales, junto al uso de herramientas tecnológicas de soporte y la estructura de roles unipersonales descrita.
 - **Satisfacción de los interesados:** se medirá a través de un sistema de calificaciones post-clase bidireccional para mantener altos estándares de calidad, complementándose con el análisis del NPS del grupo piloto para comprobar el grado de utilidad percibida y la aplicabilidad de los resultados en escenarios reales.
 
@@ -307,12 +360,13 @@ El cronograma fue construido de atrás hacia adelante tomando como fecha límite
 | 28 jul 2026 | Cap.~3 Marco teórico | Sprints 1–2: autenticación y perfiles de usuario (backend + frontend) |
 | 18 ago 2026 | Cap.~4 Marco tecnológico | Sprints 3–4: motor de matching IA + sistema de búsqueda y filtros |
 | 8 sep 2026 | Cap.~5 Justificación económica | Sprints 5–6: reservas + integración MercadoPago |
-| 22 sep 2026 | Cap.~6 Análisis de riesgos | Sprint 7: aula virtual (LiveKit + Redis) |
-| 13 oct 2026 | Cap.~7 Resultados | Sprints 8–9: módulo IA educativa + sistema de reputación |
+| 22 sep 2026 | Cap.~6 Análisis de riesgos | Sprint 7: aula virtual (LiveKit) |
+| 13 oct 2026 | Cap.~7 Resultados | Sprints 8–9: resumen automático + sistema de reputación |
 | 27 oct 2026 | Cap.~8 Conclusiones | Sprint 10: integración end-to-end, pruebas de sistema y correcciones |
-| 28 nov 2026 | Presentación final + producto funcional | Sprint 11: piloto con usuarios reales, análisis de resultados, documentación final |
+| 28 nov 2026 | Presentación final + producto funcional | Sprint 11: piloto con usuarios reales (adultos, sección~[§sec:limitaciones]), análisis de resultados, documentación final |
 
-Cabe aclarar que Redis en el Sprint 7 cubre el estado propio de la aplicación –chat en tiempo real, límite de tasa de peticiones– y no el estado interno de LiveKit, que al usarse en su modalidad Cloud queda gestionado del lado del proveedor sin intervención del backend. La figura~[§fig:gantt] muestra la línea de tiempo completa.
+La planificación original incluía Redis en el Sprint 7 para el estado propio de la aplicación –chat en tiempo real y límite de tasa de peticiones–. Durante la implementación se descartó para operar una dependencia menos (ADR-000-04): el límite de tasa se lleva en la memoria del único proceso del backend, el estado de la sala vive en LiveKit y en
+PostgreSQL, y no hay un módulo de chat propio, ya que los mensajes de texto del aula viajan por el canal de datos de LiveKit. La tabla~[§tab:hitos] y la figura~[§fig:gantt] presentan la planificación, con la línea de tiempo completa.
 
 <!-- Figura: Cronograma de sprints del proyecto (ciclo lectivo 2026) -->
 
@@ -320,9 +374,12 @@ Cabe aclarar que Redis en el Sprint 7 cubre el estado propio de la aplicación �
 
 Para garantizar la trazabilidad del trabajo y la calidad del proceso, se implementarán diversas herramientas tecnológicas de soporte. Se utilizará **GitHub Projects** para la gestión del backlog y los sprints mediante tableros Kanban integrados al repositorio, donde cada issue representa una tarea del sprint backlog. El control de versiones se efectuará en GitHub mediante ramas de características y solicitudes de revisión antes de la integración a la rama principal. Asimismo, se mantendrá una bitácora de desarrollo en formato de texto simple actualizada al cierre de cada jornada para registrar avances y decisiones técnicas como parte del seguimiento diario.
 
-Para el diseño de interfaz se empleará Figma en la elaboración de prototipos de alta fidelidad, mientras que Postman servirá para la documentación y prueba de los endpoints de la API REST, y Jest se configurará como marco de pruebas unitarias del frontend, mientras que
-JUnit 5 junto con Mockito cumplen ese rol en el backend Spring Boot, ambos integrados en el pipeline de integración continua mediante GitHub
-Actions. Para el despliegue, el backend se empaqueta como imagen Docker y se publica mediante Coolify, una plataforma de despliegue autoalojada que gestiona contenedores, certificados y variables de entorno de forma equivalente a un PaaS gestionado, alojada primero en infraestructura propia del desarrollador y migrada a un VPS antes del piloto.
+Para el diseño de interfaz se empleará Figma en la elaboración de prototipos de alta fidelidad, mientras que Postman servirá para la documentación y prueba de los endpoints de la API REST. En el backend Spring Boot, las pruebas se escriben con JUnit 5 y Mockito, y las de integración usan Testcontainers para correr contra una base
+PostgreSQL real; la cobertura se mide con JaCoCo. En el frontend, las pruebas E2E se escriben con Playwright –con la API
+simulada y controles de accesibilidad con axe-core– y el código se revisa con el analizador estático oxlint; la planificación original preveía Jest para las pruebas unitarias del frontend, pero se optó por
+Playwright, que prueba los flujos tal como los recorre el usuario. El motor de matching se prueba con pytest. Todas las suites están integradas en el pipeline de integración continua mediante GitHub
+Actions, y la rama principal solo admite cambios con las suites en verde. Para el despliegue, cada componente se empaqueta como imagen
+Docker, construida por GitHub Actions y publicada en el registro de contenedores de GitHub, y se ejecuta mediante Coolify, una plataforma de despliegue autoalojada que gestiona contenedores y variables de entorno de forma equivalente a un PaaS gestionado. Coolify corre en un servidor propio, publicado en internet mediante Cloudflare Tunnel, que además cifra el tráfico entre los usuarios y el servidor. La planificación original preveía migrar a un VPS alquilado antes del piloto; se mantuvo el servidor propio por simplicidad operativa y costo, aceptando un punto único de falla para el piloto (ADR-000-07, sección~[§sec:limitaciones]).
 
 # Capítulo 3: Síntesis de la literatura consultada
 
@@ -374,7 +431,7 @@ La tabla~[§tab:comparativa] sintetiza el relevamiento comercial de las cinco pl
 
 Un dato relevante encontrado durante este relevamiento es que
 [profecom] ya ofrece a las familias un panel de seguimiento con “informes personalizados generados por IA con feedback detallado”
-sobre el progreso del alumno –el antecedente comercial más cercano encontrado al asistente conceptual post-sesión que Tinku plantea en su alcance (sección~[§sec:alcance]), aunque aplicado sobre un modelo de plantilla docente curada y no sobre un marketplace abierto de tutores independientes.
+sobre el progreso del alumno –el antecedente comercial más cercano encontrado al resumen automático post-sesión de Tinku, aunque aplicado sobre un modelo de plantilla docente curada y no sobre un marketplace abierto de tutores independientes. En Tinku ese resumen quedó como un adicional opcional, solo entre adultos; el asistente conceptual de repaso que el diseño inicial también planteaba no se implementó (capítulo~[§cap:marco-tecnologico], sección~[§sec:decisiones-implementacion]).
 
 **Síntesis.** Ninguna de las plataformas relevadas combina simultáneamente las cuatro piezas que propone Tinku: (1) un motor de matching basado en similitud semántica en lugar de filtros manuales, (2) un aula virtual nativa disponible para todas las materias y no solo para determinados perfiles de tutor, (3) un modelo de pago protegido dentro de la plataforma, y (4) un foco explícito en ampliar la oferta hacia zonas geográficas donde hoy es escasa o inexistente. Los competidores de mayor escala en Argentina (Tusclases, Superprof) replican en esencia el modelo de directorio de contactos que el capítulo~[§cap:introduccion] describe como parte del problema
 –búsqueda por filtros, contacto manual, sin protección de pago–
@@ -389,16 +446,16 @@ A partir del relevamiento de la sección anterior, se identificaron cuatro funci
     (“kill-switch” de seguridad).] Ninguna de las plataformas relevadas implementa moderación automática del contenido de la videollamada en sí misma. Existe, sin embargo, un antecedente académico directo:
     [liang2013] desarrollaron SafeVchat, un sistema de detección automática de contenido obsceno para servicios de videollamada aleatoria, que combina múltiples detectores visuales mediante teoría de Dempster-Shafer para decidir en tiempo real si un usuario debe ser bloqueado. Reportaron que la combinación del sistema automático con moderación humana redujo el contenido ofensivo del 33,08 % al
     3,49 %. Dado que una porción significativa de los usuarios de
-    Tinku serán menores de edad, se propone un mecanismo que analice localmente (*edge computing*) los fotogramas mediante un modelo de clasificación y que ante una detección positiva corte automáticamente la transmisión y bloquee la cuenta preventivamente.
+    Tinku serán menores de edad, se propone un mecanismo que analice localmente (*edge computing*) los fotogramas mediante un modelo de clasificación y que ante una detección positiva actúe en una de dos ramas: si en la clase hay un menor, corta automáticamente la transmisión, sin preguntar, y suspende preventivamente al tutor implicado; si ambos participantes son adultos, oculta el video del detectado y le pide confirmación a la contraparte antes de cortar.
     El mecanismo técnico completo, incluida la verificación de edad del tutor mediante OCR y DNI, se desarrolla en la sección~[§sec:seguridad].
 
     **Salvedades a considerar:** ningún clasificador automático tiene 0 % de falsos positivos/negativos; es una capa adicional, no una garantía absoluta. El procesamiento en el dispositivo (por ejemplo, TensorFlow.js) evita enviar video a un servidor, facilitando el cumplimiento de la Ley de Protección de Datos Personales
     (Ley~25.326). El proceso de reactivación manual debe contemplar la notificación a un adulto responsable. Al ser un desarrollo complejo
-    (visión por computadora en tiempo real), debe evaluarse su viabilidad dentro de los plazos del MVP.
+    (visión por computadora en tiempo real), debe evaluarse su viabilidad dentro de los plazos del MVP. En la implementación, el clasificador se integró en el navegador con NSFWJS sobre TensorFlow.js; mientras no se cierre su verificación completa, el piloto corre sin clases con menores (capítulo~[§cap:marco-tecnologico], sección~[§sec:decisiones-implementacion]).
 
 - **Reputación con fricción reducida (señales implícitas).** — La literatura [reputation] señala que las calificaciones explícitas (estrellas) son propensas a sesgos. Se propone combinar una acción mínima (reacción rápida) con señales de comportamiento capturadas automáticamente: tasa de sesiones completadas, puntualidad, y la tasa de recontratación del mismo tutor por parte del mismo alumno (preferencia revelada).
 
-- **Precio dinámico por poder adquisitivo regional.** — Se propone que la plataforma sugiera un rango de precio de referencia ajustado al poder adquisitivo de la provincia o localidad del alumno, calculado a partir de los datos transaccionales de la plataforma, manteniendo la decisión final en el tutor.
+- **Precio dinámico por poder adquisitivo regional.** — Se propone que la plataforma sugiera un rango de precio de referencia ajustado al poder adquisitivo de la provincia o localidad del alumno, calculado a partir de los datos transaccionales de la plataforma, manteniendo la decisión final en el tutor. En la implementación se redujo a un precio de referencia por provincia, no vinculante, que el rol de administración mantiene a mano y que el tutor ve como sugerencia al fijar su tarifa; el cálculo a partir de datos transaccionales queda como trabajo futuro.
 
 - **Modo de baja conectividad.** — Se propone una degradación progresiva de calidad (video $$ solo audio
     $$ mensajería de texto) ante caídas de ancho de banda, sumado a la retención temporal de un buffer de video rotativo de 30
@@ -415,7 +472,8 @@ Uber, Rappi, PedidosYa y Airbnb, donde AFIP obliga al agente de pago a retener h
 
 ### Variable 1: matching semántico e inteligencia artificial aplicada a sistemas de recomendación
 
-El motor de matching de Tinku se apoya conceptualmente en dos cuerpos teóricos: los sistemas de recomendación (*recommender systems*), que buscan predecir la afinidad entre dos entidades a partir de sus atributos; y el procesamiento de lenguaje natural (NLP) aplicado a la representación semántica de texto mediante embeddings semánticos. Un embeddings semánticos es una representación vectorial de un texto en un espacio de alta dimensionalidad. Modelos como los sentence-transformers generan vectores a partir de oraciones completas, superando las búsquedas por palabras clave. Sobre este espacio, estructuras como FAISS (Facebook AI Similarity Search) permiten búsquedas de similitud eficientes.
+El motor de matching de Tinku se apoya conceptualmente en dos cuerpos teóricos: los sistemas de recomendación (*recommender systems*), que buscan predecir la afinidad entre dos entidades a partir de sus atributos; y el procesamiento de lenguaje natural (NLP) aplicado a la representación semántica de texto mediante embeddings semánticos. Un embeddings semánticos es una representación vectorial de un texto en un espacio de alta dimensionalidad. Modelos como los sentence-transformers generan vectores a partir de oraciones completas, superando las búsquedas por palabras clave. Sobre este espacio, estructuras como FAISS o extensiones de bases de datos relacionales como pgvector permiten búsquedas de similitud eficientes. Tinku usa pgvector: guarda los vectores en una columna de la misma base PostgreSQL que el resto del sistema, de modo que no hay un índice en memoria que reconstruir ni copiar al reiniciar el servicio, y el volumen del piloto no requiere las optimizaciones de FAISS para colecciones muy grandes. Los vectores se calculan con el modelo multilingüe ‘paraphrase-‘‘multilingual-‘‘MiniLM-L12-v2‘, de 384
+dimensiones (capítulo~[§cap:marco-tecnologico], sección~[§sec:decisiones-implementacion]).
 
 Como se detalló en la sección~[§sec:estado-del-arte], el trabajo de la Universidad de Ottawa [isotropy2026] validó esta técnica en la recomendación de cursos, corrigiendo el problema de anisotropía. Este antecedente es directamente aplicable a Tinku, donde los perfiles comparten un vocabulario acotado (materias, niveles). La literatura
 [beefore2024] identifica que el uso de sentence-transformers como mecanismo central sigue siendo poco explorado, confirmando que la implementación de Tinku representa un aporte que excede la aplicación estándar.
@@ -440,9 +498,9 @@ En un mercado geográficamente disperso (Variable~2), el problema del arranque e
 Tinku se ubica dentro del sector EdTech y, específicamente, en los marketplace educativos (dimensionado en el capítulo~[§cap:introduccion]).
 
 En el plano de la infraestructura, el proyecto se apoya en WebRTC, un estándar abierto para comunicación en tiempo real en navegadores.
-Sobre este, Tinku utiliza LiveKit, un framework open-source que simplifica la implementación de salas escalables. Para sostener el estado en tiempo real de esas salas, se utiliza Redis (base de datos en memoria clave-valor), necesaria por sus exigencias de baja latencia.
+Sobre este, Tinku utiliza LiveKit, un framework open-source que simplifica la implementación de salas escalables, en su versión administrada (LiveKit Cloud). El estado en tiempo real de cada sala lo mantiene el propio LiveKit, y el estado de negocio de la clase se guarda en la base de datos del sistema; por eso no se usa un almacén en memoria como Redis, que el diseño inicial preveía.
 
-En el circuito de pagos, se apoya en un modelo de escrow implementado a través de MercadoPago Marketplace, reteniendo los fondos hasta la realización de la clase, reduciendo el riesgo de fraude.
+En el circuito de pagos, se apoya en MercadoPago Marketplace con un escrow entendido como ventana lógica: cada tutor conecta su propia cuenta de MercadoPago, el pago del alumno entra a esa cuenta y la plataforma cobra su comisión en la misma operación. Durante las 24 horas posteriores a la clase la plataforma todavía puede ordenar el reembolso, por ejemplo ante una denuncia o una falta del tutor; Tinku no retiene ni recauda los fondos de terceros. El diseño inicial suponía que la plataforma retenía el dinero hasta la clase; se cambió para no recaudar fondos ajenos (capítulo~[§cap:marco-tecnologico], sección~[§sec:decisiones-implementacion]).
 
 Sobre la confianza, Tinku adopta un sistema de reputación bidireccional, respaldado por la literatura [reputation]. Para medir la satisfacción general, se contempla el uso del NPS.
 Finalmente, el proyecto se desarrolla bajo un esquema de Scrum adaptado
@@ -462,41 +520,56 @@ Se proponen dos perfiles de especialista complementarios cuyos guiones completos
 Este capítulo documenta el *cómo* de Tinku: las decisiones técnicas concretas mediante las cuales se traduce el problema planteado en el capítulo~[§cap:introduccion] y el marco conceptual del capítulo~[§cap:marco-teorico] en un sistema funcional y verificable.
 Cada elección tecnológica se justifica en función de tres criterios consistentes con las restricciones ya declaradas en el capítulo~[§cap:metodologia] (sección~[§sec:dimensiones]): un único desarrollador, un presupuesto operativo de entre 0 y 100 USD mensuales durante el desarrollo, y un plazo fijo de seis meses. Cuando existió una alternativa técnicamente superior pero incompatible con esas restricciones, se documenta también por qué fue descartada.
 
+El capítulo describe el sistema tal como quedó construido. Varias decisiones del diseño inicial se modificaron durante la implementación; cada cambio se explica donde corresponde y se resume, con su fundamento, en la sección~[§sec:decisiones-implementacion].
+
 ## Arquitectura del sistema
 
 ### Estilo arquitectónico
 
-Tinku adopta una arquitectura **cliente-servidor en capas**, con un backend propio que concentra la lógica de negocio y un conjunto de servicios externos especializados y desacoplados para las funciones que no forman parte del núcleo diferencial del producto: video (LiveKit
-Cloud), pagos (MercadoPago) e inteligencia artificial (proveedores de modelos de lenguaje y embeddings semánticos). Se descartó una arquitectura de microservicios propios porque, para un equipo de un desarrollador y un
-MVP de alcance acotado, la sobrecarga operativa de orquestar múltiples servicios propios (versionado independiente, comunicación entre servicios, observabilidad distribuida) no se justifica frente al beneficio –los “servicios” que sí están desacoplados (video, pagos,
-IA) ya lo están porque se delegan a proveedores externos maduros, no porque Tinku los reimplemente como microservicios propios.
+Tinku es un **monolito modular**: un único backend en Spring
+Boot organizado en nueve módulos de dominio –Identidad, Matching, Aula,
+Reservas, Pagos, Resumen, Reputación, Admin y Seguridad–, cada uno con su propio paquete Java y su propio esquema en la base de datos. Los módulos se comunican de forma síncrona, dentro del mismo proceso, cuando el flujo necesita una respuesta inmediata, y mediante eventos de dominio en memoria (por ejemplo sesion.finalizada o denuncia.registrada) cuando un hecho dispara varias reacciones independientes. No se usa ningún *message broker* externo. Todo plazo de negocio que involucra dinero o seguridad –liberación del escrow, vencimiento de una reserva sin pagar, plazos del kill-switch y de las denuncias, borrado del audio del resumen– se programa con Quartz persistido en la misma base de datos, de modo que sobrevive a un reinicio del proceso (Constitución del proyecto, artículos VIII a X; ADR-000-01 y
+ADR-000-02).
+
+La única pieza propia que corre como proceso aparte es el **motor de matching**, un servicio en Python que calcula los embeddings semánticos y consulta la similitud semántica. Es una excepción explícita y documentada: el ecosistema de modelos de lenguaje que el motor necesita (sentence-transformers) es nativo de Python, y aislarlo evita mezclar dos entornos de ejecución en el mismo proceso. El backend lo invoca por HTTP de forma síncrona. Fuera de esa excepción, se descartó una arquitectura de microservicios propios porque, para un único desarrollador y un MVP de alcance acotado, la sobrecarga de versionar, comunicar y observar varios servicios no se justifica frente al beneficio.
+
+El diseño inicial describía un estilo “cliente-servidor en capas” en el que toda la IA –incluido el matching– se delegaba a proveedores externos. Se reemplazó por el monolito modular porque los embeddings semánticos los calcula Tinku con un modelo abierto, sin costo por llamada y sin que los perfiles salgan del servidor; los proveedores externos quedaron acotados al video (LiveKit Cloud), el cobro
+(MercadoPago), la transcripción y el resumen (OpenAI) y el correo transaccional (Resend). Los límites entre módulos son organizativos
+–paquetes y esquemas separados– y no los impone el compilador: el acceso directo de un módulo a datos de otro está medido y aceptado como deuda técnica en ADR-000-03.
 
 ### Componentes y responsabilidades
 
-La tabla~[§tab:componentes] resume los ocho componentes del sistema y sus responsabilidades.
+La tabla~[§tab:componentes] resume los componentes del sistema y sus responsabilidades.
 
 **Tabla:** Componentes del sistema y responsabilidades
 
 | **Componente** | **Responsabilidad** | **Tecnología** |
 | --- | --- | --- |
-| Cliente (PWA) | Interfaz de usuario para alumno, tutor y adulto responsable; consume la API REST del backend | React / Next.js |
-| Backend API REST | Lógica de negocio, autenticación y autorización por rol, orquestación de los servicios externos | Spring Boot (Java) |
-| Base de datos relacional | Persistencia del modelo de datos principal (usuarios, reservas, pagos, calificaciones, denuncias) | PostgreSQL (Supabase) |
-| Caché / estado en tiempo real | Sesiones, chat en tiempo real (pub/sub), rate limiting | Redis (Upstash) |
-| Aula virtual | Transmisión de audio/video entre tutor y alumno | LiveKit Cloud (WebRTC) |
-| Pasarela de pagos | Procesamiento de cobro vía Checkout Pro | MercadoPago (SDK oficial Java) |
-| Servicios de IA | matching semántico, transcripción y resumen de sesión, asistente conceptual, kill-switch de seguridad | sentence-transformers + FAISS, LLM GPT-4o (resumen) y gpt-4o-mini-transcribe (transcripción), clasificador on-device |
-| Panel de administración | Moderación, resolución de denuncias, aprobación de tutores | Módulo interno del backend + vista en el frontend |
+| Cliente web (PWA) | Interfaz para alumno, tutor, adulto responsable y administración; consume la API REST del backend. En el aula corre el clasificador del kill-switch sobre el video remoto y, solo con el adicional de resumen, graba el audio en el navegador del tutor | Next.js 16 + React 19; NSFWJS sobre TensorFlow.js; cliente de LiveKit |
+| Backend (monolito modular) | Lógica de negocio de los nueve módulos, autenticación y autorización por tipo de usuario y por acción, plazos de negocio persistidos, orquestación de los servicios externos | Java 21 + Spring Boot 4.1.1, Spring Security + JWT, Quartz, JPA + Flyway |
+| Motor de matching | Cálculo de embeddings semánticos de perfiles y temas, y consulta de similitud semántica contra la base | Python, FastAPI, sentence-transformers (‘paraphrase-‘‘multilingual-‘‘MiniLM-L12-v2‘, 384 dimensiones) |
+| Base de datos | Persistencia de los nueve módulos (un esquema por módulo), índice semántico y tablas de Quartz | PostgreSQL 16 con pgvector, en contenedor propio |
+| Aula virtual | Transmisión de audio, video, pizarra y mensajes de texto entre tutor y alumno | LiveKit Cloud (WebRTC); el backend emite los tokens de sala y cierra las salas por la API de LiveKit, sin SDK |
+| Pasarela de pagos | Cobro con Checkout Pro en la cuenta de MercadoPago de cada tutor, conectada por OAuth; reembolsos durante la ventana de escrow | MercadoPago, cliente HTTP propio (sin SDK) |
+| Transcripción y resumen | Transcripción del audio de la clase y resumen sobre el texto ya anonimizado, solo con el adicional contratado | OpenAI: ‘gpt-4o-mini-transcribe‘ y LLM GPT-4o |
+| Correo transaccional | Avisos y recuperación de contraseña fuera de la aplicación | Resend (plan gratuito), por HTTP |
+| Panel de administración | Moderación (credenciales, CAP, alertas del kill-switch, denuncias, sanciones), soporte financiero y salud de la infraestructura, con dos roles de administrador | Módulo Admin del backend + vistas /admin del frontend |
+| Publicación y operación | Entrada desde internet sin abrir puertos, orquestación de contenedores y respaldo de la base fuera del servidor | Cloudflare Tunnel, Coolify, copia diaria cifrada en Cloudflare R2 |
 
 ### Flujo de datos
 
-El cliente nunca se comunica directamente con los servicios externos con sus propias credenciales: todo pasa por el backend, que actúa como intermediario autenticado. El cliente autentica contra el backend mediante JWT y consume la API REST para las operaciones habituales –búsqueda de tutores, reservas, chat, calificaciones. Para el aula virtual, el backend genera un token de acceso de LiveKit con permisos acotados a la sala correspondiente y se lo entrega al cliente, que recién en ese momento se conecta directamente al servicio de LiveKit
-Cloud para el flujo de audio y video; este diseño evita que todo el tráfico de video circule por el propio backend, que no está dimensionado para soportarlo. Los pagos siguen una lógica equivalente: el backend crea la preferencia de pago contra la API de MercadoPago y recibe notificaciones vía webhook cuando el estado del pago cambia, actualizando en consecuencia el estado de la reserva en la base de datos. El matching y la IA educativa, por su parte, se invocan de forma asincrónica –mediante colas o llamadas diferidas– y el resultado se persiste sin bloquear al usuario mientras espera la respuesta de un modelo externo.
+El cliente nunca se comunica con los servicios externos usando credenciales propias: todo pasa por el backend, que actúa como intermediario autenticado. El cliente se autentica contra el backend mediante JWT y consume la API REST para las operaciones habituales –búsqueda de tutores, reservas, pagos, calificaciones, denuncias. Para el aula virtual, el backend genera un token de acceso de
+LiveKit con permisos acotados a la sala correspondiente y se lo entrega al cliente, que recién entonces se conecta directamente a LiveKit Cloud para el audio, el video y los mensajes de texto (que viajan por el canal de datos de la sala); así el tráfico de video no pasa por el backend.
+
+Los pagos siguen una lógica equivalente: el backend crea la preferencia de pago contra la API de MercadoPago con el token del tutor de esa reserva, recibe la notificación por webhook cuando el pago cambia de estado y, además, concilia periódicamente los pagos pendientes con un trabajo de Quartz. El matching se resuelve con una llamada HTTP
+síncrona al motor en Python: el backend acota primero los candidatos
+(autorización, cuentas suspendidas, tutores habilitados) y el motor ordena ese subconjunto por similitud. El resumen, en cambio, es asincrónico sin necesidad de colas: al finalizar la sesión, un evento de dominio en memoria y un trabajo de Quartz persistido transcriben el audio, lo anonimizan y piden el resumen, con reintentos ante fallas. El diseño inicial preveía colas para el matching y la IA; se descartaron porque la Constitución del proyecto prohíbe un
+*broker* externo y porque Quartz, que ya era necesario para los plazos de negocio, cubre el mismo caso sin otra pieza que operar.
 
 ### Diagrama de arquitectura
 
-El diagrama muestra los ocho componentes de la tabla~[§tab:componentes] y sus conexiones: el cliente solo se comunica con Vercel (que sirve los archivos estáticos) y, a través de HTTPS, con el backend; el backend es el único componente que tiene credenciales para hablar con Supabase,
-Upstash, MercadoPago y los servicios de IA; LiveKit Cloud es la única excepción, donde el cliente se conecta directamente una vez que el backend le entrega un token de corta duración.
+La figura~[§fig:arquitectura] muestra los componentes de la tabla~[§tab:componentes] y sus conexiones. Todo el tráfico de internet entra por Cloudflare Tunnel hasta el servidor propio, donde
+Coolify ejecuta los contenedores del frontend, el backend, el motor de matching y la base de datos. El backend es el único componente con credenciales para hablar con MercadoPago, OpenAI y Resend; LiveKit Cloud es la única excepción, donde el cliente se conecta directamente una vez que el backend le entrega un token de corta duración.
 
 <!-- Figura: Diagrama de arquitectura del sistema -->
 
@@ -510,6 +583,8 @@ Sprint Backlog vigente.
 
 ## Stack de software
 
+Las versiones exactas de cada dependencia se listan en el apéndice~[§apx:tecnicos].
+
 ### Frontend
 
 **Tabla:** Frontend: decisión tecnológica
@@ -519,7 +594,8 @@ Sprint Backlog vigente.
 | Tecnología | Next.js 16 + React 19 (App Router), elegido por el posicionamiento en buscadores de los perfiles públicos de tutores |
 | Por qué se eligió | Conocimiento previo del desarrollador (capítulo~[§cap:introduccion], sección~[§sec:recursos]), ecosistema maduro, gran disponibilidad de componentes para formularios, calendarios y videollamada embebida |
 | Alternativas evaluadas | Vue.js – descartado por menor familiaridad del desarrollador, lo que hubiera consumido tiempo de aprendizaje no disponible en el cronograma de seis meses |
-| Formato de despliegue | PWA, consistente con la exclusión de app móvil nativa del alcance (capítulo~[§cap:introduccion], sección~[§sec:alcance]) |
+| Formato de despliegue | PWA, consistente con la exclusión de app móvil nativa del alcance (capítulo~[§cap:introduccion], sección~[§sec:alcance]); se sirve desde un contenedor propio en el mismo servidor que el backend |
+| Clasificador del kill-switch | NSFWJS 4.3 sobre TensorFlow.js 4.22 (backend ‘wasm‘), con el modelo servido por el propio frontend: el video nunca sale del navegador para ser clasificado (ADR-M3-01) |
 
 ### Backend
 
@@ -528,9 +604,10 @@ Sprint Backlog vigente.
 | **Ítem** | **Detalle** |
 | --- | --- |
 | Tecnología | Java 21 + Spring Boot 4.1.1 (la rama 3.5 dejó de recibir parches gratuitos el 30/06/2026) |
-| Por qué se eligió | Framework “batteries-included” (seguridad, ORM, validación, manejo de excepciones ya resueltos) que reduce el riesgo de un desarrollador único investigando y ensamblando librerías sueltas bajo un cronograma fijo; alta disponibilidad de documentación y comunidad en español, relevante para un desarrollador sin experiencia previa profunda en ninguno de los lenguajes candidatos |
+| Por qué se eligió | Framework “batteries-included” (seguridad, ORM, validación, manejo de excepciones ya resueltos) que reduce el riesgo de un desarrollador único investigando y ensamblando librerías sueltas bajo un cronograma fijo; Quartz con persistencia en la base, necesario para que ningún plazo de negocio viva en memoria; alta disponibilidad de documentación y comunidad en español (ADR-000-02) |
 | Alternativas evaluadas | Go – descartado pese a tener ventajas reales de footprint de memoria y simplicidad del lenguaje, porque su ecosistema requiere ensamblar manualmente router, ORM y librerías de autenticación, lo cual consume tiempo de decisión de arquitectura que un proyecto de 6 meses en solitario no puede permitirse. Node.js – descartado como backend principal por preferirse la robustez de tipado y el ecosistema de seguridad de Spring frente a un desarrollador que tampoco tenía experiencia consolidada previa en ninguno de los dos |
-| Autenticación | Spring Security + JWT emitido y validado por el propio backend (no se delega la autenticación a Supabase Auth, dado que el modelo de roles de Tinku –adulto responsable, menor con permisos por acción, tutor, administrador– requiere lógica de autorización granular propia que conviene mantener dentro del mismo framework que ya gestiona el resto de las reglas de negocio) |
+| Autenticación | Spring Security + JWT emitido y validado por el propio backend, sin un proveedor externo de identidad: el modelo de permisos de Tinku –adulto responsable, menor con permisos por acción, tutor, dos roles de administración– requiere reglas de autorización propias que conviene mantener dentro del mismo framework que gestiona el resto de las reglas de negocio |
+| Motor de matching | Servicio aparte en Python 3.12 con FastAPI y sentence-transformers; modelo ‘paraphrase-‘‘multilingual-‘‘MiniLM-L12-v2‘ (384 dimensiones), elegido por ser multilingüe y correr en CPU dentro del mismo servidor, sin costo por consulta |
 
 ### Datos
 
@@ -538,10 +615,16 @@ Sprint Backlog vigente.
 
 | **Ítem** | **Detalle** |
 | --- | --- |
-| Motor relacional | PostgreSQL, gestionado por Supabase. Postgres es un motor relacional maduro con buen soporte de extensiones (por ejemplo, búsqueda por similitud vectorial vía pgvector, relevante para el motor de matching); Supabase ofrece un plan gratuito suficiente para el MVP y evita la administración manual de backups y actualizaciones del motor de base de datos |
-| Detalle de conexión | El backend Spring Boot se conecta a través del pooler de Supabase (Supavisor) en modo sesión (puerto 5432), que se comporta como una conexión directa y es compatible con prepared statements de Hibernate sin configuración adicional. Se documenta como decisión explícita porque el modo transacción (puerto 6543) del mismo pooler no es compatible por defecto con el cacheo de prepared statements que usa Hibernate, y migrar a ese modo en el futuro requeriría desactivar esa característica en el driver JDBC |
-| Caché / tiempo real | Redis, gestionado por Upstash (plan gratuito serverless por volumen de uso) – usado para estado de chat en tiempo real y rate limiting, no para el estado interno de las salas de videollamada, que en el MVP delega en LiveKit Cloud |
-| Respaldo y migraciones | Backups automáticos de Supabase en su plan gestionado; migraciones de esquema versionadas con Flyway o Liquibase integradas al ciclo de despliegue de Spring Boot |
+| Motor relacional | PostgreSQL 16 con la extensión pgvector (imagen pgvector/pgvector:pg16), en un contenedor propio con volumen persistente. Un solo motor y un esquema por módulo (‘identidad‘, ‘matching‘, ‘aula‘, ‘reservas‘, ‘pagos‘, ‘resumen‘, ‘reputacion‘, ‘admin‘, ‘seguridad‘) |
+| Conexión | El backend y el motor de matching se conectan por JDBC y ‘psycopg‘ dentro de la red interna de los contenedores; la base no publica ningún puerto hacia internet |
+| Índice semántico | Columna ‘vector(384)‘ de pgvector en la misma base: los embeddings semánticos de perfiles y temas se guardan junto al resto de los datos y no hay un índice en memoria que reconstruir al reiniciar (ADR-M2-01) |
+| Estado en tiempo real | Sin Redis. El estado de la sala vive en LiveKit Cloud y en la base; los límites de pedidos por IP y el bloqueo por intentos de login se cuentan en memoria del backend, válido mientras haya una sola instancia (ADR-000-04) |
+| Migraciones | Flyway, con el esquema validado al arrancar (‘ddl-auto: validate‘): si el código y la base divergen, el backend no inicia. Una migración ya aplicada nunca se edita; las correcciones se agregan como migraciones nuevas |
+| Respaldo | Copia diaria de la base con pg_dump, cifrada y subida a Cloudflare R2, fuera del servidor, con 14 días de retención (ADR-000-07) |
+
+El diseño inicial ubicaba la base en Supabase (conectada por su
+*pooler*), un índice FAISS en memoria del proceso de matching y Redis en Upstash para el estado del chat y el control de pedidos. Las tres piezas se descartaron: Supabase y Upstash porque todo el sistema se concentró en un único servidor propio (sección~[§sec:infraestructura]);
+FAISS porque obligaba a mantener un segundo mecanismo de copia y reconstrucción del índice, mientras que pgvector deja el índice como una columna más de la misma base (ADR-M2-01); y Redis porque, con una sola instancia del backend, una dependencia menos simplifica la operación sin perder nada (ADR-000-04, decisión D8). No existe un módulo de chat: los mensajes de texto del aula viajan por el canal de datos de LiveKit.
 
 ## Infraestructura y hosting
 
@@ -551,108 +634,162 @@ La tabla~[§tab:infra] resume dónde se aloja cada componente.
 
 | **Componente** | **Dónde se aloja** | **Notas** |
 | --- | --- | --- |
-| Frontend (PWA) | Vercel | Plan gratuito (Hobby) durante el desarrollo; CDN global sin configuración adicional |
-| Backend (Spring Boot) | Fase de desarrollo: computadora propia del desarrollador, gestionada con Coolify (PaaS autoalojado) y expuesta a internet mediante Cloudflare Tunnel, sin necesidad de IP pública ni apertura de puertos. Fase de piloto (Sprint 11, capítulo~[§cap:metodologia]): migración a un VPS económico (por ejemplo, Hetzner, 10–25 USD/mes), reutilizando la misma configuración de Coolify | La migración de computadora propia a VPS no requiere reescribir la configuración de despliegue, dado que Coolify orquesta el mismo conjunto de contenedores Docker en ambos casos |
-| Base de datos y Redis | Supabase y Upstash respectivamente | Servicios gestionados en la nube, independientes de dónde corra el backend |
-| Aula virtual | LiveKit Cloud | Plan gratuito (Build): 5.000 minutos de participante por mes sin necesidad de tarjeta de crédito, equivalente a más de 40 horas de clases de 1 a 1 mensuales – cobertura suficiente para el piloto. Se descartó el auto-hospedaje de LiveKit porque requiere una IP pública alcanzable por UDP para el protocolo WebRTC, algo que ni la computadora de desarrollo ni un VPS económico garantizan sin trabajo adicional de configuración de NAT/TURN |
+| Frontend, backend, motor de matching y base de datos | Un servidor propio de 8~GB de memoria, en el domicilio del desarrollador, sin IP fija, administrado con Coolify (PaaS autoalojado). Cada componente es un contenedor del mismo *Docker Compose*, con límites de memoria propios | Ningún contenedor publica puertos. Las imágenes se construyen en GitHub Actions y se publican en GitHub Container Registry; el servidor solo las descarga y las ejecuta (ADR-000-07) |
+| Entrada desde internet | Cloudflare Tunnel, desde un contenedor ‘cloudflared‘ en el mismo servidor | Cloudflare pone el HTTPS y enruta el dominio público al frontend y el subdominio de la API al backend, sin abrir puertos en el router |
+| Respaldo de la base | Cloudflare R2 (capa gratuita) | Copia diaria cifrada, 14 días de retención; restauración documentada en el manual de operación del repositorio |
+| Aula virtual | LiveKit Cloud | Plan gratuito (Build): 5.000 minutos de participante por mes sin necesidad de tarjeta de crédito, equivalente a más de 40 horas de clases de 1 a 1 mensuales – cobertura suficiente para el piloto. Se descartó el auto-hospedaje de LiveKit porque requiere una IP pública alcanzable por UDP para el protocolo WebRTC, algo que el servidor propio no tiene |
+| Pagos, transcripción y resumen, correo | MercadoPago, OpenAI y Resend | Servicios externos invocados solo desde el backend; sin configuración, cada integración queda apagada y falla de forma segura (*fail-closed*) |
 
-En cuanto a la escalabilidad: para el rango de tráfico esperado durante el MVP y el piloto (capítulo~[§cap:metodologia]), un único
-VPS vertical (backend + base de datos si se optara por auto-alojarla) es suficiente. La estrategia de escalado horizontal
-–balanceador de carga con múltiples instancias, o eventualmente
-Kubernetes– queda fuera del alcance de esta entrega y se documenta como trabajo futuro, condicionada a que el volumen de uso real lo justifique.
+El diseño inicial repartía la operación entre Vercel (frontend),
+Supabase (base de datos), Upstash (Redis) y un backend en la computadora del desarrollador que se migraría a un VPS alquilado (por ejemplo,
+Hetzner) antes del piloto. Se reemplazó por un único servidor con
+Coolify por tres motivos registrados en ADR-000-07: el plan gratuito de
+Vercel no admite uso comercial, concentrar todo en un proveedor reduce la operación de un único desarrollador, y el costo queda dentro del techo de 0–100 USD mensuales. La decisión acepta riesgos explícitos: el servidor es un único punto de falla y, al estar en un domicilio, un corte de luz o de internet deja al sistema fuera de línea mientras dure. Se mitigan con la copia diaria fuera del servidor, la restauración ensayada y, como recomendación del mismo ADR, una UPS y un aviso externo de caída; la decisión se revisa si la operación crece.
+
+En cuanto a la escalabilidad: para el rango de tráfico esperado durante el MVP y el piloto (capítulo~[§cap:metodologia]), una única instancia de cada componente es suficiente. Escalar el backend a más de una instancia exige antes revisar dos decisiones que hoy suponen una sola
+–Quartz sin *clustering* y los contadores de pedidos en memoria
+(ADR-000-04)–, por lo que el escalado horizontal queda como trabajo futuro, condicionado a que el volumen de uso real lo justifique.
 
 Los costos por componente y por etapa (desarrollo, piloto, eventual escalado) se presentan en el capítulo~[§cap:economica], consistente con el techo de 0–100 USD mensuales declarado en el capítulo~[§cap:metodologia].
 
 ## Modelo de datos
 
-El modelo se organiza alrededor de nueve entidades, cuyo detalle completo de atributos se documenta en el diccionario de datos que se incluye como apéndice técnico. **Usuario** es la entidad base y define un rol (ADULTO, MENOR, TUTOR, ADMIN); un usuario con rol ADULTO puede, además de gestionar sus propios datos, tener uno o más perfiles de MENOR
-asociados como responsable. **PerfilMenor** está vinculado a un Usuario con rol ADULTO y hereda una sesión propia, pero con permisos restringidos a nivel de endpoint: no puede iniciar pagos, aceptar acuerdos ni reservar con un tutor no autorizado previamente. **PerfilTutor** concentra las credenciales académicas, la documentación de verificación (DNI, certificados), las materias, la disponibilidad y el precio de referencia, mientras que **Certificado** representa cada documento cargado por el tutor –DNI, título, analítico, y opcionalmente el CAP– con un estado de revisión (pendiente, aprobado manual, rechazado, y
-‘en_revision_legal‘ exclusivo para el CAP). A nivel de integridad, la ausencia de un certificado de tipo CAP no bloqueará la activación del PerfilTutor ni la generación de una Reserva.
+El modelo se organiza en nueve esquemas, uno por módulo, versionados con
+Flyway. Las tablas principales y sus atributos clave se describen en el diccionario de datos del apéndice~[§apx:tecnicos]; esta sección resume las entidades y sus relaciones.
 
-**Reserva** es el bloque horario entre un PerfilMenor/Usuario ADULTO y un PerfilTutor, con estados que recorren ‘pendiente_pago‘,
-‘confirmada‘, ‘en_curso‘, ‘finalizada‘,
-‘cancelada‘ o ‘no_show‘. **Sesión** es la instancia de videollamada asociada a una Reserva, con referencia a la grabación cuando corresponde y al resumen generado por IA; **Pago** referencia la transacción de MercadoPago asociada a esa Reserva, con su estado de escrow. Por último, **Calificación** es bidireccional y se asocia a una Sesión finalizada, y **Denuncia** se asocia a una Sesión o a un
-PerfilTutor/Usuario, con estado de revisión propio y una referencia a la evidencia preservada.
+**Usuario** (identidad.usuarios) es la entidad base. Su tipo es
+ADULTO, MENOR o TUTOR; un ADULTO tiene una o dos capacidades
+–estudiante y adulto responsable–. El menor tiene una cuenta y una sesión propias (tipo MENOR) vinculadas obligatoriamente a su Adulto
+Responsable, con permisos restringidos a nivel de endpoint: no puede pagar, no puede autorizar tutores nuevos ni presentar denuncias, y no crea Reservas. El Adulto Responsable autoriza explícitamente a cada tutor con el que el menor puede tomar clase (**Autorización de tutor**). El tutor concentra su perfil público, su foto, sus temas, su tarifa y su disponibilidad; cada **Credencial académica** (título, certificado analítico o matrícula) tiene un estado de revisión (pendiente, aprobada, rechazada), y el **CAP** tiene además los estados en_revision_legal y ‘vencido‘. El CAP no es requisito para activar el perfil del tutor ni para reservarle una clase entre adultos: solo habilita a dar clases a menores, y sin un CAP
+aprobado y vigente el tutor no aparece en las búsquedas de un menor ni se le puede reservar con uno (ADR-M1-04). Los administradores no son un tipo de usuario: **Admin** (admin.admins) es una entidad aparte, vinculada a un usuario, con exactamente uno de dos roles
+(sección~[§sec:seguridad]).
 
-**Relaciones clave:** un Usuario ADULTO $$ varios
-PerfilMenor; un PerfilTutor $$ varias Reserva; una Reserva
-$$ una Sesión (1 a 1) $$ un Pago (1 a 1)
-$$ cero o más Calificación y Denuncia.
+En el módulo de reservas, el menor genera una **Solicitud de Sesión**: una entidad separada que no bloquea el horario ni genera cobro y que el
+Adulto Responsable aprueba y paga para convertirla en una **Reserva**.
+La Reserva vincula a quien paga, a quien recibe la clase y al tutor; congela el precio y la duración (de 30 a 180 minutos en bloques de 30) y recorre los estados pendiente_pago, ‘confirmada‘, en_curso, ‘finalizada‘, ‘cancelada‘ y tres variantes de ausencia (no_show_estudiante, no_show_tutor y no_show_doble). Un **Paquete**
+mensual agrupa cuatro Reservas que se pagan juntas. Cada Reserva tiene a lo sumo una **Sesión** de aula (1 a 1), que guarda la asistencia y el estado de la clase –no una grabación–, y puede originar
+**Alertas de seguridad** del kill-switch. En pagos, cada Reserva tiene su
+**Transacción** con el estado del escrow (retenido, liberado, reembolsado o pausado por denuncia); en un paquete, un único pago de
+MercadoPago genera una Transacción por clase. Completan el modelo el
+**Resumen** de la sesión, la **Calificación** bidireccional, la
+**Denuncia** (con la evidencia que adjunta el denunciante, si la hay) y la **Sanción**.
 
-**Integridad:** se define una restricción de exclusión a nivel de base de datos (no solo validación de aplicación) para impedir dos Reserva superpuestas del mismo PerfilTutor o del mismo alumno, dado que una validación exclusivamente en el backend es vulnerable a condiciones de carrera cuando dos solicitudes llegan casi simultáneamente.
+**Relaciones clave:** un Adulto Responsable $$ uno o más menores; un tutor $$ varias Reservas; una Solicitud de Sesión
+$$ a lo sumo una Reserva; una Reserva $$ una Sesión
+(1 a 1) y una Transacción; una Sesión $$ cero o más
+Calificaciones, Alertas y Denuncias.
 
-El perfil de menor de edad no puede crear Reservas directamente ni acceder a flujos de pago; en su lugar, genera una *Solicitud de
-Sesión* (entidad separada y no bloqueante) que el Adulto Responsable debe aprobar y abonar para convertirla en una Reserva transaccional. La duración de la Reserva se congela según la franja publicada por el tutor
-(entre 30 y 180 minutos), calculándose el monto final al prorratear el valor por hora fijado por el educador.
-
-Por normas estrictas de seguridad, el perfil de menor tiene inhabilitada la acción de generar Denuncias directamente desde su interfaz; cualquier reporte recae exclusivamente bajo la gestión de su Adulto Responsable. El rol ADMIN se divide lógicamente en dos dominios con colas operativas y permisos separados: *Moderación y Seguridad* (alertas del kill-switch, credenciales, sanciones) y *Soporte Financiero*
-(intervención manual en fallas de pago). El diccionario de datos completo se presenta en el apéndice~[§apx:tecnicos].
+**Integridad:** dos restricciones de exclusión a nivel de base de datos (no solo validación de aplicación) impiden dos Reservas no canceladas cuyos rangos horarios se superpongan, una para el mismo tutor y otra para el mismo alumno, dado que una validación exclusivamente en el backend es vulnerable a condiciones de carrera cuando dos solicitudes llegan casi simultáneamente.
 
 ## Diseño y experiencia de usuario (UX/UI)
 
-El onboarding de Términos y Condiciones reemplaza el documento de scroll continuo por un paso propio del registro, “Cómo funciona Tinku”, con los puntos clave de los términos –incluido el funcionamiento de la plataforma– presentados como tarjetas: cada una tiene un título corto y grande, un párrafo breve y una ilustración al costado que representa el concepto. Los puntos cubren que Tinku conecta pero no dicta las clases, la verificación de identidad, que las recomendaciones son una ayuda y no una garantía, el pago retenido hasta después de la clase, la protección de los menores, que las clases no se graban salvo el audio del resumen contratado, y la minimización de datos. El tutor ve un conjunto propio, escrito desde su lado: que es independiente y fija su precio, la verificación de su identidad y de su formación contra registros oficiales, la foto obligatoria, cómo y cuándo cobra, los requisitos para dar clases a menores, la grabación del audio solo si habilita el resumen, y cómo se construye su reputación. Los plazos que se citan salen de la Tabla de Tiempos, nunca escritos a mano. Al final, un checkbox de aceptación explícita, desactivado por defecto, habilita el paso siguiente. La foto de perfil del tutor es obligatoria: sin ella no aparece en búsquedas ni recomendaciones, porque alumnos y familias tienen que ver con quién toman clase. La interfaz se diferencia según el rol: la de un PerfilMenor no muestra ni expone controles de las acciones reservadas al adulto –pago, gestión de acuerdos, contacto con tutores no autorizados–, y esa restricción opera tanto en el diseño de interfaz como en los permisos de la API, no solo a nivel visual. El sistema contempla una degradación de la videollamada a chat de texto exclusivamente durante una sesión activa en caso de conectividad deficiente.
+El onboarding de Términos y Condiciones reemplaza el documento de scroll continuo por un paso propio del registro, “Cómo funciona Tinku”, con los puntos clave de los términos –incluido el funcionamiento de la plataforma– presentados como tarjetas: cada una tiene un título corto y grande, un párrafo breve y una ilustración al costado que representa el concepto. Los puntos cubren que Tinku conecta pero no dicta las clases, la verificación de identidad, que las recomendaciones son una ayuda y no una garantía, el pago retenido hasta después de la clase, la protección de los menores, que las clases no se graban salvo el audio del resumen contratado, y la minimización de datos. El tutor ve un conjunto propio, escrito desde su lado: que es independiente y fija su precio, la verificación de su identidad y de su formación contra registros oficiales, la foto obligatoria, cómo y cuándo cobra, los requisitos para dar clases a menores, la grabación del audio solo si habilita el resumen, y cómo se construye su reputación. Los plazos que se citan salen de la Tabla de Tiempos, nunca escritos a mano. Al final, un checkbox de aceptación explícita, desactivado por defecto, habilita el paso siguiente. La foto de perfil del tutor es obligatoria: sin ella no aparece en búsquedas ni recomendaciones, porque alumnos y familias tienen que ver con quién toman clase. La interfaz se diferencia según el rol: la de un menor no muestra ni expone controles de las acciones reservadas al adulto –pago, autorización de tutores, denuncias–, y esa restricción opera tanto en el diseño de interfaz como en los permisos de la API, no solo a nivel visual. El aula degrada la calidad ante una conectividad deficiente (video, luego solo audio, luego texto), y los mensajes de texto viajan por el canal de datos de la propia sala de
+LiveKit.
 
 En accesibilidad, el MVP no incluye un módulo completo
-(capítulo~[§cap:introduccion], sección~[§sec:alcance]), pero aplica buenas prácticas básicas: contraste adecuado, tamaños de fuente legibles y navegación con foco visible. La validación del diseño con usuarios se apoya en las entrevistas y encuestas ya definidas en el capítulo~[§cap:metodologia], y en UAT con el grupo piloto
+(capítulo~[§cap:introduccion], sección~[§sec:alcance]), pero aplica buenas prácticas básicas: contraste adecuado, tamaños de fuente legibles y navegación con foco visible, verificadas de forma automática con axe-core en las pruebas del frontend. La validación del diseño con usuarios se apoya en las entrevistas y encuestas ya definidas en el capítulo~[§cap:metodologia], y en UAT con el grupo piloto
 (OE8).
 
 <!-- Figura: Mockups de pantallas principales -->
 
 ## Decisiones incorporadas durante la implementación
 
-Durante la construcción del MVP se tomaron decisiones que precisan o corrigen lo planteado en las secciones anteriores. Cada una quedó registrada como decisión de arquitectura (ADR) en el repositorio del sistema (anexo~[§anx:repositorios]).
+El diseño inicial de Tinku –el que describen los capítulos~[§cap:introduccion] a~[§cap:marco-teorico] y las primeras versiones de este capítulo– se ajustó durante la construcción. Los cambios responden a cuatro causas: las restricciones de un único desarrollador y un presupuesto de 0 a 100 USD mensuales, que obligaron a elegir en cada caso la opción más simple de operar; la seguridad del menor, que prevalece sobre cualquier funcionalidad; la minimización de datos, que impide guardar lo que ninguna regla de negocio necesita; y las fallas observadas al poner el sistema en producción. Cada decisión quedó registrada como un ADR en el repositorio del sistema (anexo~[§anx:repositorios]), donde se documentan las alternativas evaluadas y los riesgos aceptados. La tabla~[§tab:decisiones-implementacion] es el registro central de esos cambios: los demás capítulos remiten a ella. Las filas cuyo diseño original dice “—” son decisiones nuevas, sin un antecedente en el diseño inicial.
 
-**Tabla:** Decisiones incorporadas durante la implementación
+{
 
-| **Tema** | **Decisión y motivo** |
-| --- | --- |
-| Proveedor de LLM | GPT-4o para el resumen, en lugar de la alternativa Gemini 2.0 Flash; solo recibe el texto ya anonimizado. La transcripción usa gpt-4o-mini-transcribe por costo (ADR-M6-03) |
-| Resumen automático | Pasa a ser un adicional pago que se contrata al reservar. Si el resumen no se puede generar, se reembolsa solo el adicional |
-| Grabación | Única excepción a no grabar (enmienda de la Constitución del proyecto, v2.4): solo audio, solo con el adicional, nunca con menores, con consentimiento de ambas partes y borrado al transcribir (24 horas como máximo). La graba el navegador del tutor porque la grabación del lado del servidor de LiveKit (Egress) incluye solo 60 minutos gratuitos por mes (ADR-M3-04) |
-| Especialidades del tutor | El tutor declara de una a tres especialidades (materia y nivel máximo) además de sus temas; cada una se muestra como *verificada* (respaldada por una credencial aprobada contra un registro oficial) o *declarada*. Los tutores con especialidades solo declaradas aparecen en las búsquedas, marcados como tales (ADR-M1-06) |
-| Recomendaciones | Las puntuaciones funcionan como un sistema de recomendación, no como un aval: ordenan los resultados combinando la similitud semántica con lo buscado y las calificaciones de otros usuarios, y un tutor nuevo arranca sin calificaciones. La decisión de con quién aprender es siempre del alumno o de su adulto responsable |
-| Verificación de credenciales | Triaje automático que descarta lo inválido y prepara la consulta, más la decisión del rol ADMIN contra el registro oficial; la máquina decide lo que *no* es un título válido, pero lo que sí lo es solo lo prueba el registro (ADR-M1-06) |
-| Foto de perfil del tutor | Obligatoria: sin foto el tutor no aparece en búsquedas ni recomendaciones |
-| Catálogo de contenidos | El catálogo de temas sigue siendo cerrado y curado (el tutor solo elige temas de ahí), pero es *vivo*: se actualiza de forma continua con lo que se busca y todavía no está. Para eso se cuentan, de forma agregada, los temas buscados sin un tutor que los dé: un contador por tema, sin datos de quién buscó, sin las búsquedas de menores y con un máximo de 500 temas. El rol ADMIN solo ve los temas pedidos varias veces, agrupados por área, y los incorpora al catálogo (ADR-M2-04) |
-| Búsqueda sin coincidencia exacta | Si nadie enseña exactamente lo que se buscó, el sistema reconoce el área del tema (materia y nivel) y recomienda tutores de esa área, aclarando que es una recomendación y no una coincidencia exacta. El nivel escrito en la búsqueda (“divisiones en primario”) se toma como filtro, y el tema se reconoce aunque no se use la palabra exacta del catálogo. Los mensajes se muestran en lenguaje natural (ADR-M2-04) |
-| Reservas y cambios de horario | Se reserva hasta 30 minutos antes de la clase, para que el pago (que puede tardar hasta 15 minutos en confirmarse) llegue con margen y el tutor pueda prepararse. Con menos de 24 horas se puede cambiar de horario sin volver a pagar hasta una hora antes: el horario que se libera queda abierto a otra reserva. Con menos de una hora el cambio se rechaza y la clase sigue en pie; nunca se cancela sola |
-| Orden de los resultados | La similitud semántica se calcula contra cada tema del tutor, no contra todos juntos, para que quien enseña muchos temas no quede relegado (ADR-M2-03). La reputación solo desempata entre tutores de relevancia parecida, y los resultados por debajo de un mínimo de relevancia no se muestran (ADR-M2-02) |
-| Términos y Condiciones | Paso propio del registro con los puntos clave en tarjetas (título, párrafo breve e ilustración) y aceptación explícita |
-| CAP | Obligatorio y vigente solo para dar clases a menores; un tutor que enseña solo a adultos no lo necesita. Al vencer, se cancelan sus clases futuras con menores con reembolso total |
-| Versiones | Spring Boot 4.1.1 y Next.js 16.3.6, para mantener parches de seguridad durante el piloto |
+| **Tema** | **Diseño original** | **Lo implementado** | **Fundamento** |
+| --- | --- | --- | --- |
+| Estilo arquitectónico | Cliente-servidor en capas; la IA, incluido el matching, delegada a proveedores externos | Monolito modular de nueve módulos más un único servicio propio aparte, el motor de matching en Python. Comunicación síncrona en proceso y eventos de dominio en memoria, sin *broker*; plazos de negocio con Quartz persistido en la base | Constitución, art.~VIII a X; ADR-000-01, ADR-000-02 |
+| Hosting | Supabase (base), Vercel (frontend), Upstash (Redis); backend en la computadora propia y migración a un VPS alquilado antes del piloto | Todo en un servidor propio con Coolify (contenedores de base con pgvector, matching, backend y frontend), publicado por Cloudflare Tunnel; copia diaria cifrada en Cloudflare R2 (14 días); imágenes construidas por GitHub Actions | ADR-000-07: Vercel gratuito no admite uso comercial; un solo proveedor; costo dentro del techo. Se acepta el punto único de falla para el piloto |
+| Redis | Estado de chat y de salas, *rate limiting* | Sin Redis: límites por IP y bloqueo de login en memoria del proceso; estado de la sala en LiveKit y en la base; sin módulo de chat | ADR-000-04 (D8): una dependencia menos con una sola instancia |
+| Índice semántico | FAISS en memoria | pgvector en la misma base; modelo ‘paraphrase-‘‘multilingual-‘‘MiniLM-L12-v2‘ (384 dimensiones); el puntaje de un tutor es su máxima similitud con cada uno de sus temas | ADR-M2-01 (sin índice que reconstruir), ADR-M2-03 |
+| Orden de los resultados | Similitud y reputación combinadas | La similitud se calcula contra cada tema del tutor, no contra todos juntos, para que quien enseña muchos temas no quede relegado. La reputación solo desempata entre tutores de relevancia parecida, y los resultados por debajo de un mínimo de relevancia no se muestran | ADR-M2-02, ADR-M2-03 |
+| Recomendaciones | — | Las puntuaciones funcionan como un sistema de recomendación, no como un aval; un tutor nuevo arranca sin calificaciones y la decisión de con quién aprender es siempre del alumno o de su adulto responsable | ADR-M1-06 (decisión 2), ADR-M2-02 |
+| LLM del resumen | GPT-4o o Gemini 2.0 Flash, a confirmar; el audio enviado directo al modelo | Dos pasos: transcripción con ‘gpt-4o-mini-transcribe‘, anonimización y GPT-4o, que recibe solo texto. Sin configuración, no sale nada (*fail-closed*). Gemini se descartó por decisión del dueño del producto | ADR-M6-03 (FR-SUM-005: el audio no se puede anonimizar), ADR-M3-04 |
+| Resumen automático | Servicio general para todas las sesiones | Adicional pago y opcional, solo entre adultos y con consentimiento de ambos; precio según la duración. Si el resumen no se genera, se reembolsa solo el adicional | Constitución v2.4; ADR-M3-04, ADR-M5-06 |
+| Grabación | Ninguna | Única excepción a no grabar: solo audio, solo con el adicional, nunca con menores, con consentimiento de ambos y borrado al transcribir (24 horas como máximo). La graba el navegador del tutor porque la grabación del lado del servidor de LiveKit incluye solo 60 minutos gratuitos por mes | Constitución v2.4 (art.~V), ADR-M3-04 |
+| Asistente conversacional de repaso | Objetivo específico del proyecto | No se implementó: no forma parte de los nueve módulos. Queda como trabajo futuro | Constitución, art.~VI (alcance cerrado) |
+| CAP | Optativo con mejora de visibilidad, u obligatorio para todos los tutores | Obligatorio y vigente (12 meses) solo para dar clases a menores, con revisión manual del rol de Moderación y Seguridad. Al vencer, se cancelan las clases futuras con menores con reembolso total. La verificación de la firma digital del CAP queda diferida | ADR-M1-04, enmienda v2.3; FR-ID-021 a FR-ID-026. A quien enseña solo a adultos no se le pide (minimización) |
+| Verificación de identidad | OCR con Tess4J y revisión manual del DNI | Tesseract invocado como programa del sistema en el propio servidor; controla mayoría de edad, nombre y unicidad del DNI; la imagen no sale del servidor ni se guarda. La revisión manual existe solo para la credencial académica y el CAP | ADR-M1-01; ADR-M1-08 (Tess4J nunca funcionó en producción) |
+| Especialidades y triaje de credenciales | Presentados como implementados en versiones anteriores de este capítulo | Decidido y **pendiente de implementar**: especialidades verificadas o declaradas y triaje automático contra registros oficiales (tareas T-ESP-01 a T-ESP-04). Hoy el rol de Moderación aprueba la credencial manualmente | ADR-M1-06 |
+| Kill-switch | Una sola rama (cortar y bloquear); desenfoque del video entre adultos | NSFWJS en el navegador sobre el video remoto (cámara y pantalla), buffer rotativo de 30 segundos que se descarta salvo disparo. Con un menor corta directo, sin preguntar; entre adultos oculta el video del detectado y pide confirmación a la contraparte (plazo de 5 minutos). Evidencia: clip de 30 segundos que se sube solo ante un disparo y se conserva 30 días desde la resolución de la Alerta | ADR-M3-01, ADR-M3-07; Tabla de Tiempos |
+| Denuncias | Suspensión preventiva al denunciar; evidencia de la sesión preservada | La denuncia entra en revisión con 48 horas de descargo del denunciado y pausa el escrow de esa sesión; evidencia opcional que adjunta el denunciante; el denunciado no conoce su identidad. La suspensión automática existe solo en las Alertas del kill-switch | Spec M9; minimización (no hay grabación que preservar) |
+| Menores | El menor puede reservar con un tutor autorizado | El menor tiene cuenta propia pero no paga, no autoriza tutores ni denuncia: pide una Solicitud de Sesión que su Adulto Responsable aprueba y paga. El piloto corre **sin menores**: la opción tinku.menores.sesiones-habilitadas queda apagada hasta cerrar el kill-switch en el cliente (T-M3-06) y el CAP (T02) | Constitución, art.~II; T-TES-10 |
+| Cobro | escrow que retiene los fondos en la cuenta de la plataforma; SDK oficial de Java; reparto por OAuth “abierto” | Modelo A: cada tutor conecta su cuenta de MercadoPago por OAuth (con PKCE); la preferencia se crea con su token y el dinero entra a su cuenta; Tinku cobra su comisión con marketplace_fee. El escrow es una ventana lógica de 24 horas en la que Tinku todavía puede reembolsar. Cliente HTTP propio, sin SDK | ADR-M5-02: Tinku no recauda fondos de terceros |
+| Comisión | 27 % con la pasarela como costo de la plataforma | 27 % sobre el bruto de cada sesión (BR-PAG-01), a cargo del tutor; MercadoPago descuenta su comisión (cerca del 6,04 %) de los fondos del tutor, que recibe el 66,96 % | ADR-M5-05, que declara la discrepancia con el modelo económico del capítulo~[§cap:economica] |
+| Reembolsos | Siempre totales, nunca parciales | Totales como regla general. Excepciones: el adicional de resumen (BR-PAG-11) y la clase de un paquete devuelta por falta del tutor (FR-PAG-022); parciales manuales por disputa (FR-PAG-010) | Spec M5, FR-PAG-009 (enmienda v2.5) |
+| Paquete mensual | — | Cuatro clases semanales con un solo pago, vigencia de cuatro semanas y un descuento de 0 a 30 % que fija el tutor | ADR-M5-03 |
+| Duración de la clase | Estándar de 60 minutos | De 30 a 180 minutos en bloques de 30, la elige quien reserva; piso de tarifa de USD~4 por hora ($6.140) | FR-RES-023; BR-PAG-04 |
+| Reservas y cambios de horario | — | Se reserva hasta 30 minutos antes de la clase, para que el pago (que puede tardar hasta 15 minutos en confirmarse) llegue con margen. Con menos de 24 horas se puede cambiar de horario sin volver a pagar hasta una hora antes; el horario liberado queda abierto a otra reserva. Con menos de una hora el cambio se rechaza y la clase sigue en pie | Tabla de Tiempos; FR-RES-016 |
+| Foto de perfil del tutor | — | Obligatoria: sin foto el tutor no aparece en búsquedas ni recomendaciones | FR-ID-028 |
+| Catálogo de contenidos | Catálogo cerrado | Sigue cerrado y curado, pero *vivo*: se cuentan de forma agregada los temas buscados sin un tutor que los dé (un contador por tema, sin datos de quién buscó, sin las búsquedas de menores, con un máximo de 500 temas) y el rol de administración incorpora los más pedidos | ADR-M2-04 |
+| Búsqueda sin coincidencia exacta | — | Si nadie enseña exactamente lo buscado, se reconoce el área del tema (materia y nivel) y se recomiendan tutores de esa área, aclarando que no es una coincidencia exacta; el nivel escrito en la búsqueda se toma como filtro | ADR-M2-04 |
+| Términos y Condiciones | Documento de scroll continuo | Paso propio del registro con los puntos clave en tarjetas y aceptación explícita, que incluye el consentimiento de la grabación del audio del resumen | ADR-M3-05 |
+| Correo transaccional | — | Resend (plan gratuito) por HTTP, con una cola de salida en la base y reintentos por Quartz; sin configuración no envía | ADR-000-06 |
+| Pruebas | Jest en el frontend; cobertura mínima del 70 % por módulo | Backend: JUnit 5 y Testcontainers con PostgreSQL real; frontend: Playwright (con la API simulada) y axe-core, más oxlint; pruebas del motor de matching y prueba nocturna contra el sistema completo. Cobertura medida con JaCoCo, sin umbral que corte la construcción | ADR-000-05 |
+| Roles | ADMIN como un rol más de Usuario, con un rol único de administración | Usuario de tipo ADULTO, MENOR o TUTOR; el administrador es una entidad aparte con uno de dos roles: Moderación y Seguridad, o Soporte Financiero | Spec M8 (FR-ADM-008) |
+| Monitoreo | Paneles de Supabase y Upstash | Panel propio “Salud de Infraestructura” en la administración, más los paneles de Coolify y LiveKit | ADR-M8-01 |
+| Versiones | — | Spring Boot 4.1.1 y Next.js 16.3.6, para mantener parches de seguridad durante el piloto | Apéndice~[§apx:tecnicos] |
 
-Queda abierta una decisión con impacto en el cobro: el reparto automático de la comisión de MercadoPago (*split* de marketplace) exige que cada cobro se genere con las credenciales del propio tutor, obtenidas por OAuth
-[mpmarketplace]. Hasta implementarlo, el dinero ingresa a la cuenta de la plataforma y la liquidación al tutor debe resolverse por separado.
+}
 
 ## Seguridad, calidad y despliegue
 
 ### Seguridad
 
-La autenticación se resuelve con JWT emitido por el propio backend a través de Spring Security, con contraseñas almacenadas mediante hash bcrypt; no se utiliza Supabase Auth, por el motivo ya explicado en la sección~[§sec:stack-backend]. El control de accesos se basa en autorización por rol (ADULTO, MENOR, TUTOR, ADMIN) aplicada a nivel de cada endpoint del backend: el modelo de permisos por acción del rol MENOR
-(sección~[§sec:modelo-datos]) se implementa como reglas de autorización explícitas, no como una restricción de interfaz que pudiera sortearse llamando directamente a la API. Toda la comunicación viaja cifrada mediante TLS entre el cliente y el backend y entre el backend y los servicios externos, con el cifrado en reposo de la base de datos delegado a Supabase.
+La autenticación se resuelve con JWT emitido por el propio backend a través de Spring Security, con contraseñas almacenadas mediante hash bcrypt y sin un proveedor externo de identidad, por el motivo ya explicado en la sección~[§sec:stack-backend]. Los pedidos públicos
+(registro, login, recuperación de contraseña, verificación del DNI y webhooks) tienen un límite por IP y el login se bloquea tras varios intentos fallidos. El control de accesos distingue el tipo de usuario
+(ADULTO, MENOR, TUTOR) y, para la administración, los dos roles de Admin
+–*Moderación y Seguridad* (credenciales, CAP, alertas del kill-switch, denuncias y sanciones) y *Soporte Financiero* (pagos fallidos y tabla de precios)–, con colas y permisos separados y un registro de auditoría de cada acción. Las restricciones del menor (sección~[§sec:modelo-datos]) se implementan como reglas de autorización explícitas en cada endpoint, no como una restricción de interfaz que pudiera sortearse llamando directamente a la API.
+Además, mientras dure el piloto, las clases con menores están apagadas: la creación de Reservas y de Solicitudes de Sesión con un menor se rechaza hasta que se habiliten de forma explícita, una vez cerrados el kill-switch en el cliente y el circuito del CAP.
 
-La verificación de tutores combina la carga de DNI y certificados académicos con la extracción automática de la fecha de nacimiento mediante OCR (implementado con Tesseract vía Tess4J, ejecutado in-process en el propio backend para garantizar que las imágenes de los documentos nunca se envíen a servicios de terceros), que rechaza automáticamente el registro de cualquier tutor menor de 18 años. La credencial académica no se da por buena por el archivo –un PDF se falsifica en minutos–, sino por el registro oficial que la respalda: el
-Registro Público de Graduados Universitarios para títulos universitarios desde 2012 [rpgu], el Registro Federal de Egreso (ReFE) con el código QR de Mi Argentina para títulos secundarios y superiores digitales desde noviembre de 2023 [refe], el validador de SIU-Guaraní para certificados de alumno regular y los buscadores de cada colegio para las matrículas. Como ninguno de esos registros ofrece una API pública, la verificación combina un triaje automático –rechazo inmediato de lo que claramente no es un título, lectura por OCR del nombre para compararlo con el del DNI, y control de que el enlace de verificación pertenezca a un dominio oficial– con la decisión final del rol ADMIN, que consulta el registro y registra cómo verificó y qué especialidades del tutor cubre esa credencial (sección~[§sec:decisiones-implementacion]).
-Incluye además la verificación manual del CAP vigente para quienes dan clases a menores.
+Toda la comunicación desde internet viaja cifrada con TLS hasta Cloudflare y por el túnel cifrado hasta el servidor, y el backend usa HTTPS con los servicios externos. Los tokens de MercadoPago de los tutores se guardan cifrados con AES-256-GCM con una clave que no vive en la base
+(ADR-M5-02), y las copias de la base se cifran antes de salir del servidor (ADR-000-07).
 
-El kill-switch de seguridad, presentado como SafeVchat en la sección~[§sec:estado-del-arte] –donde se desarrolla el mecanismo técnico completo, incluida esta misma verificación de edad del tutor vía
-OCR y DNI–, se apoya en un clasificador de contenido que corre localmente en el dispositivo (*edge computing*, por ejemplo con
-TensorFlow.js) durante la videollamada; ante una detección positiva ejecuta dos acciones diferenciadas: si hay un menor presente, corta la transmisión y suspende preventivamente la cuenta de forma inmediata; si ambos participantes son adultos, el video del detectado se bloquea con un filtro de desenfoque y el sistema solicita confirmación a la contraparte antes de proceder al corte. El portal de denuncias sigue una lógica equivalente: como las clases no se graban, la evidencia es el fragmento de treinta segundos del buffer local del kill-switch, que se sube solo ante un disparo y se conserva hasta la resolución; al registrarse una denuncia, el sistema suspende preventivamente al usuario denunciado y deriva la resolución final a revisión humana del rol ADMIN, con acceso a la evidencia preservada.
+La verificación de identidad lee el DNI mediante OCR con
+Tesseract, que el backend ejecuta como programa del sistema dentro del propio servidor: la imagen se escribe en un archivo temporal que se borra al terminar, nunca se envía a terceros ni se guarda. El OCR controla la mayoría de edad de todo adulto –rechaza automáticamente a cualquier tutor menor de 18 años–, el nombre y que el DNI no esté ya registrado; no hay una revisión manual del DNI. La integración original usaba la librería Tess4J dentro del proceso Java; se reemplazó porque en producción nunca llegó a funcionar –las librerías nativas de la imagen del servidor no eran compatibles– y ninguna persona real podía completar el registro (ADR-M1-08).
+
+La credencial académica la revisa hoy manualmente el rol de Moderación y
+Seguridad. Como un PDF se falsifica en minutos, lo que prueba un título es el registro oficial que lo respalda: el Registro Público de Graduados
+Universitarios para títulos universitarios desde 2012 [rpgu], el
+Registro Federal de Egreso (ReFE) con el código QR de Mi Argentina para títulos secundarios y superiores digitales desde noviembre de 2023
+[refe], el validador de SIU-Guaraní para certificados de alumno regular y los buscadores de cada colegio para las matrículas. Como ninguno de esos registros ofrece una API pública, se decidió (ADR-M1-06) combinar un triaje automático –rechazo inmediato de lo que claramente no es un título, lectura por OCR del nombre para compararlo con el del
+DNI y control de que el enlace de verificación pertenezca a un dominio oficial– con la decisión final del administrador contra el registro, y asociar cada credencial a especialidades verificadas o declaradas. Esa decisión está tomada pero **pendiente de implementar**
+(sección~[§sec:decisiones-implementacion]). La verificación del
+CAP vigente es manual y solo se exige a quienes dan clases a menores.
+
+El kill-switch de seguridad, presentado como SafeVchat en la sección~[§sec:estado-del-arte], se apoya en el clasificador NSFWJS, que corre sobre TensorFlow.js en el navegador de cada participante durante la videollamada (ADR-M3-01). Cada cliente clasifica el video que
+*recibe* –cámara y pantalla compartida del otro–, de modo que el clasificador que protege al menor corre en el dispositivo del menor y un cliente modificado del otro lado no puede apagarlo. Una detección se confirma con tres muestras consecutivas por encima de un umbral de 0,85
+(ADR-M3-07). Mientras tanto, el navegador mantiene un buffer rotativo de
+30 segundos de video que vive solo en memoria y se descarta salvo disparo. Ante una detección confirmada, el sistema ejecuta una de dos ramas: si hay un menor presente, corta la clase de inmediato sin preguntarle nada a nadie y el tutor implicado queda suspendido preventivamente; si ambos participantes son adultos, oculta el video del detectado y le pregunta a la contraparte si quiere cortar, con un plazo de 5 minutos: sin respuesta se restaura el video y no se genera una
+Alerta. Solo ante un disparo se sube como evidencia el clip de 30
+segundos (sin audio), que se conserva 30 días desde la resolución de la
+Alerta; la Alerta la revisa el administrador de Moderación y Seguridad dentro de las 12 horas. El diseño inicial preveía un filtro de desenfoque en la rama de adultos; se reemplazó por ocultar el video, que no deja a la vista ninguna parte de la imagen.
+
+Las denuncias siguen un circuito separado de las Alertas (Spec M9): la presenta un adulto –el menor nunca, lo hace su Adulto Responsable–, con un motivo de una lista cerrada y la evidencia que el denunciante quiera adjuntar. El denunciado recibe el motivo sin conocer la identidad de quien denunció y tiene 48 horas para su descargo; si la sesión tiene dinero en la ventana de escrow, se pausa la liberación de esa sesión. La decisión final es del administrador de Moderación y
+Seguridad. Una denuncia no suspende por sí sola al denunciado: la suspensión preventiva automática existe únicamente en el circuito del kill-switch. Tampoco hay evidencia de la sesión que preservar, porque las clases no se graban; el diseño inicial suponía lo contrario, lo que habría exigido una grabación continua incompatible con la minimización de datos.
 
 La protección de datos personales sigue la Ley 25.326, con especial cuidado en el procesamiento de video de menores y en la definición de una política de retención y baja de datos a solicitud del titular o su responsable.
 
 ### Calidad y pruebas
 
-Las pruebas unitarias del backend se implementan con JUnit 5 y Mockito, con una cobertura mínima del 70 % (capítulo~[§cap:metodologia]), mientras que las del frontend usan Jest, aplicable a la capa de
-React/Next.js –esto corrige la mención original de Jest como herramienta de testing “general” del capítulo~[§cap:metodologia], dado que Jest es específico del ecosistema JavaScript y no aplica al backend Spring
-Boot, que usa JUnit y Mockito. Las pruebas de integración corren contra una base de datos de prueba con Testcontainers y Postgres antes de cada release al entorno de piloto, y las UAT se realizan con el grupo piloto, según lo definido en el capítulo~[§cap:metodologia] y el OE8.
-La documentación de la API se mantiene en Postman. Las métricas evaluadas sobre el conjunto de prueba se reportan en el capítulo~[§cap:resultados].
+Las pruebas del backend se escriben con JUnit 5 y Mockito, y las de integración corren con Testcontainers contra una base PostgreSQL real con pgvector, la misma imagen que se usa en producción. Las del frontend son pruebas de punta a punta con Playwright, que simulan la API del backend, e incluyen controles automáticos de accesibilidad con axe-core; el código del frontend se revisa además con el analizador estático oxlint. El motor de matching tiene sus propias pruebas en Python.
+El diseño inicial preveía Jest para el frontend, que no se usa: las pruebas del frontend quedaron en Playwright, que ejercita los flujos completos en un navegador real, el mismo entorno en el que corren el kill-switch y el aula.
+
+La metodología (capítulo~[§cap:metodologia]) fijaba una cobertura mínima del 70 % por módulo. En la implementación la cobertura se mide con JaCoCo sobre todo el backend, sin un umbral que corte la construcción: primero se mide y después se decide (ADR-000-05). Al
+14/10/2026 la suite del backend sumaba 661 pruebas sin fallas y una cobertura de líneas del 85,6 %. La suite exige JDK~21 y se ejecuta con
+‘./mvnw -B test‘ (apéndice~[§apx:tecnicos]). Las UAT se realizan con el grupo piloto, según lo definido en el capítulo~[§cap:metodologia] y el OE8. Los resultados se reportan en el capítulo~[§cap:resultados].
 
 ### Despliegue
 
-El control de versiones se lleva en GitHub, con ramas de feature y revisión antes de integrar a la rama principal. El pipeline de CI/CD
-corre en GitHub Actions: ejecuta las pruebas automatizadas en cada pull request y, al integrarse a la rama principal, construye una imagen Docker del backend que se despliega automáticamente a la instancia de Coolify
-–computadora propia durante el desarrollo, VPS durante el piloto– mediante un webhook de despliegue. El monitoreo del MVP se limita a los paneles nativos de Coolify (estado del contenedor, uso de recursos) y a los paneles propios de LiveKit Cloud, Supabase y Upstash; un sistema de monitoreo unificado, como Grafana, queda fuera del alcance del MVP.
+El control de versiones se lleva en GitHub, con una rama por bloque de trabajo y revisión antes de integrar a la rama principal, que es la de producción y solo acepta cambios por *pull request* con las pruebas en verde. El pipeline de CI/CD corre en GitHub Actions con cinco flujos: ‘ci-backend‘ (pruebas del backend con Tesseract instalado y publicación del reporte de cobertura), ‘ci-frontend‘ (oxlint y
+Playwright), ‘ci-matching‘ (pruebas del motor), ‘ci-e2e‘
+(una prueba nocturna que levanta la base, el motor y el backend reales y recorre por la API el registro, la búsqueda semántica, la reserva y el pago en modo de prueba hasta la confirmación) y ‘deploy‘, que en cada integración a la rama principal vuelve a correr las tres suites, publica las imágenes de los contenedores en GitHub Container Registry y llama al webhook de despliegue de Coolify. Las imágenes nunca se construyen en el servidor de producción; para volver atrás, alcanza con desplegar la imagen anterior.
+
+El monitoreo se apoya en el panel propio “Salud de Infraestructura”
+de la administración, que consulta en vivo el estado de la base, el motor de matching, MercadoPago, LiveKit y el OCR (ADR-M8-01), más los paneles de Coolify (estado y recursos de cada contenedor) y de LiveKit
+Cloud. Un sistema de monitoreo unificado, como Grafana, queda fuera del alcance del MVP.
 
 # Capítulo 5: Justificación económica
 
@@ -672,7 +809,12 @@ mide creación de valor y la TIR mide rendimiento.
 | VAN | ¿Cuánto valor crea el proyecto? | USD | Es un dato de entrada |
 | TIR | ¿Qué rendimiento anual rinde? | % anual | Es el resultado |
 
-Todos los cálculos se apoyan en un modelo financiero parametrizado construido en planilla de cálculo, en el cual los indicadores están formulados con las funciones nativas ‘NPV‘ e ‘IRR‘. Esto permite que al modificar cualquier supuesto de entrada —el ticket promedio, la comisión, las horas de desarrollo o el volumen de sesiones— los tres escenarios, el VAN y la TIR se recalculen de forma inmediata. El modelo se incluye como anexo del presente trabajo.
+Todos los cálculos se apoyan en un modelo financiero parametrizado, en el cual el VAN, la TIR y los períodos de repago se calculan con las expresiones de la sección~[§sec:indicadores-formulas]. Esto permite que al modificar cualquier supuesto de entrada —el ticket promedio, la comisión, las horas de desarrollo o el volumen de sesiones— los tres escenarios, el VAN y la TIR se recalculen de forma inmediata.
+Cada parámetro de entrada se declara en las tablas de este capítulo, con su origen, de modo que todos los resultados son reproducibles a partir de ellas.
+
+Los parámetros que dependen del funcionamiento de la plataforma
+—comisión, reparto del cobro con MercadoPago, piso de tarifa, duración de las clases, precio del resumen y paquete mensual— se tomaron del sistema efectivamente implementado y de sus registros de decisión de arquitectura (ADR), que viven en el repositorio del sistema (anexo~[§anx:repositorios]). Una versión anterior de este capítulo suponía que la plataforma pagaba la comisión de MercadoPago; el sistema implementado no funciona así
+(sección~[§sec:costos-variables]), y todas las cifras de este capítulo se recalcularon con el reparto real.
 
 ## Justificación institucional, legal, ambiental y social
 
@@ -680,16 +822,24 @@ El desarrollo de Tinku se fundamenta en un impacto transversal comprobable:
 
 - **Justificación social:** el proyecto busca democratizar el acceso al apoyo escolar, eliminando las barreras geográficas que afectan especialmente a estudiantes en comunidades rurales o del interior del país. A su vez, propone formalizar el mercado de tutorías particulares, el cual opera mayormente en la informalidad.
 - **Justificación legal e impositiva:** el modelo de contratación se apoya en el Código Civil y Comercial de la
-          Nación (artículos 25, 26, 682 y 690), exigiendo que la cuenta pagadora pertenezca siempre a un adulto responsable para resguardar patrimonialmente a los menores. En materia impositiva, la retención de fondos vía MercadoPago Marketplace funciona como un mecanismo de formalización tributaria (similar a los esquemas de retención de AFIP para plataformas digitales), mitigando además los riesgos de relación de dependencia laboral encubierta. Asimismo, la plataforma aplica el principio de minimización de datos para cumplir estrictamente con la Ley de
+          Nación (artículos 25, 26, 682 y 690), exigiendo que la cuenta pagadora pertenezca siempre a un adulto responsable para resguardar patrimonialmente a los menores. En materia impositiva, el cobro se resuelve con MercadoPago Marketplace en el llamado *modelo A* (ADR-M5-02): cada tutor conecta su propia cuenta de MercadoPago, el dinero de la clase ingresa a esa cuenta y la plataforma percibe únicamente su comisión, mediante el campo ‘marketplace_fee‘ del pago. Tinku no recauda ni retiene fondos de terceros: el escrow es una ventana lógica de 24 horas durante la cual la plataforma todavía puede ordenar un reembolso. Se descartó la alternativa de recaudar todo en la cuenta de la plataforma y transferir luego a cada tutor porque hacía ingresar el monto bruto de todas las clases como ingreso propio, con su carga impositiva, y obligaba a transferencias manuales semanales (ADR-M5-02). La formalización que el sistema aporta es otra: cada cobro queda registrado en la cuenta del tutor y la plataforma le permite exportar sus cobros del mes, con los datos del adulto pagador, para facturar y declarar ante la ARCA (ex AFIP). Asimismo, la plataforma aplica el principio de minimización de datos para cumplir estrictamente con la Ley de
           Protección de Datos Personales (Ley 25.326).
 - **Justificación institucional:** Tinku se desarrolla como el proyecto final de la carrera de Ingeniería en
           Informática, demostrando la aplicación de tecnologías de vanguardia (IA y WebRTC) para resolver una problemática concreta del sistema educativo argentino.
-- **Justificación ambiental:** al centralizar el apoyo académico en un ecosistema digital y virtual, se elimina la necesidad de desplazamiento físico de alumnos y tutores, reduciendo la huella de carbono asociada al transporte. A nivel de infraestructura tecnológica, se prioriza la eficiencia mediante servicios gestionados de bajo consumo, evitando el aprovisionamiento permanente de servidores dedicados.
+- **Justificación ambiental:** al centralizar el apoyo académico en un ecosistema digital y virtual, se elimina la necesidad de desplazamiento físico de alumnos y tutores, reduciendo la huella de carbono asociada al transporte. A nivel de infraestructura tecnológica, se dimensiona al mínimo: todos los servicios propios (base de datos, motor de matching, backend y frontend) corren como contenedores en un único servidor preexistente administrado con Coolify, sin réplicas ni entorno de pruebas duplicado, y las imágenes se construyen fuera de él, en
+          GitHub Actions (ADR-000-07). La detección de contenido inapropiado del kill-switch se ejecuta en el navegador de cada participante y no en el servidor.
 
 ## Modelo de monetización y alternativas descartadas
 
-El ingreso de Tinku proviene de una única fuente: una
-**comisión de plataforma del 27 % sobre el precio de cada sesión**, descontada exclusivamente del pago que recibe el tutor. El ticket promedio de mercado se proyecta en **USD 7 por sesión**. El estudiante abona el precio final fijado por el docente, sin cargos de servicio adicionales visibles. Se excluyen explícitamente vías de ingreso como la publicidad, la venta de datos o las suscripciones premium durante la etapa de MVP.
+El ingreso que se modela proviene de una única fuente: una
+**comisión de plataforma del 27 % sobre el precio de cada sesión** (regla BR-PAG-01 del sistema, ADR-M5-05), descontada exclusivamente del pago que recibe el tutor. El ticket promedio se fija en
+**USD 7,42 por sesión**, derivado del relevamiento de precios de
+Superprof descripto en la sección~[§sec:origen-ticket]. El estudiante abona el precio final fijado por el docente, sin cargos de servicio visibles: la comisión nunca aparece como línea aparte. El único cargo adicional es el resumen automático, opcional y de precio a costo
+(sección~[§sec:adicional-resumen]), que no se incorpora al flujo de fondos. Se excluyen explícitamente vías de ingreso como la publicidad, la venta de datos o las suscripciones premium durante la etapa de MVP.
+
+Además de la clase suelta, el sistema ofrece un **paquete mensual**
+de cuatro clases semanales, con una vigencia de cuatro semanas y un único pago (ADR-M5-03). El tutor decide si lo habilita y puede aplicarle un descuento de 0 a 30 % sobre su precio por hora, sin quedar por debajo del piso de tarifa (sección~[§sec:piso-tarifa]); la comisión se calcula clase por clase sobre el precio con descuento. El paquete no agrega una fuente de ingreso: es la misma comisión sobre un ticket eventualmente menor. Como no hay datos de su adopción, el modelo base no lo incluye y su efecto se evalúa como sensibilidad del ticket
+(sección~[§sec:sensibilidad]).
 
 Durante el diseño del modelo de negocio se evaluaron y descartaron dos metodologías alternativas de intermediación:
 
@@ -697,24 +847,112 @@ Durante el diseño del modelo de negocio se evaluaron y descartaron dos metodolo
           Adicionalmente, no genera un ingreso proporcional al valor efectivo entregado en cada sesión.
 - **Comisión de alta retención en el extremo superior del mercado (33 %):** se descartó replicar las bandas tarifarias máximas de Preply. Una comisión percibida como excesiva incentiva la desintermediación —acuerdos de pago por fuera de la plataforma tras el primer contacto— lo cual erosiona los ingresos y vulnera el modelo de confianza diseñado.
 
+### Origen del ticket promedio
+
+El ticket no es un supuesto: se obtuvo relevando 414 avisos de apoyo escolar publicados en Superprof Argentina [superprof], la plataforma de referencia del segmento. La suma de los precios horarios declarados fue de $5.544.467 y el promedio de $13.392,43 por hora
+(mediana $12.000; detalle en el apéndice~[§apx:precio]). Como el modelo trabaja con una duración media de 51 minutos por sesión
+(ecuación~[§eq:duracion]), el precio horario se pondera por
+$51/60 = 0{,}85$ y se convierte a dólares al tipo de cambio de
+$1.535 por USD, el mismo con el que el sistema expresa en pesos el piso de tarifa (sección~[§sec:piso-tarifa]) y el precio del resumen (BNA,
+09/09/2026; estimación propia declarada como tal):
+
+    Ticket = 13.392{,43 0{,}85}{1.535} = USD~7{,42}.
+
+El tipo de cambio es un parámetro del modelo y no un dato: la sensibilidad del resultado frente a él se presenta en el apéndice~[§apx:precio].
+
 ### Calibración de la comisión
 
-La comisión del 27 % no es un supuesto arbitrario sino el resultado de un análisis de punto de equilibrio. Una primera formulación del modelo adoptó una comisión del 15 %, valor que posiciona a la plataforma por debajo de toda la banda de Preply
-(18 % a 33 %). Sin embargo, al incorporar al modelo los costos financieros de la pasarela de pago y proyectar un volumen de demanda realista para un MVP, esa comisión arrojaba un VAN negativo en los tres escenarios: el margen resultante no alcanzaba a cubrir los costos fijos de operación.
+La comisión se calibró en tres etapas, y la última cambia el sentido del
+27 %. Una primera formulación del modelo adoptó una comisión del
+15 %, valor que posiciona a la plataforma por debajo de toda la banda de
+Preply (18 % a 33 %) [preply]. Sin embargo, al incorporar al modelo los costos financieros de la pasarela de pago y proyectar un volumen de demanda realista para un MVP, esa comisión arrojaba un
+VAN negativo en los tres escenarios.
 
-La comisión se recalibró entonces al 27 %, valor que continúa dentro de la banda de mercado vigente (18 % a 33 %) y por debajo de su extremo superior, pero que constituye el mínimo necesario para que el escenario base alcance un VAN no negativo dentro del horizonte de cinco años. Se trata de una restricción del modelo que se declara explícitamente: por debajo del 27 %, y manteniendo el resto de los supuestos constantes, el proyecto no se justifica económicamente.
+La comisión se recalibró entonces al 27 %. En esa versión del modelo la comisión de MercadoPago (6,04 %) se restaba como un costo de la plataforma y, con un ticket de USD 7 y un costo de IA imputado a cada sesión, el VAN del escenario base se anulaba con una comisión de aproximadamente 26,9 %: el 27 % era, en efecto, el mínimo necesario. Con el ticket actualizado a USD 7,42 y el costo de IA
+fuera de la sesión, ese umbral había bajado a aproximadamente 25,3 %.
+
+Ambas cifras quedaron superadas. El sistema implementado cobra con el modelo A (ADR-M5-02), en el que MercadoPago descuenta su comisión de los fondos del tutor y la plataforma recibe el 27 % completo
+(sección~[§sec:costos-variables]); además, la partida fija de procesamiento de LLM se eliminó por no tener contraparte en el sistema (sección~[§sec:costos-recurrentes]). Con el modelo corregido, el VAN del escenario base se anula con una comisión de
+**aproximadamente 18,2 %**. La afirmación anterior de que el
+27 % era el mínimo para que el proyecto se justificara deja, por lo tanto, de ser cierta: el 27 % se mantiene como una decisión del dueño del producto (ADR-M5-05) con un margen de unos nueve puntos porcentuales sobre el equilibrio del escenario base, cuyo fundamento se expone en la sección~[§sec:fundamento-comision].
 
 ### Unidad de cobro y duración de las sesiones
 
-La plataforma admite sesiones de duración variable, con un mínimo facturable de 30 minutos y una duración estándar de 60 minutos. Esta distinción es económicamente relevante porque los costos variables de procesamiento de IA (transcripción y resumen automatizado) escalan con la duración real del audio procesado, no con la cantidad de sesiones.
-Imputar un costo fijo por sesión sobrestimaría el costo de las clases cortas.
+El tutor fija un precio por hora y quien reserva elige la duración de la clase entre 30 y 180 minutos, en bloques de 30 (regla FR-RES-023 del sistema); el precio de la sesión es el precio por hora multiplicado por la duración elegida y queda congelado en la reserva. La duración es, por lo tanto, económicamente relevante: el ticket por sesión crece con ella, y también el costo de IA del resumen opcional, que escala con los minutos de audio procesados y no con la cantidad de sesiones.
 
-Por tal motivo, el modelo calibra el costo de procesamiento por hora de audio y luego lo pondera según la mezcla esperada de duraciones. Asumiendo que un 30 % de las sesiones utiliza el mínimo de 30 minutos, la duración promedio ponderada resulta:
+El sistema no fija una duración típica y, antes del piloto, no hay datos de la distribución real. El modelo trabaja con una **duración media supuesta**, que se declara como estimación propia: se asume que un
+30 % de las sesiones usa el bloque mínimo de 30 minutos y el resto dura
+60 minutos, de modo que la duración promedio ponderada resulta:
 
     d = 60 (1 - 0{,}30) + 30 0{,}30 = 51  minutos.
 
-El costo variable de IA por sesión se obtiene entonces como el costo por hora multiplicado por $d/60$, resultando en
-USD~0{,0255} por sesión en lugar de los USD~0{,03} que correspondería a una hora completa. El ticket promedio de USD 7, por su parte, se interpreta como el promedio ya ponderado sobre esa misma mezcla de duraciones y precios horarios.
+Las clases de 90 a 180 minutos que el sistema admite no se incluyen en la mezcla; si se dictaran, elevarían el ticket promedio. La sensibilidad del resultado frente a la duración media se presenta en la sección~[§sec:sensibilidad].
+
+El ticket promedio de USD~7,42 se interpreta como el promedio ya ponderado sobre esa misma mezcla de duraciones y precios horarios. El procesamiento de IA no se imputa a cada sesión: es un servicio opcional que quien paga contrata y que se cobra aparte, tal como se describe a continuación.
+
+### Piso de la tarifa por hora
+
+El precio lo fija el tutor, pero el sistema no le permite fijar un precio por hora inferior a un piso de **USD 4 por hora**, expresado en pesos: **$6.140** al tipo de cambio de $1.535 (regla BR-PAG-04).
+El valor es un parámetro que un administrador revisa una vez por mes, sin consumir una API de tipo de cambio, y no es retroactivo: una tarifa ya guardada por debajo sigue vigente hasta que el tutor la edita. El descuento del paquete mensual tampoco puede llevar el precio por hora por debajo del piso.
+
+El modelo permite cuantificar qué protege ese piso y qué no. Una clase de duración media (51 minutos) al piso cuesta USD~3,40; con el reparto del modelo A (sección~[§sec:costos-variables]) le deja a la plataforma
+USD~0,918 (USD~1,08 por hora de clase) y al tutor USD~2,28, una vez descontada la comisión de MercadoPago. Si todas las sesiones de cada escenario se dictaran al piso:
+
+- en el **escenario base**, la comisión cubriría los costos fijos de todos los años (bastaría un precio de USD~2,26 por hora), pero no recuperaría la inversión: el VAN sería de
+          USD~-12.340;
+- en el **escenario pesimista**, la comisión ya no cubriría los costos fijos del Año 2 (flujo de USD~-40): el precio por hora que los cubre en todos los años de ese escenario es de aproximadamente USD~4,04, prácticamente el piso.
+
+El piso, entonces, no garantiza la viabilidad del proyecto, que depende del ticket promedio: el VAN del escenario base se anula con unos
+USD~5,87 por hora (sección~[§sec:sensibilidad]), por encima del piso.
+Lo que el piso asegura es una cota inferior: con un volumen como el del escenario pesimista, una tarifa por debajo de él dejaría a la comisión sin cubrir siquiera los costos fijos de operación. Esa es la lectura que sostiene el cálculo de la afirmación con la que el sistema fundamenta la regla («por debajo, la comisión no cubre la operación»).
+
+### Resumen automático como adicional opcional
+
+Al reservar una clase, quien paga puede sumar un resumen automático de la sesión (transcripción y síntesis por IA). Es un servicio opcional, disponible solo en clases entre adultos y con el consentimiento de ambas partes —con un menor nunca se contrata ni se graba—, y su precio se fija a costo más un 50 % (ADR-M5-06):
+
+    P_{resumen}(d) = 1{,}50 C_{IA}(d),
+           C_{IA}(d) = c_{t} d + c_{e} d + c_{s} ,
+
+donde $d$ es la duración de la clase en minutos, de modo que el precio
+**crece con la duración** y no es un monto fijo. Los parámetros, con su fuente, son los de la tabla~[§tab:parametros-ia].
+
+**Tabla:** Parámetros del costo de ia
+
+     del resumen
+
+| **Parámetro** | **Origen** | **Valor** |
+| --- | --- | --- |
+| $c_t$ — transcripción (por minuto) | Tarifa de lista de ‘gpt-4o-mini-transcribe‘, estimada en USD 0,003 por minuto [openaitranscribe2026] | 0,0030 |
+| $c_e$ — entrada del LLM (por token) | Tarifa de lista de GPT-4o: USD 2,50 por millón de tokens [openaipricing2026] | $2{,}510^{-6}$ |
+| $$ — tokens de transcripción por minuto | Estimación propia: unos 13.000 tokens por hora de clase (10.000 a 15.000 según el diseño del módulo), redondeada a 217 por minuto, el valor que usa el sistema | 217 |
+| $c_s$ — salida del LLM (por token) | Tarifa de lista de GPT-4o: USD 10,00 por millón de tokens [openaipricing2026] | $110^{-5}$ |
+| $$ — tokens de salida y de instrucciones | Estimación propia: resumen de cinco puntos (unos 800 tokens) más instrucciones fijas | 840 |
+
+Con esos valores, el costo de IA es de unos USD 0,22 por hora de clase, de los cuales unos USD 0,18 corresponden a la transcripción. La tabla~[§tab:precio-resumen] muestra el precio resultante según la duración, convertido al tipo de cambio de $1.535 por USD y redondeado hacia arriba a la decena de pesos; los montos en pesos son los que cobra el sistema. El adicional ingresa **íntegro a la plataforma**: se suma al ‘marketplace_fee‘ de la sesión y la comisión del 27 % no se calcula sobre él (regla BR-PAG-11). La comisión de MercadoPago sobre el adicional, en cambio, se descuenta de los fondos del tutor junto con la de la clase (modelo A, ADR-M5-02): son USD~0,017 en una clase de duración media. Por eso la columna final es el margen de la plataforma, precio menos costo de IA, sin descontar la pasarela.
+
+**Tabla:** Costo y precio del resumen según la duración de la clase
+
+| **Duración** | **Costo de IA (USD)** | **Precio (USD)** | **Precio (ARS)** | **Margen de la plataforma (USD)** |
+| --- | --- | --- | --- | --- |
+| 30 min | 0,1147 | 0,1720 | 270 | 0,0573 |
+| 51 min (promedio) | 0,1891 | 0,2836 | 440 | 0,0945 |
+| 60 min | 0,2209 | 0,3314 | 510 | 0,1105 |
+| 90 min | 0,3272 | 0,4908 | 760 | 0,1636 |
+| 120 min | 0,4335 | 0,6502 | 1.000 | 0,2167 |
+| 180 min | 0,6461 | 0,9691 | 1.490 | 0,3230 |
+
+Tres consecuencias de este diseño son relevantes para la evaluación:
+
+- **No es una fuente de ingreso relevante.** El adicional se fija a costo más un 50 %, y deja a la plataforma USD 0,0945
+          por resumen de duración promedio. Si, a modo de referencia, se contratara en una de cada cinco sesiones del escenario base, el aporte sería de unos USD 165 anuales. Por eso
+          **no se incorpora al flujo de fondos**: su función es ofrecer el servicio sin que el costo de IA recaiga sobre las sesiones que no lo usan.
+- **El costo de IA sale de la economía unitaria de la sesión.** En la formulación anterior se imputaban USD 0,0255 a cada sesión, calculados con un costo de USD 0,03 por hora que la investigación de tarifas no respalda (el costo vigente es unas siete veces mayor). Al pasar a cobrarse aparte y en proporción a la duración, las sesiones sin resumen no cargan costo de
+          IA y el margen unitario base sube en esa cantidad.
+- **Riesgo de falla.** Si el resumen no llega a generarse, se reembolsa el monto exacto del adicional —una de las dos excepciones a la regla de reembolsos totales
+          (sección~[§sec:reembolsos])—, pero el costo de transcripción ya incurrido no se recupera. Además, si MercadoPago prorrateara ese reembolso parcial entre el tutor y la plataforma, la diferencia que se le descuente al tutor la devuelve la plataforma por la cola de reembolsos manuales (ADR-M5-02, pendiente de verificar en el entorno de pruebas de MercadoPago).
+          Nada de esto se cuantifica en el modelo base y se declara como una restricción del análisis; su magnitud es de centavos de dólar por incidente.
+
+Las tarifas de lista se verificaron en fuentes secundarias y en la documentación del proveedor, y deben contrastarse con la página oficial de precios antes de fijar el monto definitivo, ya que se expresan en dólares y pueden cambiar.
 
 ## Estructura de costos
 
@@ -722,6 +960,9 @@ USD~0{,0255} por sesión en lugar de los USD~0{,03} que correspondería a una ho
 
 La inversión inicial corresponde a las erogaciones necesarias para llevar el MVP a producción, concentradas en el semestre de desarrollo
 (Año 0). Se compone del costo del equipo de desarrollo valorizado a tarifas de mercado según el perfil, los costos administrativos de puesta en marcha y una reserva de contingencia. La tabla~[§tab:inversion] presenta el desglose.
+
+La partida de personal es una **valorización a precio de mercado**
+y no una medición del esfuerzo real. El desarrollo efectivo lo lleva adelante un único desarrollador; la tabla estima cuánto costaría construir el mismo producto contratando los cuatro perfiles a tarifas de mercado, que es el costo de oportunidad relevante para evaluar la inversión con independencia de quién la ejecute. Las horas por perfil son, por lo tanto, una estimación propia del trabajo que el producto requiere, no un registro de horas trabajadas.
 
 **Tabla:** Inversión inicial desglosada por rol y concepto (en USD)
 
@@ -731,19 +972,24 @@ La inversión inicial corresponde a las erogaciones necesarias para llevar el MV
 | Personal | Mid — backend y pasarela de pagos | 250 hs | 30 | 7.500 |
 | Personal | Junior — frontend PWA e interfaz | 250 hs | 15 | 3.750 |
 | Personal | Junior — UAT y pruebas | 120 hs | 15 | 1.800 |
-| Infraestructura | Cloud de desarrollo (Supabase, Vercel, LiveKit) | 6 meses | 0 | 0 |
+| Infraestructura | Servidor propio preexistente y capas gratuitas (LiveKit, GitHub) | 6 meses | 0 | 0 |
 | Administrativo | Registro de dominio | 1 año | 15 | 15 |
 | Legal | Asesoría en privacidad de datos y TyC | único | 800 | 800 |
 | Riesgo | Contingencia por imprevistos (10 % del desarrollo) | único | 2.265 | 2.265 |
 | **Total inversión inicial** | **25.730** |  |  |  |
 
-Las tarifas horarias por perfil (USD 50 para el rol senior, USD 30 para el semi-senior y USD 15 para los roles junior) se adoptan como estimación propia basada en valores de mercado para desarrollo remoto en la región, y se declaran como tal. Las horas asignadas a los perfiles mid y junior se dimensionaron considerando que el uso de servicios gestionados
-(Supabase como backend) y de bibliotecas de componentes reduce sustancialmente el trabajo de construcción desde cero.
+Las tarifas horarias por perfil (USD 50 para el rol senior, USD 30 para el semi-senior y USD 15 para los roles junior) se adoptan como estimación propia basada en valores de mercado para desarrollo remoto en la región, y se declaran como tal. Las horas asignadas a los perfiles mid y junior se dimensionaron considerando que el uso de un marco de desarrollo maduro para el backend (Java con Spring Boot, ADR-000-02), de una única base de datos PostgreSQL que también aloja el índice semántico (pgvector,
+ADR-M2-01) y de bibliotecas de componentes para la interfaz reduce sustancialmente el trabajo de construcción desde cero.
 
 La reserva de contingencia del 10 % sobre el costo de desarrollo se incorpora para absorber retrabajo, subestimación de horas y corrección tardía de defectos. Su inclusión responde a un criterio conservador: un presupuesto de desarrollo sin margen de imprevistos presenta un riesgo de desvío elevado.
 
-La infraestructura durante el desarrollo se aprovisiona íntegramente sobre las capas gratuitas de los proveedores seleccionados, por lo que no genera erogación en el Año 0. Como referencia del costo alternativo, un VPS de recursos medios de un proveedor local (8 vCore/16~GB) cuesta USD~158,7 mensuales y los planes de entrada arrancan en
-USD~7,71 mensuales [lightnode2026]; la arquitectura elegida evita esa erogación durante la etapa de construcción.
+La infraestructura durante el desarrollo no genera erogación en el
+Año 0: todos los servicios propios corren en un servidor preexistente del desarrollador, administrado con Coolify y publicado mediante un túnel de Cloudflare, y los servicios de terceros se usan en sus capas gratuitas
+(ADR-000-07). Esta decisión reemplazó al diseño inicial, que repartía la infraestructura entre Supabase (base de datos), Vercel (frontend) y un
+VPS alquilado: el plan gratuito de Vercel no admite uso comercial y concentrar todo en un solo servidor simplifica la operación para un único desarrollador, dentro del presupuesto de infraestructura de USD 0 a 100
+mensuales que el proyecto se fijó para el desarrollo. El costo aceptado es un único punto de falla —un corte de luz o de conectividad del servidor deja la plataforma fuera de línea—, mitigado con respaldos diarios cifrados fuera del servidor, y la decisión se revisa si la operación crece. Como referencia del costo alternativo de alquilar un VPS, uno de recursos medios de un proveedor local (8 vCore/16~GB) cuesta
+USD~158,7 mensuales y los planes de entrada arrancan en USD~7,71
+mensuales [lightnode2026].
 
 ### Costos recurrentes post-lanzamiento
 
@@ -753,39 +999,48 @@ Los costos operativos se proyectan mensualmente y se anualizan para el flujo de 
 
 | **Categoría** | **Concepto** | **Año 1** | **Año 2** | **Año 3** | **Año 4** | **Año 5** |
 | --- | --- | --- | --- | --- | --- | --- |
-| Infraestructura | Servidores y base de datos | 45 | 45 | 50 | 55 | 60 |
+| Infraestructura | Servidor, base de datos y respaldos | 45 | 45 | 50 | 55 | 60 |
 | Infraestructura | Transmisión de video (LiveKit) | 60 | 60 | 65 | 70 | 75 |
-| Infraestructura | Procesamiento LLM (base) | 55 | 55 | 60 | 65 | 70 |
 | Administrativo | Honorarios contables | 150 | 150 | 150 | 150 | 150 |
 | Administrativo | Renovación de dominio | 1,25 | 1,25 | 1,25 | 1,25 | 1,25 |
 | Comercial | Adquisición de usuarios | 40 | 50 | 60 | 70 | 80 |
-| **Total mensual** | **351,25** | **361,25** | **386,25** | **411,25** | **436,25** |  |
-| **Total anual** | **4.215** | **4.335** | **4.635** | **4.935** | **5.235** |  |
+| **Total mensual** | **296,25** | **306,25** | **326,25** | **346,25** | **366,25** |  |
+| **Total anual** | **3.555** | **3.675** | **3.915** | **4.155** | **4.395** |  |
 
-Dos decisiones de este cuadro merecen justificación explícita:
+Tres decisiones de este cuadro merecen justificación explícita:
 
-- **Ausencia de equipo de soporte rentado.** El modelo no incorpora personal técnico contratado dentro de los costos fijos durante los cinco años proyectados. Un análisis de sensibilidad sobre esta variable mostró que, con el volumen de sesiones proyectado, sostener un equipo de soporte
-          —aun escalonando su incorporación— vuelve el proyecto inviable en los tres escenarios. El mantenimiento correctivo y evolutivo queda a cargo del equipo fundador. La incorporación de soporte pago se difiere hasta que el volumen efectivo de sesiones lo justifique, lo cual constituye una restricción operativa declarada del modelo y no un supuesto de costo cero.
+- **Sin partida fija de procesamiento de LLM.** Una versión anterior del cuadro incluía una partida de
+          USD~55 a USD~70 mensuales de «procesamiento LLM
+          (base)». El sistema implementado no tiene un consumo base de
+          LLM: el único uso es el resumen automático, que se cobra aparte a costo más un 50 % a quien lo contrata
+          (sección~[§sec:adicional-resumen]); los embeddings del matching se calculan con un modelo propio en el servidor y el OCR del documento de identidad también corre en él, sin API paga. La partida se eliminó: mantenerla imputaba un costo sin contraparte. Su efecto sobre los indicadores se muestra por separado en la sección~[§sec:sensibilidad].
+- **Ausencia de equipo de soporte rentado.** El modelo no incorpora personal técnico contratado dentro de los costos fijos durante los cinco años proyectados. Con el volumen de sesiones proyectado, el escenario base admite como máximo unos
+          USD~469 mensuales constantes de costo adicional antes de que el VAN se anule (sección~[§sec:sensibilidad]): a la tarifa junior de la tabla~[§tab:inversion] (USD~15 por hora) equivale a unas 31 horas mensuales, una dedicación parcial y no un equipo. El mantenimiento correctivo y evolutivo queda a cargo del equipo fundador. La incorporación de soporte pago se difiere hasta que el volumen efectivo de sesiones lo justifique, lo cual constituye una restricción operativa declarada del modelo y no un supuesto de costo cero.
 - **Presupuesto de adquisición de usuarios.** Se incorpora una partida de marketing, modesta pero creciente, dado que la proyección de demanda no se sostiene por sí sola: un modelo que proyecta captación de usuarios sin asignar presupuesto de adquisición incurre en una inconsistencia interna.
 
-### Costos variables por transacción
+### Costos variables por transacción y reparto del cobro
 
-Además de los costos fijos, cada sesión concretada genera costos variables que se deducen del ingreso bruto. La tabla~[§tab:unit-economics] presenta la economía unitaria completa de una sesión promedio.
+El reparto de cada pago lo determina el modelo de cobro que el sistema implementa (modelo A, ADR-M5-02). Cada tutor conecta su cuenta de
+MercadoPago y la orden de pago se crea con esa cuenta como vendedora; la plataforma percibe su comisión mediante el campo ‘marketplace_fee‘.
+En ese esquema, MercadoPago descuenta primero su propia comisión de procesamiento (6,04 % con IVA, para dinero disponible de forma inmediata) de los fondos del vendedor —el tutor— y la comisión de la plataforma se descuenta del saldo restante. La tabla~[§tab:unit-economics] presenta la economía unitaria de una sesión promedio con ese reparto.
 
-**Tabla:** Economía unitaria por sesión (en USD)
+**Tabla:** Economía unitaria y reparto de una sesión promedio (en USD)
 
 | **Concepto** | **Cálculo** | **Valor** |
 | --- | --- | --- |
-| Ticket promedio de la sesión | Precio fijado por el tutor | 7,0000 |
-| Comisión bruta de plataforma | Ticket $$ 27 % | 1,8900 |
-| Costo variable de IA | Costo/hora $$ ($d/60$) | $-0{,}0255$ |
-| Costo de pasarela de pago | Ticket $$ 6,04 % | $-0{,}4228$ |
-| **Margen neto por sesión** |  | **1,4417** |
+| Ticket promedio de la sesión | Precio fijado por el tutor | 7,4200 |
+| Comisión de MercadoPago (a cargo del tutor) | Ticket $$ 6,04 % | $-0{,}4482$ |
+| Comisión de plataforma (‘marketplace_fee‘) | Ticket $$ 27 % | $-2{,}0034$ |
+| **Neto que recibe el tutor** | Ticket $$ 66,96 % | **4,9684** |
+| **Margen de la plataforma por sesión** | Ticket $$ 27 % | **2,0034** |
 
-El costo de la pasarela de pago corresponde a la comisión de procesamiento de MercadoPago con dinero disponible de forma inmediata, incrementada por el IVA que grava dicha comisión. Es un costo real de cobranza y resulta conceptualmente distinto de la comisión de plataforma, que constituye el ingreso del proyecto. Su omisión en una formulación preliminar del modelo sobrestimaba el margen neto en aproximadamente un 40 %.
+El tutor recibe, entonces, $1 - 0{,}27 - 0{,}0604 = 66{,}96 %$ del precio que fija: unos USD~4,97 por sesión promedio o, al precio horario promedio del relevamiento ($13.392,43), unos $8.968 por hora. La pantalla de precio del tutor le muestra ese neto aproximado, con la comisión de la plataforma y la estimada de MercadoPago por separado (regla FR-PAG-019); es aproximado porque la tasa real de MercadoPago depende del plazo de acreditación que tenga configurado cada cuenta. Ese neto es parte de la propuesta de valor para el tutor y, a la vez, el punto sensible del modelo: el descuento total sobre su precio es del 33,04 %, y cuanto menor es su neto mayor es el incentivo a acordar las clases por fuera de la plataforma (sección~[§sec:fundamento-comision]).
 
-Se reconoce además la existencia de fricción financiera adicional
-—retenciones de ingresos brutos, percepciones impositivas y contracargos— cuya magnitud depende de la jurisdicción y del comportamiento efectivo de los usuarios. No se cuantifica en el modelo base y se trata como una sensibilidad adicional sobre el margen, lo cual se declara como una restricción del análisis.
+**Cambio respecto de la versión anterior del modelo..**  La versión anterior de este capítulo restaba la comisión de MercadoPago
+(USD~0,4482 por sesión) como un costo de cobranza de la plataforma y obtenía un margen de USD~1,5552 por sesión. Ese tratamiento correspondía al diseño inicial, en el que todo el dinero ingresaba a la cuenta de la plataforma y se transfería después a cada tutor. El sistema descartó ese esquema porque obligaba a recaudar fondos de terceros, con su carga impositiva y transferencias manuales (ADR-M5-02), y también descartó que la plataforma absorbiera la comisión de MercadoPago dentro del modelo A, porque exigiría conocer la comisión real de cada pago, variable según la cuenta de cada tutor (ADR-M5-05). El registro de decisiones del sistema declara explícitamente la discrepancia y señala que el ajuste corresponde a esta evaluación y no al código (ADR-M5-05). Con el reparto real, el margen de la plataforma es la comisión completa, USD~2,0034 por sesión, un 29 % más que en la versión anterior; la comisión de MercadoPago sigue existiendo, pero recae sobre el tutor.
+
+Se reconoce además la existencia de fricción financiera adicional sobre la comisión que factura la plataforma —retenciones de ingresos brutos, percepciones impositivas y contracargos— cuya magnitud depende de la jurisdicción y del comportamiento efectivo de los usuarios. Tampoco se modelan ciertos costos que el sistema pone a cargo de la plataforma: la diferencia de comisión en los reembolsos parciales que resuelve manualmente el área de soporte financiero ante una disputa (regla
+FR-PAG-010) y los reembolsos que la plataforma debe afrontar con fondos propios cuando el tutor revocó el acceso a su cuenta de MercadoPago con una ventana de reembolso abierta (ADR-M5-02). Ninguno de estos conceptos se cuantifica en el modelo base: se tratan como una sensibilidad adicional sobre el margen (sección~[§sec:sensibilidad]), lo cual se declara como una restricción del análisis.
 
 ## Beneficios del proyecto
 
@@ -795,14 +1050,14 @@ El análisis costo-beneficio contempla tanto los beneficios directamente monetiz
 
 | **Tipo** | **Beneficio** | **Cuantificación** |
 | --- | --- | --- |
-| Tangible | Ingreso por comisión sobre sesiones concretadas | USD~1,4417 de margen neto por sesión; es la única fuente de ingreso del flujo |
-| Tangible | Ahorro en infraestructura por arquitectura serverless | Evita USD~7,71 a USD~158,7 mensuales de un VPS dedicado [lightnode2026] |
+| Tangible | Ingreso por comisión sobre sesiones concretadas | USD~2,0034 de margen por sesión; es la única fuente de ingreso del flujo |
+| Tangible | Infraestructura de desarrollo sin erogación (servidor propio preexistente, ADR-000-07) | Evita alquilar un VPS durante el Año 0, de USD~7,71 a USD~158,7 mensuales [lightnode2026]; no se imputa al flujo |
 | Tangible | Ahorro en desplazamiento para alumnos y tutores | No se imputa al flujo del proyecto; es un excedente que capta el usuario |
-| Intangible | Formalización tributaria del mercado de tutorías | Reduce exposición regulatoria y habilita escalabilidad institucional |
+| Intangible | Formalización de los cobros de los tutores | Cada cobro ingresa a la cuenta de MercadoPago del tutor y se exporta para facturar ante la ARCA; la plataforma no recauda fondos de terceros |
 | Intangible | Trazabilidad y seguridad en la interacción con menores | Barrera de entrada frente a competidores informales |
 | Intangible | Acceso a apoyo escolar en zonas sin oferta presencial | Impacto social; amplía el mercado direccionable |
 
-Únicamente el primer beneficio se incorpora al flujo de fondos. Los ahorros que captura el usuario final y los beneficios intangibles se declaran pero no se monetizan, con el fin de no sobrestimar la rentabilidad del proyecto.
+Únicamente el primer beneficio se incorpora al flujo de fondos. El ahorro de infraestructura, los ahorros que captura el usuario final y los beneficios intangibles se declaran pero no se monetizan, con el fin de no sobrestimar la rentabilidad del proyecto.
 
 ## Estimación de la demanda
 
@@ -836,23 +1091,22 @@ El factor de descuento aplicado a cada año $t$ es $1/(1+0{,}15)^t$. La sensibil
 
 ## Flujo de fondos proyectado
 
-El flujo de fondos cruza los ingresos derivados del volumen de sesiones contra los costos fijos anuales, imputando la inversión inicial íntegramente en el Año 0. Los ingresos netos de cada año se obtienen multiplicando las sesiones anuales por el margen neto unitario de
-USD~1,4417. La tabla~[§tab:flujo-caja] presenta el flujo del escenario base.
+El flujo de fondos cruza los ingresos derivados del volumen de sesiones contra los costos fijos anuales, imputando la inversión inicial íntegramente en el Año 0. Los ingresos netos de cada año se obtienen multiplicando las sesiones anuales por el margen unitario de la plataforma, USD~2,0034. La tabla~[§tab:flujo-caja] presenta el flujo del escenario base.
 
 **Tabla:** Flujo de fondos proyectado — escenario base (en USD)
 
 | **Concepto** | **Año 0** | **Año 1** | **Año 2** | **Año 3** | **Año 4** | **Año 5** |
 | --- | --- | --- | --- | --- | --- | --- |
 | Sesiones anuales | 0 | 7.200 | 9.360 | 7.560 | 10.440 | 9.000 |
-| Ingreso neto | 0 | 10.380 | 13.494 | 10.899 | 15.051 | 12.975 |
-| Costos fijos anuales | 0 | $-4.215$ | $-4.335$ | $-4.635$ | $-4.935$ | $-5.235$ |
+| Ingreso neto | 0 | 14.424 | 18.752 | 15.146 | 20.915 | 18.031 |
+| Costos fijos anuales | 0 | $-3.555$ | $-3.675$ | $-3.915$ | $-4.155$ | $-4.395$ |
 | Inversión inicial | $-25.730$ | 0 | 0 | 0 | 0 | 0 |
-| **Flujo neto** | **$-25.730$** | **6.165** | **9.159** | **6.264** | **10.116** | **7.740** |
-| **Flujo acumulado** | **$-25.730$** | **$-19.565$** | **$-10.405$** | **$-4.141$** | **5.975** | **13.715** |
-| **Flujo descontado** | **$-25.730$** | **5.361** | **6.926** | **4.119** | **5.784** | **3.848** |
-| **Acum. descontado** | **$-25.730$** | **$-20.369$** | **$-13.443$** | **$-9.324$** | **$-3.540$** | **308** |
+| **Flujo neto** | **$-25.730$** | **10.869** | **15.077** | **11.231** | **16.760** | **13.636** |
+| **Flujo acumulado** | **$-25.730$** | **$-14.861$** | **216** | **11.447** | **28.208** | **41.843** |
+| **Flujo descontado** | **$-25.730$** | **9.452** | **11.400** | **7.384** | **9.583** | **6.779** |
+| **Acum. descontado** | **$-25.730$** | **$-16.278$** | **$-4.878$** | **2.506** | **12.089** | **18.869** |
 
-La comparación entre las dos últimas filas ilustra el efecto del descuento: mientras el flujo acumulado nominal cambia de signo durante el Año 4, el acumulado descontado recién lo hace sobre el cierre del Año 5. Esa distancia es, precisamente, el precio del tiempo.
+La comparación entre las dos últimas filas ilustra el efecto del descuento: mientras el flujo acumulado nominal cambia de signo al cierre del Año 2, el acumulado descontado recién lo hace durante el Año 3. Esa distancia es, precisamente, el precio del tiempo.
 
 ## Evaluación financiera
 
@@ -887,55 +1141,133 @@ La tabla~[§tab:indicadores-financieros] resume los cuatro indicadores calculado
 
 | **Escenario** | **VAN (USD)** | **TIR** | **Repago simple** | **Repago descontado** |
 | --- | --- | --- | --- | --- |
-| Pesimista | $-16.444$ | $-14{,}98$ % | No recupera en 5 años | No recupera en 5 años |
-| Base | 308 | 15{,}48 % | 3,41 años | 4,92 años |
-| Optimista | 24.143 | 47{,}01 % | 1,88 años | 2,42 años |
+| Pesimista | $-4.410$ | 8{,}09 % | 4,22 años | No recupera en 5 años |
+| Base | 18.869 | 41{,}57 % | 1,99 años | 2,66 años |
+| Optimista | 51.990 | 78{,}24 % | 1,34 años | 1,56 años |
 
 La lectura de cada indicador es la siguiente:
 
-- **VAN del escenario base:** USD~308. Es positivo, por lo que el proyecto crea valor por encima de la tasa exigida del 15 % y se acepta. Ahora bien, el margen es mínimo sobre una inversión de USD~25.730: el proyecto apenas cubre su costo de capital, sin excedente relevante.
-- **TIR del escenario base:** 15,48 %. Supera a la tasa de corte del 15 % por apenas 0,48 puntos porcentuales.
-          Ese diferencial es el margen de seguridad disponible: bastaría que la tasa exigida subiera medio punto para que el proyecto dejara de convenir.
-- **Período de repago:** 3,41 años en el escenario base. La inversión nominal se recupera durante el Año 4, dentro del horizonte de evaluación.
-- **Repago descontado:** 4,92 años. Medido en dinero de hoy, el recupero se alcanza recién sobre el cierre del Año 5, es decir, en el límite mismo del horizonte proyectado.
+- **VAN del escenario base:** USD~18.869. Es positivo, por lo que el proyecto crea valor por encima de la tasa exigida del 15 % y se acepta: además de recuperar la inversión y rendir el 15 % anual, deja un excedente equivalente a aproximadamente el 73 % de la inversión de USD~25.730, expresado en dinero de hoy.
+- **TIR del escenario base:** 41,57 %. Supera a la tasa de corte del 15 % por 26,57 puntos porcentuales. Ese diferencial es el margen de seguridad: la tasa exigida podría subir hasta casi el 41,6 % antes de que el proyecto dejara de convenir.
+- **Período de repago:** 1,99 años en el escenario base. La inversión nominal se recupera al cierre del Año 2.
+- **Repago descontado:** 2,66 años. Medido en dinero de hoy, el recupero se alcanza durante el Año 3, con más de dos años de holgura dentro del horizonte proyectado.
 
-En el escenario pesimista los cuatro indicadores son concluyentes: con un
-VAN de USD~-16.444 y una TIR negativa, los flujos ni siquiera alcanzan a devolver el capital nominal invertido. El escenario optimista, en cambio, presenta holgura en las cuatro métricas.
+El escenario pesimista, en cambio, no se justifica: con un VAN de
+USD~-4.410 y una TIR de 8,09 %, inferior a la tasa de corte, los flujos devuelven el capital nominal invertido (repago simple de 4,22
+años) pero no alcanzan a remunerarlo al 15 % exigido, y el repago descontado no se produce dentro del horizonte. El escenario optimista presenta holgura en las cuatro métricas.
+
+Estos resultados mejoran sustancialmente los de la versión anterior del modelo (VAN base de USD~3.573, TIR de 20,47 % y
+VAN pesimista de USD~-14.499). La diferencia no proviene de supuestos de demanda más favorables —los escenarios son los mismos— sino de dos correcciones de alineación con el sistema implementado, cuyo efecto se separa en la tabla~[§tab:puente].
+
+**Tabla:** Efecto de cada corrección sobre el escenario base
+
+| **Versión del modelo** | **Margen por sesión** | **VAN base** | **TIR base** | **Comisión de equilibrio** |
+| --- | --- | --- | --- | --- |
+| Anterior: pasarela a cargo de la plataforma y partida fija de LLM | 1,5552 | 3.573 | 20,47 % | $$ 25,3 % |
+| Reparto del modelo A (ADR-M5-02, ADR-M5-05) | 2,0034 | 16.459 | 38,43 % | $$ 19,3 % |
+| **Vigente**: además, sin partida fija de LLM | **2,0034** | **18.869** | **41,57 %** | **$$ 18,2 %** |
+
+El reparto del modelo A explica la mayor parte del cambio: confirma lo que el propio registro de decisiones del sistema anticipaba, que el modelo anterior era una cota inferior conservadora del margen real
+(ADR-M5-05). Con solo esa corrección, el escenario pesimista mejora de
+USD~-14.499 a USD~-6.820; con ambas, a USD~-4.410.
 
 ## Análisis de sensibilidad
 
-Los resultados de la sección anterior muestran que la viabilidad del proyecto no es robusta: depende críticamente de tres variables. El análisis de sensibilidad realizado sobre el modelo permite identificarlas y cuantificar su incidencia.
+Los resultados de la sección anterior dependen de un conjunto acotado de variables. El análisis de sensibilidad realizado sobre el modelo permite identificarlas y cuantificar su incidencia; en cada caso se modifica una variable y se mantiene constante el resto de los supuestos del escenario base.
 
 - **Volumen de sesiones.** Es la variable de mayor impacto.
-          El punto de equilibrio operativo se obtiene dividiendo los costos fijos anuales por el margen neto unitario: en el Año 1
-          se requieren $4.215 / 1{,}4417 2.924$ sesiones anuales para cubrir los costos fijos, y en el Año 5 aproximadamente
-          3.631. Por debajo de ese umbral la operación genera pérdidas antes de considerar la recuperación de la inversión.
-- **Comisión de plataforma.** Manteniendo el resto de los supuestos, una comisión del 26 % arroja un VAN de aproximadamente USD~-1.834 en el escenario base, y una del
-          23 % lo lleva a USD~-7.872. El 27 % adoptado es, en consecuencia, el valor mínimo compatible con la aceptación del proyecto.
-- **Estructura de costos fijos.** La incorporación de un equipo de soporte rentado —evaluada en una formulación previa del modelo con perfiles junior, mid y senior incorporados de forma escalonada— torna negativo el VAN en los tres escenarios. La operación con equipo fundador no es una preferencia sino una condición de viabilidad en esta etapa.
+          El punto de equilibrio operativo se obtiene dividiendo los costos fijos anuales por el margen unitario: en el Año 1 se requieren $3.555 / 2{,}0034 1.774$ sesiones anuales para cubrir los costos fijos, y en el Año 5 aproximadamente 2.194.
+          Por debajo de ese umbral la operación genera pérdidas antes de considerar la recuperación de la inversión. Para que el
+          VAN del escenario base no sea negativo, el volumen puede caer hasta un 32,8 % en todos los años: el promedio anual de sesiones no puede bajar de unas 5.858, frente a las 8.712 del escenario base.
+- **Comisión de plataforma.** El VAN del escenario base se anula con una comisión de aproximadamente 18,2 %. La tabla~[§tab:sens-comision] muestra el efecto de otros valores sobre el escenario base, sobre el pesimista y sobre el neto que recibe el tutor.
+- **Ticket promedio.** Con la comisión en 27 %, el
+          VAN del escenario base se anula con un ticket de aproximadamente USD~4,99 por sesión de duración media, es decir, unos USD~5,87 por hora ($9.010 al tipo de cambio de
+          $1.535): un precio horario que queda entre el primer cuartil
+          ($8.000) y la mediana ($12.000) del relevamiento de Superprof.
+          Como el ticket depende del tipo de cambio, el resultado es sensible a él: el VAN base se anula por encima de unos
+          $2.281 por USD (apéndice~[§apx:precio]).
+- **Paquete mensual con descuento.** El descuento de 0 a
+          30 % que el tutor puede aplicar al paquete (ADR-M5-03) reduce el ticket de las clases vendidas en paquete. Si la mitad de las sesiones se vendiera en paquetes con el descuento máximo, el ticket efectivo bajaría a USD~6,31 y el VAN base a
+          USD~10.228; aun si todas las sesiones se vendieran así, el ticket sería de USD~5,19 y el VAN base seguiría siendo positivo (USD~1.587). El descuento medio que anula el VAN
+          base es de 32,8 %, por encima del máximo que el sistema admite.
+          No se dispone de datos de adopción del paquete, por lo que estas cifras son cotas y no una proyección.
+- **Duración media de las sesiones.** Como el precio de la sesión es proporcional a su duración, el ticket se mueve con el supuesto de 51 minutos (ecuación~[§eq:duracion]): con una duración media de 45 minutos el ticket sería de USD~6,54 y el
+          VAN base de USD~12.037; con 60 minutos, de USD~8,72 y
+          USD~28.961. El VAN base se anula con una duración media de unos 34 minutos, cercana al bloque mínimo de 30.
+- **Estructura de costos fijos.** La incorporación de un equipo de soporte rentado —evaluada en una formulación previa del modelo con perfiles junior, mid y senior incorporados de forma escalonada— tornaba negativo el VAN en los tres escenarios. Con el modelo vigente, el escenario base podría absorber como máximo unos USD~469 mensuales constantes de costo adicional durante los cinco años antes de que el VAN
+          se anule. Ese mismo margen es el que debe cubrir los costos que la plataforma absorbe y el modelo no cuantifica
+          (sección~[§sec:costos-variables]): una dedicación parcial de soporte y esos costos compiten por el mismo excedente.
+- **Partida fija de LLM.** Si se mantuviera la partida de USD~55 a USD~70 mensuales que se eliminó
+          (sección~[§sec:costos-recurrentes]), el VAN base sería de USD~16.459 y la comisión de equilibrio de aproximadamente
+          19,3 % (tabla~[§tab:puente]).
+
+**Tabla:** Sensibilidad a la comisión de plataforma
+
+| **Comisión** | **VAN base (USD)** | **TIR base** | **VAN pesimista (USD)** | **Neto del tutor** |
+| --- | --- | --- | --- | --- |
+| 18,2 % (equilibrio del base) | 0 | 15,00 % | $-15.653$ | 75,8 % |
+| 21 % | 6.068 | 24,14 % | $-12.038$ | 72,96 % |
+| 23 % | 10.335 | 30,18 % | $-9.495$ | 70,96 % |
+| 25 % | 14.602 | 35,97 % | $-6.952$ | 68,96 % |
+| **27 % (vigente)** | **18.869** | **41,57 %** | **$-4.410$** | **66,96 %** |
+| 30 % | 25.269 | 49,67 % | $-596$ | 63,96 % |
+| 33 % | 31.669 | 57,50 % | 3.218 | 60,96 % |
 
 Cabe señalar que la tasa de descuento afecta al VAN y al repago descontado, pero no a la TIR, que depende exclusivamente del perfil de los flujos.
 
+### Por qué se mantiene la comisión del 27 %
+
+Con el modelo corregido, el escenario base tolera una comisión de hasta aproximadamente 18,2 %. El 27 % no se mantiene, entonces, porque sea el mínimo que el proyecto necesita —eso dejó de ser cierto
+(sección~[§sec:calibracion-comision])—, sino por los siguientes fundamentos:
+
+- **Es la decisión vigente del dueño del producto.** El sistema la fija en la regla BR-PAG-01 (ADR-M5-05), con conocimiento de que el tutor recibe el 66,96 % del precio. La misma decisión reemplazó a una comisión del 21 % que había estado vigente durante el desarrollo (ADR-M5-04).
+- **Colchón frente al escenario pesimista.** Aun con el
+          27 %, el escenario pesimista tiene un VAN de
+          USD~-4.410; para que se anule haría falta una comisión de aproximadamente 30,5 %. Bajar la comisión al equilibrio del escenario base dejaría el VAN pesimista en
+          USD~-15.653 (tabla~[§tab:sens-comision]). La holgura del escenario base es la que permite absorber una demanda menor a la proyectada.
+- **Costos que el modelo no cuantifica.** La plataforma absorbe la diferencia de comisión en los reembolsos parciales por disputa (FR-PAG-010), los reembolsos que debe afrontar con fondos propios cuando un tutor revoca el acceso a su cuenta
+          (ADR-M5-02), la fricción impositiva sobre su comisión y el soporte que hoy presta el equipo fundador. Todos compiten por el mismo excedente, de unos USD~469 mensuales en el escenario base.
+- **Dentro de la banda de referencia.** El 27 % se ubica dentro de la banda de comisiones de Preply (18 % a
+          33 %) [preply] y por debajo de su extremo superior, que se descartó por el riesgo de desintermediación.
+
+El costo de esta decisión recae sobre el tutor y se reconoce explícitamente. Al sumarse la comisión de MercadoPago, el descuento total sobre su precio es del 33,04 %: seis puntos más de lo que se había calibrado cuando la plataforma absorbía la pasarela. El propio registro de decisiones del sistema señala que, con ese neto, vuelven a pesar dos riesgos: la **desintermediación** —que tutor y alumno acuerden las clases siguientes por fuera de la plataforma— y la mayor dificultad para
+**sumar tutores** (ADR-M5-05). Por eso la comisión no se considera definitiva: la métrica con la que se revisará después del piloto quedó diferida deliberadamente hasta ese momento (regla BR-PAG-03), y la tabla~[§tab:sens-comision] muestra el margen disponible para hacerlo
+—una reducción a 23 o 25 % mantiene el escenario base con VAN
+positivo— a costa de agravar el pesimista.
+
 ## Política de reembolsos y su costo real
 
-Todo reembolso al estudiante se ejecuta de manera total a través de la
-API de MercadoPago, nunca de forma parcial. Esta política tiene un costo real de cero para Tinku, ya que la pasarela reintegra su propia comisión de procesamiento junto con los fondos, evitando saldos negativos. Además, previene riesgos legales de retención indebida frente a la Ley de Defensa del Consumidor y reduce significativamente la exposición de la plataforma a contracargos.
+La regla general del sistema es que todo reembolso a quien pagó es
+**total**: se ejecuta a través de la API de MercadoPago sin indicar monto, y está prohibido el reembolso parcial automático que traslade la comisión al estudiante (regla FR-PAG-009). La regla previene riesgos legales de retención indebida frente a la Ley de Defensa del
+Consumidor y reduce la exposición de la plataforma a contracargos. Tiene dos excepciones automáticas y una manual:
+
+- el **adicional de resumen** que no llega a generarse se devuelve por su monto exacto, con un reembolso parcial (regla
+          BR-PAG-11);
+- la **clase de un paquete mensual** que no se dicta por falta del tutor se devuelve por el precio de esa clase; lo que
+          MercadoPago no reintegre de su comisión en ese parcial queda a cargo del tutor (regla FR-PAG-022, ADR-M5-03);
+- los **reembolsos parciales por disputa** los resuelve manualmente el área de soporte financiero, y la diferencia de comisión la absorbe la plataforma (regla FR-PAG-010).
+
+El costo de un reembolso total para la plataforma se considera nulo: deja de percibir la comisión de una sesión que no se concretó, y el modelo solo computa ingresos de sesiones concretadas. Esa conclusión descansa en un
+**supuesto** que se declara: que el reembolso total revierte tanto la comisión de MercadoPago como el ‘marketplace_fee‘ de la plataforma. El sistema dejó esa verificación pendiente en el entorno de pruebas de MercadoPago (ADR-M5-02); si no se cumpliera, el reembolso tendría un costo que el modelo no incluye.
 
 ## Conclusión de la evaluación económica
 
-El proyecto se justifica económicamente, pero bajo condiciones estrictas que corresponde explicitar.
+El proyecto se justifica económicamente, bajo condiciones que corresponde explicitar.
 
-En el escenario base, los cuatro indicadores apuntan en la misma dirección: el VAN es positivo (USD~308), la TIR supera la tasa de corte (15,48 % frente a 15 %) y tanto el repago simple como el descontado se producen dentro del horizonte de cinco años. Conforme al criterio de decisión estándar, el proyecto se acepta. El escenario optimista confirma esa conclusión con holgura.
+En el escenario base, los cuatro indicadores apuntan en la misma dirección: el VAN es positivo (USD~18.869), la TIR supera holgadamente la tasa de corte (41,57 % frente a 15 %) y tanto el repago simple (1,99 años) como el descontado (2,66 años) se producen dentro de los primeros tres años del horizonte. Conforme al criterio de decisión estándar, el proyecto se acepta. El escenario optimista confirma esa conclusión con holgura.
 
-Sin embargo, los márgenes del escenario base son estrechos y el escenario pesimista resulta claramente no viable. De ello se desprenden tres condiciones de viabilidad:
+Estos resultados reemplazan a los de la versión anterior del capítulo, que restaba la comisión de MercadoPago como costo de la plataforma. Con el modelo de cobro que el sistema implementa, esa comisión la paga el tutor, que recibe el 66,96 % de su precio, y la plataforma percibe el
+27 % completo. El escenario pesimista sigue sin justificarse
+(VAN de USD~-4.410): recupera el capital nominal invertido, pero no lo remunera a la tasa exigida. De ello se desprenden tres condiciones de viabilidad:
 
-- **Sostener un volumen mínimo de aproximadamente 3.000
-          sesiones anuales**, umbral por debajo del cual la operación no cubre siquiera sus costos fijos.
-- **Mantener la comisión en el 27 %**, dado que valores inferiores tornan negativo el VAN con la estructura de costos proyectada.
-- **Operar sin equipo de soporte rentado** durante el horizonte evaluado, difiriendo esa incorporación hasta que el volumen efectivo la justifique.
+- **Sostener un volumen mínimo de entre 1.774 (Año 1) y
+          2.194 (Año 5) sesiones anuales**, umbral por debajo del cual la operación no cubre siquiera sus costos fijos, y de unas 5.858
+          sesiones anuales en promedio para que el VAN no sea negativo.
+- **No bajar la comisión por debajo de aproximadamente
+          18,2 %**, valor con el que el VAN del escenario base se anula. El 27 % vigente deja un margen de unos nueve puntos porcentuales, que se mantiene deliberadamente como colchón frente al escenario pesimista y a los costos que el modelo no cuantifica, y que se revisará después del piloto considerando su efecto sobre el neto del tutor y el riesgo de desintermediación.
+- **Operar sin equipo de soporte rentado**, o con una dedicación parcial que, sumada a los costos no modelados, no supere unos USD~469 mensuales, durante el horizonte evaluado, difiriendo la incorporación de un equipo hasta que el volumen efectivo la justifique.
 
-Que el escenario pesimista no resulte viable no invalida el proyecto, sino que delimita con precisión el terreno en que debe moverse. Ante una tracción inferior a la proyectada, las alternativas disponibles no pasan por reducir costos —el margen de recorte ya está agotado— sino por revisar el modelo de negocio: segmentar la oferta por niveles de precio, incorporar modalidades de clase grupal que eleven el ingreso por hora de tutor, o explorar acuerdos institucionales que aporten volumen agregado.
-El análisis de riesgos del capítulo siguiente retoma estas contingencias.
+Que el escenario pesimista no resulte viable no invalida el proyecto, sino que delimita con precisión el terreno en que debe moverse. Ante una tracción inferior a la proyectada, las alternativas disponibles no pasan por reducir costos —el margen de recorte es escaso— sino por revisar el modelo de negocio: segmentar la oferta por niveles de precio, incorporar modalidades de clase grupal que eleven el ingreso por hora de tutor, o explorar acuerdos institucionales que aporten volumen agregado. El análisis de riesgos del capítulo siguiente retoma estas contingencias.
 
 # Capítulo 6: Análisis de riesgos
 
@@ -1123,37 +1455,194 @@ Hasta entonces los guiones aquí transcritos constituyen la evidencia del diseñ
 
 # Detalles técnicos e implementación
 
-## Configuración de los modelos
+Este apéndice reúne los detalles técnicos del sistema tal como están en la rama principal del repositorio de código (anexo~[§anx:repositorios]) al 14/10/2026. La fuente de cada valor son estos archivos del repositorio:
 
-**Tabla:** Hiperparámetros del modelo final (ejemplo de estructura)
+- backend/pom.xml, frontend/package.json y matching-service/requirements.txt (dependencias);
+- backend/src/main/resources/application.yml
+          (configuración);
+- backend/src/main/resources/db/migration (migraciones de la base de datos).
 
-| **Parámetro** | **Valor** | **Criterio de selección** |
+## Versiones del stack
+
+**Tabla:** Versiones de las dependencias principales
+
+| **Componente** | **Versión** | **Fuente** |
 | --- | --- | --- |
-| *n_estimators* | *500* | *búsqueda en grilla, validación cruzada 5 pliegues* |
-| *max_depth* | *8* | *...* |
+| Java (JDK) | 21 | pom.xml; el ‘maven-enforcer-plugin‘ exige ‘[21,22)‘ |
+| Spring Boot | 4.1.1 | pom.xml (incluye Spring Security, Data JPA, Flyway, Quartz, Validation, Actuator) |
+| jjwt (JWT) | 0.13.0 | pom.xml |
+| Testcontainers | la que fija Spring Boot 4.1.1 | pom.xml |
+| JaCoCo | 0.8.13 | pom.xml |
+| Tesseract (OCR) | paquete del sistema | backend/Dockerfile: ‘tesseract-ocr‘ y ‘tesseract-ocr-spa‘ sobre ‘eclipse-temurin:21-jre‘ |
+| Next.js | 16.3.6 | package.json |
+| React | ‘\^{‘19.2} | package.json |
+| livekit-client | ‘\^{‘2.22.3} | package.json |
+| TensorFlow.js (y ‘wasm‘) | 4.22.0 | package.json |
+| NSFWJS | 4.3.0 | package.json |
+| Playwright / axe-core | ‘\^{‘1.63.0} / ‘\^{‘4.13.0} | package.json |
+| oxlint | ‘\^{‘1.82.0} | package.json |
+| Python (matching) | 3.12 | matching-service/Dockerfile y CI |
+| FastAPI | ‘>=0.141.1‘ | requirements.txt |
+| sentence-transformers | ‘>=6.1.0‘ | requirements.txt |
+| psycopg / pgvector (Python) | ‘>=3.3.6‘ / ‘>=0.5.0‘ | requirements.txt |
+| PostgreSQL + pgvector | 16 | Imagen pgvector/pgvector:pg16 en deploy/docker-compose.coolify.yml; la misma usan las pruebas |
+| Copia de seguridad | 16 | Imagen eeshugerman/postgres-backup-s3:16 en el mismo archivo |
+
+## Configuración de los modelos y parámetros
+
+Tinku no entrena modelos propios: usa modelos preentrenados y parámetros de configuración que se pueden cambiar sin tocar el código.
+La tabla~[§tab:hiperparametros] lista los valores por defecto.
+
+**Tabla:** Modelos y parámetros por defecto
+
+| **Parámetro** | **Valor** | **Fuente / criterio** |
+| --- | --- | --- |
+| Modelo de embeddings semánticos | ‘paraphrase-‘‘multilingual-‘‘MiniLM-L12-v2‘, 384 dimensiones | matching-service/main.py; multilingüe y ejecutable en CPU (ADR-M2-01) |
+| Puntaje de un tutor | Máxima similitud coseno con cada uno de sus temas | ADR-M2-03 |
+| Peso de la reputación | 0,05 (MATCHING_PESO_REPUTACION) | Solo desempata entre tutores de similitud parecida (ADR-M2-02) |
+| Similitud mínima para mostrar | 0,3 (MATCHING_SCORE_MINIMO) | ADR-M2-02 |
+| Clasificador del kill-switch | NSFWJS (MobileNetV2, 5 clases) | ADR-M3-01 |
+| Umbral de detección | 0,85 en 3 muestras consecutivas; con un menor se suman las clases Porn, Hentai y Sexy, entre adultos solo Porn y Hentai | ADR-M3-07 |
+| Intervalo de clasificación | 250~ms | Tabla de Tiempos del sistema |
+| Transcripción | ‘gpt-4o-mini-transcribe‘ | ADR-M3-04 |
+| Resumen | GPT-4o, temperatura 0,3 | ADR-M6-03 |
+| Comisión de la plataforma | 27 % | Propiedad ‘marketplace-fee-percent‘; BR-PAG-01, ADR-M5-05 |
+| Piso de la tarifa por hora | $6.140 (TARIFA_PISO_HORA_ARS) | BR-PAG-04 |
+| Vigencia del JWT | 60 minutos | application.yml |
 
 ## Datos utilizados
 
-*Identificador, fuente, versión, fecha de descarga, licencia y tamaño de cada conjunto de datos.*
+El único conjunto de datos que el sistema carga es el catálogo cerrado de materias, niveles y temas, sembrado por migración
+(V20__m2_temas_seed.sql) y ampliado luego a partir del catálogo vivo (ADR-M2-04). No se usa ningún conjunto de datos personales para entrenar o ajustar modelos. El relevamiento de precios de Superprof que respalda el capítulo~[§cap:economica] se conserva en apendices/superprof-precios.csv y se analiza en el apéndice~[§apx:precio].
 
 ## Arquitectura de la aplicación
 
-### Stack tecnológico
+### Estructura del repositorio
 
-python == 3.12
-scikit-learn == 1.5.0
-fastapi == 0.111.0
-postgresql == 16
+backend/            Spring Boot: un paquete por modulo (identidad, matching, aula, reservas, pagos, resumen, reputacion, admin, seguridad) y migraciones Flyway frontend/           Next.js: aplicacion web y pruebas Playwright (tests/) matching-service/   Python: FastAPI + sentence-transformers deploy/             docker-compose.coolify.yml (produccion) docs/               Constitucion, Tabla de Tiempos, specs, ADR (docs/adr), manual de operacion
+.github/workflows/  ci-backend, ci-frontend, ci-matching, ci-e2e, deploy
 
 ### Esquema de base de datos
 
-CREATE TABLE usuario (
-    id          SERIAL PRIMARY KEY, correo      TEXT NOT NULL UNIQUE, creado_en   TIMESTAMPTZ NOT NULL DEFAULT now()
+El esquema se construye con 47 migraciones de Flyway (‘V1‘ a
+‘V47‘ al 14/10/2026). Como ninguna migración aplicada se edita, las tablas iniciales se completan con migraciones posteriores. Los listados siguientes son extractos textuales de las migraciones.
+
+CREATE TABLE identidad.usuarios (
+    id                           UUID PRIMARY KEY DEFAULT gen_random_uuid(), dni                          VARCHAR(20) NOT NULL UNIQUE, nombre                       VARCHAR(150) NOT NULL, apellido                     VARCHAR(150) NOT NULL, fecha_nacimiento             DATE NOT NULL, tipo                         VARCHAR(20) NOT NULL
+                                 CHECK (tipo IN ('ADULTO', 'MENOR', 'TUTOR')), capacidad_estudiante         BOOLEAN NOT NULL DEFAULT FALSE, capacidad_adulto_responsable BOOLEAN NOT NULL DEFAULT FALSE, adulto_responsable_id        UUID REFERENCES identidad.usuarios(id), password_hash                VARCHAR(255) NOT NULL, estado_cuenta                VARCHAR(20) NOT NULL DEFAULT 'ACTIVA'
+                                 CHECK (estado_cuenta IN ('ACTIVA', 'SUSPENDIDA')), created_at                   TIMESTAMPTZ NOT NULL DEFAULT now(),
+    CONSTRAINT chk_adulto_tiene_capacidad CHECK (
+        tipo != 'ADULTO' OR (capacidad_estudiante OR capacidad_adulto_responsable)
+    ),
+    CONSTRAINT chk_menor_tiene_responsable CHECK (
+        (tipo = 'MENOR' AND adulto_responsable_id IS NOT NULL) OR
+        (tipo != 'MENOR' AND adulto_responsable_id IS NULL)
+    )
 );
+
+CREATE TABLE reservas.reservas (
+    id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(), pagador_id          UUID NOT NULL REFERENCES identidad.usuarios(id), beneficiario_id     UUID NOT NULL REFERENCES identidad.usuarios(id), tutor_id            UUID NOT NULL REFERENCES identidad.usuarios(id), solicitud_origen_id UUID REFERENCES reservas.solicitudes_sesion(id), horario             TIMESTAMPTZ NOT NULL, precio              NUMERIC(10,2) NOT NULL CHECK (precio >= 0), estado              VARCHAR(20) NOT NULL DEFAULT 'pendiente_pago'
+                        CHECK (estado IN ('pendiente_pago', 'confirmada', 'en_curso',
+                                          'finalizada', 'cancelada', 'no_show_estudiante',
+                                          'no_show_tutor', 'no_show_doble'))
+    – (se omiten motivo_cancelacion, created_at y sus restricciones)
+);
+
+– V30: sin superposicion de rangos horarios, por tutor y por alumno
+ALTER TABLE reservas.reservas ADD CONSTRAINT ex_reservas_rango_tutor
+    EXCLUDE USING gist (tutor_id WITH =, tstzrange(horario, horario_fin, '[)') WITH &&)
+    WHERE (estado <> 'cancelada');
+ALTER TABLE reservas.reservas ADD CONSTRAINT ex_reservas_rango_beneficiario
+    EXCLUDE USING gist (beneficiario_id WITH =, tstzrange(horario, horario_fin, '[)') WITH &&)
+    WHERE (estado <> 'cancelada');
+
+CREATE TABLE pagos.transacciones (
+    id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(), reserva_id          UUID NOT NULL REFERENCES reservas.reservas(id), mp_payment_id       VARCHAR        NOT NULL, monto_bruto         NUMERIC(10, 2) NOT NULL CHECK (monto_bruto >= 0), comision_plataforma NUMERIC(10, 2) NOT NULL
+                        CHECK (comision_plataforma >= 0 AND comision_plataforma <= monto_bruto), estado              VARCHAR(20) NOT NULL DEFAULT 'retenido_escrow'
+                        CHECK (estado IN ('retenido_escrow', 'liberado',
+                                          'reembolsado', 'pausado_denuncia')), liberar_at          TIMESTAMPTZ, intentos_liberacion INT NOT NULL DEFAULT 0 CHECK (intentos_liberacion >= 0), created_at          TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE matching.perfiles_tutor_matching (
+    tutor_id                UUID PRIMARY KEY REFERENCES identidad.usuarios(id), materias_niveles_ids    UUID[] NOT NULL DEFAULT ”, embedding               VECTOR(384), activo_para_matching    BOOLEAN NOT NULL DEFAULT FALSE
+);
+
+El nombre retenido_escrow es anterior al modelo de cobro A
+(ADR-M5-02): con ese modelo el dinero ya está en la cuenta del tutor, y el estado indica que todavía no cerró la ventana lógica –hasta 24 horas después de la clase– en la que Tinku puede ordenar el reembolso.
+
+### Diccionario de datos
+
+La tabla~[§tab:diccionario] resume las tablas principales de cada esquema. El detalle de columnas, restricciones e índices está en la migración que se indica y en las que la completan.
+
+{
+
+| **Tabla** | **Contenido** | **Migración** |
+| --- | --- | --- |
+| identidad.usuarios | Cuenta de cada persona: DNI único, tipo (ADULTO, MENOR, TUTOR), capacidades del adulto, Adulto Responsable del menor, hash de la contraseña y estado de la cuenta | V2 |
+| identidad.credenciales_academicas | Título, analítico o matrícula del tutor, con su estado de revisión e intentos | V2 |
+| identidad.autorizaciones_tutor | Tutores que el Adulto Responsable autorizó para cada menor | V2 |
+| identidad.certificados_antecedentes_penales | CAP del tutor: estado (pendiente, aprobado, rechazado, en revisión legal, vencido) y vencimiento | V6 |
+| identidad.aceptaciones_clausula | Quién aceptó qué versión de los Términos y de la cláusula de grabación, y cuándo | V36 |
+| matching.temas | Catálogo cerrado de temas por materia y nivel, con su embeddings semánticos | V19, V42 |
+| matching.perfiles_tutor_matching | embeddings semánticos del perfil del tutor y si está activo para el matching | V7 |
+| matching.temas_sugeridos | Contador agregado de temas buscados sin tutor, sin datos de quién buscó | V43 |
+| reservas.franjas_disponibilidad | Franjas semanales o puntuales que publica el tutor | V9 |
+| reservas.solicitudes_sesion | Pedido de clase del menor, que no bloquea horario ni genera cobro | V9 |
+| reservas.reservas | Clase reservada: pagador, beneficiario, tutor, horario, duración, precio congelado y estado | V9, V29, V46 |
+| reservas.paquetes | Paquete mensual de cuatro clases con un solo pago | V46 |
+| aula.sesiones_aprendizaje | Sesión de aula (1 a 1 con la reserva): asistencia y estado de la clase | V8 |
+| aula.alertas_seguridad | Alertas del kill-switch y referencia al clip de evidencia | V8 |
+| aula.confirmaciones_killswitch | Pregunta a la contraparte en la rama de adultos y su vencimiento | V12, V47 |
+| pagos.transacciones | Cobro de cada reserva, comisión y estado del escrow | V11 |
+| pagos.tarifas_tutor | Precio por hora del tutor y configuración del paquete | V17, V31, V46 |
+| pagos.cuentas_mp_tutor | Cuenta de MercadoPago conectada por OAuth, con los tokens cifrados | V39 |
+| resumen.resumenes_sesion | Resumen generado y su estado | V15 |
+| reputacion.calificaciones | Calificaciones bidireccionales por sesión | V14 |
+| seguridad.denuncias, seguridad.sanciones | Denuncias con su estado y evidencia opcional; sanciones aplicadas | V13 |
+| admin.admins | Administradores, vinculados a un usuario, con uno de dos roles | V16 |
+| admin.log_auditoria_admin | Registro de cada acción de un administrador | V16 |
+| admin.notificaciones | Avisos a usuarios y cola de salida del correo | V32 |
+
+}
+
+Las tablas de Quartz (QRTZ_*) viven en el esquema
+‘public‘ (ADR-000-01).
 
 ### Variables de entorno
 
-*Nombre, propósito y ejemplo de valor de cada variable. Nunca incluir secretos reales.*
+La tabla~[§tab:variables-entorno] lista las variables que cambian el comportamiento del sistema en producción. Ninguna credencial se guarda en el repositorio: los valores secretos se cargan en Coolify.
+
+**Tabla:** Variables de entorno principales (sin secretos)
+
+| **Variable** | **Propósito (valor por defecto)** |
+| --- | --- |
+| TINKU_MENORES_SESIONES_HABILITADAS | Habilita las clases con menores (‘false‘: piloto sin menores) |
+| TINKU_RESUMEN_ADICIONAL_HABILITADO | Habilita el adicional de resumen (‘false‘) |
+| LLM_PROVEEDOR, LLM_API_KEY | Activa la transcripción y el resumen con OpenAI solo si vale ‘gpt-4o‘; vacío, no sale nada |
+| MP_CLIENT_ID, MP_CLIENT_SECRET, MP_OAUTH_REDIRECT_URI | Aplicación de MercadoPago para el modelo A (OAuth por tutor) |
+| TINKU_CLAVE_CIFRADO | Clave AES-256 que cifra los tokens de MercadoPago; sin ella no se conecta ninguna cuenta |
+| LIVEKIT_URL, LIVEKIT_API_KEY, LIVEKIT_API_SECRET | Proyecto de LiveKit Cloud |
+| RESEND_API_KEY, EMAIL_REMITENTE | Correo transaccional; vacíos, no se envía correo |
+| MATCHING_SERVICE_URL, MATCHING_SERVICE_TOKEN | Dirección del motor de matching y token compartido |
+| RATE_LIMIT_HEADER_IP | Encabezado del que se toma la IP real del cliente detrás de Cloudflare |
+| OCR_COMANDO | Programa de OCR (‘tesseract‘) |
+| TARIFA_PISO_HORA_ARS | Piso de la tarifa por hora (6140) |
+| TINKU_TAG | Versión de las imágenes que despliega Coolify (‘latest‘); permite volver atrás |
+
+## Ejecución de las pruebas
+
+La suite del backend corre solo con JDK~21: el
+‘maven-enforcer-plugin‘ rechaza otra versión y, en ese caso, no se ejecuta ninguna prueba. Las pruebas de integración necesitan Docker, porque Testcontainers levanta una base pgvector/pgvector:pg16.
+
+# backend (desde backend/, con JAVA_HOME apuntando a un JDK 21)
+./mvnw -B test        # reporte de cobertura: target/site/jacoco
+
+# frontend (desde frontend/) bun run lint          # oxlint bun run test:e2e      # Playwright + axe-core
+
+# motor de matching (desde matching-service/) uv run pytest -q
+
+Al 14/10/2026 la suite del backend registraba 661 pruebas, 0 fallas, 0
+errores y 5 omitidas –las pruebas del OCR real, que se saltean si el equipo no tiene Tesseract instalado y que en el CI sí corren–, con una cobertura de líneas del 85,6 % medida con JaCoCo (ADR-000-05).
 
 # Prompts utilizados con herramientas de IA generativa
 
@@ -1183,19 +1672,105 @@ CREATE TABLE usuario (
 > **Respuesta IA:** (texto devuelto por la herramienta, luego editado)
 
 > **Instrucción IA:** Generá el scaffolding de una clase Java de Spring Boot para el endpoint de reserva de una sesión, con validación de permisos por rol.
-> **Respuesta IA:** (código devuelto, revisado y adaptado por el autor; las pruebas se escribieron a mano)
+> **Respuesta IA:** (código devuelto, revisado y adaptado por el autor)
+
+Además de estas consultas puntuales, parte del código y de las pruebas automatizadas del sistema se escribió con asistentes de programación con
+IA –Claude Code y OpenCode– que trabajaron sobre el repositorio bajo las reglas del archivo ‘AGENTS.md‘ (anexo~[§anx:repositorios]): cada bloque de tareas en su propia rama, al menos una prueba de integración por historia de usuario y un ADR escrito para cada decisión técnica que lo requiere. Cada cambio se integró a la rama principal después de la revisión del autor. El historial de git lo deja registrado: al 14/10/2026, 129 de los 482
+commits de la rama principal del repositorio del sistema figuran con autor “Claude”.
+
+# Defensa del precio: relevamiento de tarifas en Superprof
+
+## Relevamiento
+
+Se relevaron los avisos de apoyo escolar publicados en el sitio de
+Superprof Argentina [superprof], registrando el precio por hora que cada profesor declara. El resultado fue:
+
+**Tabla:** Resultado del relevamiento (pesos argentinos por hora)
+
+| **Indicador** | **Valor** |
+| --- | --- |
+| Avisos relevados | 414 |
+| Suma de precios horarios | $5.544.467 |
+| Precio horario promedio | $13.392,43 |
+| Mediana | $12.000 |
+| Primer y tercer cuartil | $8.000 y $18.000 |
+| Mínimo y máximo | $1.990 y $60.000 |
+| Avisos en modalidad online | 387 (93 %) |
+
+El detalle de los 414 avisos se conserva en
+‘apendices/superprof-precios.csv‘. Este promedio funciona como precio de referencia de mercado: es lo que hoy cobra un profesor particular en la plataforma líder, contra lo cual compite la oferta de Tinku.
+
+## Traslado al ticket promedio
+
+El ticket del modelo es un promedio ya ponderado por la mezcla de duraciones (Ec.~[§eq:duracion], $d=51$ minutos, una duración media supuesta), por lo que el precio horario se multiplica por
+$51/60 = 0{,}85$ y se convierte a dólares al tipo de cambio de $1.535
+por USD (Ec.~[§eq:ticket]), el mismo con el que el sistema expresa en pesos el piso de tarifa de USD 4 por hora ($6.140, sección~[§sec:piso-tarifa]). El resultado es un ticket de USD~7,42.
+Con el reparto del cobro que implementa el sistema
+(sección~[§sec:costos-variables]), la plataforma percibe la comisión completa del 27 %, USD~2,0034 por sesión, y el tutor recibe el
+66,96 % del precio, una vez descontada también la comisión de
+MercadoPago.
+
+El precio horario promedio del relevamiento ($13.392,43) supera holgadamente al piso de tarifa ($6.140). Aun así, 78 de los 414 avisos relevados (19 %), entre ellos los 36 publicados a $1.990, declaran un precio por hora inferior al piso: esos profesores no podrían publicar su tarifa actual en Tinku. El precio horario con el que el VAN del escenario base se anula, unos $9.010, queda entre el primer cuartil y la mediana del relevamiento; 129 avisos (31 %) están por debajo de él.
+
+El tipo de cambio es un parámetro del modelo. La tabla~[§tab:sens-precio] muestra cómo cambian el ticket, los puntos de equilibrio y los indicadores del escenario base si se usara otro valor, manteniendo el resto de los supuestos.
+
+**Tabla:** Sensibilidad del escenario base al tipo de cambio
+
+| **ARS/USD** | **Ticket** | **Margen** | **Sesiones eq. Año 1** | **Sesiones eq. Año 5** | **VAN (USD)** | **TIR** |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1.400 | 8,13 | 2,20 | 1.620 | 2.002 | 24.380 | 48,56 % |
+| **1.535** | **7,42** | **2,00** | **1.774** | **2.194** | **18.869** | **41,57 %** |
+| 1.700 | 6,70 | 1,81 | 1.965 | 2.430 | 13.279 | 34,20 % |
+| 1.900 | 5,99 | 1,62 | 2.198 | 2.717 | 7.767 | 26,58 % |
+| 2.100 | 5,42 | 1,46 | 2.429 | 3.003 | 3.342 | 20,13 % |
+
+El margen de la tabla es la comisión completa del 27 % sobre el ticket, porque la comisión de MercadoPago la paga el tutor
+(sección~[§sec:costos-variables]), y los costos fijos son los de la tabla~[§tab:costos-fijos]. Cuanto más pesos cuesta el dólar, menos dólares equivale el precio local y peor resulta el modelo: por encima de aproximadamente $2.281 por USD el VAN del escenario base pasa a ser negativo. En la versión anterior del modelo, que restaba la comisión de
+MercadoPago como costo de la plataforma, ese umbral era de unos $1.670.
+
+## Limitaciones
+
+- Son precios *pedidos* por los profesores, no pagados por los alumnos; los avisos pueden incluir descuentos o primeras clases gratis.
+- 36 avisos figuran a $1.990 por hora, probablemente un precio promocional o de entrada. Excluyéndolos, el promedio sube a
+          $14.478 y la mediana a $14.000. Se adopta el promedio completo por ser el más conservador.
+- El tipo de cambio es un parámetro del modelo, no un dato: la inflación en pesos erosiona el precio en dólares entre relevamientos.
 
 # Anexos
 
 # Repositorios de código fuente
 
-*Repositorios.*
+El trabajo se reparte en dos repositorios de GitHub, ambos activos. Las referencias a un ADR (por ejemplo, ADR-000-07), a una especificación funcional (por ejemplo, Spec M5) o a la Constitución del proyecto que aparecen en los capítulos remiten a los documentos del repositorio del sistema.
 
-## *Nombre del repositorio*
+## Sistema Tinku (‘usal-tinku‘)
 
-usuario/repositorio
+smercadocarbone/usal-tinku
 
-*Descripción: qué contiene, tecnología, cómo ejecutarlo, licencia.*
+Código del sistema y su documentación de diseño. La rama
+‘main‘ es la que está en producción.
+
+- backend/: monolito modular en Java 21 y Spring Boot, con las migraciones de Flyway en backend/src/main/resources/db/migration.
+- frontend/: aplicación web en Next.js, con las pruebas de Playwright en frontend/tests.
+- matching-service/: el motor de matching, escrito en Python con FastAPI y la biblioteca sentence-transformers.
+- deploy/: definición de producción para Coolify
+          (docker-compose.coolify.yml); .github/workflows/: los flujos de CI/CD.
+- docs/Constitucion_Tinku.md: principios que gobiernan las decisiones del proyecto y su historial de enmiendas.
+- docs/Tabla_Tiempos_Tinku.md: Tabla de Tiempos, única fuente de todos los plazos del sistema.
+- docs/specs/: especificaciones funcionales de los nueve módulos (Spec_M1 a Spec_M9).
+- docs/adr/: registros de decisión de arquitectura
+          (ADR-000-01 en adelante), con el contexto, las alternativas descartadas y los riesgos aceptados de cada decisión.
+- docs/operacion/RUNBOOK_produccion.md: manual de operación de producción (despliegue, vuelta atrás, copia y restauración de la base).
+- AGENTS.md: reglas de trabajo para el desarrollo, incluido el uso de asistentes de IA.
+
+Cómo ejecutarlo y probarlo: ver el README.md del repositorio y el apéndice~[§apx:tecnicos].
+
+## Tesis (‘usal-tinku-docs‘)
+
+smercadocarbone/usal-tinku-docs
+
+Fuente en de este documento (capítulos, apéndices, anexos, figuras y bibliografía), armada sobre la plantilla de Proyecto Final de
+Ingeniería Informática de la USAL. Incluye el relevamiento de precios de
+Superprof (apendices/superprof-precios.csv) y un archivo
+‘LICENSE‘ (CC0~1.0).
 
 # Bibliografía
 
@@ -1234,3 +1809,5 @@ usuario/repositorio
 * `[rpgu]` *Ministerio de Capital Humano. Dirección Nacional de Gestión Universitaria. Registro Público de Graduados Universitarios (2026). https://registrograduados.siu.edu.ar/*
 * `[refe]` *Ministerio de Capital Humano. Dirección de Validez Nacional de Títulos y Estudios. Registro Federal de Egreso (ReFE) (2026). https://www.argentina.gob.ar/educacion/direccion-de-validez-nacional-de-titulos-y-estudios/registro-federal-de-egreso-refe*
 * `[mpmarketplace]` *Mercado Pago. Integrar checkout en marketplace (2026). https://www.mercadopago.com.br/developers/en/docs/checkout-pro/how-tos/integrate-marketplace*
+* `[openaitranscribe2026]` *OpenAI. GPT-4o Mini Transcribe -- modelo y tarifa (s. f.). https://developers.openai.com/api/docs/models/gpt-4o-mini-transcribe*
+* `[openaipricing2026]` *OpenAI. Precios de la API de OpenAI (s. f.). https://openai.com/api/pricing/*
