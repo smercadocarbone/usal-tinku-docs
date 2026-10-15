@@ -10,10 +10,55 @@ manuales del proveedor. Para cada repositorio: enlace, tecnología,
 contenido y estado (activo, archivado).
 \end{guia}
 
-\completar{Repositorios.}
+El trabajo se reparte en dos repositorios de GitHub, ambos activos. Las
+referencias a un ADR (por ejemplo, ADR-000-07), a una especificación
+funcional (por ejemplo, Spec M5) o a la Constitución del proyecto que
+aparecen en los capítulos remiten a los documentos del repositorio del
+sistema.
 
-\section{\completar{Nombre del repositorio}}
+\section{Sistema \sistema{} (\texttt{usal-tinku})}
 
-\prettygitlink{usuario/repositorio}
+\prettygitlink{smercadocarbone/usal-tinku}
 
-\completar{Descripción: qué contiene, tecnología, cómo ejecutarlo, licencia.}
+Código del sistema y su documentación de diseño. La rama
+\texttt{main} es la que está en producción.
+
+\begin{itemize}
+    \item \path{backend/}: monolito modular en Java 21 y Spring Boot,
+          con las migraciones de Flyway en
+          \path{backend/src/main/resources/db/migration}.
+    \item \path{frontend/}: aplicación web en Next.js, con las pruebas
+          de Playwright en \path{frontend/tests}.
+    \item \path{matching-service/}: el motor de \gls{matching}, escrito
+          en Python con FastAPI y la biblioteca sentence-transformers.
+    \item \path{deploy/}: definición de producción para Coolify
+          (\path{docker-compose.coolify.yml}); \path{.github/workflows/}:
+          los flujos de \gls{cicd}.
+    \item \path{docs/Constitucion_Tinku.md}: principios que gobiernan
+          las decisiones del proyecto y su historial de enmiendas.
+    \item \path{docs/Tabla_Tiempos_Tinku.md}: Tabla de Tiempos, única
+          fuente de todos los plazos del sistema.
+    \item \path{docs/specs/}: especificaciones funcionales de los nueve
+          módulos (\path{Spec_M1} a \path{Spec_M9}).
+    \item \path{docs/adr/}: registros de decisión de arquitectura
+          (ADR-000-01 en adelante), con el contexto, las alternativas
+          descartadas y los riesgos aceptados de cada decisión.
+    \item \path{docs/operacion/RUNBOOK_produccion.md}: manual de
+          operación de producción (despliegue, vuelta atrás, copia y
+          restauración de la base).
+    \item \path{AGENTS.md}: reglas de trabajo para el desarrollo,
+          incluido el uso de asistentes de \gls{ia}.
+\end{itemize}
+
+Cómo ejecutarlo y probarlo: ver el \path{README.md} del repositorio y
+el apéndice~\ref{apx:tecnicos}.
+
+\section{Tesis (\texttt{usal-tinku-docs})}
+
+\prettygitlink{smercadocarbone/usal-tinku-docs}
+
+Fuente en \LaTeX{} de este documento (capítulos, apéndices, anexos,
+figuras y bibliografía), armada sobre la plantilla de Proyecto Final de
+Ingeniería Informática de la USAL. Incluye el relevamiento de precios de
+Superprof (\path{apendices/superprof-precios.csv}) y un archivo
+\texttt{LICENSE} (CC0~1.0).

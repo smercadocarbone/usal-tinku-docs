@@ -88,9 +88,12 @@ de usuarios potenciales de la plataforma.
 que centraliza en un único ecosistema la búsqueda de tutores, la
 reserva de sesiones, el dictado de clases virtuales y la gestión de
 pagos, incorporando \gls{ia} como eje diferenciador: un motor de
-\gls{matching} semántico que compatibiliza perfiles de alumnos y
-tutores, y herramientas de apoyo post-sesión que extienden el valor de
-cada clase más allá del tiempo de pantalla.
+\gls{matching} semántico que compara lo que el alumno busca con los
+temas que enseña cada tutor, un clasificador de contenido que protege
+la clase en el propio navegador (\emph{kill-switch}) y un resumen
+automático de la sesión, ofrecido como adicional opcional para las
+clases entre adultos, que extiende el valor de cada clase más allá del
+tiempo de pantalla.
 
 \section{Planteo del problema}\label{sec:problema}
 
@@ -185,36 +188,90 @@ oferta presencial de tutores es escasa o inexistente.
           brechas de funcionalidad y oportunidades de diferenciación
           tecnológica.
     \item \textbf{OE2 --- Diseño de arquitectura del sistema:} definir la
-          arquitectura técnica completa de \sistema{}, incluyendo modelo
-          de datos, contratos de \gls{api}, diseño \gls{ux} y flujos
-          operativos principales.
+          arquitectura técnica completa de \sistema{} --un monolito
+          modular organizado en los nueve módulos del alcance
+          (sección~\ref{sec:alcance})--, incluyendo modelo de datos,
+          contratos de \gls{api}, diseño \gls{ux} y flujos operativos
+          principales.
     \item \textbf{OE3 --- Implementación del motor de \gls{matching}
-          \gls{ia}:} desarrollar e integrar el microservicio de
-          recomendación basado en \gls{embeddings} semánticos
-          (sentence-transformers + FAISS) para la sugerencia de tutores
-          compatibles, implementando un factor de ponderación o
-          multiplicador de puntaje (\emph{boost}) para aquellos perfiles
-          que hayan validado voluntariamente su \gls{cap}.
+          \gls{ia}:} desarrollar e integrar el servicio de recomendación
+          basado en \gls{embeddings} semánticos (sentence-transformers,
+          con el índice vectorial en pgvector dentro de la misma base
+          PostgreSQL) que compara la búsqueda del alumno con cada uno de
+          los temas del catálogo elegidos por el tutor, y que a un menor
+          solo le muestra tutores con \gls{cap} aprobado y vigente.
     \item \textbf{OE4 --- Desarrollo del aula virtual (LiveKit):}
           implementar el módulo de videollamada mediante
-          LiveKit/\gls{webrtc} integrado nativamente en la plataforma, con
-          gestión de estado de sala en tiempo real a través de Redis.
+          LiveKit/\gls{webrtc} integrado nativamente en la plataforma,
+          junto con el \emph{kill-switch} de seguridad: un clasificador de
+          contenido que corre en el navegador de cada participante sobre
+          el video que recibe.
     \item \textbf{OE5 --- Implementación del sistema de pagos:} integrar
-          la \gls{api} de MercadoPago Marketplace con modelo de
-          \gls{escrow} y comisión de plataforma.
+          MercadoPago Marketplace de modo que cada tutor cobre en su
+          propia cuenta, conectada por \gls{oauth}, la plataforma perciba
+          su comisión sobre cada cobro y conserve, durante el
+          \gls{escrow} de 24 horas posterior a la sesión, la posibilidad
+          de reembolsar.
     \item \textbf{OE6 --- Desarrollo del módulo de \gls{ia} educativa:}
-          implementar el servicio de transcripción y resumen automático
-          de sesiones, y el asistente conversacional de repaso
-          conceptual.
+          implementar el resumen automático de sesiones como adicional
+          pago y opcional, disponible solo en clases entre adultos que lo
+          contratan y con el consentimiento de ambas partes: se graba
+          únicamente el audio, se transcribe, se anonimiza y el
+          \gls{llm} recibe solo el texto.
     \item \textbf{OE7 --- Implementación del sistema de reputación:}
           desarrollar el sistema de calificaciones bidireccional
           implementando un umbral mínimo de calificaciones para su
           exposición pública como medida anti-manipulación.
     \item \textbf{OE8 --- Validación funcional:} realizar pruebas de
           aceptación de usuario (\gls{uat}) con un grupo piloto de tutores
-          y alumnos reales, midiendo usabilidad, confianza percibida y
-          satisfacción con el \gls{matching} propuesto.
+          y alumnos reales --adultos mientras las clases con menores
+          permanezcan deshabilitadas (sección~\ref{sec:limitaciones})--,
+          midiendo usabilidad, confianza percibida y satisfacción con el
+          \gls{matching} propuesto.
 \end{enumerate}
+
+\paragraph{Objetivos reformulados durante la implementación.} Cuatro
+objetivos específicos se redactaron antes de que se tomaran las
+decisiones que los afectan, y se reformularon para describir el sistema
+construido. Cada cambio queda registrado como \gls{adr} en el repositorio del sistema
+(anexo~\ref{anx:repositorios}) y se resume en la
+sección~\ref{sec:decisiones-implementacion}:
+\begin{itemize}
+    \item \textbf{OE3.} El diseño inicial preveía un índice \gls{faiss} en
+          memoria y un multiplicador de puntaje (\emph{boost}) para los
+          tutores que validaran voluntariamente su \gls{cap}. El índice
+          pasó a pgvector para tener una sola base y ningún índice en
+          memoria que reconstruir (ADR-M2-01), y el puntaje de cada tutor
+          es la máxima similitud con cada uno de sus temas, para que
+          quien enseña muchos temas no quede relegado (ADR-M2-03). El
+          \gls{cap} dejó de ser un incentivo de posicionamiento: un
+          requisito de seguridad del menor no puede depender de que el
+          tutor lo quiera cumplir, por lo que pasó a ser obligatorio y
+          vigente, pero solo para enseñar a menores (ADR-M1-04).
+    \item \textbf{OE4.} El estado de sala en Redis se descartó: el estado
+          de la sala vive en LiveKit y en PostgreSQL, y el límite de tasa
+          de peticiones se lleva en la memoria del único proceso del
+          backend, con lo que se opera una dependencia menos
+          (ADR-000-04).
+    \item \textbf{OE5.} El \gls{escrow} se concebía como una retención de
+          fondos en una cuenta de la plataforma. Para no recaudar fondos
+          de terceros, el dinero ingresa directamente a la cuenta del
+          tutor y el \gls{escrow} es una ventana lógica de 24 horas en la
+          que la plataforma puede reembolsar (ADR-M5-02).
+    \item \textbf{OE6.} El resumen se planteaba como un servicio general
+          que procesaba el audio directamente en el \gls{llm}, y el
+          objetivo incluía un asistente conversacional de repaso
+          conceptual. Grabar audio es la única excepción a la regla de no
+          grabar del proyecto y solo se admite entre adultos, con el
+          adicional contratado y el consentimiento de ambos (ADR-M3-04);
+          el audio no puede anonimizarse antes de salir del servidor, por
+          lo que se transcribe primero y el \gls{llm} recibe solo texto
+          anonimizado (ADR-M6-03). El asistente conversacional salió del
+          alcance: el \gls{mvp} quedó cerrado en nueve módulos y ninguno
+          lo contiene, de modo que incorporarlo exigiría una enmienda
+          explícita de los principios del proyecto (Constitución del
+          proyecto, Art.~VI). Se documenta como trabajo futuro.
+\end{itemize}
 
 \section{Barreras e impedimentos}\label{sec:barreras}
 
@@ -226,16 +283,24 @@ mercado argentino con el nivel de integración que \sistema{} propone:
     \item \textbf{Barreras de verificación y onboarding:} aunque el
           objetivo ideal incluye la validación automatizada de
           antecedentes penales e identidad, los organismos competentes
-          (RENAPER, Registro Nacional de Reincidencia) no ofrecen
+          (\gls{renaper}, Registro Nacional de Reincidencia) no ofrecen
           \gls{api} públicas. Esta restricción impide automatizar dicho
           proceso en el \gls{mvp}. En consecuencia, la plataforma
-          centrará sus esfuerzos obligatorios de seguridad y confianza en
-          la rigurosa verificación de los antecedentes académicos.
-          Adicionalmente, para mitigar la barrera de verificación de
-          antecedentes penales, se habilitará su carga manual de forma
-          optativa, incentivando a los tutores mediante una mejora
-          algorítmica en su visibilidad. El proceso de registro básico
-          exigirá únicamente la demostración empírica de los
+          centra sus esfuerzos de seguridad y confianza en la
+          verificación propia del \gls{dni} --mayoría de edad, nombre y
+          unicidad, leídos por \gls{ocr} en el propio servidor-- y en la
+          rigurosa verificación de los antecedentes académicos. Para
+          mitigar la barrera de verificación de antecedentes penales, el
+          \gls{cap} se carga de forma manual y es obligatorio y vigente
+          (doce meses desde su emisión) para todo tutor que quiera dar
+          clases a menores; lo revisa una persona con el rol de
+          Moderación y Seguridad. Los tutores que solo enseñan a adultos
+          no lo cargan, lo que evita pedir un dato sensible que ninguna
+          regla de esas clases necesita. En el diseño inicial se preveía
+          un \gls{cap} optativo que mejorara la visibilidad del tutor; se
+          descartó porque dejaba la protección del menor librada a la
+          voluntad del tutor (ADR-M1-04). Más allá del \gls{cap}, el
+          registro exige la demostración empírica de los
           conocimientos del tutor mediante la presentación de historial
           académico, títulos de grado o certificaciones pertinentes. Esta
           estrategia no solo sortea el impedimento técnico estatal, sino
@@ -267,7 +332,12 @@ mercado argentino con el nivel de integración que \sistema{} propone:
           transcripción y resumen automático de sesiones implica
           procesamiento de audio post-sesión, lo que requiere gestión
           eficiente de recursos computacionales para mantener costos
-          operativos controlados en la fase de \gls{mvp}.
+          operativos controlados en la fase de \gls{mvp}. Por eso el
+          resumen se ofrece como adicional pago cuyo precio cubre el
+          costo de los modelos según la duración de la clase
+          (ADR-M5-06), y el \emph{kill-switch} clasifica el video en el
+          navegador de cada participante, sin costo de servidor ni envío
+          de imágenes.
 \end{itemize}
 
 \section{Relevancia del proyecto}\label{sec:relevancia}
@@ -291,18 +361,19 @@ online generó USD 637,3 millones en ingresos en 2023 y se proyecta un
 crecimiento anual compuesto del 16,6\,\% hasta 2030, según
 \citet{grandview2024}. A nivel global, el mercado de tutorías privadas
 fue valorado en USD 124,5 mil millones en 2024 y se proyecta alcanzar
-USD 238,5 mil millones hacia 2033, con una CAGR del 7,5\,\%
+USD 238,5 mil millones hacia 2033, con una \gls{cagr} del 7,5\,\%
 \citep{researchmarkets2024}. En Argentina, el segmento opera en su
 mayoría de manera informal, sin registro de transacciones ni
 facturación formal. \sistema{} propone formalizar una porción de ese
 mercado, habilitando el cobro digital, generando historial de actividad
 y contribuyendo a la bancarización de los tutores.
 
-\textbf{Relevancia tecnológica.} El proyecto aplica tecnologías de
-\gls{ia} de vanguardia --\gls{embeddings} semánticos para
-\gls{matching}, modelos de lenguaje de gran escala (\gls{llm}) para
-asistencia educativa-- a un problema local concreto. Esta aplicación
-constituye un aporte original al estado del arte en plataformas
+\textbf{Relevancia tecnológica.} El proyecto aplica a un problema local
+concreto tecnologías de \gls{ia} de vanguardia: \gls{embeddings}
+semánticos para el \gls{matching}, modelos de lenguaje de gran escala
+(\gls{llm}) para el resumen de las sesiones y un clasificador de
+contenido que corre en el navegador para proteger a los participantes.
+Esta aplicación constituye un aporte original al estado del arte en plataformas
 educativas adaptativas en el contexto latinoamericano, diferenciándose
 de soluciones globales por su foco en las particularidades del sistema
 educativo y la geografía argentina.
@@ -322,12 +393,15 @@ principales son:
           de datos, diseño de wireframes y prototipos de alta fidelidad,
           validación con usuarios.
     \item \textbf{Desarrollo iterativo del \gls{mvp}:} implementación por
-          módulos funcionales con ciclos de revisión quincenales.
-    \item \textbf{Integración y pruebas:} pruebas unitarias, de integración
-          y de aceptación de usuario (\gls{uat}).
+          módulos funcionales con una revisión del incremento al cierre de
+          cada sprint.
+    \item \textbf{Integración y pruebas:} pruebas unitarias, de
+          integración, \gls{e2e} y de aceptación de
+          usuario (\gls{uat}).
     \item \textbf{Piloto y validación:} lanzamiento controlado con grupo
-          reducido de tutores y alumnos reales para validar la hipótesis
-          central.
+          reducido de tutores y alumnos reales --adultos, mientras las
+          clases con menores sigan deshabilitadas-- para validar la
+          hipótesis central.
     \item \textbf{Documentación y presentación:} elaboración del informe
           final y presentación del producto funcional.
 \end{itemize}
@@ -338,41 +412,85 @@ El presente proyecto abarca el diseño completo y la implementación
 funcional de la versión \gls{mvp} de \sistema{}. Este desarrollo
 comprende un frontend web estructurado como \gls{pwa}, el cual proveerá
 todas las interfaces de usuario necesarias para alumnos, tutores y
-administradores. El núcleo del sistema estará compuesto por un backend
-\gls{api} REST que expondrá todos los endpoints operativos, respaldado
-por una base de datos relacional en PostgreSQL para el modelo de datos
-principal y Redis para la gestión del estado en tiempo real. El backend
-se implementa en Java mediante el framework Spring Boot. Todo este
-ecosistema será desplegado sobre infraestructura cloud utilizando
-Supabase y Vercel, incluyendo la entrega de la documentación
-correspondiente a su arquitectura.
+administradores. El núcleo del sistema es un backend \gls{api}
+\gls{rest} implementado en Java con el framework Spring Boot y
+organizado como un \emph{monolito modular}: un único proceso dividido
+en nueve módulos de dominio con límites claros: (1)~Identidad y
+Perfiles, (2)~Motor de \gls{matching}, (3)~Aula Virtual, (4)~Reservas y
+Agenda, (5)~Motor de Pagos, (6)~Resumen Automático, (7)~Calificaciones
+y Reputación, (8)~Panel de Administración y (9)~Denuncias y Seguridad.
+Los módulos se comunican con llamadas síncronas dentro del mismo
+proceso y con eventos de dominio en memoria, sin intermediario de
+mensajes, y los plazos de negocio (\gls{escrow}, cancelaciones,
+aprobaciones, \emph{kill-switch}) se programan con Quartz persistido en
+la base, para que sobrevivan a un reinicio. La única pieza propia que
+corre como proceso aparte es el motor de \gls{matching}, escrito en
+Python, que es la excepción explícita a la regla del monolito. El modelo
+de datos reside en una base relacional PostgreSQL que también guarda
+los vectores semánticos mediante la extensión pgvector; no se utiliza
+Redis (ADR-000-04).
 
-A nivel funcional, la plataforma integrará un microservicio de
-\gls{matching} impulsado por \gls{ia} y un módulo de aula virtual
-soportado por la tecnología de LiveKit (\gls{webrtc}). El flujo
-económico estará cubierto mediante la integración con MercadoPago para
-la gestión de pagos bajo la modalidad de \gls{escrow}. Para potenciar la
-experiencia educativa, se implementará un módulo de resumen automático
-de sesiones utilizando un \gls{llm} (como GPT-4o o Gemini 2.0 Flash)
-que procesa audio nativamente. Adicionalmente, el \gls{mvp} contará con
-un sistema de calificaciones y reputación bidireccional, junto con un
-panel de administración básico para la gestión interna de la
-plataforma. La plataforma incluye, además, un portal de denuncias con
-verificación de veracidad, que ante cada denuncia preserva de forma
-automática la evidencia de la sesión correspondiente y deriva la
-resolución final a revisión manual.
+Todo el ecosistema se despliega en un servidor propio administrado con
+Coolify: cuatro contenedores (base de datos, motor de \gls{matching},
+backend y frontend) cuyas imágenes construye GitHub Actions, publicados
+en internet a través de Cloudflare Tunnel y con una copia de seguridad
+diaria y cifrada de la base en Cloudflare R2. En el diseño inicial se
+preveía repartir el sistema entre Supabase (base de datos), Vercel
+(frontend) y Upstash (Redis); se abandonó porque el plan gratuito de
+Vercel no admite uso comercial y porque concentrar todo en un solo
+servidor mantiene el costo dentro del presupuesto de cero a cien
+dólares mensuales con una sola operación que atender (ADR-000-07). El
+proyecto incluye la documentación correspondiente a su arquitectura.
+
+A nivel funcional, la plataforma integra el servicio de \gls{matching}
+semántico y un módulo de aula virtual soportado por la tecnología de
+LiveKit (\gls{webrtc}), con un \emph{kill-switch} de seguridad que
+clasifica el video en el navegador: con un menor presente corta la
+clase sin preguntar; entre adultos oculta el video y pide confirmación
+a la contraparte. El flujo económico se cubre mediante la integración
+con MercadoPago Marketplace: cada tutor conecta su propia cuenta por
+\gls{oauth}, el dinero de la clase ingresa a esa cuenta, la plataforma
+percibe su comisión sobre cada cobro y el \gls{escrow} es una ventana
+de 24 horas posterior a la sesión durante la cual la plataforma puede
+reembolsar. La integración usa un cliente \gls{http} propio, sin el
+\gls{sdk} oficial. Para potenciar la experiencia educativa, el
+\gls{mvp} ofrece un resumen automático de la sesión como adicional
+pago y opcional, solo para clases entre adultos y con el
+consentimiento de ambos: se graba únicamente el audio, que se borra al
+transcribirse (24 horas como máximo); la transcripción se anonimiza y
+el resumen lo genera GPT-4o a partir de ese texto. Si el resumen falla,
+se reembolsa el adicional. Adicionalmente, el \gls{mvp} cuenta con un
+sistema de calificaciones y reputación bidireccional, junto con un
+panel de administración para la gestión interna de la plataforma. El
+módulo de denuncias permite que un usuario adulto denuncie una sesión
+o a otro usuario --el menor lo hace a través de su adulto
+responsable--, con un motivo de una lista cerrada y evidencia
+opcional que aporta quien denuncia. La identidad del denunciante no se
+revela, el denunciado dispone de 48 horas para presentar su descargo y,
+mientras el caso está abierto, se pausa la liberación del pago de esa
+sesión; la resolución final queda a cargo de una persona con el rol de
+Moderación y Seguridad. La plataforma no preserva evidencia de la
+sesión ante una denuncia porque no graba las clases (el audio del
+resumen se borra al transcribirse): el único registro de video es el
+fragmento de 30 segundos que el \emph{kill-switch} sube cuando se
+dispara, ya que guardar más contradiría el principio de minimización
+de datos del proyecto.
 
 Por último, es importante delimitar que este proyecto no incluye ciertas
 características en su fase inicial. Quedan excluidos de este alcance:
 el desarrollo de aplicaciones móviles nativas; la integración
 automatizada mediante \gls{api} con sistemas estatales (requiriéndose en
-su lugar la carga y verificación manual del \gls{cap}); el desarrollo de
-un módulo de accesibilidad completo; la implementación de un modelo de
-suscripción premium; la posibilidad de extender la duración de una
-sesión de videollamada en curso mediante un cobro adicional; y la
-incorporación de tutores menores de edad. Todas estas iniciativas y
-funcionalidades no incluidas quedarán debidamente documentadas como
-propuestas para el trabajo a futuro.
+su lugar la carga y revisión manual del \gls{cap} de los tutores que
+enseñan a menores, cuya verificación de firma digital queda diferida);
+el desarrollo de un módulo de accesibilidad completo; la implementación
+de un modelo de suscripción premium; la posibilidad de extender la
+duración de una sesión de videollamada en curso mediante un cobro
+adicional; la incorporación de tutores menores de edad; y el asistente
+conversacional de repaso conceptual, que el planteo original incluía en
+el objetivo OE6 y que quedó fuera porque el alcance del \gls{mvp} está
+cerrado en los nueve módulos enumerados (Constitución del proyecto,
+Art.~VI). Todas estas iniciativas y funcionalidades no incluidas quedan
+documentadas como propuestas para el trabajo a futuro.
 
 \section{Limitaciones}\label{sec:limitaciones}
 
@@ -381,26 +499,52 @@ propuestas para el trabajo a futuro.
           realizará con un grupo piloto acotado. Los resultados son
           indicativos de la validez funcional del sistema, no
           estadísticamente representativos del mercado total.
+    \item \textbf{Límite de piloto sin menores:} aunque el sistema está
+          diseñado para alumnos desde el nivel primario, el piloto corre
+          sin clases con menores. Una opción de configuración
+          (\texttt{tinku.menores.sesiones-habilitadas}) vale
+          \texttt{false} por defecto y, mientras tanto, el sistema rechaza
+          toda reserva o solicitud de sesión cuyo beneficiario sea un
+          menor. Solo se habilita cuando estén cerrados el
+          \emph{kill-switch} en el cliente y el \gls{cap} de los tutores
+          de menores: al momento de esta redacción el \gls{cap} está
+          implementado y al \emph{kill-switch} en el cliente le resta su
+          prueba de punta a punta contra el servicio de video real, entre
+          otras tareas previas al encendido. Se prefirió demorar las
+          clases con menores antes que habilitarlas sin todas sus
+          protecciones (Constitución del proyecto, Art.~II). En
+          consecuencia, la validación del piloto no cubre el flujo con
+          menores.
     \item \textbf{Límite de verificación de tutores:} en el \gls{mvp}, la
-          verificación combina un chequeo automático de mayoría de edad
-          mediante reconocimiento óptico (\gls{ocr}) sobre la fecha de
-          nacimiento del DNI cargado, y una revisión manual final de la
-          autenticidad del documento y la correspondencia de los
-          certificados académicos declarados. La verificación
-          automatizada de antecedentes vía \gls{api} queda fuera de
-          alcance, reemplazándose por la exigencia y revisión manual
-          obligatoria del \gls{cap} tramitado por el tutor vía Mi
-          Argentina, con actualización anual; no debe confundirse con la
-          verificación de edad, que también se realiza.
+          identidad se verifica con reconocimiento óptico de caracteres
+          (\gls{ocr}) sobre el \gls{dni}, ejecutado con Tesseract en el
+          propio servidor: controla la mayoría de edad, el nombre y que
+          el documento no esté ya registrado. La imagen no sale del
+          servidor ni se conserva, y no hay revisión manual del
+          \gls{dni}, por lo que se acepta el riesgo de una lectura
+          errónea en fotos de baja calidad (ADR-M1-01, ADR-M1-08). La
+          revisión manual existe para la credencial académica y para el
+          \gls{cap}. La verificación automatizada de antecedentes vía
+          \gls{api} queda fuera de alcance; la reemplaza la exigencia y
+          revisión manual del \gls{cap} tramitado por el tutor vía Mi
+          Argentina, obligatorio y vigente (doce meses desde su emisión)
+          solo para dar clases a menores. Se acepta el riesgo residual de
+          un certificado adulterado o mal evaluado, ya que la
+          verificación de su firma digital queda diferida.
     \item \textbf{Límite de conectividad:} el servicio requiere conexión a
           internet estable para el aula virtual. Si bien Starlink y otras
           soluciones satelitales amplían el universo de usuarios
           potenciales, persiste una porción de la población objetivo sin
           acceso adecuado a dispositivos o conectividad.
-    \item \textbf{Límite del asistente \gls{ia}:} el asistente conceptual
-          opera sobre el resumen de la sesión y el conocimiento del modelo
-          subyacente. No tiene acceso a libros de texto o currículos
-          oficiales específicos del sistema educativo argentino.
+    \item \textbf{Límite del resumen automático:} el resumen existe solo
+          para las clases entre adultos que contratan el adicional y en
+          las que ambas partes aceptaron la grabación de audio; las clases
+          con un menor nunca se graban ni se resumen. El resumen opera
+          sobre la transcripción anonimizada de la sesión y el
+          conocimiento del modelo subyacente, sin acceso a libros de texto
+          o currículos oficiales del sistema educativo argentino, y
+          depende de un proveedor externo: sin la configuración del
+          proveedor, el sistema no lo genera.
     \item \textbf{Límite geográfico del piloto:} la validación funcional
           queda circunscripta al territorio argentino. La plataforma está
           diseñada para escalar regionalmente, pero dicha expansión
@@ -412,13 +556,19 @@ propuestas para el trabajo a futuro.
           alumno en otra provincia. Esta limitación no invalida la
           propuesta de valor de la plataforma, pero marca un límite real
           de la personalización ofrecida.
-    \item \textbf{Límite de disponibilidad en fase de desarrollo:}
-          mientras se construye el \gls{mvp}, el backend se aloja en
-          infraestructura propia del desarrollador y no en un proveedor
-          cloud con garantías de disponibilidad, lo que implica un punto
-          único de falla hasta la migración planificada a un \gls{vps}
-          antes del piloto con usuarios reales, prevista para el
-          Sprint~11.
+    \item \textbf{Límite de disponibilidad:} todo el sistema --base de
+          datos, motor de \gls{matching}, backend y frontend-- corre en un
+          único servidor propio, ubicado en un domicilio y sin dirección
+          IP fija, y no en un proveedor con garantías de disponibilidad.
+          Es un punto único de falla aceptado para el piloto: un corte de
+          luz o de internet deja la plataforma fuera de línea mientras
+          dure. Se mitiga con la copia de seguridad diaria y cifrada fuera
+          del servidor y con un procedimiento de restauración documentado
+          en el manual de operación, y la decisión se
+          revisa si crece la operación (ADR-000-07). El plan original
+          preveía migrar a un \gls{vps} alquilado antes del piloto; se
+          optó por concentrar todo en el servidor existente por
+          simplicidad operativa y costo.
 \end{itemize}
 
 \section{Justificación}\label{sec:justificacion}
@@ -464,11 +614,11 @@ se quiere construir.
         \tb{Categoría} & \tb{Detalle} \\
         \midrule
         Recursos humanos & 1 desarrollador full-stack (autor del proyecto). Tutores y alumnos para el grupo piloto de validación. \\
-        Infraestructura cloud & Vercel (plan Hobby) para el frontend, Supabase (plan gratuito) para la base de datos Postgres, Upstash (plan gratuito) para Redis, y backend alojado inicialmente en infraestructura propia mediante Coolify y Cloudflare Tunnel, con migración planificada a un \gls{vps} de entre 10 y 25 USD mensuales antes del piloto. Estimación de costo: USD 0 en fase de desarrollo, hasta \~{}25 USD/mes en la fase de piloto. \\
-        APIs externas & Para el motor de \gls{matching} semántico: sentence-transformers junto con FAISS, con procesamiento local y sin costo de \gls{api} por request. Para la transcripción y el resumen de sesión, y para el asistente conceptual: un \gls{llm} a confirmar entre GPT-4o y Gemini 2.0 Flash para la transcripción y resumen directo de audio, según relación costo-calidad al momento de la implementación (capítulos \ref{cap:marco-tecnologico} y \ref{cap:economica}). MercadoPago: sin costo fijo, comisión por transacción, con SDK oficial en Java. LiveKit Cloud: plan gratuito Build de 5.000 minutos de participante por mes. \\
-        Herramientas de desarrollo & OpenCode + Neovim (editor principal), GitHub (control de versiones), Figma (diseño \gls{ux}), Postman (testing \gls{api}), Jest (testing unitario). Todas en planes gratuitos o estudiantiles. \\
+        Infraestructura & Servidor propio ya existente, administrado con Coolify, con cuatro contenedores (PostgreSQL con pgvector, motor de \gls{matching}, backend y frontend) publicados mediante Cloudflare Tunnel; imágenes construidas por GitHub Actions y publicadas en el registro de contenedores de GitHub; copia de seguridad diaria y cifrada de la base en Cloudflare R2 (capa gratuita, 14 días de retención). Sin costo de alquiler de hosting; el presupuesto de infraestructura se mantiene entre USD 0 y 100 mensuales. El plan original (Vercel, Supabase, Upstash y migración a un \gls{vps} de 10 a 25 USD mensuales antes del piloto) se reemplazó por esta topología (ADR-000-07, sección~\ref{sec:alcance}). \\
+        Servicios externos & Motor de \gls{matching} semántico: sentence-transformers (modelo \texttt{paraphrase-multilingual-MiniLM-L12-v2}, vectores de 384 dimensiones) con el índice en pgvector, con procesamiento local y sin costo de \gls{api} por consulta. Resumen de sesión: transcripción con \texttt{gpt-4o-mini-transcribe} (ADR-M3-04) y resumen con GPT-4o sobre el texto anonimizado (ADR-M6-03), con un costo que cubre el precio del adicional (capítulos \ref{cap:marco-tecnologico} y \ref{cap:economica}). MercadoPago: sin costo fijo, comisión por transacción, integrado con un cliente \gls{http} propio y conexión \gls{oauth} de cada tutor. LiveKit Cloud: plan gratuito Build de 5.000 minutos de participante por mes. Resend (plan gratuito) para el correo transaccional (ADR-000-06). \gls{ocr} con Tesseract local, sin servicio externo. \\
+        Herramientas de desarrollo & OpenCode + Neovim (editor principal), GitHub y GitHub Actions (control de versiones e integración continua), Figma (diseño \gls{ux}), JUnit 5 con Testcontainers (pruebas del backend contra PostgreSQL real), Playwright con axe-core (pruebas \gls{e2e} y de accesibilidad del frontend), pytest (motor de \gls{matching}) y JaCoCo (medición de cobertura). La mención original de Jest se reemplazó porque las pruebas del frontend se resolvieron con Playwright. Todas en planes gratuitos o estudiantiles. \\
         Tiempo estimado & 6 meses de desarrollo. Dedicación aproximada: 15--20 horas semanales. \\
-        Conocimientos previos & Desarrollo web full-stack (React para el frontend, Java con Spring Boot para el backend), bases de datos relacionales, fundamentos de \gls{ml}, integración de \gls{api} REST. \\
+        Conocimientos previos & Desarrollo web full-stack (React para el frontend, Java con Spring Boot para el backend), bases de datos relacionales, fundamentos de \gls{ml}, integración de \gls{api} \gls{rest}. \\
         \bottomrule
     \end{tabularx}
 \end{table}

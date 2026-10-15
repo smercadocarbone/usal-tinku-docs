@@ -1,17 +1,19 @@
-# Template — Proyecto Final de Ingeniería Informática (USAL)
+# Tinku — Proyecto Final de Ingeniería Informática (USAL)
 
-Template LaTeX para el documento de Proyecto Final de la Facultad de
-Ingeniería de la Universidad del Salvador. Sigue la estructura de ocho
-capítulos de la cátedra, uno por entrega, y cada capítulo abre con una caja
-que resume qué evalúa la cátedra.
+Documento de Proyecto Final de **Santiago Mercado Carbone** (Facultad de
+Ingeniería, Universidad del Salvador): *Tinku, una plataforma digital de
+marketplace educativo para conectar estudiantes y tutores académicos a
+escala nacional*. Sigue la estructura de ocho capítulos de la cátedra, uno
+por entrega, sobre el template LaTeX de la cátedra
+([Noorman999/usal-proyecto-final-template](https://github.com/Noorman999/usal-proyecto-final-template)).
 
-## Cómo empezar
-
-1. Crear el repo propio con **Use this template** (o clonar este).
-2. Completar los datos al principio de `main.tex`: título, autor, correo,
-   autoridades, ciclo lectivo y palabras clave.
-3. Escribir cada capítulo en su archivo de `capitulos/`, reemplazando los
-   marcadores entre corchetes.
+El sistema que describe está en
+[smercadocarbone/usal-tinku](https://github.com/smercadocarbone/usal-tinku).
+Ese repositorio es la **fuente de verdad** de las decisiones técnicas (ADR en
+`docs/adr/`, Constitución del proyecto, specs por módulo y Tabla de Tiempos):
+cuando el texto de la tesis y el sistema difieren, se corrige la tesis y el
+cambio se justifica en la sección «Decisiones incorporadas durante la
+implementación» del capítulo 4.
 
 ## Compilar
 
@@ -20,8 +22,8 @@ Compilador: **pdfLaTeX** (LuaLaTeX también funciona, y es obligatorio con
 `latexmk` corre todo solo.
 
 ```bash
-git clone https://github.com/Noorman999/usal-proyecto-final-template.git mi-tesis
-cd mi-tesis
+git clone https://github.com/smercadocarbone/usal-tinku-docs.git
+cd usal-tinku-docs
 latexmk main.tex
 ```
 
@@ -40,9 +42,11 @@ LaTeX Workshop) no tiene límite.
 | `preliminares/` | Resumen, abstract, agradecimientos, declaración de IA, y las entradas del glosario, siglas y símbolos (se imprimen al final del documento) |
 | `capitulos/01` a `08` | Introducción · Metodología y procedimientos · Síntesis de la literatura consultada · Marco tecnológico · Justificación económica · Análisis de riesgos · Presentación de resultados · Implicancias, conclusiones y recomendaciones |
 | `refs.bib` | Bibliografía (estilo APA) |
-| `apendices/` | Encuesta de validación, entrevista, detalles técnicos |
+| `apendices/` | A encuesta de validación · B entrevista · C detalles técnicos · D prompts de IA · E defensa del precio (con `superprof-precios.csv`, el relevamiento de 414 avisos) |
 | `anexos/` | Repositorios de código |
-| `figuras/` | Imágenes del trabajo |
+| `figuras/` | Imágenes del trabajo (el diagrama de arquitectura se edita en `.svg` y se exporta a `.pdf`) |
+| `main.pdf` | PDF compilado. **No se regenera solo**: compilar y commitear después de cambiar los `.tex` |
+| `tesis.md`, `tesis_a_markdown.py` | Versión Markdown de la tesis para trabajar con asistentes de IA. **Se genera** con `python3 tesis_a_markdown.py`; no editar a mano, y regenerarla después de cambiar los `.tex` |
 
 ## Cajas de guía y marcadores
 

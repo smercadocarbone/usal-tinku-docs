@@ -57,5 +57,16 @@ sin cambiar su contenido.}
 \instruccionIA[5]{Generá el scaffolding de una clase Java de Spring Boot
 para el endpoint de reserva de una sesión, con validación de permisos por
 rol.}
-\respuestaIA[5]{(código devuelto, revisado y adaptado por el autor; las
-pruebas se escribieron a mano)}
+\respuestaIA[5]{(código devuelto, revisado y adaptado por el autor)}
+
+Además de estas consultas puntuales, parte del código y de las pruebas
+automatizadas del sistema se escribió con asistentes de programación con
+\gls{ia} --Claude Code y OpenCode-- que trabajaron sobre el repositorio
+bajo las reglas del archivo \texttt{AGENTS.md} (anexo~\ref{anx:repositorios}):
+cada bloque de tareas en su propia rama, al menos una prueba de
+integración por historia de usuario y un ADR escrito para cada decisión
+técnica que lo requiere. Cada cambio se integró a la rama principal
+después de la revisión del autor. El
+historial de git lo deja registrado: al 14/10/2026, 129 de los 482
+commits de la rama principal del repositorio del sistema figuran con
+autor ``Claude''.

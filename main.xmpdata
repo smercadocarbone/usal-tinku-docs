@@ -1,7 +1,7 @@
-% Metadatos del PDF/A (los lee el paquete pdfx). Completar.
-\Title{Título del proyecto}
-\Author{Nombre Apellido}
+% Metadatos del PDF/A (los lee el paquete pdfx). Deben coincidir con la portada de main.tex.
+\Title{Tinku: una plataforma digital de marketplace educativo para conectar estudiantes y tutores académicos a escala nacional}
+\Author{Santiago Mercado Carbone}
 \Language{es-AR}
-\Keywords{palabra 1\sep palabra 2\sep palabra 3}
+\Keywords{marketplace educativo\sep tutorías particulares\sep inteligencia artificial\sep matching semántico\sep educación personalizada}
 \Subject{Proyecto Final de Ingeniería Informática, Universidad del Salvador}
 \Publisher{Universidad del Salvador}

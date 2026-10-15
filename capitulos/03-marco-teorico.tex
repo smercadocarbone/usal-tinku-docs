@@ -158,10 +158,13 @@ Un dato relevante encontrado durante este relevamiento es que
 \citep{profecom} ya ofrece a las familias un panel de seguimiento
 con ``informes personalizados generados por IA con feedback detallado''
 sobre el progreso del alumno --el antecedente comercial más cercano
-encontrado al asistente conceptual post-sesión que \sistema{} plantea en
-su alcance (sección~\ref{sec:alcance}), aunque aplicado sobre un modelo
-de plantilla docente curada y no sobre un \gls{marketplace} abierto de
-tutores independientes.
+encontrado al resumen automático post-sesión de \sistema{}, aunque
+aplicado sobre un modelo de plantilla docente curada y no sobre un
+\gls{marketplace} abierto de tutores independientes. En \sistema{} ese
+resumen quedó como un adicional opcional, solo entre adultos; el
+asistente conceptual de repaso que el diseño inicial también planteaba no
+se implementó (capítulo~\ref{cap:marco-tecnologico},
+sección~\ref{sec:decisiones-implementacion}).
 
 \textbf{Síntesis.} Ninguna de las plataformas relevadas combina
 simultáneamente las cuatro piezas que propone \sistema{}: (1) un motor de
@@ -202,10 +205,13 @@ el modo de baja conectividad.
     3,49\,\%. Dado que una porción significativa de los usuarios de
     \sistema{} serán menores de edad, se propone un mecanismo que analice
     localmente (\emph{edge computing}) los fotogramas mediante un modelo
-    de clasificación y que ante una detección positiva corte
-    automáticamente la transmisión y bloquee la cuenta preventivamente.
+    de clasificación y que ante una detección positiva actúe en una de dos
+    ramas: si en la clase hay un menor, corta automáticamente la
+    transmisión, sin preguntar, y suspende preventivamente al tutor
+    implicado; si ambos participantes son adultos, oculta el video del
+    detectado y le pide confirmación a la contraparte antes de cortar.
     El mecanismo técnico completo, incluida la verificación de edad del
-    tutor mediante \gls{ocr} y DNI, se desarrolla en la
+    tutor mediante \gls{ocr} y \gls{dni}, se desarrolla en la
     sección~\ref{sec:seguridad}.
 
     \textbf{Salvedades a considerar:} ningún clasificador automático
@@ -216,7 +222,11 @@ el modo de baja conectividad.
     (Ley~25.326). El proceso de reactivación manual debe contemplar la
     notificación a un adulto responsable. Al ser un desarrollo complejo
     (visión por computadora en tiempo real), debe evaluarse su viabilidad
-    dentro de los plazos del \gls{mvp}.
+    dentro de los plazos del \gls{mvp}. En la implementación, el
+    clasificador se integró en el navegador con NSFWJS sobre TensorFlow.js;
+    mientras no se cierre su verificación completa, el piloto corre sin
+    clases con menores (capítulo~\ref{cap:marco-tecnologico},
+    sección~\ref{sec:decisiones-implementacion}).
 
     \item[Reputación con fricción reducida (señales implícitas).] La
     literatura \citep{reputation} señala que las calificaciones
@@ -230,7 +240,11 @@ el modo de baja conectividad.
     la plataforma sugiera un rango de precio de referencia ajustado al
     poder adquisitivo de la provincia o localidad del alumno, calculado a
     partir de los datos transaccionales de la plataforma, manteniendo la
-    decisión final en el tutor.
+    decisión final en el tutor. En la implementación se redujo a un precio
+    de referencia por provincia, no vinculante, que el rol de
+    administración mantiene a mano y que el tutor ve como sugerencia al
+    fijar su tarifa; el cálculo a partir de datos transaccionales queda
+    como trabajo futuro.
 
     \item[Modo de baja conectividad.] Se propone una degradación
     progresiva de calidad (video $\rightarrow$ solo audio
@@ -256,7 +270,7 @@ adulto responsable.
 
 El mismo criterio se refuerza con un antecedente impositivo: el modelo
 de retención que aplican plataformas comparables en Argentina, como
-Uber, Rappi, PedidosYa y Airbnb, donde AFIP obliga al agente de pago a
+Uber, Rappi, PedidosYa y Airbnb, donde \gls{afip} obliga al agente de pago a
 retener hasta un 28\,\% de lo abonado a quien no esté inscripto en el
 régimen de Monotributo, funciona como antecedente directo de la
 estrategia de formalización tributaria de los tutores de \sistema{},
@@ -280,8 +294,16 @@ aplicado a la representación semántica de texto mediante
 un texto en un espacio de alta dimensionalidad. Modelos como los
 sentence-transformers generan vectores a partir de oraciones completas,
 superando las búsquedas por palabras clave. Sobre este espacio,
-estructuras como FAISS (Facebook AI Similarity Search) permiten
-búsquedas de similitud eficientes.
+estructuras como \gls{faiss} o extensiones de
+bases de datos relacionales como pgvector permiten búsquedas de similitud
+eficientes. \sistema{} usa pgvector: guarda los vectores en una columna
+de la misma base PostgreSQL que el resto del sistema, de modo que no hay
+un índice en memoria que reconstruir ni copiar al reiniciar el servicio,
+y el volumen del piloto no requiere las optimizaciones de FAISS para
+colecciones muy grandes. Los vectores se calculan con el modelo
+multilingüe \texttt{paraphrase-}\allowbreak\texttt{multilingual-}\allowbreak\texttt{MiniLM-L12-v2}, de 384
+dimensiones (capítulo~\ref{cap:marco-tecnologico},
+sección~\ref{sec:decisiones-implementacion}).
 
 Como se detalló en la sección~\ref{sec:estado-del-arte}, el trabajo de
 la Universidad de Ottawa \citep{isotropy2026} validó esta técnica en la
@@ -339,13 +361,22 @@ capítulo~\ref{cap:introduccion}).
 En el plano de la infraestructura, el proyecto se apoya en \gls{webrtc},
 un estándar abierto para comunicación en tiempo real en navegadores.
 Sobre este, \sistema{} utiliza LiveKit, un framework open-source que
-simplifica la implementación de salas escalables. Para sostener el estado
-en tiempo real de esas salas, se utiliza Redis (base de datos en memoria
-clave-valor), necesaria por sus exigencias de baja latencia.
+simplifica la implementación de salas escalables, en su versión
+administrada (LiveKit Cloud). El estado en tiempo real de cada sala lo
+mantiene el propio LiveKit, y el estado de negocio de la clase se guarda
+en la base de datos del sistema; por eso no se usa un almacén en memoria
+como Redis, que el diseño inicial preveía.
 
-En el circuito de pagos, se apoya en un modelo de \gls{escrow}
-implementado a través de MercadoPago Marketplace, reteniendo los fondos
-hasta la realización de la clase, reduciendo el riesgo de fraude.
+En el circuito de pagos, se apoya en MercadoPago Marketplace con un
+\gls{escrow} entendido como ventana lógica: cada tutor conecta su propia
+cuenta de MercadoPago, el pago del alumno entra a esa cuenta y la
+plataforma cobra su comisión en la misma operación. Durante las 24 horas
+posteriores a la clase la plataforma todavía puede ordenar el reembolso,
+por ejemplo ante una denuncia o una falta del tutor; \sistema{} no
+retiene ni recauda los fondos de terceros. El diseño inicial suponía que
+la plataforma retenía el dinero hasta la clase; se cambió para no
+recaudar fondos ajenos (capítulo~\ref{cap:marco-tecnologico},
+sección~\ref{sec:decisiones-implementacion}).
 
 Sobre la confianza, \sistema{} adopta un sistema de reputación
 bidireccional, respaldado por la literatura \citep{reputation}. Para
