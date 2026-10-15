@@ -10,14 +10,27 @@
 
 ## Declaración sobre el uso de IA
 
-**Ejemplo.**
-Se reconoce el uso de *herramienta y versión* para
-*tareas: revisión de redacción, generación de código de prueba, resumen de papers, etc.*. Todas las salidas fueron revisadas, verificadas y adaptadas por el autor, que asume la responsabilidad total sobre el contenido de este documento.
+En este trabajo se utilizaron herramientas de inteligencia artificial generativa tanto en el desarrollo del sistema como en la elaboración del documento. La tabla~[§tab:herramientas-ia] resume cada herramienta y las tareas que asistió; el registro de las instrucciones más relevantes se presenta en el apéndice~[§apx:prompts].
 
-> **Instrucción IA:** Reescribí este párrafo en registro académico impersonal sin cambiar su contenido.
-> **Respuesta IA:** (texto devuelto por la herramienta, luego editado)
+**Tabla:** Herramientas de IA generativa utilizadas
 
-*Declaración propia: herramientas utilizadas, tareas asistidas y cómo se verificaron los resultados.*
+| **Herramienta** | **Tareas asistidas** |
+| --- | --- |
+| OpenCode (modelo Big Pickle) | Implementación del código del MVP a partir de la Constitución, las especificaciones, los planes técnicos y la lista de tareas redactados previamente, en las primeras etapas del desarrollo |
+| Claude Code (Claude Opus 5, Claude Opus 5.5 y Claude Sonnet 5) | En el sistema: implementación de código y de pruebas automatizadas, redacción de especificaciones y de registros de decisión que el autor validó, y pruebas exploratorias sobre el despliegue. En el documento: revisión de la consistencia, relevamiento de tarifas y fuentes, recálculo del modelo financiero, alineación del texto con el sistema implementado y redacción asistida de capítulos y apéndices |
+| Gemini (Gemini 3.1 Pro) | Consultas esporádicas, como segunda opinión sobre decisiones puntuales |
+| ChatGPT (modelo predeterminado) | Consultas esporádicas, como tercera mirada sobre decisiones puntuales |
+
+La magnitud de la asistencia queda registrada en el historial de los repositorios (anexo~[§anx:repositorios]). Al 14 de octubre de 2026,
+129 de los 482 commits de la rama principal del repositorio del sistema figuran con autor “Claude”, entre ellos 76 de los 196 que modifican pruebas automatizadas; en el repositorio de la tesis, al 15 de octubre de
+2026, 13 de sus 24 commits. Los commits registrados a nombre del autor también pueden contener código generado con asistencia, en particular con OpenCode, que no firma sus cambios.
+
+El uso se rigió por los siguientes criterios:
+
+- **Autoría.** La definición del problema, la arquitectura, el alcance, los criterios de evaluación y las decisiones del proyecto son del autor. Las herramientas propusieron alternativas, código y redacciones; la elección entre ellas fue siempre del autor, y las decisiones de arquitectura se documentaron como registros de decisión validados por él.
+- **Verificación.** Toda tarifa, cotización y dato de mercado se confirmó en la fuente original, que se cita en cada caso. Los indicadores financieros se reprodujeron con un cálculo independiente a partir de los parámetros declarados en el anexo~[§anx:modelo-financiero] antes de incluirlos en el texto. El código se verificó con las pruebas automatizadas, la integración continua, una auditoría técnica y pruebas sobre el despliegue real (capítulo~[§cap:resultados]); cada cambio se integró a la rama principal después de la revisión del autor.
+- **Trazabilidad.** Las instrucciones con las que se desarrolló el sistema están versionadas en el propio repositorio (‘AGENTS.md‘, la Constitución, las especificaciones y la lista de tareas). Los prompts más relevantes de la elaboración del documento se registran en el apéndice~[§apx:prompts].
+- **Comprensión.** El autor leyó, revisó y adaptó todo el contenido asistido, y asume la responsabilidad total sobre el contenido de este documento.
 
 ## Resumen (español)
 
@@ -170,7 +183,7 @@ Python, que es la excepción explícita a la regla del monolito. El modelo de da
 Redis (ADR-000-04).
 
 Todo el ecosistema se despliega en un servidor propio administrado con
-Coolify: cuatro contenedores (base de datos, motor de matching, backend y frontend) cuyas imágenes construye GitHub Actions, publicados en internet a través de Cloudflare Tunnel y con una copia de seguridad diaria y cifrada de la base en Cloudflare R2. En el diseño inicial se preveía repartir el sistema entre Supabase (base de datos), Vercel
+Coolify: cuatro contenedores (base de datos, motor de matching, backend y frontend) cuyas imágenes construye GitHub Actions, publicados en internet a través de Cloudflare Tunnel y con una copia de seguridad diaria y cifrada de la base en Cloudflare R2 (implementada; se activa al cargar las credenciales de R2, paso pendiente antes del piloto). En el diseño inicial se preveía repartir el sistema entre Supabase (base de datos), Vercel
 (frontend) y Upstash (Redis); se abandonó porque el plan gratuito de
 Vercel no admite uso comercial y porque concentrar todo en un solo servidor mantiene el costo dentro del presupuesto de cero a cien dólares mensuales con una sola operación que atender (ADR-000-07). El proyecto incluye la documentación correspondiente a su arquitectura.
 
@@ -620,7 +633,7 @@ Las versiones exactas de cada dependencia se listan en el apéndice~[§apx:tecni
 | Índice semántico | Columna ‘vector(384)‘ de pgvector en la misma base: los embeddings semánticos de perfiles y temas se guardan junto al resto de los datos y no hay un índice en memoria que reconstruir al reiniciar (ADR-M2-01) |
 | Estado en tiempo real | Sin Redis. El estado de la sala vive en LiveKit Cloud y en la base; los límites de pedidos por IP y el bloqueo por intentos de login se cuentan en memoria del backend, válido mientras haya una sola instancia (ADR-000-04) |
 | Migraciones | Flyway, con el esquema validado al arrancar (‘ddl-auto: validate‘): si el código y la base divergen, el backend no inicia. Una migración ya aplicada nunca se edita; las correcciones se agregan como migraciones nuevas |
-| Respaldo | Copia diaria de la base con pg_dump, cifrada y subida a Cloudflare R2, fuera del servidor, con 14 días de retención (ADR-000-07) |
+| Respaldo | Copia diaria de la base con pg_dump, cifrada y subida a Cloudflare R2, fuera del servidor, con 14 días de retención (ADR-000-07). El contenedor está desplegado; la copia sale del servidor recién cuando se cargan las credenciales de R2, paso pendiente antes del piloto |
 
 El diseño inicial ubicaba la base en Supabase (conectada por su
 *pooler*), un índice FAISS en memoria del proceso de matching y Redis en Upstash para el estado del chat y el control de pedidos. Las tres piezas se descartaron: Supabase y Upstash porque todo el sistema se concentró en un único servidor propio (sección~[§sec:infraestructura]);
@@ -644,7 +657,7 @@ El diseño inicial repartía la operación entre Vercel (frontend),
 Supabase (base de datos), Upstash (Redis) y un backend en la computadora del desarrollador que se migraría a un VPS alquilado (por ejemplo,
 Hetzner) antes del piloto. Se reemplazó por un único servidor con
 Coolify por tres motivos registrados en ADR-000-07: el plan gratuito de
-Vercel no admite uso comercial, concentrar todo en un proveedor reduce la operación de un único desarrollador, y el costo queda dentro del techo de 0–100 USD mensuales. La decisión acepta riesgos explícitos: el servidor es un único punto de falla y, al estar en un domicilio, un corte de luz o de internet deja al sistema fuera de línea mientras dure. Se mitigan con la copia diaria fuera del servidor, la restauración ensayada y, como recomendación del mismo ADR, una UPS y un aviso externo de caída; la decisión se revisa si la operación crece.
+Vercel no admite uso comercial, concentrar todo en un proveedor reduce la operación de un único desarrollador, y el costo queda dentro del techo de 0–100 USD mensuales. La decisión acepta riesgos explícitos: el servidor es un único punto de falla y, al estar en un domicilio, un corte de luz o de internet deja al sistema fuera de línea mientras dure. Se mitigan con la copia diaria fuera del servidor (pendiente de activar con las credenciales de R2), una restauración a ensayar antes del piloto y, como recomendación del mismo ADR, una UPS y un aviso externo de caída; la decisión se revisa si la operación crece.
 
 En cuanto a la escalabilidad: para el rango de tráfico esperado durante el MVP y el piloto (capítulo~[§cap:metodologia]), una única instancia de cada componente es suficiente. Escalar el backend a más de una instancia exige antes revisar dos decisiones que hoy suponen una sola
 –Quartz sin *clustering* y los contadores de pedidos en memoria
@@ -987,7 +1000,7 @@ La infraestructura durante el desarrollo no genera erogación en el
 Año 0: todos los servicios propios corren en un servidor preexistente del desarrollador, administrado con Coolify y publicado mediante un túnel de Cloudflare, y los servicios de terceros se usan en sus capas gratuitas
 (ADR-000-07). Esta decisión reemplazó al diseño inicial, que repartía la infraestructura entre Supabase (base de datos), Vercel (frontend) y un
 VPS alquilado: el plan gratuito de Vercel no admite uso comercial y concentrar todo en un solo servidor simplifica la operación para un único desarrollador, dentro del presupuesto de infraestructura de USD 0 a 100
-mensuales que el proyecto se fijó para el desarrollo. El costo aceptado es un único punto de falla —un corte de luz o de conectividad del servidor deja la plataforma fuera de línea—, mitigado con respaldos diarios cifrados fuera del servidor, y la decisión se revisa si la operación crece. Como referencia del costo alternativo de alquilar un VPS, uno de recursos medios de un proveedor local (8 vCore/16~GB) cuesta
+mensuales que el proyecto se fijó para el desarrollo. El costo aceptado es un único punto de falla —un corte de luz o de conectividad del servidor deja la plataforma fuera de línea—, mitigado con respaldos diarios cifrados fuera del servidor (a activar antes del piloto), y la decisión se revisa si la operación crece. Como referencia del costo alternativo de alquilar un VPS, uno de recursos medios de un proveedor local (8 vCore/16~GB) cuesta
 USD~158,7 mensuales y los planes de entrada arrancan en USD~7,71
 mensuales [lightnode2026].
 
@@ -1271,81 +1284,396 @@ Que el escenario pesimista no resulte viable no invalida el proyecto, sino que d
 
 # Capítulo 6: Análisis de riesgos
 
-*Desarrollo del capítulo.*
+## Enfoque y criterios
 
-## *Nombre de la sección*
+Un riesgo es un evento incierto que, de ocurrir, afecta al menos a uno de los objetivos del proyecto; a diferencia de un problema, todavía no ocurrió y admite decisiones anticipadas [pmi2021]. Cada riesgo de este capítulo se formula como “debido a [causa], podría ocurrir
+[evento], lo que provocaría [efecto]”, se clasifica por su naturaleza
+(alcance, técnico, recursos, terceros, datos o cumplimiento), por su origen (interno, bajo control del proyecto, o externo) y por la etapa en que puede materializarse (antes de arrancar, durante el desarrollo, en el pasaje a producción o en la operación).
 
-*Texto.*
+La exposición al riesgo se calcula como el producto de la probabilidad y el impacto, ambos en una escala de 1 a 5
+(tabla~[§tab:exposicion]). Para este proyecto, las escalas se interpretan de la siguiente manera:
 
-**Tabla:** Matriz de exposición: probabilidad $$ impacto (escala de la cátedra)
+- **Probabilidad.** 1: sin indicios de que ocurra; 3: hay evidencia de que la causa existe; 5: la causa ya está presente y nada la contiene.
+- **Impacto.** 1: demora de días sin efecto sobre los objetivos; 3: afecta un objetivo específico o reduce el
+          VAN sin volverlo negativo; 5: impide el lanzamiento, vuelve negativo el VAN del escenario base o expone a menores a un daño.
+
+Las respuestas posibles son cuatro: **evitar** (eliminar la causa, cambiando el alcance o la actividad), **mitigar** (reducir la probabilidad o el impacto), **transferir** (trasladar el riesgo a un tercero mejor preparado) y **aceptar** (convivir con él, documentado y con un plan de contingencia).
+
+Los identificadores de los riesgos son estables: el registro de decisiones del sistema (anexo~[§anx:repositorios]) cita varios de ellos por su número —por ejemplo, ADR-M5-05 remite a R-02 y R-07, y
+ADR-M1-04 a R-10—, por lo que la numeración no sigue el orden de exposición.
+
+## Identificación y evaluación
+
+La tabla~[§tab:matriz-riesgos] presenta los diecisiete riesgos identificados, ordenados por exposición descendente. Las fuentes de identificación fueron la encuesta de validación
+(apéndice~[§apx:encuesta]), el modelo financiero
+(capítulo~[§cap:economica] y anexo~[§anx:modelo-financiero]), los registros de decisión y la documentación de operación del sistema
+(anexo~[§anx:repositorios]), la auditoría técnica y las pruebas en producción del capítulo~[§cap:resultados], y las condiciones de los proveedores relevadas en el capítulo~[§cap:marco-tecnologico]. Su estado corresponde al 15 de octubre de 2026.
+
+**Tabla:** Ubicación de los riesgos en la matriz de exposición (probabilidad $$ impacto)
+
+    {4pt}
 
 |  | **1 Insignif.** | **2 Menor** | **3 Moderado** | **4 Importante** | **5 Severo** |
 | --- | --- | --- | --- | --- | --- |
-| **5 Muy probable** | 5 | 10 | 15 | 20 | 25 |
-| **4 Probable** | 4 | 8 | 12 | 16 | 20 |
-| **3 Posible** | 3 | 6 | 9 | 12 | 15 |
-| **2 Poco probable** | 2 | 4 | 6 | 8 | 10 |
-| **1 Muy improbable** | 1 | 2 | 3 | 4 | 5 |
+| **5 Muy probable** | | | | | |
+| **4 Probable** | | | R-08 | R-02, R-03 | |
+| **3 Posible** | | R-06, R-13 | R-11, R-14, R-15 | R-05, R-07 | R-04, R-17 |
+| **2 Poco probable** | | | | R-12, R-16 | R-01, R-09, R-10 |
+| **1 Muy improbable** | | | | | |
 
-**Ejemplo.** [Ejemplo de la cátedra: así no / así sí]
-**Así no:** “Puede fallar el servidor.” No hay causa, no hay consecuencia y no se puede hacer nada con esa frase.
-
-**Así sí:** “Debido a que el prototipo corre en una única VM sin réplica, podría caerse durante la demo, lo que impediría mostrar el resultado al jurado.”
-
-Cuatro respuestas posibles: **evitar** (sacar la causa: cambiar el alcance), **mitigar** (bajar probabilidad o impacto: repositorio con backup, ambiente de respaldo), **transferir** (que lo asuma un tercero: hosting administrado, librería probada) y **aceptar**
-(convivir con él, documentado, con responsable y contingencia).
-
-| **ID** | **Descripción (causa, evento, efecto)** | **Naturaleza** | **Etapa** | **P** | **I** | **E** | **Respuesta** | **Resp.** | **Contingencia** |
+| **ID** | **Descripción (causa, evento, efecto)** | **Naturaleza (origen)** | **Etapa** | **P** | **I** | **E** | **Respuesta** | **Resp.** | **Contingencia** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| R-01 | Debido a que los requerimientos se relevan con un solo usuario, podría ocurrir que aparezcan funciones nuevas en cada revisión, lo que provocaría que el alcance no cierre antes de la entrega final. | Alcance | Durante | 4 | 5 | 20 | Mitigar: congelar el alcance del MVP en el hito H4 | Autor | Recortar a los RF de prioridad alta |
-| R-02 | Debido a que el prototipo corre en una única VM sin réplica, podría caerse durante la demo, lo que impediría mostrar el resultado al jurado. | Técnico | Pasaje a producción | 3 | 5 | 15 | Mitigar: ambiente de respaldo y video de la demo | Autor | Mostrar el video y el ambiente local |
-| R-03 | Debido a que la fuente de datos es una API de terceros sin acuerdo de servicio, podría ocurrir que cambie o se cierre, lo que provocaría la pérdida del insumo del modelo. | Datos / terceros (externo) | Operación | 3 | 5 | 15 | Mitigar: descarga periódica y respaldo local | Autor | Reentrenar con el último respaldo |
-| R-04 | Debido a que el hosting se cotiza en dólares y el presupuesto en pesos, podría ocurrir que el costo supere lo previsto, lo que provocaría la suspensión del entorno de producción. | Recursos (externo) | Operación | 3 | 3 | 9 | Transferir: hosting administrado con plan gratuito de respaldo | Autor | Migrar a entorno gratuito degradado |
-| R-05 | Debido a que el equipo es de una persona, podría ocurrir una enfermedad o sobrecarga laboral, lo que provocaría atrasos en las entregas. | Recursos | Durante | 2 | 4 | 8 | Aceptar: no hay reemplazo posible; se documenta el avance semanalmente | Autor | Solicitar prórroga a la cátedra con evidencia |
-| R-06 | *...* | *...* | *...* | ** | ** | ** | *...* | *...* | *...* |
+| R-02 | Debido a que solo el 35,2 % de los encuestados prefiere pagar dentro de una plataforma antes que por transferencia, y a que el tutor recibe el 66,96 % de su precio una vez descontadas la comisión de la plataforma y la de MercadoPago (ADR-M5-05), podría ocurrir que alumnos y tutores acuerden las clases siguientes por fuera después del primer contacto, lo que provocaría la pérdida de la comisión, única fuente de ingreso. | Terceros: usuarios (externo) | Operación | 4 | 4 | 16 | Mitigar: la verificación, la reputación, el cobro con ventana de reembolso y el resumen solo existen dentro de la plataforma | Autor | Revisar la comisión después del piloto con la métrica diferida en BR-PAG-03; una comisión de 23 a 25 % mantiene positivo el VAN base (tabla~[§tab:sens-comision]) |
+| R-03 | Debido a que el piloto se extiende del 27 de octubre al 27 de noviembre de 2026, el capítulo~[§cap:conclusiones] vence el 27 de octubre y un único desarrollador debe cerrar además las tareas previas al encendido de las clases con menores y las acciones operativas previas al piloto, podría ocurrir que la hipótesis deba responderse sin datos del piloto, lo que provocaría conclusiones sin evidencia suficiente. | Alcance (interno) | Durante | 4 | 4 | 16 | Mitigar: alcance del MVP congelado; lo no esencial se difiere de forma explícita (video de presentación del tutor, firma digital del CAP, especialidades verificadas) | Autor | Presentar la respuesta a la hipótesis como preliminar y completarla con el piloto para la entrega final |
+| R-04 | Debido a que el escenario pesimista tiene un VAN de USD~-4.410, podría ocurrir que la demanda no alcance unas 5.858 sesiones anuales en promedio, lo que provocaría que la inversión no se recupere a la tasa exigida; por debajo de 1.774 a 2.194 sesiones anuales la operación ni siquiera cubre sus costos fijos (capítulo~[§cap:economica]). | Recursos: mercado (externo) | Operación | 3 | 5 | 15 | Mitigar: presupuesto de adquisición de usuarios y acuerdos institucionales (O-02) | Autor | Si a los 12 meses el volumen anualizado queda por debajo del umbral: revisar el modelo de negocio (segmentación de precios, clases grupales, acuerdos institucionales); si persiste, cierre ordenado |
+| R-17 | Debido a que, después de las pruebas en producción del 14 de octubre de 2026, el plan de remediación registra que el despliegue quedó con configuraciones propias de un entorno de pruebas (datos y cuentas de prueba, pagos simulados y la opción de clases con menores encendida; acciones O-1 a O-6), podría ocurrir que el piloto se abra a usuarios reales en ese estado, lo que provocaría reservas confirmadas sin cobro o la reserva de un menor real sin todas sus protecciones. | Cumplimiento y datos (interno) | Pasaje a producción | 3 | 5 | 15 | Evitar: las acciones O-1 a O-6 del plan de remediación son criterio de entrada al piloto | Autor | Desactivar el modo simulado desde el panel de administración (efecto inmediato, ADR-M5-01), volver a apagar la opción de menores y dar de baja o renovar las cuentas de prueba |
+| R-05 | Debido a que el ticket del modelo (USD~7,42 por sesión de 51 minutos) surge del precio promedio publicado en Superprof ($13.392 por hora), mientras que la mediana de la disposición a pagar relevada en la encuesta es de USD~4,56 por hora, podría ocurrir que el precio efectivo de las clases quede por debajo del ticket de equilibrio (USD~5,87 por hora), lo que provocaría un VAN base negativo. | Recursos: mercado (externo) | Operación | 3 | 4 | 12 | Mitigar: piso de tarifa de USD~4 por hora (BR-PAG-04), que protege los costos fijos pero no la inversión; medir el precio efectivo en el piloto | Autor | Si el ticket observado queda por debajo del de equilibrio: revisar comisión y piso con los datos del piloto (sección~[§sec:sensibilidad]) |
+| R-07 | Debido a que solo 9 tutores respondieron la encuesta, a que el marketplace es bilateral y a que el tutor recibe seis puntos menos de neto que con la comisión anterior (ADR-M5-05) y debe conectar su cuenta de MercadoPago para aparecer en las búsquedas (ADR-M5-02), podría ocurrir que no haya suficientes tutores verificados al iniciar el piloto, lo que provocaría búsquedas sin candidatos e impediría medir la aceptación del matching (I-01). | Recursos: oferta (externo) | Antes de arrancar | 3 | 4 | 12 | Mitigar: reclutar tutores antes del piloto en la comunidad universitaria; recomendación por área cuando no hay coincidencia directa (FR-MATCH-011) | Autor | Acotar el piloto a una o dos materias con oferta suficiente |
+| R-08 | Debido a que el 90,9 % de las respuestas de la encuesta proviene de la provincia de Buenos Aires y de la Ciudad Autónoma de Buenos Aires, podría ocurrir que la demanda y el precio del interior difieran de los relevados, lo que provocaría que la hipótesis de reducción de la brecha geográfica quede sin evidencia. | Datos (interno) | Antes de arrancar | 4 | 3 | 12 | Mitigar: reencuesta dirigida al interior y entrevistas a docentes de zonas rurales | Autor | Declarar la limitación y acotar el alcance de la conclusión |
+| R-01 | Debido a que el kill-switch en el cliente todavía no tiene su prueba de punta a punta formal contra el servicio de video real ni la medición de latencia en dispositivos reales (T-M3-06f y T-M3-06g), y a que la exactitud del clasificador con contenido real no se probó, podría ocurrir que, al habilitar las clases con menores, una detección falle o llegue tarde, lo que provocaría la exposición de un menor a contenido inapropiado. | Técnico (interno) | Pasaje a producción | 2 | 5 | 10 | Evitar: piloto sin menores (opción de configuración de clases con menores apagada); el encendido exige cerrar T-M3-06f a T-M3-06i; sin clasificador listo el menor no entra al aula | Autor | Volver a apagar la opción de menores; ante una detección, corte, suspensión preventiva y revisión de la Alerta en 12 horas |
+| R-09 | Debido a que el desarrollo y la operación dependen de una sola persona, podría ocurrir una enfermedad, una sobrecarga o un abandono, lo que provocaría la detención del desarrollo o de la operación. | Recursos (interno) | Operación | 2 | 5 | 10 | Aceptar: el modelo económico no admite un equipo rentado (capítulo~[§cap:economica]); documentación y pruebas reducen la dependencia | Autor | Prórroga ante la cátedra; en operación, pausa sin pérdida de datos y traspaso a partir del repositorio documentado |
+| R-10 | Debido a que la verificación de antecedentes depende de la revisión manual del CAP, un documento que presenta el propio tutor y cuya firma digital no se verifica en el MVP, podría ocurrir que un certificado adulterado o evaluado con un criterio incorrecto habilite a un tutor con antecedentes para dar clases a menores, lo que provocaría un daño grave al menor y responsabilidad legal para la plataforma. | Cumplimiento (interno) | Operación | 2 | 5 | 10 | Mitigar: CAP vigente (12 meses) obligatorio solo para dar clases a menores, revisado por el rol de Moderación y Seguridad, con criterio de rechazo definido con la asesoría legal presupuestada (ADR-M1-04) | Autor y asesoría legal | Suspensión inmediata, conservación del certificado y del registro de auditoría, y denuncia ante la autoridad |
+| R-11 | Debido a que el modelo de cobro con conexión de la cuenta de MercadoPago de cada tutor se implementó según la documentación del proveedor y quedó pendiente de verificar en su entorno de pruebas (ADR-M5-02), podría ocurrir que en producción el reembolso total no devuelva el ‘marketplace_fee‘, que no pueda reembolsarse a un tutor que revocó el acceso o que el contrato de OAuth difiera del documentado, lo que provocaría reembolsos a cargo de la plataforma o reservas que no pueden cobrarse. | Técnico: terceros (externo) | Pasaje a producción | 3 | 3 | 9 | Mitigar: verificación en el entorno de pruebas con dos usuarios antes del cobro real; notificaciones idempotentes y conciliación periódica contra la API (FR-PAG-017) | Autor | Modo de pago simulado (ADR-M5-01) y cola manual del rol de Soporte Financiero |
+| R-14 | Debido a que todo el sistema corre en un único servidor propio, ubicado en un domicilio y sin IP fija (ADR-000-07), podría ocurrir un corte de luz, de internet o una falla del equipo, lo que provocaría que la plataforma quede fuera de línea mientras dure, incumpliendo la disponibilidad del 95 % mensual. | Técnico (interno) | Operación | 3 | 3 | 9 | Aceptar: alternativa compatible con el presupuesto de USD 0 a 100 mensuales y un único desarrollador; mitigación con copia diaria cifrada fuera del servidor (implementada, se activa al cargar las credenciales de R2 antes del piloto) y restauración documentada | Autor | Restaurar el último respaldo y desplegar las imágenes publicadas en otro servidor con la misma configuración |
+| R-15 | Debido a que las pruebas exploratorias en producción encontraron tres hallazgos de severidad alta que la suite automatizada no detectaba, y a que su remediación, integrada a la rama principal el 15 de octubre de 2026, todavía no se repitió por rol en producción, podría ocurrir que el piloto arranque con defectos de seguridad o de uso no detectados, lo que provocaría pérdida de confianza de los primeros usuarios. | Técnico (interno) | Pasaje a producción | 3 | 3 | 9 | Mitigar: cada hallazgo con una prueba que falla antes del arreglo; repetir las pruebas por rol en producción antes del piloto | Autor | Corregir con prueba de regresión y desplegar la imagen corregida; volver a la imagen anterior si el arreglo falla |
+| R-12 | Debido a la jurisprudencia laboral sobre repartidores de plataformas de delivery, podría ocurrir que un tutor reclame una relación de dependencia con la plataforma, lo que provocaría costos laborales no previstos. | Cumplimiento (externo) | Operación | 2 | 4 | 8 | Transferir: términos y condiciones redactados por asesoría legal; el tutor fija precio y horarios y cobra en su propia cuenta | Asesoría legal | Defensa legal con los registros de autonomía del tutor |
+| R-16 | Debido a que el adicional de resumen graba el audio de la clase en el navegador del tutor y lo envía a un proveedor extranjero para transcribirlo (ADR-M3-04), podría ocurrir que la voz y los datos personales de los participantes se transfieran sin un consentimiento con validez legal suficiente, lo que provocaría un incumplimiento de la Ley 25.326. | Cumplimiento (interno) | Operación | 2 | 4 | 8 | Evitar: el adicional está apagado en producción hasta contar con el texto legal de la cláusula; nunca con menores; solo texto anonimizado llega al LLM; el audio se borra al transcribir (máximo 24 horas) | Autor y asesoría legal | Desactivar el adicional, solicitar la eliminación al proveedor y notificar a los titulares |
+| R-06 | Debido a que los proveedores de LLM discontinúan modelos y modifican precios, podría ocurrir que el modelo de transcripción o el de resumen deje de estar disponible o se encarezca, lo que provocaría la interrupción del resumen o la pérdida de su margen. | Terceros (externo) | Operación | 3 | 2 | 6 | Mitigar: el backend accede al proveedor por un puerto intercambiable (‘ResumenProveedor‘) que, sin configuración, no envía nada; el precio del adicional se calcula sobre el costo (ADR-M5-06) | Autor | Cambiar de proveedor y ajustar el precio del adicional; si no es viable, suspenderlo sin afectar el núcleo |
+| R-13 | Debido a que varios servicios se usan en planes gratuitos o se cotizan en dólares (LiveKit, Cloudflare, Resend, GitHub), podría ocurrir que un proveedor cambie las condiciones de su plan o sus tarifas, lo que provocaría un aumento de los costos fijos y una reducción del VAN. | Terceros (externo) | Operación | 3 | 2 | 6 | Mitigar: despliegue en contenedores portables y presupuesto de video ya incluido en los costos fijos; el escenario base absorbe hasta unos USD~469 mensuales adicionales | Autor | Cambiar de proveedor o de plan con la misma configuración de contenedores |
+
+## Tratamiento de los riesgos principales
+
+Los diez primeros riesgos concentran la exposición del proyecto. Su tratamiento se detalla a continuación; el resto se monitorea.
+
+- **R-02, desintermediación (16).** Es el riesgo con mejor respaldo empírico: el 34,1 % de los encuestados se mostró en desacuerdo con pagar dentro de una plataforma
+          (apéndice~[§apx:encuesta]). La decisión de mantener la comisión del 27 % lo agrava, y el propio registro de decisiones del sistema lo reconoce (ADR-M5-05): con la comisión de MercadoPago a cargo del tutor, el descuento total sobre su precio es del 33,04 %. La respuesta apunta a que el valor diferencial solo exista dentro de Tinku: las funciones más valoradas en la encuesta —profesores verificados (58 %), resumen automático (56,8 %) y pago seguro (48,9 %)— dependen de que la transacción ocurra en la plataforma. La contingencia no es improvisada: el capítulo~[§cap:economica] muestra cuánto puede bajar la comisión sin volver negativo el escenario base.
+- **R-03, alcance y cronograma (16).** Corresponde al
+          “alcance que nunca cierra” señalado por la cátedra. Al 14 de octubre de 2026, la lista de tareas del sistema registraba 221
+          tareas completadas y 9 pendientes. De las pendientes, seis corresponden al kill-switch en el cliente y a su encendido, y tres se difirieron de forma explícita: la verificación automática de la firma digital del CAP (opcional), el video de presentación del tutor (fuera del MVP) y las especialidades verificadas contra registros oficiales
+          (ADR-M1-06). Cualquier funcionalidad nueva pasa al trabajo futuro.
+- **R-04, inviabilidad económica (15).** Surge del escenario pesimista del capítulo~[§cap:economica]. La contingencia define un disparador medible y una decisión: si a los doce meses el volumen anualizado no alcanza el umbral, se revisa el modelo de negocio y, si no hay alternativa viable, se cierra la operación de forma ordenada. Cancelar a tiempo un proyecto inviable es una decisión de gestión, no un fracaso.
+- **R-17, estado operativo de producción (15).** Es un riesgo que no existía en el diseño y surgió de una actividad de verificación: para probar el aula en vivo y los pagos sin dinero real, el despliegue de producción se usó como entorno de pruebas, con datos sembrados y con la opción de menores encendida. El plan de remediación lo registró y definió las acciones para revertirlo, todas operativas y a cargo del autor. Se responde evitándolo: ninguna de esas condiciones puede seguir vigente al abrir el piloto. La lección es que un entorno de pruebas separado
+          (T-M3-06h), descartado al principio por costo de memoria
+          (ADR-000-07), deja de ser opcional cuando hay usuarios reales.
+- **R-05, precio efectivo (12).** El capítulo~[§cap:economica] fija el ticket con precios de oferta publicados, no con la disposición a pagar declarada en la encuesta, que es aproximadamente la mitad. Ninguno de los dos es un precio observado en la plataforma; el piloto es la primera fuente de precios reales y el indicador que dispara la revisión.
+- **R-07, oferta de tutores (12).** Es la manifestación del problema de arranque en frío (arranque en frío) descrito en el capítulo~[§cap:marco-teorico], agravada por las condiciones que el sistema exige al tutor para aparecer en las búsquedas: identidad verificada, foto, cuenta de MercadoPago conectada y, para dar clases a menores, el CAP vigente. Cada una se justifica por sí misma (confianza, cobro directo al tutor, seguridad del menor), pero en conjunto elevan la fricción del lado más escaso del marketplace.
+- **R-08, sesgo geográfico de la encuesta (12).** Afecta directamente a la hipótesis central, que pone el foco en las zonas con escasa oferta de tutores.
+- **R-01, kill-switch y clases con menores (10).** El backend del kill-switch y el clasificador en el navegador están implementados y se probaron en vivo, con salas de video reales, en las dos ramas y ante la falla del clasificador
+          (capítulo~[§cap:resultados]). Faltan la prueba formal de punta a punta, la medición en celulares reales y la decisión de encendido. La respuesta es evitar: sin esas condiciones no se habilitan clases con menores, y el sistema lo impone con una opción de configuración que rechaza toda reserva o solicitud para un menor.
+- **R-09, dependencia de una persona (10).** Se acepta porque no existe una respuesta alternativa compatible con el proyecto: el análisis económico mostró que un equipo rentado torna negativo el VAN en los tres escenarios. Aceptarlo no equivale a ignorarlo: la Constitución del proyecto, las nueve especificaciones, los 37 registros de decisión, el manual de operación y una suite de 661 pruebas automatizadas
+          (capítulo~[§cap:resultados]) permiten que otra persona retome el sistema.
+- **R-10, antecedentes de los tutores de menores (10).**
+          Una primera versión del sistema exigía el CAP a todos los tutores y se retiró (ADR-M1-02) por dos motivos: la fricción en el registro de tutores, el recurso más escaso de la plataforma
+          (R-07), y la necesidad de decidir la descalificación de un tutor por sus antecedentes sin asesoría legal. La verificación se reincorporó acotada (ADR-M1-04, implementada el 25 de septiembre de 2026): el CAP vigente es obligatorio solo para dar clases a menores, y al vencer se cancelan las clases futuras con menores con reembolso total. Así, los tutores que enseñan a adultos se registran sin fricción adicional. El riesgo residual es la validez del documento y su evaluación manual, porque la verificación automática de la firma digital quedó diferida.
+
+Dos riesgos de exposición media merecen una mención por su respuesta. El
+**R-14** (punto único de falla) es el riesgo aceptado de forma explícita en el diseño de la infraestructura: se eligió concentrar todo en un servidor propio porque el plan gratuito de Vercel no admite uso comercial y un solo proveedor simplifica la operación para un único desarrollador (ADR-000-07). Aceptarlo exige que la mitigación exista de verdad: el manual de operación advierte que, mientras no estén cargadas las credenciales del almacenamiento externo, no hay copia de seguridad fuera del servidor, y prevé ensayar la restauración antes del piloto. El
+**R-16** (privacidad del audio) reemplaza a un riesgo que figuraba en una versión anterior de este capítulo —el envío del audio de las clases directamente al LLM—, eliminado por diseño: el audio va solo al servicio de transcripción, el texto se anonimiza antes de llegar al modelo de resumen (ADR-M6-03) y las clases con un menor nunca se graban.
+
+## Riesgos que cancelan proyectos
+
+La tabla~[§tab:riesgos-fatales] vincula los siete riesgos que la cátedra señala como causas de cancelación con los riesgos identificados.
+
+**Tabla:** Riesgos fatales y su tratamiento en Tinku{
+
+    }
+
+| **Riesgo fatal** | **Situación en Tinku** |
+| --- | --- |
+| Alcance que no cierra | R-03: alcance congelado, con las funcionalidades no esenciales diferidas de forma explícita |
+| Pérdida del proveedor de datos | R-06, R-11 y R-13: los servicios de terceros se aíslan detrás de interfaces intercambiables, el resumen no envía nada sin configuración y existe un modo de operación sin cobro real |
+| Equipo que se desarma | R-09: aceptado, con documentación y pruebas que permiten el traspaso |
+| Tecnología inadecuada | R-01: el clasificador en el navegador funciona y se probó en vivo; faltan la medición en dispositivos reales y el encendido |
+| Inviabilidad económica | R-04 y R-05: viable en los escenarios base y optimista, con disparadores de revisión |
+| Barrera ética o legal | R-16 y R-17 se evitan; R-10 se mitiga con el CAP obligatorio para dar clases a menores; R-12 se transfiere |
+| Falta de un responsable | El autor es responsable de todos los riesgos internos; los de cumplimiento se comparten con la asesoría legal |
+
+## Oportunidades
+
+El análisis también identificó dos riesgos positivos, que se gestionan buscando que ocurran:
+
+- **O-01.** Debido a que el 56,8 % de los encuestados valoró el resumen automático, podría ocurrir que una parte relevante de las clases entre adultos lo contrate, lo que provocaría un motivo adicional para pagar dentro de la plataforma y reduciría la exposición a R-02. Su aporte económico directo es pequeño, porque se cobra a costo más un 50 %
+          (sección~[§sec:adicional-resumen]). Respuesta: explotar, habilitando el adicional en cuanto se resuelva R-16 y destacándolo en el flujo de reserva.
+- **O-02.** Debido a que algunas jurisdicciones ya recurren a escuelas mediadas por tecnología con docentes en las ciudades
+          [olea], podría ocurrir que una institución educativa o un municipio contrate paquetes de sesiones, lo que provocaría un volumen agregado superior al del escenario optimista. Respuesta: mejorar la probabilidad, presentando el piloto a instituciones del interior.
+
+## Supuestos y restricciones
+
+Los supuestos son condiciones que se dan por ciertas para que el proyecto sea válido; si alguno falla, se convierte en un riesgo. Las restricciones son condiciones impuestas que limitan el tiempo, el costo o el alcance.
+
+**Tabla:** Supuestos del proyecto y riesgo asociado si fallan
+
+| **ID** | **Supuesto** | **Si falla** |
+| --- | --- | --- |
+| S-01 | Los alumnos activos por año se ubican en la banda del escenario base (200 a 290) | R-04 |
+| S-02 | Cada alumno activo toma tres clases por mes | R-04 |
+| S-03 | El precio horario promedio publicado en Superprof ($13.392) y una duración media de 51 minutos representan el ticket de la plataforma (USD~7,42) | R-05 |
+| S-04 | El tipo de cambio se mantiene por debajo de unos $2.281 por dólar, valor con el que se anula el VAN base (apéndice~[§apx:precio]) | R-05 |
+| S-05 | Las condiciones de los planes gratuitos y las tarifas de los proveedores se mantienen durante el horizonte | R-13 |
+| S-06 | La mayoría de los pagos se realiza dentro de la plataforma | R-02 |
+| S-07 | El reembolso total revierte también el ‘marketplace_fee‘ de la plataforma (sección~[§sec:reembolsos]) | R-11 |
+| S-08 | El servidor propio sostiene la disponibilidad del 95 % mensual que exige la Constitución del proyecto | R-14 |
+
+**Tabla:** Restricciones del proyecto
+
+| **Tipo** | **Restricción** |
+| --- | --- |
+| Tiempo | Presentación final el 28 de noviembre de 2026, con entregas parciales por capítulo |
+| Recursos | Un único desarrollador, con una dedicación de 15 a 20 horas semanales |
+| Costo | Entre 0 y 100 USD mensuales durante el desarrollo y el piloto |
+| Infraestructura | Un único servidor propio, sin entorno de pruebas separado mientras no haya usuarios reales (ADR-000-07) |
+| Técnica | Los organismos estatales (RENAPER, Registro Nacional de Reincidencia, registros de títulos) no ofrecen API públicas |
+| Legal | Ley 25.326 de protección de datos personales; tutores exclusivamente mayores de edad; piloto sin clases con menores |
+| Alcance | PWA sin aplicaciones móviles nativas |
+
+## Seguimiento y continuidad
+
+Los riesgos se revisan en cada Sprint Review (capítulo~[§cap:metodologia]): se actualizan la probabilidad y el impacto, se incorporan los riesgos nuevos y se registran los que se materializaron como problemas. Durante la operación, los disparadores de las contingencias —el volumen anualizado de sesiones para R-04, el ticket efectivo para R-05 y la tasa de recompra dentro de la plataforma para R-02— se miden mensualmente.
+
+En cuanto a la pregunta de quién mantiene el sistema una vez finalizado el proyecto académico: el modelo económico prevé que el equipo fundador asuma el mantenimiento correctivo y evolutivo durante los cinco años evaluados, sin personal rentado (capítulo~[§cap:economica]). Si el proyecto no continuara, el cierre se haría de forma ordenada: aviso a los usuarios, reembolso de las reservas pendientes a través de
+MercadoPago, y exportación o eliminación de los datos personales conforme a la Ley 25.326.
 
 # Capítulo 7: Presentación de resultados
 
-*Desarrollo del capítulo.*
+Este capítulo presenta los resultados del proyecto al 15 de octubre de
+2026: los requerimientos del sistema, su construcción, las pruebas técnicas —automatizadas, de auditoría y en producción—, la validación con usuarios y la evaluación económica. Se informan tanto los resultados favorables como los desfavorables. Las pruebas de aceptación con usuarios reales corresponden al piloto del Sprint~11 (capítulo~[§cap:metodologia]); sus resultados se incorporarán al finalizarlo, y las secciones afectadas lo indican.
 
-## *Nombre de la sección*
+## Requerimientos
 
-*Texto.*
+### Requerimientos funcionales
 
-**Tabla:** Requerimientos funcionales (ejemplo de estructura)
+Los requerimientos funcionales se especificaron por módulo, antes de implementarse, en las especificaciones del repositorio del sistema
+(anexo~[§anx:repositorios]). Cada uno tiene un identificador, una descripción y criterios de aceptación expresados como escenarios verificables (“dado , cuando , entonces ”); las especificaciones se enmiendan con fecha cuando una decisión posterior las modifica. La tabla~[§tab:rf] resume los requerimientos registrados por módulo en la rama principal al 14 de octubre de 2026 y su estado de implementación.
 
-| **ID** | **Nombre** | **Descripción** | **Prioridad** | **Criterio de aceptación** |
-| --- | --- | --- | --- | --- |
-| RF-01 | Autenticación | El sistema permite registrarse e iniciar sesión con credenciales propias | Alta | Un usuario nuevo completa el registro y accede en menos de 2 minutos |
-| RF-02 | *...* | *...* | *...* | *...* |
+**Tabla:** Requerimientos funcionales por módulo y estado de implementación
 
-**Tabla:** Requerimientos no funcionales (ejemplo de estructura)
+| **Módulo** | **Prefijo** | **RF** | **Estado** |
+| --- | --- | --- | --- |
+| M1 Identidad y perfiles | FR-ID | 30 | Implementado, incluido el CAP para tutores de menores (ADR-M1-04). Diferidos: video de presentación del tutor (FR-ID-034 a 036, fuera del MVP) y especialidades verificadas contra registros oficiales (ADR-M1-06) |
+| M2 Motor de matching | FR-MATCH | 14 | Implementado |
+| M3 Aula virtual | FR-AULA | 13 | Implementado, con el kill-switch en el cliente; faltan su prueba formal de punta a punta, la medición en dispositivos reales y el encendido de las clases con menores (T-M3-06) |
+| M4 Reservas y agenda | FR-RES | 33 | Implementado; un requerimiento retirado (FR-RES-028, ADR-M4-01) |
+| M5 Motor de pagos | FR-PAG | 23 | Implementado, con conexión de la cuenta de MercadoPago de cada tutor (ADR-M5-02), pendiente de verificar en el entorno de pruebas del proveedor, y modo de operación sin cobro real (ADR-M5-01) |
+| M6 Resumen automático | FR-SUM | 8 | Implementado (transcripción y GPT-4o sobre texto anonimizado); apagado en producción hasta contar con el texto legal de la cláusula de grabación |
+| M7 Reputación | FR-REP | 12 | Implementado |
+| M8 Administración | FR-ADM | 11 | Implementado |
+| M9 Denuncias y seguridad | FR-SEC | 16 | Implementado |
+| **Total** | **160** |  |  |
 
-| **ID** | **Atributo** | **Descripción** | **Prioridad** | **Umbral medible** |
-| --- | --- | --- | --- | --- |
-| RNF-01 | Rendimiento | Tiempo de respuesta de las consultas principales | Alta | Latencia p95 menor a 5 s (indicador I-02) |
-| RNF-02 | Calidad del modelo | Capacidad predictiva sobre datos no vistos | Alta | $F_1 0{,}70$ (indicador I-01) |
-| RNF-03 | *...* | *...* | *...* | *...* |
+La prioridad de cada requerimiento y su criterio de aceptación detallado se encuentran en la especificación del módulo correspondiente.
+La verificación funcional con usuarios se traza a los indicadores del capítulo~[§cap:metodologia] (tabla~[§tab:indicadores]): el matching (M2) a la tasa de aceptación de sugerencias (I-01), el aula virtual (M3) a la calidad percibida (I-02) y a la cobertura geográfica (I-03), y la experiencia completa al NPS (I-04).
 
-## *Nombre de la sección*
+### Requerimientos no funcionales
 
-*Texto.*
+La tabla~[§tab:rnf] presenta los requerimientos no funcionales, que la Constitución del proyecto define como no negociables.
 
-<!-- Figura: Captura del sistema en funcionamiento (ejemplo de figura) -->
+**Tabla:** Requerimientos no funcionales
 
-**Tabla:** Resultados sobre el conjunto de prueba (ejemplo de estructura)
+| **ID** | **Atributo** | **Umbral medible** | **Estado** |
+| --- | --- | --- | --- |
+| RNF-01 | Disponibilidad | 95 % mensual durante el piloto | A medir en el piloto; el servidor único es un riesgo aceptado (R-14, capítulo~[§cap:riesgos]) |
+| RNF-02 | Seguridad | TLS 1.2 o superior; contraseñas con bcrypt o argon2; registro de auditoría de toda acción de administración | Implementado: TLS hasta Cloudflare y túnel cifrado, bcrypt, auditoría de las acciones de administración; los 36 hallazgos de la auditoría técnica, cerrados (sección~[§sec:auditoria]) |
+| RNF-03 | Privacidad | Cumplimiento de la Ley 25.326, con especial cuidado en los datos de menores | Medidas implementadas (la imagen del DNI no sale del servidor, las clases no se graban salvo el adicional entre adultos, piloto sin menores); riesgos abiertos R-16 y R-17 |
+| RNF-04 | Rendimiento | Latencia de videollamada menor a 200~ms; ajuste automático de calidad sin modo degradado visible | A medir en el piloto |
+| RNF-05 | Mantenibilidad | Sostenible por uno o dos desarrolladores, sin conocimiento tácito no documentado | Cumplido: Constitución, especificaciones, registros de decisión y manual de operación versionados |
 
-| **Modelo** | **Precisión** | **Exhaustividad** | **$F_1$** | **Tiempo (s)** |
-| --- | --- | --- | --- | --- |
-| Línea de base | *...* | *...* | *...* | *...* |
-| Modelo propuesto | *...* | *...* | *...* | *...* |
+## Diseño
 
-**Tabla:** Traducción de la retroalimentación en decisiones de diseño (ejemplo de estructura)
+La arquitectura, el modelo de datos y las decisiones de diseño se documentan en el capítulo~[§cap:marco-tecnologico]. El resultado de esa etapa fue un monolito modular de nueve módulos de dominio, con un único servicio propio separado para el matching y con el video, los pagos, el correo y el resumen delegados en proveedores externos
+(figura~[§fig:arquitectura]). Las decisiones que cambiaron el diseño original durante la implementación se registran en la sección~[§sec:decisiones-implementacion].
+
+*Insertar capturas reales de las pantallas principales: búsqueda de tutores, reserva, aula virtual y panel de administración.*
+
+## Construcción e integración
+
+El sistema se construyó con el método dirigido por especificaciones descrito en el capítulo~[§cap:metodologia], con asistentes de programación con IA (declaración de uso de IA y apéndice~[§apx:prompts]). La tabla~[§tab:construccion] resume el resultado medido sobre la rama principal del repositorio del sistema.
+
+**Tabla:** Métricas de construcción al 14 de octubre de 2026
+
+| **Métrica** | **Valor** |
+| --- | --- |
+| Módulos de dominio con especificación propia | 9 |
+| Requerimientos funcionales especificados | 160 |
+| Migraciones de base de datos versionadas (V1 a V47) | 47 |
+| Registros de decisión de arquitectura (ADR) | 37 |
+| Tareas completadas / pendientes | 221 / 9 |
+| Commits de la rama principal | 482 |
+| Pruebas automatizadas del backend / cobertura de líneas | 661 / 85,6 % |
+
+El listado~[§lst:puerto-resumen] muestra un fragmento representativo de la construcción: el puerto que aísla al proveedor de LLM. Si el proveedor no está configurado, la implementación activa rechaza toda solicitud (*fail-closed*), de modo que ningún dato sale hacia un modelo externo. El comentario del propio código registra por qué el modelo recibe solo texto: el audio no puede anonimizarse antes de salir, y por eso se descartó el envío directo del audio que preveía el diseño inicial (ADR-M6-03).
+
+/**
+ * Anonimizacion (FR-SUM-005): transcriptAnonimizado ES lo que se
+ * envia [...] el audio crudo no es anonimizable antes de salir,
+ * por eso ADR-M6-03 descarta el "audio directo" de la Constitucion
+ * y el LLM solo recibe texto.
+ */
+public interface ResumenProveedor {
+    ResumenResultado generarResumen(ResumenRequest request);
+}
+
+public class ResumenProveedorFailClosed implements ResumenProveedor {
+    @Override public ResumenResultado generarResumen(ResumenRequest request) {
+        throw new ResumenProveedorNoConfiguradoException();
+    }
+}
+
+## Pruebas técnicas
+
+### Pruebas automatizadas
+
+El backend se prueba con JUnit~5 y Testcontainers contra una base
+PostgreSQL real; el frontend, con pruebas de punta a punta en Playwright que simulan la API e incluyen controles de accesibilidad con axe-core; el motor de matching, con pytest. Las tres suites corren en la integración continua en cada cambio, y una prueba nocturna recorre el camino crítico —registro, búsqueda semántica, reserva y pago en modo de prueba hasta la confirmación— contra la base, el motor de matching y el backend reales (capítulo~[§cap:marco-tecnologico]).
+Entre las pruebas de integración del backend hay dos de extremo a extremo sin simulaciones entre los módulos propios: el flujo principal completo y la rama de seguridad (sesión con un menor, disparo del kill-switch, suspensión, alerta y resolución del administrador).
+
+La tabla~[§tab:evolucion-pruebas] muestra la evolución de la suite del backend en las mediciones registradas en el repositorio del sistema.
+
+**Tabla:** Evolución de las pruebas automatizadas
+
+| **Fecha** | **Medición** | **Pruebas del backend** | **Otros resultados** |
+| --- | --- | --- | --- |
+| 21/09/2026 | Auditoría técnica, sobre la rama principal | 383, sin fallas | — |
+| 14/10/2026 | Línea de base de la rama principal | 661, sin fallas, 5 omitidas | Cobertura de líneas del 85,6 % (JaCoCo) |
+| 15/10/2026 | Rama principal, con la remediación de las pruebas en producción y la ventana mínima de 21 minutos integradas | 739, sin fallas, 5 omitidas | Cobertura del 86,2 % (medida con 738 pruebas, antes del último cambio); Playwright: 222 exitosas y 3 omitidas; pytest: 26 de 26 |
+
+Las cinco pruebas omitidas son las del OCR con Tesseract real, que se saltean en un equipo sin Tesseract instalado y corren en la integración continua. La metodología fijaba una cobertura mínima del
+70 % por módulo; durante la implementación se optó por medir primero la cobertura de todo el backend, sin un umbral que corte la construcción, y decidir el umbral con el valor medido (ADR-000-05). El valor medido supera el umbral original, pero no se mide por módulo y nada impide hoy que baje.
+
+### Auditoría técnica
+
+El 21 de septiembre de 2026 se realizó una auditoría técnica del repositorio completo —backend, frontend, servicio de matching, migraciones, documentación, integración continua y configuración de despliegue—, que incluyó la ejecución de la suite de pruebas.
+*Quién realizó la auditoría y con qué método o herramienta.*
+La auditoría registró 36 hallazgos, que se gestionan en un registro con su estado: un hallazgo solo se da por cerrado con un cambio en el código y una prueba de regresión. La tabla~[§tab:auditoria] resume su estado.
+
+**Tabla:** Hallazgos de la auditoría técnica por severidad y estado (registro del 28/09/2026)
+
+| **Severidad** | **Hallazgos** | **Cerrados** | **Abiertos** |
+| --- | --- | --- | --- |
+| Crítica | 7 | 7 | 0 |
+| Alta | 12 | 12 | 0 |
+| Media | 13 | 13 | 0 |
+| Baja | 4 | 4 | 0 |
+| **Total** | **36** | **36** | **0** |
+
+La auditoría concluyó que el proceso de desarrollo era disciplinado, pero que la implementación de los controles de seguridad era más débil de lo que la documentación sugería. Los siete hallazgos críticos afectaban directamente a la seguridad del menor y a la confianza:
+
+- el kill-switch registraba el corte en la base de datos, pero no cerraba la sala de video, que seguía activa;
+- los permisos de acceso a las salas de video otorgaban a los participantes privilegios de administración;
+- el DNI del participante se usaba como identificador en la sala de video y se mostraba en pantalla, incluido el de los menores;
+- la verificación de identidad por OCR funcionaba con una simulación activada por defecto;
+- cualquier participante podía disparar el kill-switch sin aportar evidencia;
+- la credencial académica se aprobaba sin que el administrador pudiera ver el documento;
+- el enlace de restablecimiento de contraseña se registraba en claro en los registros del servidor.
+
+Entre los de severidad alta estaban la ausencia de límites de intentos en los endpoints públicos, la falta de una infraestructura real de notificaciones, el servicio de matching expuesto sin autenticación y una restricción de reservas que comparaba horarios idénticos en lugar de superpuestos. Al 28 de septiembre de 2026 los 36 hallazgos figuraban cerrados, cada uno con el commit que lo resolvió y la prueba que lo cubre; de los siete subítems de calidad del hallazgo AUD-036, uno se aceptó sin cambio con su justificación.
+
+### Pruebas en producción
+
+El 14 de octubre de 2026 se ejecutaron pruebas exploratorias sobre el despliegue real (tinku.site), con datos sembrados y siete recorridos independientes, uno por rol (estudiante, tutor, menor y su adulto responsable, moderación, soporte financiero, seguridad y experiencia móvil), sobre la interfaz y la API. Los recorridos fueron asistidos por agentes de IA que operaron un navegador automatizado. El resultado no encontró bloqueantes: ninguna fuga de datos entre cuentas, ningún salto de rol ni de autenticación, y el corte de las clases con menores resistió por la API y por la interfaz. Sí encontró tres hallazgos de severidad alta que la suite automatizada no detectaba:
+
+- un menor podía modificar sus propias capacidades por la
+          API, aunque la restricción de fondo impidió que reservara;
+- la cola de revisión del CAP fallaba en cuanto había un certificado pendiente;
+- el tutor no podía dar de baja una franja horaria, algo que la especificación del módulo tampoco definía.
+
+A ellos se sumaron un patrón transversal —los errores de validación respondían como si fueran de permisos—, problemas de relevancia de la búsqueda, de agenda y de accesibilidad en el móvil. El pago real, el flujo con menores en sesión y la verificación de identidad con un
+DNI real no se probaron, por las reglas de la propia prueba.
+
+Una segunda ronda, el mismo día, probó el aula en vivo y el kill-switch con salas de video reales, dos navegadores por escenario y el backend de producción. El kill-switch funcionó de punta a punta en sus dos ramas: con un menor presente, la clase se cortó 2,5 segundos después de que el modelo empezara a detectar, sin preguntarle nada al menor y con el clip de evidencia disponible para el administrador; entre adultos, el video se ocultó y, sin respuesta de la contraparte, la confirmación venció a los 300 segundos. Ante la falla del clasificador con un menor, el cliente ocultó el video, reintentó y cortó la clase al no poder reactivarlo. Se encontró un hallazgo de severidad media: tras un corte, el participante que no recibía el aviso del otro navegador quedaba en la pantalla de espera. La exactitud del clasificador con contenido real y su latencia en un celular no se probaron.
+
+La remediación de los hallazgos de código se implementó el 15 de octubre de
+2026, con una prueba que reproduce cada hallazgo y falla antes del arreglo, y se integró ese mismo día a la rama principal con la integración continua en verde; queda repetir las pruebas por rol en producción (riesgo R-15 del capítulo~[§cap:riesgos]). Como parte de ella se calibró el umbral de relevancia de la búsqueda con el modelo de embeddings semánticos real sobre 40 consultas (20 relevantes, 10 irrelevantes y 10 sin sentido): con el umbral anterior (0,30) pasaban 5 de 10 consultas irrelevantes; con el elegido (0,46) el 95 % de las relevantes conserva resultados y ninguna irrelevante ni sin sentido los obtiene. La consulta relevante que se pierde cae a la recomendación por área (FR-MATCH-011).
+Las consultas son de elaboración propia, por lo que la medición calibra el umbral pero no reemplaza al indicador I-01 del piloto.
+
+La lectura de estas dos actividades complementa la de la auditoría: cientos de pruebas exitosas no garantizan la ausencia de defectos graves, porque las pruebas verifican lo que se especificó y no lo que se omitió. La revisión independiente y la prueba sobre el despliegue real detectaron fallas que ninguna prueba cubría, y en un caso, un hueco de la propia especificación. El desarrollo asistido por IA acelera la construcción, pero no reemplaza la verificación.
+
+### Pruebas de aceptación
+
+Las pruebas de aceptación con usuarios (UAT) se realizan en el piloto del Sprint~11, entre el 27 de octubre y el 27 de noviembre de
+2026, y miden los indicadores del capítulo~[§cap:metodologia]
+(tabla~[§tab:indicadores-piloto]). Por el riesgo R-01 del capítulo~[§cap:riesgos], el piloto no incluye clases con menores.
+
+**Tabla:** Indicadores del piloto
+
+| **ID** | **Indicador** | **Umbral** | **Resultado** |
+| --- | --- | --- | --- |
+| I-01 | Aceptación de las sugerencias del matching | $> 60 %$ | *pendiente del piloto* |
+| I-02 | Calidad percibida de la sesión (escala 1 a 5) | $4{,}0$ | *pendiente del piloto* |
+| I-03 | Sesiones entre provincias distintas, con una del interior | $1$ | *pendiente del piloto* |
+| I-04 | NPS del piloto | positivo | *pendiente del piloto* |
+
+## Validación con usuarios
+
+### Encuesta de validación
+
+La encuesta, aplicada a 88 personas entre el 28 de agosto y el 9 de septiembre de 2026, se detalla en el apéndice~[§apx:encuesta]. Sus resultados se contrastan con los supuestos del proyecto:
+
+- **El problema existe.** De quienes tomaron clases particulares, el 70 % encontró al profesor por recomendación, y las dificultades más mencionadas fueron saber si era bueno
+          (30 %) y la confianza (20 %). El resultado respalda el diagnóstico de informalidad del capítulo~[§cap:introduccion].
+- **La modalidad virtual es aceptada.** El 77,3 % tomaría clases virtuales con un buen profesor, lo que respalda el modelo remoto.
+- **La verificación genera confianza.** El 81,8 % confía más en una plataforma con profesores verificados, que además fue la función más valorada (58 %).
+- **La IA se valora por su resultado, no como etiqueta.** El 68,2 % querría que la plataforma le recomiende el tutor más adecuado, pero solo el 5,7 % eligió “IA que recomiende profesores” entre las funciones importantes, el último lugar. En cambio, el resumen automático, una función basada en IA descrita por su utilidad, fue la segunda más valorada (56,8 %).
+- **El pago dentro de la plataforma no está asegurado.**
+          Solo el 35,2 % prefiere pagar dentro de una plataforma antes que por transferencia, y el 34,1 % está en desacuerdo. Es el resultado más desfavorable para el modelo de negocio (riesgo
+          R-02).
+- **La disposición a pagar es menor que el precio de mercado.** La mediana de la disposición a pagar es de
+          USD~4,56 por hora, aproximadamente la mitad del precio horario promedio publicado en Superprof ($13.392, unos
+          USD~8,72 al tipo de cambio de $1.535), con el que el capítulo~[§cap:economica] calcula el ticket. El modelo toma el precio de la oferta publicada y no la intención declarada; la diferencia se trata como riesgo (R-05) y se resolverá con los precios efectivos del piloto.
+
+La encuesta tiene limitaciones que acotan estas conclusiones: la muestra no es probabilística, el 90,9 % de las respuestas proviene de la provincia de Buenos Aires y de la Ciudad Autónoma de Buenos Aires, y solo 9 corresponden a tutores. Entre las funciones consultadas figuraba un chat, que el sistema no implementa como módulo propio: los mensajes de texto del aula viajan por el canal de datos del servicio de video
+(capítulo~[§cap:metodologia]).
+
+### Entrevistas a especialistas
+
+*Síntesis de las entrevistas (apéndice~[§apx:entrevista*): fecha, entrevistado, aportes principales y contraste con los resultados de la encuesta.]
+
+### Decisiones derivadas
+
+La tabla~[§tab:feedback-decisiones] traduce los hallazgos en decisiones concretas.
+
+**Tabla:** Traducción de los hallazgos en decisiones de diseño
 
 | **Fuente** | **Hallazgo** | **Decisión** | **Estado** |
 | --- | --- | --- | --- |
-| Encuesta (n=*..*) | *El 60 % no encontró la función X* | *Mover X al menú principal* | Implementado |
-| Experto 1 | *...* | *...* | Planificado |
+| Encuesta | La IA como etiqueta casi no se valora | Presentar las recomendaciones por su resultado, sin el rótulo “IA” (T-TES-12) | Aplicado |
+| Encuesta | El resumen automático es la segunda función más valorada | Resumen como adicional opcional, a costo más un 50 % (ADR-M5-06) | Aplicado; apagado en producción (R-16) |
+| Encuesta | Solo el 35,2 % prefiere pagar en la plataforma | Mitigación del riesgo R-02: valor exclusivo dentro de la plataforma | Planificado |
+| Encuesta | Mediana de disposición a pagar de USD~4,56 por hora | Medir el precio efectivo en el piloto (riesgo R-05) | Planificado |
+| Encuesta | 90,9 % de las respuestas de Buenos Aires | Reencuesta dirigida al interior (riesgo R-08) | Planificado |
+| Auditoría | 36 hallazgos, 7 críticos | Corrección de cada uno con prueba de regresión | Aplicado |
+| Pruebas en producción | 3 hallazgos altos y uno transversal | Remediación con prueba previa al arreglo | Implementado, por integrar |
+| Pruebas en producción | Búsquedas sin relación devolvían tutores | Umbral de relevancia calibrado con el modelo real | Implementado, por integrar |
+| Diseño | El audio de la sesión no puede anonimizarse antes del LLM | Transcripción previa y modelo de resumen solo con texto anonimizado; sin resumen con menores (ADR-M6-03) | Aplicado |
+
+## Contraste con el estado del arte
+
+El capítulo~[§cap:marco-teorico] comparó las plataformas existentes
+(tabla~[§tab:comparativa]). Los resultados permiten contrastar la propuesta con ellas en tres ejes:
+
+- **matching.** Las plataformas relevadas ofrecen filtros manuales; Tinku implementa un motor de matching semántico con embeddings semánticos. La calibración con consultas propias muestra que separa consultas relevantes de irrelevantes; su valor para los usuarios queda sujeto al indicador I-01 del piloto.
+- **Aula y pagos integrados.** Tinku integra en un mismo flujo la reserva, el aula virtual y el cobro con una ventana de 24 horas en la que la plataforma todavía puede reembolsar (escrow), algo que las plataformas relevadas resuelven solo de forma parcial.
+- **Seguridad del menor.** Es el diferencial más ambicioso y, a la vez, el que la auditoría encontró más débil. Tras corregir los hallazgos críticos, reincorporar el CAP para los tutores de menores e integrar el kill-switch en el cliente, que funcionó en la prueba en vivo, quedan pendientes su medición en dispositivos reales y la decisión de encendido (riesgo R-01 del capítulo~[§cap:riesgos]).
+
+## Evaluación económica
+
+La evaluación del capítulo~[§cap:economica], con un ticket de
+USD~7,42 por sesión, la comisión del 27 % a cargo del tutor y una tasa de descuento del 15 %, arroja en el escenario base un
+VAN de USD~18.869 y una TIR del 41,57 %, con un repago simple de 1,99 años y uno descontado de 2,66 años. El escenario pesimista no resulta viable (VAN de USD~-4.410). El VAN
+base se anula con una comisión de aproximadamente 18,2 %. El resultado más relevante del proceso fue que la contrastación del modelo con el sistema implementado cambió la conclusión: una versión anterior del modelo restaba la comisión de MercadoPago como costo de la plataforma, pero con el modelo de cobro implementado esa comisión la paga el tutor
+(sección~[§sec:costos-variables]). El detalle del cálculo se presenta en el anexo~[§anx:modelo-financiero].
+
+## Síntesis
+
+**Tabla:** Síntesis de resultados
+
+| **Resultados favorables** | **Resultados desfavorables** |
+| --- | --- |
+| Nueve módulos implementados y desplegados, con 661 pruebas automatizadas en la rama principal y 85,6 % de cobertura | Las pruebas en producción encontraron tres hallazgos altos que la suite no detectaba; su remediación ya está en la rama principal y falta repetir las pruebas en producción |
+| Los 36 hallazgos de la auditoría, cerrados con prueba de regresión | Producción quedó, tras las pruebas, en un estado que debe revertirse antes del piloto (R-17) |
+| Kill-switch funcionando de punta a punta en la prueba en vivo | Sin medición en dispositivos reales: el piloto no incluye menores |
+| La encuesta respalda el problema, la modalidad virtual y la verificación | Solo el 35,2 % prefiere pagar dentro de la plataforma, y la disposición a pagar es la mitad del precio de mercado |
+| Escenarios base y optimista económicamente viables | Escenario pesimista no viable |
+| CAP obligatorio para dar clases a menores, implementado | Resumen automático implementado pero apagado en producción hasta tener la cláusula legal |
 
 # Capítulo 8: Implicancias, conclusiones y recomendaciones
 
@@ -1372,30 +1700,176 @@ La hipótesis planteada en el capítulo~[§cap:introduccion] se responde de mane
 
 ## Introducción
 
-*Objetivo de la encuesta y qué se quería validar.*
+La encuesta constituye el instrumento cuantitativo de validación de demanda previsto en el capítulo~[§cap:metodologia]. Su objetivo fue contrastar con usuarios potenciales cuatro supuestos del proyecto:
+
+- que la búsqueda de un tutor particular depende hoy de canales informales y presenta fricciones concretas (confianza, calidad, coordinación);
+- que alumnos y familias aceptarían la modalidad virtual y valorarían la verificación de los tutores;
+- qué funciones de la plataforma se perciben como más importantes, incluidas las basadas en IA;
+- la disposición a pagar por una clase de una hora y a hacerlo dentro de la plataforma, supuestos sobre los que descansa el modelo de ingresos del capítulo~[§cap:economica].
+
+El modelo de ingresos vigente no toma el precio de esta encuesta: el ticket se calcula con los precios publicados en Superprof
+(apéndice~[§apx:precio]). La disposición a pagar relevada aquí se usa como contraste de ese precio, y la diferencia entre ambos se analiza como riesgo en el capítulo~[§cap:riesgos] (R-05).
 
 ## Metodología
 
-*Diseño del cuestionario, población, canal de distribución, período de aplicación y cantidad de respuestas.*
+- **Instrumento:** cuestionario autoadministrado en línea
+          (Tally), de 14 preguntas cerradas: opción única, escala de 1
+          (menor acuerdo) a 5 (mayor acuerdo) y selección múltiple.
+- **Lógica condicional:** las preguntas 5 a 8 se muestran solo a quienes responden “Sí” en la pregunta 4.
+- **Población objetivo:** alumnos, madres y padres de alumnos, y tutores particulares residentes en Argentina.
+- **Muestreo:** no probabilístico, por conveniencia.
+          *Canal de distribución (grupos de WhatsApp, redes sociales, contactos personales, etc.).*
+- **Período de aplicación:** del 28 de agosto al 9 de septiembre de 2026. El 87,5 % de las respuestas se registró en los dos primeros días.
+- **Respuestas:** 88 respuestas válidas, sin duplicados por identificador de respondente, por encima del mínimo de 30
+          fijado en el capítulo~[§cap:metodologia].
+- **Moneda:** el cuestionario relevó los montos en pesos argentinos. Para su análisis se convierten a dólares estadounidenses, moneda de todo el trabajo, con la cotización vendedora del Banco de la Nación Argentina al cierre de la encuesta: $1.535 por dólar el 9 de septiembre de 2026
+          [bna2026].
+- **Depuración:** un registro indicó no haber tomado clases particulares pero completó dos preguntas del bloque condicional; esas dos respuestas se excluyen del análisis de ese bloque.
+- **Datos crudos:** la exportación del formulario, sin datos que identifiquen a las personas, se conserva en el repositorio de la tesis (anexos/encuesta-tinku.csv, anexo~[§anx:repositorios]).
 
 ## Presentación de la encuesta
 
 *Texto introductorio que vieron las personas participantes
-(propósito, anonimato, duración estimada).*
+(propósito, anonimato, duración estimada) y, dado que respondieron menores de 18 años, cómo se obtuvo o se solicitó el consentimiento de su adulto responsable.*
 
 ## Cuestionario
 
-- *Pregunta 1 (tipo: opción única).*
-- *Pregunta 2 (tipo: escala 1–5).*
-- *Pregunta 3 (tipo: abierta).*
+**Bloque 1 — Perfil.**
+
+- Edad (opción única): Menor de 18 / 18–25 / 26–40 / Más de 40.
+- Provincia (opción única).
+- Rol (opción única): Alumno / Padre/Madre / Tutor.
+
+**Bloque 2 — Experiencia previa.**
+
+- ¿Tomaste clases particulares durante los últimos años? (Sí / No)
+- ¿Cuántas veces? (Una / 2–5 / Más de cinco)
+- ¿Cómo encontraste al profesor? (Recomendación / Google /
+          Superprof / Redes / Otro)
+- ¿Cuánto tardaste? (1–3 días / Una semana / Más de una semana)
+- ¿Qué fue lo más difícil? (Encontrar profesor / Saber si era bueno / Comparar precios / Coordinar horarios / Confianza)
+
+**Bloque 3 — Actitudes (escala de 1 a 5).**
+
+- Me gustaría que una plataforma me recomendara automáticamente el tutor más adecuado.
+- Tomaría clases virtuales si el profesor fuera bueno.
+- Me genera confianza una plataforma con profesores verificados.
+- Preferiría pagar dentro de una plataforma antes que por transferencia.
+
+**Bloque 4 — Funciones y precio.**
+
+- ¿Cuáles de estas funciones considera más importantes?
+          (selección múltiple): Videollamada integrada / Pago seguro /
+          Profesores verificados / Calificaciones / IA que recomiende profesores / Chat / Agenda / Recordatorios / Resumen automático de la clase.
+- ¿Cuánto estaría dispuesto a pagar por una clase de una hora?
+          (opción única): hasta USD~1,95 / USD~1,95 a USD~3,26 /
+          USD~3,26 a USD~5,86 / USD~5,86 o más. Las opciones se presentaron en pesos argentinos: “Hasta $3000”, “$3000 a
+          $5000”, “$5000 a $9000” y “$9000 o más”.
+
+## Resultados descriptivos
+
+Esta sección presenta las frecuencias de cada pregunta. Su interpretación y su contraste con los supuestos del proyecto se desarrollan en el capítulo~[§cap:resultados].
+
+### Perfil de la muestra
+
+**Tabla:** Perfil de las personas encuestadas ($n = 88$)
+
+| **Variable** | **Categoría** | **Frecuencia** | **%** |
+| --- | --- | --- | --- |
+| Rol | Alumno | 50 | 56,8 |
+|  | Padre/Madre | 29 | 33,0 |
+|  | Tutor | 9 | 10,2 |
+|  | 18–25 | 24 | 27,3 |
+|  | 26–40 | 23 | 26,1 |
+|  | Más de 40 | 30 | 34,1 |
+|  | Ciudad Autónoma de Buenos Aires | 8 | 9,1 |
+|  | Resto del país (7 provincias) | 8 | 9,1 |
+
+Las respuestas del resto del país corresponden a Corrientes (2),
+Córdoba, Chaco, Entre Ríos, San Juan, Santa Cruz y Santa Fe (1 cada una).
+
+### Experiencia previa con clases particulares
+
+El 22,7 % de la muestra (20 personas) tomó clases particulares en los últimos años. La tabla~[§tab:encuesta-experiencia] resume las respuestas de ese subgrupo.
+
+**Tabla:** Experiencia de búsqueda de quienes tomaron clases particulares ($n = 20$)
+
+| **Pregunta** | **Respuesta** | **Frecuencia** | **%** |
+| --- | --- | --- | --- |
+| Cantidad de veces | Una | 3 | 15,0 |
+|  | 2–5 | 7 | 35,0 |
+|  | Más de cinco | 10 | 50,0 |
+|  | Google | 2 | 10,0 |
+|  | Superprof | 1 | 5,0 |
+|  | Otro | 3 | 15,0 |
+|  | Una semana | 6 | 30,0 |
+|  | Más de una semana | 5 | 25,0 |
+|  | Confianza | 4 | 20,0 |
+|  | Coordinar horarios | 4 | 20,0 |
+|  | Comparar precios | 3 | 15,0 |
+|  | Encontrar profesor | 3 | 15,0 |
+
+### Actitudes hacia la plataforma
+
+**Tabla:** Grado de acuerdo con las afirmaciones del bloque 3 ($n = 88$, escala 1 a 5)
+
+| **Afirmación** | **Media** | **% 4–5** | **% 3** | **% 1–2** |
+| --- | --- | --- | --- | --- |
+| Me genera confianza una plataforma con profesores verificados | 4,24 | 81,8 | 6,8 | 11,4 |
+| Tomaría clases virtuales si el profesor fuera bueno | 4,15 | 77,3 | 6,8 | 15,9 |
+| Me gustaría que una plataforma me recomendara el tutor más adecuado | 4,07 | 68,2 | 22,7 | 9,1 |
+| Preferiría pagar dentro de una plataforma antes que por transferencia | 3,07 | 35,2 | 30,7 | 34,1 |
+
+### Funciones valoradas
+
+**Tabla:** Funciones consideradas más importantes (selección múltiple, $n = 88$)
+
+| **Función** | **Menciones** | **% de encuestados** |
+| --- | --- | --- |
+| Profesores verificados | 51 | 58,0 |
+| Resumen automático de la clase | 50 | 56,8 |
+| Pago seguro | 43 | 48,9 |
+| Videollamada integrada | 42 | 47,7 |
+| Agenda | 25 | 28,4 |
+| Chat | 21 | 23,9 |
+| Recordatorios | 21 | 23,9 |
+| Calificaciones | 12 | 13,6 |
+| IA que recomiende profesores | 5 | 5,7 |
+
+### Disposición a pagar
+
+**Tabla:** Disposición a pagar por una clase de una hora, en USD ($n = 88$)
+
+| **Rango (USD)** | **Frecuencia** | **%** | **% acumulado** |
+| --- | --- | --- | --- |
+| Hasta 1,95 | 9 | 10,2 | 10,2 |
+| 1,95 a 3,26 | 19 | 21,6 | 31,8 |
+| 3,26 a 5,86 | 32 | 36,4 | 68,2 |
+| 5,86 o más | 28 | 31,8 | 100,0 |
+
+Interpolando dentro del rango que la contiene, la mediana de la disposición a pagar es de USD~4,56 por hora. La distribución es similar entre quienes tomaron clases particulares (35 % en el rango superior, $n = 20$) y quienes no lo hicieron (31 %, $n = 68$).
+
+## Limitaciones del instrumento
+
+- **Representatividad:** la muestra es no probabilística y sus resultados son indicativos, no extrapolables al mercado nacional.
+- **Sesgo geográfico:** el 90,9 % de las respuestas proviene de la provincia de Buenos Aires y de la Ciudad
+          Autónoma de Buenos Aires. Las zonas del interior y rurales, en las que el capítulo~[§cap:introduccion] ubica el mayor impacto del proyecto, están subrepresentadas.
+- **Lado de la oferta:** solo 9 respuestas corresponden a tutores, por lo que la encuesta valida principalmente el lado de la demanda.
+- **Experiencia previa:** el 77,3 % no tomó clases particulares en los últimos años, por lo que las preguntas actitudinales reflejan en su mayoría intenciones y no conductas observadas.
+- **Precio:** la disposición a pagar se relevó en rangos de pesos argentinos y para una clase de una hora. Su expresión en dólares depende del tipo de cambio de una única fecha, y el rango superior es abierto, por lo que no permite estimar cuánto por encima de USD~5,86 pagaría ese 31,8 %.
+- **Funciones consultadas:** la lista de funciones se redactó antes de cerrar el alcance del sistema. Algunas no existen como tales en la versión implementada: el chat no es un módulo propio (los mensajes del aula viajan por el canal de datos del servicio de video) y el resumen automático se ofrece solo como adicional pago en clases entre adultos.
 
 # Entrevistas a especialistas
 
 Como se detalla en el capítulo~[§cap:marco-teorico]
 (sección~[§sec:entrevistas]), se definieron dos perfiles de especialista complementarios: un docente o gestor/a institucional y un/a profesional del campo psicopedagógico o del vínculo y la seguridad con menores. En cada caso se documenta el contexto, la ficha de la persona entrevistada y la transcripción por ejes temáticos.
 
-**Estado: [PENDIENTE]** – el cronograma del capítulo~[§cap:metodologia] prevé su realización durante el Sprint 3.
-Hasta entonces los guiones aquí transcritos constituyen la evidencia del diseño metodológico; los *completar* marcan los datos que se completarán con la realización efectiva de cada entrevista.
+**Estado: [PENDIENTE]** – las entrevistas no se realizaron en el
+Sprint 3, como preveía originalmente el cronograma del capítulo~[§cap:metodologia], y se reprogramaron para
+*fecha prevista*. Hasta entonces los guiones aquí transcritos constituyen la evidencia del diseño metodológico; los
+*completar* marcan los datos que se completarán con la realización efectiva de cada entrevista.
+
+Para el Perfil~1 se preparó además un guion ampliado, de 25 preguntas en seis ejes, que contrasta con la persona entrevistada los resultados de la encuesta (apéndice~[§apx:encuesta]) y los supuestos de los capítulos~[§cap:economica] y~[§cap:riesgos]. Se conserva en el repositorio de la tesis (entrevistas/guion-entrevista-profesor.md, anexo~[§anx:repositorios]).
 
 ## Perfil 1: Docente o gestor/a institucional
 
@@ -1648,35 +2122,62 @@ errores y 5 omitidas –las pruebas del OCR real, que se saltean si el equipo no
 
 ## Criterios de registro
 
-- **Trazabilidad**: cada entrada indica la herramienta y versión utilizada y la fecha aproximada.
-- **Verificación**: toda cifra, cita o referencia sugerida por la herramienta se confirmó en la fuente original antes de incorporarla (regla 3 de la declaración de IA).
-- **Autoría**: las salidas se transcriben solo como evidencia; el texto final del documento puede diferir por la revisión y adaptación del autor.
+- **Alcance.** Se registran las instrucciones cuyo resultado tuvo un impacto significativo en el sistema o en el documento.
+          Los prompts se transcriben con leves correcciones de redacción, sin alterar su contenido.
+- **Verificación.** Para cada resultado se indica cómo se verificó antes de incorporarlo (regla 3 de la declaración de uso de IA).
+- **Autoría.** Las salidas se describen como evidencia; el texto final del documento surge de la revisión y adaptación del autor.
+- **Vigencia.** Algunos resultados se reemplazaron después, al contrastar el documento con el sistema implementado. Cuando es así, se indica qué quedó vigente.
 
-## Asistencia en el marco teórico y estado del arte
+## Desarrollo del sistema
 
-> **Instrucción IA:** Resumí los argumentos principales de este paper sobre evaluación de tutores y ranking de compatibilidad en plataformas de tutoría en línea, en tres párrafos en español.
-> **Respuesta IA:** (resumen devuelto por la herramienta, verificado contra el texto original)
+El desarrollo con asistentes de programación —OpenCode en las primeras etapas y Claude Code después— no se guió por prompts aislados, sino por instrucciones persistentes versionadas en el repositorio
+(anexo~[§anx:repositorios]): el archivo ‘AGENTS.md‘, la
+Constitución, las especificaciones, los planes técnicos y la lista de tareas. Ese conjunto constituye el registro completo de lo que se le pidió a cada agente: cada bloque de tareas en su propia rama, al menos una prueba de integración por historia de usuario, una prueba que falla antes de cada arreglo y un registro de decisión escrito para cada decisión técnica que lo requiere. Se transcriben dos de las reglas de
+‘AGENTS.md‘ que más condicionaron el resultado.
 
-> **Instrucción IA:** Compará los modelos de negocio, comisiones y esquemas de pago de Superprof, Preply, Wyzant y Tus Clases de manera tabular.
-> **Respuesta IA:** (tabla devuelta, contrastada con las tarifas públicas de cada plataforma antes de usarse en [§tab:comparativa)]
+> **Instrucción IA:** Ante dos soluciones que cumplen el mismo requisito, la más simple. No justifiques una decisión técnica con “buena práctica genérica”: justificala contra un desarrollador y un presupuesto de
+USD 0 a 100 por mes, o no la tomes.
+> **Respuesta IA:** Arquitectura de monolito modular con nueve módulos de dominio y un único servicio propio separado, el de matching.
+Verificación: cada desvío quedó documentado en un registro de decisión
+(ADR) validado por el autor.
 
-## Asistencia en la justificación económica
+> **Instrucción IA:** La rama del kill-switch con un menor presente nunca continúa la sesión ni le pregunta al menor si vio algo: corta directamente. Si una tarea deja dudas sobre cuál de los dos casos aplica, tratala como si hubiera un menor.
+> **Respuesta IA:** Implementación del kill-switch con dos ramas diferenciadas, en el backend y en el cliente. Verificación: prueba de extremo a extremo de la rama de seguridad completa (sesión con menor, corte, suspensión, alerta y resolución del administrador) y prueba en vivo con salas de video reales (capítulo~[§cap:resultados).]
 
-> **Instrucción IA:** Calculá el VAN a tasa 15 % y la TIR del flujo de caja
-[Año 0 ... Año 5] de esta tabla de volúmenes y costos.
-> **Respuesta IA:** (cálculos devueltos; se replicaron de forma independiente en hoja de cálculo antes de incluirlos en [§tab:flujo-caja y en la sección de indicadores)]
+El historial de git deja registrada la magnitud de esta asistencia: al
+14 de octubre de 2026, 129 de los 482 commits de la rama principal del repositorio del sistema figuran con autor “Claude”, entre ellos 76 de los 196 que modifican pruebas automatizadas. Las pruebas, por lo tanto, no se escribieron exclusivamente a mano: su confiabilidad no descansa en quién las escribió, sino en que cada una se revisó antes de integrarse y en que la auditoría técnica y las pruebas en producción verificaron el sistema desde fuera de la suite.
 
-## Asistencia en redacción y código
+## Consultas de contraste
 
-> **Instrucción IA:** Reescribí este párrafo en registro académico impersonal sin cambiar su contenido.
-> **Respuesta IA:** (texto devuelto por la herramienta, luego editado)
+Gemini y ChatGPT se consultaron de forma esporádica, como segunda y tercera opinión sobre decisiones puntuales. Sus respuestas no se incorporaron como texto al documento.
+*Transcribir, si se conservaron, una o dos consultas representativas y la decisión que motivaron.*
 
-> **Instrucción IA:** Generá el scaffolding de una clase Java de Spring Boot para el endpoint de reserva de una sesión, con validación de permisos por rol.
-> **Respuesta IA:** (código devuelto, revisado y adaptado por el autor)
+## Elaboración del documento
 
-Además de estas consultas puntuales, parte del código y de las pruebas automatizadas del sistema se escribió con asistentes de programación con
-IA –Claude Code y OpenCode– que trabajaron sobre el repositorio bajo las reglas del archivo ‘AGENTS.md‘ (anexo~[§anx:repositorios]): cada bloque de tareas en su propia rama, al menos una prueba de integración por historia de usuario y un ADR escrito para cada decisión técnica que lo requiere. Cada cambio se integró a la rama principal después de la revisión del autor. El historial de git lo deja registrado: al 14/10/2026, 129 de los 482
-commits de la rama principal del repositorio del sistema figuran con autor “Claude”.
+Los siguientes prompts se utilizaron con Claude Code durante la revisión y redacción de los capítulos~[§cap:economica] y~[§cap:riesgos] y de los apéndices.
+
+> **Instrucción IA:** Agregué los resultados de la encuesta y el Excel con el presupuesto y las proyecciones. Revisá si tengo que modificar algo en la tesis en función de esto y decime todo lo que falta completar.
+> **Respuesta IA:** Detectó inconsistencias entre capítulos: un equipo de cuatro perfiles en la evaluación económica frente a un desarrollo unipersonal en el resto del documento, el costo del servidor de aplicación omitido, un precio de sesión sin respaldo frente a la disposición a pagar relevada, y diferencias entre el documento y el repositorio. Además, redactó el apéndice~[§apx:encuesta a partir de los datos crudos. Verificación: cada inconsistencia se contrastó con el texto y el repositorio, y las frecuencias de la encuesta se recalcularon sobre el archivo original.]
+
+> **Instrucción IA:** Busquemos y analicemos empíricamente los costos de las plataformas con sus planes reales actuales, pensando qué es lo mejor para este caso.
+> **Respuesta IA:** Relevamiento de las tarifas públicas de los proveedores de alojamiento, video y LLM, y del costo de grabar el audio de las sesiones, no contemplado hasta entonces. Verificación: cada tarifa se consultó en la página del proveedor. Vigencia: la infraestructura finalmente adoptada es un servidor propio (ADR-000-07), y las tarifas vigentes son las citadas en el capítulo~[§cap:economica.]
+
+> **Instrucción IA:** Toda la tesis debe estar en dólares. Si necesitás el tipo de cambio, usá el del BNA al cierre de la encuesta.
+> **Respuesta IA:** Conversión de los rangos de la encuesta con la cotización vendedora del 9 de septiembre de 2026 [bna2026., Verificación: cotización, contrastada, en, la, fuente, citada., Vigencia:, el, mismo, tipo, de cambio, se, usa, en, el, capítulo~[§cap:economica] y en el sistema.]
+
+> **Instrucción IA:** Quiero saber si las horas con las que se calcula la inversión son realistas o no, y compararlas con lo que costó de verdad.
+> **Respuesta IA:** Estimación del esfuerzo registrado en el repositorio y propuesta de evaluar solo la inversión incremental. Verificación: métricas recalculadas sobre el repositorio; la elección del criterio fue del autor. Vigencia: el capítulo~[§cap:economica valoriza finalmente la inversión a precio de mercado
+(tabla~tab:inversion]).
+
+> **Instrucción IA:** Construí la tasa de descuento con fuentes reales.
+> **Respuesta IA:** Tasa construida por acumulación de tasa libre de riesgo, beta sectorial, prima de mercado y prima de riesgo país. Verificación: cada componente se consultó en su fuente primaria. Vigencia: el capítulo~[§cap:economica adopta finalmente una tasa del 15 % anual en dólares.]
+
+> **Instrucción IA:** Arrancá con el capítulo 6 siguiendo las indicaciones de la cátedra.
+> **Respuesta IA:** Borrador del análisis de riesgos a partir de la encuesta, el modelo financiero y el estado del repositorio. Verificación: cada riesgo se contrastó con la evidencia que cita. Vigencia: el capítulo se actualizó después contra el estado del sistema al 15 de octubre de
+2026; varios riesgos del borrador ya se habían resuelto o cambiado de causa, y se agregaron los que surgieron de las pruebas en producción.
+
+> **Instrucción IA:** Alinear la tesis a lo que está en el sistema, refutando y justificando las decisiones de cambio.
+> **Respuesta IA:** Relevamiento de las diferencias entre los capítulos y el repositorio del sistema, con la cita de cada fuente, y reescritura de los pasajes afectados, con el registro de cada cambio de diseño en la sección~[§sec:decisiones-implementacion. Verificación: cada afirmación nueva remite a una especificación, un registro de decisión o el código del sistema, y las cifras económicas se recalcularon con el modelo del anexo~anx:modelo-financiero].
 
 # Defensa del precio: relevamiento de tarifas en Superprof
 
@@ -1735,6 +2236,85 @@ MercadoPago como costo de la plataforma, ese umbral era de unos $1.670.
           $14.478 y la mediana a $14.000. Se adopta el promedio completo por ser el más conservador.
 - El tipo de cambio es un parámetro del modelo, no un dato: la inflación en pesos erosiona el precio en dólares entre relevamientos.
 
+# Diagramas UML
+
+Este apéndice modela Tinku con nueve diagramas UML. Complementan la arquitectura del capítulo~[§cap:marco-tecnologico]
+(sección~[§sec:infraestructura], tabla~[§tab:componentes] y figura~[§fig:arquitectura]) y el modelo de datos de la sección~[§sec:modelo-datos], sin repetir sus justificaciones: las diferencias entre el diseño inicial y lo implementado se registran en la sección~[§sec:decisiones-implementacion]. Los nombres de clases, estados, eventos, trabajos programados y *endpoints* que aparecen son los del código del sistema –el backend en Spring Boot, el frontend en
+Next.js y el motor de matching en Python–, publicado en los repositorios del anexo~[§anx:repositorios]. Las fuentes editables, en
+PlantUML, están en figuras/uml/.
+
+Los plazos que muestran los diagramas (15 minutos para pagar, sala en
+T$-$5, no-show en T$+$10, corte automático 5 minutos después del fin agendado, 24 horas de ventana de escrow) salen de la Tabla de
+Tiempos del sistema. La ventana mínima de anticipación para reservar se nombra sin cifra, porque es un parámetro de esa tabla que se ajusta con la operación.
+
+## Diagrama de actividad
+
+La figura~[§fig:uml-actividad] recorre el ciclo completo de una clase, desde la búsqueda hasta la calificación, con tres carriles: quien paga
+(Estudiante adulto o Adulto Responsable), el backend de Tinku y el tutor. Si la clase la pide un menor, la crea como Solicitud de Sesión y su
+Adulto Responsable la aprueba; el adulto también puede reservar directamente para su menor. Antes de crear la Reserva se exige que el tutor tenga su cuenta de MercadoPago conectada por OAuth, porque el cobro se hace con su token y el dinero entra a su cuenta (ADR-M5-02); la
+Transacción queda en retenido_escrow, que en este modelo es una ventana lógica en la que Tinku todavía puede reembolsar. El diagrama distingue el cierre manual (botón Finalizar) del corte automático, que es el único que aplica el umbral del 50 % de duración efectiva para separar una sesión finalizada de una interrumpida con reembolso total.
+El resumen corre solo si se contrató el adicional, que existe únicamente entre adultos.
+
+<!-- Figura: Diagrama de actividad: ciclo de una clase -->
+
+## Diagrama de casos de uso
+
+La figura~[§fig:uml-casos-uso] muestra los actores humanos y los sistemas externos (MercadoPago, LiveKit Cloud y OpenAI). Estudiante adulto, Adulto Responsable, Estudiante menor y tutor especializan a
+Usuario registrado; el Visitante solo puede registrarse, porque la búsqueda y los perfiles requieren una sesión iniciada. El menor busca, solicita sesiones y participa en el aula, pero no paga, no autoriza tutores ni denuncia. Los administradores no son un tipo de usuario: se modelan como dos actores, uno por rol (Moderación y Seguridad, Soporte
+Financiero), como se describe en la sección~[§sec:modelo-datos]. El kill-switch no lo acciona una persona: es una detección automática del clasificador que corre en el navegador y extiende la participación en el aula; entre adultos, la contraparte confirma o descarta la detección.
+
+<!-- Figura: Diagrama de casos de uso de Tinku
+
+La figura~[§fig:uml-estados-reserva] modela ‘EstadoReserva‘. Una
+Reserva nace en pendiente_pago y pasa a ‘confirmada‘ cuando el pago se aprueba por cualquiera de sus vías (aviso de MercadoPago, vuelta del navegador, conciliación periódica o modo *bypass*). El cambio de horario no la saca de ‘confirmada‘ y nunca la cancela; la cancelación la decide el pagador, el tutor o el propio sistema (sanción, baja del menor o CAP vencido). Termina en ‘finalizada‘,
+‘cancelada‘ o en alguno de los tres estados de no-show. Mientras la clase transcurre, la Reserva sigue en ‘confirmada‘: el estado en vivo lo lleva la Sesión de Aprendizaje, y el valor en_curso del enumerado queda reservado.
+
+La figura~[§fig:uml-estados-sesion] completa el modelo con los estados de la Sesión de Aprendizaje y de la Transacción. La sesión pasa a en_curso con el primer ingreso; el no-show y el corte automático con el par roto antes del fin agendado la dejan en finalizada_anticipada. En la Transacción, una denuncia pausa el escrow y su resolución lo destraba según el resultado (infundada: vuelve a contar las 24 horas; fundada: se libera al tutor; escalada: se reembolsa); el kill-switch lo aparta en pausado_alerta, que prevalece sobre la denuncia y termina en reembolso total al resolverse la Alerta.
+
+<!-- Figura: Diagrama de máquina de estados de la Reserva -->
+
+<!-- Figura: Diagrama de máquina de estados de la Sesión de Aprendizaje y de la Transacción -->
+
+## Diagrama de secuencia
+
+La figura~[§fig:uml-secuencia] detalla la reserva directa y el pago. El frontend crea la Reserva y pide la preferencia de MercadoPago, que el backend genera con el token OAuth del tutor y con la comisión de
+Tinku como ‘marketplace_fee‘. El aviso firmado llega a
+‘MercadoPagoWebhookController‘, que verifica la firma y resuelve el token del tutor; ‘EscrowService‘ vuelve a consultar el pago con un cliente HTTP propio (sin SDK), bloquea la fila de la Reserva y, si el monto coincide con el precio congelado, crea la Transacción en retenido_escrow y confirma la Reserva. Con esa confirmación se publica el evento ‘ReservaConfirmadaEvent‘, a partir del cual el módulo de aula crea la Sesión y agenda sus trabajos. Si no llegan ni el aviso ni la vuelta del navegador, la conciliación periódica sigue el mismo camino.
+
+<!-- Figura: Diagrama de secuencia: reserva directa y pago -->
+
+## Diagrama de comunicación
+
+La figura~[§fig:uml-comunicacion] muestra, con mensajes numerados, los objetos que colaboran en el aula virtual: la emisión del token de LiveKit
+(que, con un menor, exige que el clasificador del navegador esté listo), los *webhooks* de ingreso y salida, la cancelación del trabajo de no-show, el disparo del kill-switch (mensajes K1 a K4, que cierran la sala) y el corte automático, junto con los eventos que reciben los módulos de pagos y de resumen.
+
+<!-- Figura: Diagrama de comunicación: aula virtual -->
+
+## Diagrama de tiempos
+
+La figura~[§fig:uml-tiempos] ubica en una línea de tiempo los plazos de una clase de 60 minutos: pago dentro de los 15 minutos, creación de la sala en T$-$5, decisión de no-show en T$+$10 y corte automático 5 minutos después del fin agendado. La sesión pasa a en_curso con el primer ingreso, y al cierre se fija ‘liberarAt‘ 24 horas después del fin efectivo de la clase.
+
+<!-- Figura: Diagrama de tiempos de una sesión -->
+
+## Diagrama de visión general de interacciones
+
+La figura~[§fig:uml-vision-general] encadena las interacciones del sistema como fragmentos ‘ref‘: búsqueda, solicitud o reserva directa, pago, ingreso al aula, no-show o kill-switch, cierre y, en paralelo, el cierre de la ventana de escrow (que verifica en
+MercadoPago que el pago siga aprobado), el resumen automático y la calificación.
+
+<!-- Figura: Diagrama de visión general de interacciones -->
+
+## Diagrama de clases
+
+La figura~[§fig:uml-clases] presenta las entidades del dominio agrupadas por módulo, con sus atributos principales, sus enumeraciones de estado y sus multiplicidades; es la vista detallada del modelo que resume la sección~[§sec:modelo-datos]. ‘Usuario‘ concentra las identidades: una Reserva lo referencia tres veces (pagador, beneficiario y tutor), un menor se vincula con su Adulto Responsable por una autorreferencia y ‘Admin‘ es una entidad aparte, vinculada a un usuario, con uno de dos roles. Un ‘Paquete‘ agrupa cuatro Reservas, y la cuenta de MercadoPago conectada del tutor (‘CuentaMpTutor‘) guarda su token cifrado.
+
+<!-- Figura: Diagrama de clases del modelo de dominio -->
+
+## Diagrama de componentes
+
+La figura~[§fig:uml-componentes] detalla la vista de la figura~[§fig:arquitectura]: el monolito modular Spring Boot con sus nueve módulos y el planificador Quartz, el frontend Next.js con el clasificador del kill-switch, el motor de matching en Python (el único proceso propio separado), PostgreSQL con pgvector, el respaldo cifrado hacia Cloudflare R2 y los servicios externos. Las flechas punteadas entre módulos son eventos de dominio en memoria; el único ingreso desde internet es el túnel de Cloudflare.
+
+<!-- Figura: Diagrama de componentes de Tinku{ -->
+
 # Anexos
 
 # Repositorios de código fuente
@@ -1771,6 +2351,68 @@ Fuente en de este documento (capítulos, apéndices, anexos, figuras y bibliogra
 Ingeniería Informática de la USAL. Incluye el relevamiento de precios de
 Superprof (apendices/superprof-precios.csv) y un archivo
 ‘LICENSE‘ (CC0~1.0).
+
+# Modelo financiero
+
+Este anexo documenta el modelo con el que se calcularon los indicadores del capítulo~[§cap:economica], de modo que cualquier lector pueda reproducirlos a partir de los parámetros declarados. El modelo es determinístico: no tiene supuestos ocultos fuera de los que se listan a continuación, y todos los montos están expresados en dólares estadounidenses.
+
+## Parámetros de entrada
+
+**Tabla:** Parámetros del modelo financiero y su origen
+
+| **Parámetro** | **Valor** | **Origen** |
+| --- | --- | --- |
+| Precio horario promedio | $13.392,43 | Relevamiento de 414 avisos de Superprof (apéndice~[§apx:precio]) |
+| Duración media de la sesión | 51 min | Ecuación~[§eq:duracion] |
+| Tipo de cambio | $1.535 por USD | BNA, 09/09/2026; el mismo que usa el sistema para el piso de tarifa |
+| Ticket promedio | USD~7,42 | Ecuación~[§eq:ticket] |
+| Comisión de la plataforma | 27 % | Regla BR-PAG-01 (ADR-M5-05) |
+| Comisión de MercadoPago | 6,04 % | A cargo del tutor en el modelo de cobro A (ADR-M5-02); no es costo de la plataforma |
+| Margen de la plataforma por sesión | USD~2,0034 | Ticket $$ comisión |
+| Inversión inicial (Año 0) | USD~25.730 | Tabla~[§tab:inversion] |
+| Costos fijos anuales (Años 1 a 5) | USD~3.555 a USD~4.395 | Tabla~[§tab:costos-fijos] |
+| Sesiones anuales por escenario | tabla~[§tab:demanda] | Alumnos activos $$ 3 clases por mes $$ 12 |
+| Tasa de descuento | 15 % anual en USD | Sección de tasa de descuento del capítulo~[§cap:economica] |
+
+El adicional de resumen y el paquete mensual no entran en el flujo base: el primero se cobra a costo más un 50 % y su aporte es marginal
+(sección~[§sec:adicional-resumen]); el segundo no tiene datos de adopción y se evalúa como sensibilidad del ticket
+(sección~[§sec:sensibilidad]).
+
+## Cadena de cálculo
+
+Para cada escenario y cada año $t$ de 1 a 5:
+
+- ingreso neto$_t$ = sesiones anuales$_t$ $$ margen de la plataforma por sesión;
+- flujo neto$_t$ = ingreso neto$_t$ $-$ costos fijos anuales$_t$; el flujo del Año 0 es la inversión inicial con signo negativo;
+- el VAN, la TIR y los períodos de repago simple y descontado se obtienen de la serie de flujos netos con las ecuaciones de la sección~[§sec:indicadores-formulas].
+
+Los análisis de sensibilidad del capítulo~[§cap:economica] se obtienen variando un parámetro por vez sobre esta misma cadena y buscando, cuando corresponde, el valor que anula el VAN del escenario base (por ejemplo, la comisión de aproximadamente 18,2 % o el ticket de USD~4,99 por sesión).
+
+## Flujos por escenario
+
+La tabla~[§tab:flujos-escenarios] presenta los flujos netos de los tres escenarios; el desglose del escenario base se encuentra en la tabla~[§tab:flujo-caja].
+
+**Tabla:** Flujos netos por escenario (en USD)
+
+| **Escenario** | **Año 0** | **Año 1** | **Año 2** | **Año 3** | **Año 4** | **Año 5** |
+| --- | --- | --- | --- | --- | --- | --- |
+| Pesimista | $-25.730$ | 5.821 | 4.258 | 7.625 | 5.942 | 9.308 |
+| Base | $-25.730$ | 10.869 | 15.077 | 11.231 | 16.760 | 13.636 |
+| Optimista | $-25.730$ | 16.639 | 26.616 | 20.607 | 30.464 | 24.454 |
+
+**Tabla:** Indicadores resultantes por escenario
+
+| **Escenario** | **VAN (USD)** | **TIR** | **Repago simple** | **Repago descontado** |
+| --- | --- | --- | --- | --- |
+| Pesimista | $-4.410$ | 8,09 % | 4,22 años | no se alcanza |
+| Base | 18.869 | 41,57 % | 1,99 años | 2,66 años |
+| Optimista | 51.990 | 78,24 % | 1,34 años | 1,56 años |
+
+## Versiones anteriores del modelo
+
+Las primeras versiones del modelo se construyeron en una planilla de cálculo que usaba un ticket derivado de la disposición a pagar de la encuesta, restaba la comisión de MercadoPago como costo de la plataforma e incluía una partida fija de procesamiento de LLM. Esa planilla no se incluye en este trabajo porque sus cifras contradicen el modelo vigente: el ticket se recalculó con el relevamiento de Superprof
+(apéndice~[§apx:precio]), con el modelo de cobro A la comisión de
+MercadoPago la paga el tutor, y el único uso de LLM es el adicional de resumen, que se cobra aparte. El efecto de los dos últimos cambios sobre los indicadores se presenta en la tabla~[§tab:puente].
 
 # Bibliografía
 
@@ -1811,3 +2453,4 @@ Superprof (apendices/superprof-precios.csv) y un archivo
 * `[mpmarketplace]` *Mercado Pago. Integrar checkout en marketplace (2026). https://www.mercadopago.com.br/developers/en/docs/checkout-pro/how-tos/integrate-marketplace*
 * `[openaitranscribe2026]` *OpenAI. GPT-4o Mini Transcribe -- modelo y tarifa (s. f.). https://developers.openai.com/api/docs/models/gpt-4o-mini-transcribe*
 * `[openaipricing2026]` *OpenAI. Precios de la API de OpenAI (s. f.). https://openai.com/api/pricing/*
+* `[bna2026]` *El Cronista. Dólar oficial: cómo cerró su cotización hoy miércoles 9 de septiembre (s. f.). https://www.cronista.com/finanzas-mercados/dolar-oficial-como-cerro-su-cotizacion-hoy-miercoles-9-de-septiembre/*

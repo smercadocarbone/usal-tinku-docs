@@ -245,7 +245,7 @@ apéndice~\ref{apx:tecnicos}.
         Índice semántico & Columna \texttt{vector(384)} de pgvector en la misma base: los \gls{embeddings} de perfiles y temas se guardan junto al resto de los datos y no hay un índice en memoria que reconstruir al reiniciar (ADR-M2-01) \\
         Estado en tiempo real & Sin Redis. El estado de la sala vive en LiveKit Cloud y en la base; los límites de pedidos por IP y el bloqueo por intentos de login se cuentan en memoria del backend, válido mientras haya una sola instancia (ADR-000-04) \\
         Migraciones & Flyway, con el esquema validado al arrancar (\texttt{ddl-auto: validate}): si el código y la base divergen, el backend no inicia. Una migración ya aplicada nunca se edita; las correcciones se agregan como migraciones nuevas \\
-        Respaldo & Copia diaria de la base con \path{pg_dump}, cifrada y subida a Cloudflare R2, fuera del servidor, con 14 días de retención (ADR-000-07) \\
+        Respaldo & Copia diaria de la base con \path{pg_dump}, cifrada y subida a Cloudflare R2, fuera del servidor, con 14 días de retención (ADR-000-07). El contenedor está desplegado; la copia sale del servidor recién cuando se cargan las credenciales de R2, paso pendiente antes del piloto \\
         \bottomrule
     \end{tabularx}
 \end{table}
@@ -294,7 +294,8 @@ la operación de un único desarrollador, y el costo queda dentro del techo
 de 0--100 USD mensuales. La decisión acepta riesgos explícitos: el
 servidor es un único punto de falla y, al estar en un domicilio, un corte
 de luz o de internet deja al sistema fuera de línea mientras dure. Se
-mitigan con la copia diaria fuera del servidor, la restauración ensayada
+mitigan con la copia diaria fuera del servidor (pendiente de activar con
+las credenciales de R2), una restauración a ensayar antes del piloto
 y, como recomendación del mismo ADR, una UPS y un aviso externo de caída;
 la decisión se revisa si la operación crece.
 

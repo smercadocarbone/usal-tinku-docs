@@ -207,7 +207,7 @@ del backend en las mediciones registradas en el repositorio del sistema.
         \midrule
         21/09/2026 & Auditoría técnica, sobre la rama principal & 383, sin fallas & --- \\
         14/10/2026 & Línea de base de la rama principal & 661, sin fallas, 5 omitidas & Cobertura de líneas del 85,6\,\% (JaCoCo) \\
-        15/10/2026 & Rama que integra la remediación de las pruebas en producción & 738, sin fallas, 5 omitidas & Cobertura del 86,2\,\%; Playwright: 220 exitosas y 3 omitidas; pytest: 26 de 26 \\
+        15/10/2026 & Rama principal, con la remediación de las pruebas en producción y la ventana mínima de 21 minutos integradas & 739, sin fallas, 5 omitidas & Cobertura del 86,2\,\% (medida con 738 pruebas, antes del último cambio); Playwright: 222 exitosas y 3 omitidas; pytest: 26 de 26 \\
         \bottomrule
     \end{tabularx}
 \end{table}
@@ -328,8 +328,9 @@ un celular no se probaron.
 
 La remediación de los hallazgos de código se implementó el 15 de octubre de
 2026, con una prueba que reproduce cada hallazgo y falla antes del
-arreglo, en ramas pendientes de integrar a la rama principal (riesgo
-R-15 del capítulo~\ref{cap:riesgos}). Como parte de ella se calibró el
+arreglo, y se integró ese mismo día a la rama principal con la
+integración continua en verde; queda repetir las pruebas por rol en
+producción (riesgo R-15 del capítulo~\ref{cap:riesgos}). Como parte de ella se calibró el
 umbral de relevancia de la búsqueda con el modelo de \gls{embeddings}
 real sobre 40 consultas (20 relevantes, 10 irrelevantes y 10 sin
 sentido): con el umbral anterior (0,30) pasaban 5 de 10 consultas
@@ -511,7 +512,7 @@ en el anexo~\ref{anx:modelo-financiero}.
         \tb{Resultados favorables} & \tb{Resultados desfavorables} \\
         \midrule
         Nueve módulos implementados y desplegados, con 661 pruebas automatizadas en la rama principal y 85,6\,\% de cobertura &
-        Las pruebas en producción encontraron tres hallazgos altos que la suite no detectaba; su remediación está por integrar \\
+        Las pruebas en producción encontraron tres hallazgos altos que la suite no detectaba; su remediación ya está en la rama principal y falta repetir las pruebas en producción \\
         Los 36 hallazgos de la auditoría, cerrados con prueba de regresión &
         Producción quedó, tras las pruebas, en un estado que debe revertirse antes del piloto (R-17) \\
         Kill-switch funcionando de punta a punta en la prueba en vivo &

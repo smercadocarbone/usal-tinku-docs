@@ -434,7 +434,8 @@ Todo el ecosistema se despliega en un servidor propio administrado con
 Coolify: cuatro contenedores (base de datos, motor de \gls{matching},
 backend y frontend) cuyas imágenes construye GitHub Actions, publicados
 en internet a través de Cloudflare Tunnel y con una copia de seguridad
-diaria y cifrada de la base en Cloudflare R2. En el diseño inicial se
+diaria y cifrada de la base en Cloudflare R2 (implementada; se activa al
+cargar las credenciales de R2, paso pendiente antes del piloto). En el diseño inicial se
 preveía repartir el sistema entre Supabase (base de datos), Vercel
 (frontend) y Upstash (Redis); se abandonó porque el plan gratuito de
 Vercel no admite uso comercial y porque concentrar todo en un solo
