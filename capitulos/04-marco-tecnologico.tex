@@ -44,84 +44,126 @@ durante el desarrollo, y un plazo fijo de seis meses. Cuando existió una
 alternativa técnicamente superior pero incompatible con esas
 restricciones, se documenta también por qué fue descartada.
 
+El capítulo describe el sistema tal como quedó construido. Varias
+decisiones del diseño inicial se modificaron durante la implementación;
+cada cambio se explica donde corresponde y se resume, con su fundamento,
+en la sección~\ref{sec:decisiones-implementacion}.
+
 \section{Arquitectura del sistema}
 
 \subsection{Estilo arquitectónico}
 
-\sistema{} adopta una arquitectura \textbf{cliente-servidor en capas},
-con un backend propio que concentra la lógica de negocio y un conjunto
-de servicios externos especializados y desacoplados para las funciones
-que no forman parte del núcleo diferencial del producto: video (LiveKit
-Cloud), pagos (MercadoPago) e inteligencia artificial (proveedores de
-modelos de lenguaje y \gls{embeddings}). Se descartó una arquitectura de
-microservicios propios porque, para un equipo de un desarrollador y un
-\gls{mvp} de alcance acotado, la sobrecarga operativa de orquestar
-múltiples servicios propios (versionado independiente, comunicación
-entre servicios, observabilidad distribuida) no se justifica frente al
-beneficio --los ``servicios'' que sí están desacoplados (video, pagos,
-\gls{ia}) ya lo están porque se delegan a proveedores externos maduros,
-no porque \sistema{} los reimplemente como microservicios propios.
+\sistema{} es un \textbf{monolito modular}: un único backend en Spring
+Boot organizado en nueve módulos de dominio --Identidad, Matching, Aula,
+Reservas, Pagos, Resumen, Reputación, Admin y Seguridad--, cada uno con
+su propio paquete Java y su propio esquema en la base de datos. Los
+módulos se comunican de forma síncrona, dentro del mismo proceso, cuando
+el flujo necesita una respuesta inmediata, y mediante eventos de dominio
+en memoria (por ejemplo \path{sesion.finalizada} o
+\path{denuncia.registrada}) cuando un hecho dispara varias reacciones
+independientes. No se usa ningún \emph{message broker} externo. Todo plazo
+de negocio que involucra dinero o seguridad --liberación del
+\gls{escrow}, vencimiento de una reserva sin pagar, plazos del kill-switch
+y de las denuncias, borrado del audio del resumen-- se programa con Quartz
+persistido en la misma base de datos, de modo que sobrevive a un reinicio
+del proceso (Constitución del proyecto, artículos VIII a X; ADR-000-01 y
+ADR-000-02).
+
+La única pieza propia que corre como proceso aparte es el \textbf{motor
+de \gls{matching}}, un servicio en Python que calcula los
+\gls{embeddings} y consulta la similitud semántica. Es una excepción
+explícita y documentada: el ecosistema de modelos de lenguaje que el
+motor necesita (sentence-transformers) es nativo de Python, y aislarlo
+evita mezclar dos entornos de ejecución en el mismo proceso. El backend
+lo invoca por HTTP de forma síncrona. Fuera de esa excepción, se descartó
+una arquitectura de microservicios propios porque, para un único
+desarrollador y un \gls{mvp} de alcance acotado, la sobrecarga de
+versionar, comunicar y observar varios servicios no se justifica frente
+al beneficio.
+
+El diseño inicial describía un estilo ``cliente-servidor en capas'' en
+el que toda la \gls{ia} --incluido el \gls{matching}-- se delegaba a
+proveedores externos. Se reemplazó por el monolito modular porque los
+\gls{embeddings} los calcula \sistema{} con un modelo abierto, sin costo
+por llamada y sin que los perfiles salgan del servidor; los proveedores
+externos quedaron acotados al video (LiveKit Cloud), el cobro
+(MercadoPago), la transcripción y el resumen (OpenAI) y el correo
+transaccional (Resend). Los límites entre módulos son organizativos
+--paquetes y esquemas separados-- y no los impone el compilador: el
+acceso directo de un módulo a datos de otro está medido y aceptado como
+deuda técnica en ADR-000-03.
 
 \subsection{Componentes y responsabilidades}
 
-La tabla~\ref{tab:componentes} resume los ocho componentes del sistema y
-sus responsabilidades.
+La tabla~\ref{tab:componentes} resume los componentes del sistema y sus
+responsabilidades.
 
 \begin{table}[H]
     \centering
     \caption{Componentes del sistema y responsabilidades}
     \label{tab:componentes}
     \small
-    \begin{tabularx}{\textwidth}{L L L}
+    \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.1cm} L L}
         \toprule
         \tb{Componente} & \tb{Responsabilidad} & \tb{Tecnología} \\
         \midrule
-        Cliente (\gls{pwa}) & Interfaz de usuario para alumno, tutor y adulto responsable; consume la \gls{api} REST del backend & React / Next.js \\
-        Backend \gls{api} REST & Lógica de negocio, autenticación y autorización por rol, orquestación de los servicios externos & Spring Boot (Java) \\
-        Base de datos relacional & Persistencia del modelo de datos principal (usuarios, reservas, pagos, calificaciones, denuncias) & PostgreSQL (Supabase) \\
-        Caché / estado en tiempo real & Sesiones, chat en tiempo real (pub/sub), rate limiting & Redis (Upstash) \\
-        Aula virtual & Transmisión de audio/video entre tutor y alumno & LiveKit Cloud (\gls{webrtc}) \\
-        Pasarela de pagos & Procesamiento de cobro vía Checkout Pro & MercadoPago (SDK oficial Java) \\
-        Servicios de \gls{ia} & \gls{matching} semántico, transcripción y resumen de sesión, asistente conceptual, kill-switch de seguridad & sentence-transformers + FAISS, \gls{llm} GPT-4o (resumen) y gpt-4o-mini-transcribe (transcripción), clasificador on-device \\
-        Panel de administración & Moderación, resolución de denuncias, aprobación de tutores & Módulo interno del backend + vista en el frontend \\
+        Cliente web (\gls{pwa}) & Interfaz para alumno, tutor, adulto responsable y administración; consume la \gls{api} \gls{rest} del backend. En el aula corre el clasificador del kill-switch sobre el video remoto y, solo con el adicional de resumen, graba el audio en el navegador del tutor & Next.js 16 + React 19; NSFWJS sobre TensorFlow.js; cliente de LiveKit \\
+        Backend (monolito modular) & Lógica de negocio de los nueve módulos, autenticación y autorización por tipo de usuario y por acción, plazos de negocio persistidos, orquestación de los servicios externos & Java 21 + Spring Boot 4.1.1, Spring Security + \gls{jwt}, Quartz, JPA + Flyway \\
+        Motor de \gls{matching} & Cálculo de \gls{embeddings} de perfiles y temas, y consulta de similitud semántica contra la base & Python, FastAPI, sentence-transformers (\texttt{paraphrase-}\allowbreak\texttt{multilingual-}\allowbreak\texttt{MiniLM-L12-v2}, 384 dimensiones) \\
+        Base de datos & Persistencia de los nueve módulos (un esquema por módulo), índice semántico y tablas de Quartz & PostgreSQL 16 con pgvector, en contenedor propio \\
+        Aula virtual & Transmisión de audio, video, pizarra y mensajes de texto entre tutor y alumno & LiveKit Cloud (\gls{webrtc}); el backend emite los tokens de sala y cierra las salas por la \gls{api} de LiveKit, sin \gls{sdk} \\
+        Pasarela de pagos & Cobro con Checkout Pro en la cuenta de MercadoPago de cada tutor, conectada por \gls{oauth}; reembolsos durante la ventana de \gls{escrow} & MercadoPago, cliente HTTP propio (sin \gls{sdk}) \\
+        Transcripción y resumen & Transcripción del audio de la clase y resumen sobre el texto ya anonimizado, solo con el adicional contratado & OpenAI: \texttt{gpt-4o-mini-transcribe} y \gls{llm} GPT-4o \\
+        Correo transaccional & Avisos y recuperación de contraseña fuera de la aplicación & Resend (plan gratuito), por HTTP \\
+        Panel de administración & Moderación (credenciales, \gls{cap}, alertas del kill-switch, denuncias, sanciones), soporte financiero y salud de la infraestructura, con dos roles de administrador & Módulo Admin del backend + vistas \path{/admin} del frontend \\
+        Publicación y operación & Entrada desde internet sin abrir puertos, orquestación de contenedores y respaldo de la base fuera del servidor & Cloudflare Tunnel, Coolify, copia diaria cifrada en Cloudflare R2 \\
         \bottomrule
     \end{tabularx}
 \end{table}
 
 \subsection{Flujo de datos}
 
-El cliente nunca se comunica directamente con los servicios externos con
-sus propias credenciales: todo pasa por el backend, que actúa como
-intermediario autenticado. El cliente autentica contra el backend
-mediante \gls{jwt} y consume la \gls{api} REST para las operaciones
-habituales --búsqueda de tutores, reservas, chat, calificaciones. Para
-el aula virtual, el backend genera un token de acceso de LiveKit con
-permisos acotados a la sala correspondiente y se lo entrega al cliente,
-que recién en ese momento se conecta directamente al servicio de LiveKit
-Cloud para el flujo de audio y video; este diseño evita que todo el
-tráfico de video circule por el propio backend, que no está dimensionado
-para soportarlo. Los pagos siguen una lógica equivalente: el backend
-crea la preferencia de pago contra la \gls{api} de MercadoPago y recibe
-notificaciones vía webhook cuando el estado del pago cambia, actualizando
-en consecuencia el estado de la reserva en la base de datos. El
-\gls{matching} y la \gls{ia} educativa, por su parte, se invocan de forma
-asincrónica --mediante colas o llamadas diferidas-- y el resultado se
-persiste sin bloquear al usuario mientras espera la respuesta de un
-modelo externo.
+El cliente nunca se comunica con los servicios externos usando
+credenciales propias: todo pasa por el backend, que actúa como
+intermediario autenticado. El cliente se autentica contra el backend
+mediante \gls{jwt} y consume la \gls{api} \gls{rest} para las operaciones
+habituales --búsqueda de tutores, reservas, pagos, calificaciones,
+denuncias. Para el aula virtual, el backend genera un token de acceso de
+LiveKit con permisos acotados a la sala correspondiente y se lo entrega
+al cliente, que recién entonces se conecta directamente a LiveKit Cloud
+para el audio, el video y los mensajes de texto (que viajan por el canal
+de datos de la sala); así el tráfico de video no pasa por el backend.
+
+Los pagos siguen una lógica equivalente: el backend crea la preferencia
+de pago contra la \gls{api} de MercadoPago con el token del tutor de esa
+reserva, recibe la notificación por webhook cuando el pago cambia de
+estado y, además, concilia periódicamente los pagos pendientes con un
+trabajo de Quartz. El \gls{matching} se resuelve con una llamada HTTP
+síncrona al motor en Python: el backend acota primero los candidatos
+(autorización, cuentas suspendidas, tutores habilitados) y el motor
+ordena ese subconjunto por similitud. El resumen, en cambio, es
+asincrónico sin necesidad de colas: al finalizar la sesión, un evento de
+dominio en memoria y un trabajo de Quartz persistido transcriben el
+audio, lo anonimizan y piden el resumen, con reintentos ante fallas. El
+diseño inicial preveía colas para el \gls{matching} y la \gls{ia}; se
+descartaron porque la Constitución del proyecto prohíbe un
+\emph{broker} externo y porque Quartz, que ya era necesario para los
+plazos de negocio, cubre el mismo caso sin otra pieza que operar.
 
 \subsection{Diagrama de arquitectura}
 
-El diagrama muestra los ocho componentes de la tabla~\ref{tab:componentes}
-y sus conexiones: el cliente solo se comunica con Vercel (que sirve los
-archivos estáticos) y, a través de HTTPS, con el backend; el backend es
-el único componente que tiene credenciales para hablar con Supabase,
-Upstash, MercadoPago y los servicios de \gls{ia}; LiveKit Cloud es la
-única excepción, donde el cliente se conecta directamente una vez que el
-backend le entrega un token de corta duración.
+La figura~\ref{fig:arquitectura} muestra los componentes de la
+tabla~\ref{tab:componentes} y sus conexiones. Todo el tráfico de
+internet entra por Cloudflare Tunnel hasta el servidor propio, donde
+Coolify ejecuta los contenedores del frontend, el backend, el motor de
+\gls{matching} y la base de datos. El backend es el único componente con
+credenciales para hablar con MercadoPago, OpenAI y Resend; LiveKit Cloud
+es la única excepción, donde el cliente se conecta directamente una vez
+que el backend le entrega un token de corta duración.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.85\textwidth]{figuras/diagrama_arquitectura_tinku}
+    \includegraphics[width=\textwidth]{figuras/diagrama_arquitectura_tinku}
     \caption{Diagrama de arquitectura del sistema}
     \label{fig:arquitectura}
 \end{figure}
@@ -144,6 +186,9 @@ Sprint Backlog vigente.
 
 \section{Stack de software}
 
+Las versiones exactas de cada dependencia se listan en el
+apéndice~\ref{apx:tecnicos}.
+
 \subsection{Frontend}
 
 \begin{table}[H]
@@ -158,7 +203,8 @@ Sprint Backlog vigente.
         Tecnología & Next.js 16 + React 19 (App Router), elegido por el posicionamiento en buscadores de los perfiles públicos de tutores \\
         Por qué se eligió & Conocimiento previo del desarrollador (capítulo~\ref{cap:introduccion}, sección~\ref{sec:recursos}), ecosistema maduro, gran disponibilidad de componentes para formularios, calendarios y videollamada embebida \\
         Alternativas evaluadas & Vue.js -- descartado por menor familiaridad del desarrollador, lo que hubiera consumido tiempo de aprendizaje no disponible en el cronograma de seis meses \\
-        Formato de despliegue & \gls{pwa}, consistente con la exclusión de app móvil nativa del alcance (capítulo~\ref{cap:introduccion}, sección~\ref{sec:alcance}) \\
+        Formato de despliegue & \gls{pwa}, consistente con la exclusión de app móvil nativa del alcance (capítulo~\ref{cap:introduccion}, sección~\ref{sec:alcance}); se sirve desde un contenedor propio en el mismo servidor que el backend \\
+        Clasificador del kill-switch & NSFWJS 4.3 sobre TensorFlow.js 4.22 (backend \texttt{wasm}), con el modelo servido por el propio frontend: el video nunca sale del navegador para ser clasificado (ADR-M3-01) \\
         \bottomrule
     \end{tabularx}
 \end{table}
@@ -175,9 +221,10 @@ Sprint Backlog vigente.
         \tb{Ítem} & \tb{Detalle} \\
         \midrule
         Tecnología & Java 21 + Spring Boot 4.1.1 (la rama 3.5 dejó de recibir parches gratuitos el 30/06/2026) \\
-        Por qué se eligió & Framework ``batteries-included'' (seguridad, ORM, validación, manejo de excepciones ya resueltos) que reduce el riesgo de un desarrollador único investigando y ensamblando librerías sueltas bajo un cronograma fijo; alta disponibilidad de documentación y comunidad en español, relevante para un desarrollador sin experiencia previa profunda en ninguno de los lenguajes candidatos \\
+        Por qué se eligió & Framework ``batteries-included'' (seguridad, ORM, validación, manejo de excepciones ya resueltos) que reduce el riesgo de un desarrollador único investigando y ensamblando librerías sueltas bajo un cronograma fijo; Quartz con persistencia en la base, necesario para que ningún plazo de negocio viva en memoria; alta disponibilidad de documentación y comunidad en español (ADR-000-02) \\
         Alternativas evaluadas & Go -- descartado pese a tener ventajas reales de footprint de memoria y simplicidad del lenguaje, porque su ecosistema requiere ensamblar manualmente router, ORM y librerías de autenticación, lo cual consume tiempo de decisión de arquitectura que un proyecto de 6 meses en solitario no puede permitirse. Node.js -- descartado como backend principal por preferirse la robustez de tipado y el ecosistema de seguridad de Spring frente a un desarrollador que tampoco tenía experiencia consolidada previa en ninguno de los dos \\
-        Autenticación & Spring Security + \gls{jwt} emitido y validado por el propio backend (no se delega la autenticación a Supabase Auth, dado que el modelo de roles de \sistema{} --adulto responsable, menor con permisos por acción, tutor, administrador-- requiere lógica de autorización granular propia que conviene mantener dentro del mismo framework que ya gestiona el resto de las reglas de negocio) \\
+        Autenticación & Spring Security + \gls{jwt} emitido y validado por el propio backend, sin un proveedor externo de identidad: el modelo de permisos de \sistema{} --adulto responsable, menor con permisos por acción, tutor, dos roles de administración-- requiere reglas de autorización propias que conviene mantener dentro del mismo framework que gestiona el resto de las reglas de negocio \\
+        Motor de \gls{matching} & Servicio aparte en Python 3.12 con FastAPI y sentence-transformers; modelo \texttt{paraphrase-}\allowbreak\texttt{multilingual-}\allowbreak\texttt{MiniLM-L12-v2} (384 dimensiones), elegido por ser multilingüe y correr en CPU dentro del mismo servidor, sin costo por consulta \\
         \bottomrule
     \end{tabularx}
 \end{table}
@@ -193,15 +240,29 @@ Sprint Backlog vigente.
         \toprule
         \tb{Ítem} & \tb{Detalle} \\
         \midrule
-        Motor relacional & PostgreSQL, gestionado por Supabase. Postgres es un motor relacional maduro con buen soporte de extensiones (por ejemplo, búsqueda por similitud vectorial vía pgvector, relevante para el motor de \gls{matching}); Supabase ofrece un plan gratuito suficiente para el \gls{mvp} y evita la administración manual de backups y actualizaciones del motor de base de datos \\
-        Detalle de conexión & El backend Spring Boot se conecta a través del pooler de Supabase (Supavisor) en modo sesión (puerto 5432), que se comporta como una conexión directa y es compatible con prepared statements de Hibernate sin configuración adicional. Se documenta como decisión explícita porque el modo transacción (puerto 6543) del mismo pooler no es compatible por defecto con el cacheo de prepared statements que usa Hibernate, y migrar a ese modo en el futuro requeriría desactivar esa característica en el driver JDBC \\
-        Caché / tiempo real & Redis, gestionado por Upstash (plan gratuito serverless por volumen de uso) -- usado para estado de chat en tiempo real y rate limiting, no para el estado interno de las salas de videollamada, que en el \gls{mvp} delega en LiveKit Cloud \\
-        Respaldo y migraciones & Backups automáticos de Supabase en su plan gestionado; migraciones de esquema versionadas con Flyway o Liquibase integradas al ciclo de despliegue de Spring Boot \\
+        Motor relacional & PostgreSQL 16 con la extensión pgvector (imagen \path{pgvector/pgvector:pg16}), en un contenedor propio con volumen persistente. Un solo motor y un esquema por módulo (\texttt{identidad}, \texttt{matching}, \texttt{aula}, \texttt{reservas}, \texttt{pagos}, \texttt{resumen}, \texttt{reputacion}, \texttt{admin}, \texttt{seguridad}) \\
+        Conexión & El backend y el motor de \gls{matching} se conectan por JDBC y \texttt{psycopg} dentro de la red interna de los contenedores; la base no publica ningún puerto hacia internet \\
+        Índice semántico & Columna \texttt{vector(384)} de pgvector en la misma base: los \gls{embeddings} de perfiles y temas se guardan junto al resto de los datos y no hay un índice en memoria que reconstruir al reiniciar (ADR-M2-01) \\
+        Estado en tiempo real & Sin Redis. El estado de la sala vive en LiveKit Cloud y en la base; los límites de pedidos por IP y el bloqueo por intentos de login se cuentan en memoria del backend, válido mientras haya una sola instancia (ADR-000-04) \\
+        Migraciones & Flyway, con el esquema validado al arrancar (\texttt{ddl-auto: validate}): si el código y la base divergen, el backend no inicia. Una migración ya aplicada nunca se edita; las correcciones se agregan como migraciones nuevas \\
+        Respaldo & Copia diaria de la base con \path{pg_dump}, cifrada y subida a Cloudflare R2, fuera del servidor, con 14 días de retención (ADR-000-07) \\
         \bottomrule
     \end{tabularx}
 \end{table}
 
-\section{Infraestructura y hosting}
+El diseño inicial ubicaba la base en Supabase (conectada por su
+\emph{pooler}), un índice \gls{faiss} en memoria del proceso de \gls{matching}
+y Redis en Upstash para el estado del chat y el control de pedidos. Las
+tres piezas se descartaron: Supabase y Upstash porque todo el sistema se
+concentró en un único servidor propio (sección~\ref{sec:infraestructura});
+FAISS porque obligaba a mantener un segundo mecanismo de copia y
+reconstrucción del índice, mientras que pgvector deja el índice como una
+columna más de la misma base (ADR-M2-01); y Redis porque, con una sola
+instancia del backend, una dependencia menos simplifica la operación sin
+perder nada (ADR-000-04, decisión D8). No existe un módulo de chat: los
+mensajes de texto del aula viajan por el canal de datos de LiveKit.
+
+\section{Infraestructura y hosting}\label{sec:infraestructura}
 
 La tabla~\ref{tab:infra} resume dónde se aloja cada componente.
 
@@ -210,25 +271,40 @@ La tabla~\ref{tab:infra} resume dónde se aloja cada componente.
     \caption{Infraestructura y hosting de cada componente}
     \label{tab:infra}
     \small
-    \begin{tabularx}{\textwidth}{l L L}
+    \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{2.8cm} L L}
         \toprule
         \tb{Componente} & \tb{Dónde se aloja} & \tb{Notas} \\
         \midrule
-        Frontend (\gls{pwa}) & Vercel & Plan gratuito (Hobby) durante el desarrollo; CDN global sin configuración adicional \\
-        Backend (Spring Boot) & Fase de desarrollo: computadora propia del desarrollador, gestionada con Coolify (PaaS autoalojado) y expuesta a internet mediante Cloudflare Tunnel, sin necesidad de IP pública ni apertura de puertos. Fase de piloto (Sprint 11, capítulo~\ref{cap:metodologia}): migración a un \gls{vps} económico (por ejemplo, Hetzner, 10--25 USD/mes), reutilizando la misma configuración de Coolify & La migración de computadora propia a \gls{vps} no requiere reescribir la configuración de despliegue, dado que Coolify orquesta el mismo conjunto de contenedores Docker en ambos casos \\
-        Base de datos y Redis & Supabase y Upstash respectivamente & Servicios gestionados en la nube, independientes de dónde corra el backend \\
-        Aula virtual & LiveKit Cloud & Plan gratuito (Build): 5.000 minutos de participante por mes sin necesidad de tarjeta de crédito, equivalente a más de 40 horas de clases de 1 a 1 mensuales -- cobertura suficiente para el piloto. Se descartó el auto-hospedaje de LiveKit porque requiere una IP pública alcanzable por UDP para el protocolo \gls{webrtc}, algo que ni la computadora de desarrollo ni un \gls{vps} económico garantizan sin trabajo adicional de configuración de NAT/TURN \\
+        Frontend, backend, motor de \gls{matching} y base de datos & Un servidor propio de 8~GB de memoria, en el domicilio del desarrollador, sin IP fija, administrado con Coolify (\gls{paas} autoalojado). Cada componente es un contenedor del mismo \emph{Docker Compose}, con límites de memoria propios & Ningún contenedor publica puertos. Las imágenes se construyen en GitHub Actions y se publican en GitHub Container Registry; el servidor solo las descarga y las ejecuta (ADR-000-07) \\
+        Entrada desde internet & Cloudflare Tunnel, desde un contenedor \texttt{cloudflared} en el mismo servidor & Cloudflare pone el HTTPS y enruta el dominio público al frontend y el subdominio de la \gls{api} al backend, sin abrir puertos en el router \\
+        Respaldo de la base & Cloudflare R2 (capa gratuita) & Copia diaria cifrada, 14 días de retención; restauración documentada en el manual de operación del repositorio \\
+        Aula virtual & LiveKit Cloud & Plan gratuito (Build): 5.000 minutos de participante por mes sin necesidad de tarjeta de crédito, equivalente a más de 40 horas de clases de 1 a 1 mensuales -- cobertura suficiente para el piloto. Se descartó el auto-hospedaje de LiveKit porque requiere una IP pública alcanzable por UDP para el protocolo \gls{webrtc}, algo que el servidor propio no tiene \\
+        Pagos, transcripción y resumen, correo & MercadoPago, OpenAI y Resend & Servicios externos invocados solo desde el backend; sin configuración, cada integración queda apagada y falla de forma segura (\emph{fail-closed}) \\
         \bottomrule
     \end{tabularx}
 \end{table}
 
+El diseño inicial repartía la operación entre Vercel (frontend),
+Supabase (base de datos), Upstash (Redis) y un backend en la computadora
+del desarrollador que se migraría a un \gls{vps} alquilado (por ejemplo,
+Hetzner) antes del piloto. Se reemplazó por un único servidor con
+Coolify por tres motivos registrados en ADR-000-07: el plan gratuito de
+Vercel no admite uso comercial, concentrar todo en un proveedor reduce
+la operación de un único desarrollador, y el costo queda dentro del techo
+de 0--100 USD mensuales. La decisión acepta riesgos explícitos: el
+servidor es un único punto de falla y, al estar en un domicilio, un corte
+de luz o de internet deja al sistema fuera de línea mientras dure. Se
+mitigan con la copia diaria fuera del servidor, la restauración ensayada
+y, como recomendación del mismo ADR, una UPS y un aviso externo de caída;
+la decisión se revisa si la operación crece.
+
 En cuanto a la escalabilidad: para el rango de tráfico esperado durante
-el \gls{mvp} y el piloto (capítulo~\ref{cap:metodologia}), un único
-\gls{vps} vertical (backend + base de datos si se optara por
-auto-alojarla) es suficiente. La estrategia de escalado horizontal
---balanceador de carga con múltiples instancias, o eventualmente
-Kubernetes-- queda fuera del alcance de esta entrega y se documenta como
-trabajo futuro, condicionada a que el volumen de uso real lo justifique.
+el \gls{mvp} y el piloto (capítulo~\ref{cap:metodologia}), una única
+instancia de cada componente es suficiente. Escalar el backend a más de
+una instancia exige antes revisar dos decisiones que hoy suponen una sola
+--Quartz sin \emph{clustering} y los contadores de pedidos en memoria
+(ADR-000-04)--, por lo que el escalado horizontal queda como trabajo
+futuro, condicionado a que el volumen de uso real lo justifique.
 
 Los costos por componente y por etapa (desarrollo, piloto, eventual
 escalado) se presentan en el capítulo~\ref{cap:economica}, consistente
@@ -237,63 +313,64 @@ capítulo~\ref{cap:metodologia}.
 
 \section{Modelo de datos}\label{sec:modelo-datos}
 
-El modelo se organiza alrededor de nueve entidades, cuyo detalle
-completo de atributos se documenta en el diccionario de datos que se
-incluye como apéndice técnico. \tb{Usuario} es la entidad base y define
-un rol (ADULTO, MENOR, TUTOR, ADMIN); un usuario con rol ADULTO puede,
-además de gestionar sus propios datos, tener uno o más perfiles de MENOR
-asociados como responsable. \tb{PerfilMenor} está vinculado a un Usuario
-con rol ADULTO y hereda una sesión propia, pero con permisos restringidos
-a nivel de endpoint: no puede iniciar pagos, aceptar acuerdos ni reservar
-con un tutor no autorizado previamente. \tb{PerfilTutor} concentra las
-credenciales académicas, la documentación de verificación (DNI,
-certificados), las materias, la disponibilidad y el precio de referencia,
-mientras que \tb{Certificado} representa cada documento cargado por el
-tutor --DNI, título, analítico, y opcionalmente el \gls{cap}-- con un
-estado de revisión (pendiente, aprobado manual, rechazado, y
-\texttt{en\_revision\_legal} exclusivo para el \gls{cap}). A nivel de
-integridad, la ausencia de un certificado de tipo \gls{cap} no bloqueará
-la activación del PerfilTutor ni la generación de una Reserva.
+El modelo se organiza en nueve esquemas, uno por módulo, versionados con
+Flyway. Las tablas principales y sus atributos clave se describen en el
+diccionario de datos del apéndice~\ref{apx:tecnicos}; esta sección
+resume las entidades y sus relaciones.
 
-\tb{Reserva} es el bloque horario entre un PerfilMenor/Usuario ADULTO y
-un PerfilTutor, con estados que recorren \texttt{pendiente\_pago},
-\texttt{confirmada}, \texttt{en\_curso}, \texttt{finalizada},
-\texttt{cancelada} o \texttt{no\_show}. \tb{Sesión} es la instancia de
-videollamada asociada a una Reserva, con referencia a la grabación cuando
-corresponde y al resumen generado por \gls{ia}; \tb{Pago} referencia la
-transacción de MercadoPago asociada a esa Reserva, con su estado de
-\gls{escrow}. Por último, \tb{Calificación} es bidireccional y se asocia
-a una Sesión finalizada, y \tb{Denuncia} se asocia a una Sesión o a un
-PerfilTutor/Usuario, con estado de revisión propio y una referencia a la
-evidencia preservada.
+\tb{Usuario} (\path{identidad.usuarios}) es la entidad base. Su tipo es
+ADULTO, MENOR o TUTOR; un ADULTO tiene una o dos capacidades
+--estudiante y adulto responsable--. El menor tiene una cuenta y una
+sesión propias (tipo MENOR) vinculadas obligatoriamente a su Adulto
+Responsable, con permisos restringidos a nivel de endpoint: no puede
+pagar, no puede autorizar tutores nuevos ni presentar denuncias, y no
+crea Reservas. El Adulto Responsable autoriza explícitamente a cada tutor
+con el que el menor puede tomar clase (\tb{Autorización de tutor}). El
+tutor concentra su perfil público, su foto, sus temas, su tarifa y su
+disponibilidad; cada \tb{Credencial académica} (título, certificado
+analítico o matrícula) tiene un estado de revisión (pendiente, aprobada,
+rechazada), y el \tb{\gls{cap}} tiene además los estados
+\path{en_revision_legal} y \texttt{vencido}. El \gls{cap} no es
+requisito para activar el perfil del tutor ni para reservarle una clase
+entre adultos: solo habilita a dar clases a menores, y sin un \gls{cap}
+aprobado y vigente el tutor no aparece en las búsquedas de un menor ni
+se le puede reservar con uno (ADR-M1-04). Los administradores no son un
+tipo de usuario: \tb{Admin} (\path{admin.admins}) es una entidad aparte,
+vinculada a un usuario, con exactamente uno de dos roles
+(sección~\ref{sec:seguridad}).
 
-\textbf{Relaciones clave:} un Usuario ADULTO $\rightarrow$ varios
-PerfilMenor; un PerfilTutor $\rightarrow$ varias Reserva; una Reserva
-$\rightarrow$ una Sesión (1 a 1) $\rightarrow$ un Pago (1 a 1)
-$\rightarrow$ cero o más Calificación y Denuncia.
+En el módulo de reservas, el menor genera una \tb{Solicitud de Sesión}:
+una entidad separada que no bloquea el horario ni genera cobro y que el
+Adulto Responsable aprueba y paga para convertirla en una \tb{Reserva}.
+La Reserva vincula a quien paga, a quien recibe la clase y al tutor;
+congela el precio y la duración (de 30 a 180 minutos en bloques de 30) y
+recorre los estados \path{pendiente_pago}, \texttt{confirmada},
+\path{en_curso}, \texttt{finalizada}, \texttt{cancelada} y tres
+variantes de ausencia (\path{no_show_estudiante},
+\path{no_show_tutor} y \path{no_show_doble}). Un \tb{Paquete}
+mensual agrupa cuatro Reservas que se pagan juntas. Cada Reserva tiene
+a lo sumo una \tb{Sesión} de aula (1 a 1), que guarda la asistencia y el
+estado de la clase --no una grabación--, y puede originar
+\tb{Alertas de seguridad} del kill-switch. En pagos, cada Reserva tiene su
+\tb{Transacción} con el estado del \gls{escrow} (retenido, liberado,
+reembolsado o pausado por denuncia); en un paquete, un único pago de
+MercadoPago genera una Transacción por clase. Completan el modelo el
+\tb{Resumen} de la sesión, la \tb{Calificación} bidireccional, la
+\tb{Denuncia} (con la evidencia que adjunta el denunciante, si la hay) y
+la \tb{Sanción}.
 
-\textbf{Integridad:} se define una restricción de exclusión a nivel de
-base de datos (no solo validación de aplicación) para impedir dos Reserva
-superpuestas del mismo PerfilTutor o del mismo alumno, dado que una
-validación exclusivamente en el backend es vulnerable a condiciones de
-carrera cuando dos solicitudes llegan casi simultáneamente.
+\textbf{Relaciones clave:} un Adulto Responsable $\rightarrow$ uno o más
+menores; un tutor $\rightarrow$ varias Reservas; una Solicitud de Sesión
+$\rightarrow$ a lo sumo una Reserva; una Reserva $\rightarrow$ una Sesión
+(1 a 1) y una Transacción; una Sesión $\rightarrow$ cero o más
+Calificaciones, Alertas y Denuncias.
 
-El perfil de menor de edad no puede crear Reservas directamente ni
-acceder a flujos de pago; en su lugar, genera una \emph{Solicitud de
-Sesión} (entidad separada y no bloqueante) que el Adulto Responsable debe
-aprobar y abonar para convertirla en una Reserva transaccional. La
-duración de la Reserva se congela según la franja publicada por el tutor
-(entre 30 y 180 minutos), calculándose el monto final al prorratear el
-valor por hora fijado por el educador.
-
-Por normas estrictas de seguridad, el perfil de menor tiene inhabilitada
-la acción de generar Denuncias directamente desde su interfaz; cualquier
-reporte recae exclusivamente bajo la gestión de su Adulto Responsable. El
-rol ADMIN se divide lógicamente en dos dominios con colas operativas y
-permisos separados: \emph{Moderación y Seguridad} (alertas del
-kill-switch, credenciales, sanciones) y \emph{Soporte Financiero}
-(intervención manual en fallas de pago). El diccionario de datos
-completo se presenta en el apéndice~\ref{apx:tecnicos}.
+\textbf{Integridad:} dos restricciones de exclusión a nivel de base de
+datos (no solo validación de aplicación) impiden dos Reservas no
+canceladas cuyos rangos horarios se superpongan, una para el mismo tutor
+y otra para el mismo alumno, dado que una validación exclusivamente en el
+backend es vulnerable a condiciones de carrera cuando dos solicitudes
+llegan casi simultáneamente.
 
 \section{Diseño y experiencia de usuario (UX/UI)}
 
@@ -317,19 +394,20 @@ un checkbox de aceptación explícita, desactivado por defecto, habilita el
 paso siguiente. La foto de perfil del tutor es obligatoria: sin ella no
 aparece en búsquedas ni recomendaciones, porque alumnos y familias tienen
 que ver con quién toman clase. La interfaz se diferencia según el rol:
-la de un PerfilMenor no muestra ni expone controles de las acciones
-reservadas al adulto --pago, gestión de acuerdos, contacto con tutores no
-autorizados--, y esa restricción opera tanto en el diseño de interfaz
-como en los permisos de la \gls{api}, no solo a nivel visual. El sistema
-contempla una degradación de la videollamada a chat de texto
-exclusivamente durante una sesión activa en caso de conectividad
-deficiente.
+la de un menor no muestra ni expone controles de las acciones
+reservadas al adulto --pago, autorización de tutores, denuncias--, y esa
+restricción opera tanto en el diseño de interfaz como en los permisos de
+la \gls{api}, no solo a nivel visual. El aula degrada la calidad ante una
+conectividad deficiente (video, luego solo audio, luego texto), y los
+mensajes de texto viajan por el canal de datos de la propia sala de
+LiveKit.
 
 En accesibilidad, el \gls{mvp} no incluye un módulo completo
 (capítulo~\ref{cap:introduccion}, sección~\ref{sec:alcance}), pero aplica
 buenas prácticas básicas: contraste adecuado, tamaños de fuente legibles
-y navegación con foco visible. La validación del diseño con usuarios se
-apoya en las entrevistas y encuestas ya definidas en el
+y navegación con foco visible, verificadas de forma automática con
+axe-core en las pruebas del frontend. La validación del diseño con
+usuarios se apoya en las entrevistas y encuestas ya definidas en el
 capítulo~\ref{cap:metodologia}, y en \gls{uat} con el grupo piloto
 (OE8).
 
@@ -343,43 +421,70 @@ capítulo~\ref{cap:metodologia}, y en \gls{uat} con el grupo piloto
 
 \section{Decisiones incorporadas durante la implementación}\label{sec:decisiones-implementacion}
 
-Durante la construcción del \gls{mvp} se tomaron decisiones que precisan o
-corrigen lo planteado en las secciones anteriores. Cada una quedó
-registrada como decisión de arquitectura (ADR) en el repositorio del
-sistema (anexo~\ref{anx:repositorios}).
+El diseño inicial de \sistema{} --el que describen los
+capítulos~\ref{cap:introduccion} a~\ref{cap:marco-teorico} y las primeras
+versiones de este capítulo-- se ajustó durante la construcción. Los
+cambios responden a cuatro causas: las restricciones de un único
+desarrollador y un presupuesto de 0 a 100 USD mensuales, que obligaron a
+elegir en cada caso la opción más simple de operar; la seguridad del
+menor, que prevalece sobre cualquier funcionalidad; la minimización de
+datos, que impide guardar lo que ninguna regla de negocio necesita; y las
+fallas observadas al poner el sistema en producción. Cada decisión quedó
+registrada como un \gls{adr} en el
+repositorio del sistema (anexo~\ref{anx:repositorios}), donde se
+documentan las alternativas evaluadas y los riesgos aceptados. La
+tabla~\ref{tab:decisiones-implementacion} es el registro central de esos
+cambios: los demás capítulos remiten a ella. Las filas cuyo diseño
+original dice ``---'' son decisiones nuevas, sin un antecedente en el
+diseño inicial.
 
-\begin{table}[H]
-    \centering
+{\small
+\begin{xltabular}{\textwidth}{>{\raggedright\arraybackslash}p{2.6cm} >{\raggedright\arraybackslash}p{3.1cm} L >{\raggedright\arraybackslash}p{2.3cm}}
     \caption{Decisiones incorporadas durante la implementación}
-    \label{tab:decisiones-implementacion}
-    \small
-    \begin{tabularx}{\textwidth}{p{3.4cm} L}
-        \toprule
-        \tb{Tema} & \tb{Decisión y motivo} \\
-        \midrule
-        Proveedor de \gls{llm} & GPT-4o para el resumen, en lugar de la alternativa Gemini 2.0 Flash; solo recibe el texto ya anonimizado. La transcripción usa gpt-4o-mini-transcribe por costo (ADR-M6-03) \\
-        Resumen automático & Pasa a ser un adicional pago que se contrata al reservar. Si el resumen no se puede generar, se reembolsa solo el adicional \\
-        Grabación & Única excepción a no grabar (enmienda de la Constitución del proyecto, v2.4): solo audio, solo con el adicional, nunca con menores, con consentimiento de ambas partes y borrado al transcribir (24 horas como máximo). La graba el navegador del tutor porque la grabación del lado del servidor de LiveKit (Egress) incluye solo 60 minutos gratuitos por mes (ADR-M3-04) \\
-        Especialidades del tutor & El tutor declara de una a tres especialidades (materia y nivel máximo) además de sus temas; cada una se muestra como \emph{verificada} (respaldada por una credencial aprobada contra un registro oficial) o \emph{declarada}. Los tutores con especialidades solo declaradas aparecen en las búsquedas, marcados como tales (ADR-M1-06) \\
-        Recomendaciones & Las puntuaciones funcionan como un sistema de recomendación, no como un aval: ordenan los resultados combinando la similitud semántica con lo buscado y las calificaciones de otros usuarios, y un tutor nuevo arranca sin calificaciones. La decisión de con quién aprender es siempre del alumno o de su adulto responsable \\
-        Verificación de credenciales & Triaje automático que descarta lo inválido y prepara la consulta, más la decisión del rol ADMIN contra el registro oficial; la máquina decide lo que \emph{no} es un título válido, pero lo que sí lo es solo lo prueba el registro (ADR-M1-06) \\
-        Foto de perfil del tutor & Obligatoria: sin foto el tutor no aparece en búsquedas ni recomendaciones \\
-        Catálogo de contenidos & El catálogo de temas sigue siendo cerrado y curado (el tutor solo elige temas de ahí), pero es \emph{vivo}: se actualiza de forma continua con lo que se busca y todavía no está. Para eso se cuentan, de forma agregada, los temas buscados sin un tutor que los dé: un contador por tema, sin datos de quién buscó, sin las búsquedas de menores y con un máximo de 500 temas. El rol ADMIN solo ve los temas pedidos varias veces, agrupados por área, y los incorpora al catálogo (ADR-M2-04) \\
-        Búsqueda sin coincidencia exacta & Si nadie enseña exactamente lo que se buscó, el sistema reconoce el área del tema (materia y nivel) y recomienda tutores de esa área, aclarando que es una recomendación y no una coincidencia exacta. El nivel escrito en la búsqueda (``divisiones en primario'') se toma como filtro, y el tema se reconoce aunque no se use la palabra exacta del catálogo. Los mensajes se muestran en lenguaje natural (ADR-M2-04) \\
-        Reservas y cambios de horario & Se reserva hasta 30 minutos antes de la clase, para que el pago (que puede tardar hasta 15 minutos en confirmarse) llegue con margen y el tutor pueda prepararse. Con menos de 24 horas se puede cambiar de horario sin volver a pagar hasta una hora antes: el horario que se libera queda abierto a otra reserva. Con menos de una hora el cambio se rechaza y la clase sigue en pie; nunca se cancela sola \\
-        Orden de los resultados & La similitud semántica se calcula contra cada tema del tutor, no contra todos juntos, para que quien enseña muchos temas no quede relegado (ADR-M2-03). La reputación solo desempata entre tutores de relevancia parecida, y los resultados por debajo de un mínimo de relevancia no se muestran (ADR-M2-02) \\
-        Términos y Condiciones & Paso propio del registro con los puntos clave en tarjetas (título, párrafo breve e ilustración) y aceptación explícita \\
-        \gls{cap} & Obligatorio y vigente solo para dar clases a menores; un tutor que enseña solo a adultos no lo necesita. Al vencer, se cancelan sus clases futuras con menores con reembolso total \\
-        Versiones & Spring Boot 4.1.1 y Next.js 16.3.6, para mantener parches de seguridad durante el piloto \\
-        \bottomrule
-    \end{tabularx}
-\end{table}
-
-Queda abierta una decisión con impacto en el cobro: el reparto automático
-de la comisión de MercadoPago (\emph{split} de marketplace) exige que cada
-cobro se genere con las credenciales del propio tutor, obtenidas por OAuth
-\citep{mpmarketplace}. Hasta implementarlo, el dinero ingresa a la cuenta
-de la plataforma y la liquidación al tutor debe resolverse por separado.
+    \label{tab:decisiones-implementacion} \\
+    \toprule
+    \tb{Tema} & \tb{Diseño original} & \tb{Lo implementado} & \tb{Fundamento} \\
+    \midrule
+    \endfirsthead
+    \toprule
+    \tb{Tema} & \tb{Diseño original} & \tb{Lo implementado} & \tb{Fundamento} \\
+    \midrule
+    \endhead
+    \bottomrule
+    \endfoot
+    Estilo arquitectónico & Cliente-servidor en capas; la \gls{ia}, incluido el \gls{matching}, delegada a proveedores externos & Monolito modular de nueve módulos más un único servicio propio aparte, el motor de \gls{matching} en Python. Comunicación síncrona en proceso y eventos de dominio en memoria, sin \emph{broker}; plazos de negocio con Quartz persistido en la base & Constitución, art.~VIII a X; ADR-000-01, ADR-000-02 \\
+    Hosting & Supabase (base), Vercel (frontend), Upstash (Redis); backend en la computadora propia y migración a un \gls{vps} alquilado antes del piloto & Todo en un servidor propio con Coolify (contenedores de base con pgvector, \gls{matching}, backend y frontend), publicado por Cloudflare Tunnel; copia diaria cifrada en Cloudflare R2 (14 días); imágenes construidas por GitHub Actions & ADR-000-07: Vercel gratuito no admite uso comercial; un solo proveedor; costo dentro del techo. Se acepta el punto único de falla para el piloto \\
+    Redis & Estado de chat y de salas, \emph{rate limiting} & Sin Redis: límites por IP y bloqueo de login en memoria del proceso; estado de la sala en LiveKit y en la base; sin módulo de chat & ADR-000-04 (D8): una dependencia menos con una sola instancia \\
+    Índice semántico & FAISS en memoria & pgvector en la misma base; modelo \texttt{paraphrase-}\allowbreak\texttt{multilingual-}\allowbreak\texttt{MiniLM-L12-v2} (384 dimensiones); el puntaje de un tutor es su máxima similitud con cada uno de sus temas & ADR-M2-01 (sin índice que reconstruir), ADR-M2-03 \\
+    Orden de los resultados & Similitud y reputación combinadas & La similitud se calcula contra cada tema del tutor, no contra todos juntos, para que quien enseña muchos temas no quede relegado. La reputación solo desempata entre tutores de relevancia parecida, y los resultados por debajo de un mínimo de relevancia no se muestran & ADR-M2-02, ADR-M2-03 \\
+    \hspace{0pt}Recomendaciones & --- & Las puntuaciones funcionan como un sistema de recomendación, no como un aval; un tutor nuevo arranca sin calificaciones y la decisión de con quién aprender es siempre del alumno o de su adulto responsable & ADR-M1-06 (decisión 2), ADR-M2-02 \\
+    \gls{llm} del resumen & GPT-4o o Gemini 2.0 Flash, a confirmar; el audio enviado directo al modelo & Dos pasos: transcripción con \texttt{gpt-4o-mini-transcribe}, anonimización y GPT-4o, que recibe solo texto. Sin configuración, no sale nada (\emph{fail-closed}). Gemini se descartó por decisión del dueño del producto & ADR-M6-03 (FR-SUM-005: el audio no se puede anonimizar), ADR-M3-04 \\
+    Resumen automático & Servicio general para todas las sesiones & Adicional pago y opcional, solo entre adultos y con consentimiento de ambos; precio según la duración. Si el resumen no se genera, se reembolsa solo el adicional & Constitución v2.4; ADR-M3-04, ADR-M5-06 \\
+    Grabación & Ninguna & Única excepción a no grabar: solo audio, solo con el adicional, nunca con menores, con consentimiento de ambos y borrado al transcribir (24 horas como máximo). La graba el navegador del tutor porque la grabación del lado del servidor de LiveKit incluye solo 60 minutos gratuitos por mes & Constitución v2.4 (art.~V), ADR-M3-04 \\
+    Asistente conversacional de repaso & Objetivo específico del proyecto & No se implementó: no forma parte de los nueve módulos. Queda como trabajo futuro & Constitución, art.~VI (alcance cerrado) \\
+    \gls{cap} & Optativo con mejora de visibilidad, u obligatorio para todos los tutores & Obligatorio y vigente (12 meses) solo para dar clases a menores, con revisión manual del rol de Moderación y Seguridad. Al vencer, se cancelan las clases futuras con menores con reembolso total. La verificación de la firma digital del \gls{cap} queda diferida & ADR-M1-04, enmienda v2.3; FR-ID-021 a FR-ID-026. A quien enseña solo a adultos no se le pide (minimización) \\
+    Verificación de identidad & \gls{ocr} con Tess4J y revisión manual del \gls{dni} & Tesseract invocado como programa del sistema en el propio servidor; controla mayoría de edad, nombre y unicidad del \gls{dni}; la imagen no sale del servidor ni se guarda. La revisión manual existe solo para la credencial académica y el \gls{cap} & ADR-M1-01; ADR-M1-08 (Tess4J nunca funcionó en producción) \\
+    Especialidades y triaje de credenciales & Presentados como implementados en versiones anteriores de este capítulo & Decidido y \textbf{pendiente de implementar}: especialidades verificadas o declaradas y triaje automático contra registros oficiales (tareas T-ESP-01 a T-ESP-04). Hoy el rol de Moderación aprueba la credencial manualmente & ADR-M1-06 \\
+    Kill-switch & Una sola rama (cortar y bloquear); desenfoque del video entre adultos & NSFWJS en el navegador sobre el video remoto (cámara y pantalla), buffer rotativo de 30 segundos que se descarta salvo disparo. Con un menor corta directo, sin preguntar; entre adultos oculta el video del detectado y pide confirmación a la contraparte (plazo de 5 minutos). Evidencia: clip de 30 segundos que se sube solo ante un disparo y se conserva 30 días desde la resolución de la Alerta & ADR-M3-01, ADR-M3-07; Tabla de Tiempos \\
+    Denuncias & Suspensión preventiva al denunciar; evidencia de la sesión preservada & La denuncia entra en revisión con 48 horas de descargo del denunciado y pausa el \gls{escrow} de esa sesión; evidencia opcional que adjunta el denunciante; el denunciado no conoce su identidad. La suspensión automática existe solo en las Alertas del kill-switch & Spec M9; minimización (no hay grabación que preservar) \\
+    Menores & El menor puede reservar con un tutor autorizado & El menor tiene cuenta propia pero no paga, no autoriza tutores ni denuncia: pide una Solicitud de Sesión que su Adulto Responsable aprueba y paga. El piloto corre \textbf{sin menores}: la opción \path{tinku.menores.sesiones-habilitadas} queda apagada hasta cerrar el kill-switch en el cliente (T-M3-06) y el \gls{cap} (T02) & Constitución, art.~II; T-TES-10 \\
+    Cobro & \gls{escrow} que retiene los fondos en la cuenta de la plataforma; \gls{sdk} oficial de Java; reparto por \gls{oauth} ``abierto'' & Modelo A: cada tutor conecta su cuenta de MercadoPago por \gls{oauth} (con \gls{pkce}); la preferencia se crea con su token y el dinero entra a su cuenta; \sistema{} cobra su comisión con \path{marketplace_fee}. El \gls{escrow} es una ventana lógica de 24 horas en la que \sistema{} todavía puede reembolsar. Cliente HTTP propio, sin \gls{sdk} & ADR-M5-02: \sistema{} no recauda fondos de terceros \\
+    Comisión & \comision{} con la pasarela como costo de la plataforma & \comision{} sobre el bruto de cada sesión (BR-PAG-01), a cargo del tutor; MercadoPago descuenta su comisión (cerca del 6,04\,\%) de los fondos del tutor, que recibe el 66,96\,\% & ADR-M5-05, que declara la discrepancia con el modelo económico del capítulo~\ref{cap:economica} \\
+    Reembolsos & Siempre totales, nunca parciales & Totales como regla general. Excepciones: el adicional de resumen (BR-PAG-11) y la clase de un paquete devuelta por falta del tutor (FR-PAG-022); parciales manuales por disputa (FR-PAG-010) & Spec M5, FR-PAG-009 (enmienda v2.5) \\
+    Paquete mensual & --- & Cuatro clases semanales con un solo pago, vigencia de cuatro semanas y un descuento de 0 a 30\,\% que fija el tutor & ADR-M5-03 \\
+    Duración de la clase & Estándar de 60 minutos & De 30 a 180 minutos en bloques de 30, la elige quien reserva; piso de tarifa de \usd{4} por hora (\$6.140) & FR-RES-023; BR-PAG-04 \\
+    Reservas y cambios de horario & --- & Se reserva hasta 30 minutos antes de la clase, para que el pago (que puede tardar hasta 15 minutos en confirmarse) llegue con margen. Con menos de 24 horas se puede cambiar de horario sin volver a pagar hasta una hora antes; el horario liberado queda abierto a otra reserva. Con menos de una hora el cambio se rechaza y la clase sigue en pie & Tabla de Tiempos; FR-RES-016 \\
+    Foto de perfil del tutor & --- & Obligatoria: sin foto el tutor no aparece en búsquedas ni recomendaciones & FR-ID-028 \\
+    Catálogo de contenidos & Catálogo cerrado & Sigue cerrado y curado, pero \emph{vivo}: se cuentan de forma agregada los temas buscados sin un tutor que los dé (un contador por tema, sin datos de quién buscó, sin las búsquedas de menores, con un máximo de 500 temas) y el rol de administración incorpora los más pedidos & ADR-M2-04 \\
+    Búsqueda sin coincidencia exacta & --- & Si nadie enseña exactamente lo buscado, se reconoce el área del tema (materia y nivel) y se recomiendan tutores de esa área, aclarando que no es una coincidencia exacta; el nivel escrito en la búsqueda se toma como filtro & ADR-M2-04 \\
+    Términos y Condiciones & Documento de scroll continuo & Paso propio del registro con los puntos clave en tarjetas y aceptación explícita, que incluye el consentimiento de la grabación del audio del resumen & ADR-M3-05 \\
+    Correo transaccional & --- & Resend (plan gratuito) por HTTP, con una cola de salida en la base y reintentos por Quartz; sin configuración no envía & ADR-000-06 \\
+    Pruebas & Jest en el frontend; cobertura mínima del 70\,\% por módulo & Backend: JUnit 5 y Testcontainers con PostgreSQL real; frontend: Playwright (con la \gls{api} simulada) y axe-core, más oxlint; pruebas del motor de \gls{matching} y prueba nocturna contra el sistema completo. Cobertura medida con JaCoCo, sin umbral que corte la construcción & ADR-000-05 \\
+    Roles & ADMIN como un rol más de Usuario, con un rol único de administración & Usuario de tipo ADULTO, MENOR o TUTOR; el administrador es una entidad aparte con uno de dos roles: Moderación y Seguridad, o Soporte Financiero & Spec M8 (FR-ADM-008) \\
+    Monitoreo & Paneles de Supabase y Upstash & Panel propio ``Salud de Infraestructura'' en la administración, más los paneles de Coolify y LiveKit & ADR-M8-01 \\
+    Versiones & --- & Spring Boot 4.1.1 y Next.js 16.3.6, para mantener parches de seguridad durante el piloto & Apéndice~\ref{apx:tecnicos} \\
+\end{xltabular}
+}
 
 \section{Seguridad, calidad y despliegue}
 
@@ -387,57 +492,97 @@ de la plataforma y la liquidación al tutor debe resolverse por separado.
 
 La autenticación se resuelve con \gls{jwt} emitido por el propio backend
 a través de Spring Security, con contraseñas almacenadas mediante hash
-bcrypt; no se utiliza Supabase Auth, por el motivo ya explicado en la
-sección~\ref{sec:stack-backend}. El control de accesos se basa en
-autorización por rol (ADULTO, MENOR, TUTOR, ADMIN) aplicada a nivel de
-cada endpoint del backend: el modelo de permisos por acción del rol MENOR
-(sección~\ref{sec:modelo-datos}) se implementa como reglas de
-autorización explícitas, no como una restricción de interfaz que pudiera
-sortearse llamando directamente a la \gls{api}. Toda la comunicación
-viaja cifrada mediante TLS entre el cliente y el backend y entre el
-backend y los servicios externos, con el cifrado en reposo de la base de
-datos delegado a Supabase.
+bcrypt y sin un proveedor externo de identidad, por el motivo ya
+explicado en la sección~\ref{sec:stack-backend}. Los pedidos públicos
+(registro, login, recuperación de contraseña, verificación del \gls{dni} y
+webhooks) tienen un límite por IP y el login se bloquea tras varios
+intentos fallidos. El control de accesos distingue el tipo de usuario
+(ADULTO, MENOR, TUTOR) y, para la administración, los dos roles de Admin
+--\emph{Moderación y Seguridad} (credenciales, \gls{cap}, alertas del
+kill-switch, denuncias y sanciones) y \emph{Soporte Financiero} (pagos
+fallidos y tabla de precios)--, con colas y permisos
+separados y un registro de auditoría de cada acción. Las restricciones del
+menor (sección~\ref{sec:modelo-datos}) se implementan como reglas de
+autorización explícitas en cada endpoint, no como una restricción de
+interfaz que pudiera sortearse llamando directamente a la \gls{api}.
+Además, mientras dure el piloto, las clases con menores están apagadas:
+la creación de Reservas y de Solicitudes de Sesión con un menor se
+rechaza hasta que se habiliten de forma explícita, una vez cerrados el
+kill-switch en el cliente y el circuito del \gls{cap}.
 
-La verificación de tutores combina la carga de DNI y certificados
-académicos con la extracción automática de la fecha de nacimiento
-mediante \gls{ocr} (implementado con Tesseract vía Tess4J, ejecutado
-in-process en el propio backend para garantizar que las imágenes de los
-documentos nunca se envíen a servicios de terceros), que rechaza
-automáticamente el registro de cualquier tutor menor de 18 años. La
-credencial académica no se da por buena por el archivo --un PDF se
-falsifica en minutos--, sino por el registro oficial que la respalda: el
-Registro Público de Graduados Universitarios para títulos universitarios
-desde 2012 \citep{rpgu}, el Registro Federal de Egreso (ReFE) con el
-código QR de Mi Argentina para títulos secundarios y superiores digitales
-desde noviembre de 2023 \citep{refe}, el validador de SIU-Guaraní para
-certificados de alumno regular y los buscadores de cada colegio para las
-matrículas. Como ninguno de esos registros ofrece una \gls{api} pública, la
-verificación combina un triaje automático --rechazo inmediato de lo que
-claramente no es un título, lectura por \gls{ocr} del nombre para
-compararlo con el del DNI, y control de que el enlace de verificación
-pertenezca a un dominio oficial-- con la decisión final del rol ADMIN, que
-consulta el registro y registra cómo verificó y qué especialidades del
-tutor cubre esa credencial (sección~\ref{sec:decisiones-implementacion}).
-Incluye además la verificación manual del \gls{cap} vigente para quienes
-dan clases a menores.
+Toda la comunicación desde internet viaja cifrada con \gls{tls} hasta Cloudflare
+y por el túnel cifrado hasta el servidor, y el backend usa HTTPS con los
+servicios externos. Los tokens de MercadoPago de los tutores se guardan
+cifrados con AES-256-GCM con una clave que no vive en la base
+(ADR-M5-02), y las copias de la base se cifran antes de salir del
+servidor (ADR-000-07).
+
+La verificación de identidad lee el \gls{dni} mediante \gls{ocr} con
+Tesseract, que el backend ejecuta como programa del sistema dentro del
+propio servidor: la imagen se escribe en un archivo temporal que se borra
+al terminar, nunca se envía a terceros ni se guarda. El \gls{ocr} controla
+la mayoría de edad de todo adulto --rechaza automáticamente a cualquier
+tutor menor de 18 años--, el nombre y que el \gls{dni} no esté ya registrado; no
+hay una revisión manual del \gls{dni}. La integración original usaba la
+librería Tess4J dentro del proceso Java; se reemplazó porque en producción
+nunca llegó a funcionar --las librerías nativas de la imagen del
+servidor no eran compatibles-- y ninguna persona real podía completar el
+registro (ADR-M1-08).
+
+La credencial académica la revisa hoy manualmente el rol de Moderación y
+Seguridad. Como un PDF se falsifica en minutos, lo que prueba un título
+es el registro oficial que lo respalda: el Registro Público de Graduados
+Universitarios para títulos universitarios desde 2012 \citep{rpgu}, el
+Registro Federal de Egreso (ReFE) con el código QR de Mi Argentina para
+títulos secundarios y superiores digitales desde noviembre de 2023
+\citep{refe}, el validador de SIU-Guaraní para certificados de alumno
+regular y los buscadores de cada colegio para las matrículas. Como ninguno
+de esos registros ofrece una \gls{api} pública, se decidió (ADR-M1-06)
+combinar un triaje automático --rechazo inmediato de lo que claramente no
+es un título, lectura por \gls{ocr} del nombre para compararlo con el del
+\gls{dni} y control de que el enlace de verificación pertenezca a un dominio
+oficial-- con la decisión final del administrador contra el registro, y
+asociar cada credencial a especialidades verificadas o declaradas. Esa
+decisión está tomada pero \textbf{pendiente de implementar}
+(sección~\ref{sec:decisiones-implementacion}). La verificación del
+\gls{cap} vigente es manual y solo se exige a quienes dan clases a menores.
 
 El kill-switch de seguridad, presentado como SafeVchat en la
-sección~\ref{sec:estado-del-arte} --donde se desarrolla el mecanismo
-técnico completo, incluida esta misma verificación de edad del tutor vía
-\gls{ocr} y DNI--, se apoya en un clasificador de contenido que corre
-localmente en el dispositivo (\emph{edge computing}, por ejemplo con
-TensorFlow.js) durante la videollamada; ante una detección positiva
-ejecuta dos acciones diferenciadas: si hay un menor presente, corta la
-transmisión y suspende preventivamente la cuenta de forma inmediata; si
-ambos participantes son adultos, el video del detectado se bloquea con un
-filtro de desenfoque y el sistema solicita confirmación a la contraparte
-antes de proceder al corte. El portal de denuncias sigue una lógica
-equivalente: como las clases no se graban, la evidencia es el fragmento de
-treinta segundos del buffer local del kill-switch, que se sube solo ante un
-disparo y se conserva hasta la resolución; al registrarse una denuncia, el
-sistema suspende preventivamente al usuario denunciado y
-deriva la resolución final a revisión humana del rol ADMIN, con acceso a
-la evidencia preservada.
+sección~\ref{sec:estado-del-arte}, se apoya en el clasificador NSFWJS,
+que corre sobre TensorFlow.js en el navegador de cada participante
+durante la videollamada (ADR-M3-01). Cada cliente clasifica el video que
+\emph{recibe} --cámara y pantalla compartida del otro--, de modo que el
+clasificador que protege al menor corre en el dispositivo del menor y un
+cliente modificado del otro lado no puede apagarlo. Una detección se
+confirma con tres muestras consecutivas por encima de un umbral de 0,85
+(ADR-M3-07). Mientras tanto, el navegador mantiene un buffer rotativo de
+30 segundos de video que vive solo en memoria y se descarta salvo
+disparo. Ante una detección confirmada, el sistema ejecuta una de dos
+ramas: si hay un menor presente, corta la clase de inmediato sin
+preguntarle nada a nadie y el tutor implicado queda suspendido
+preventivamente; si ambos participantes son adultos, oculta el video del
+detectado y le pregunta a la contraparte si quiere cortar, con un plazo
+de 5 minutos: sin respuesta se restaura el video y no se genera una
+Alerta. Solo ante un disparo se sube como evidencia el clip de 30
+segundos (sin audio), que se conserva 30 días desde la resolución de la
+Alerta; la Alerta la revisa el administrador de Moderación y Seguridad
+dentro de las 12 horas. El diseño inicial preveía un filtro de
+desenfoque en la rama de adultos; se reemplazó por ocultar el video, que
+no deja a la vista ninguna parte de la imagen.
+
+Las denuncias siguen un circuito separado de las Alertas (Spec M9): la
+presenta un adulto --el menor nunca, lo hace su Adulto Responsable--,
+con un motivo de una lista cerrada y la evidencia que el denunciante
+quiera adjuntar. El denunciado recibe el motivo sin conocer la identidad
+de quien denunció y tiene 48 horas para su descargo; si la sesión tiene
+dinero en la ventana de \gls{escrow}, se pausa la liberación de esa
+sesión. La decisión final es del administrador de Moderación y
+Seguridad. Una denuncia no suspende por sí sola al denunciado: la
+suspensión preventiva automática existe únicamente en el circuito del
+kill-switch. Tampoco hay evidencia de la sesión que preservar, porque las
+clases no se graban; el diseño inicial suponía lo contrario, lo que
+habría exigido una grabación continua incompatible con la minimización
+de datos.
 
 La protección de datos personales sigue la Ley 25.326, con especial
 cuidado en el procesamiento de video de menores y en la definición de una
@@ -446,30 +591,49 @@ responsable.
 
 \subsection{Calidad y pruebas}
 
-Las pruebas unitarias del backend se implementan con JUnit 5 y Mockito,
-con una cobertura mínima del 70\,\% (capítulo~\ref{cap:metodologia}),
-mientras que las del frontend usan Jest, aplicable a la capa de
-React/Next.js --esto corrige la mención original de Jest como herramienta
-de testing ``general'' del capítulo~\ref{cap:metodologia}, dado que Jest
-es específico del ecosistema JavaScript y no aplica al backend Spring
-Boot, que usa JUnit y Mockito. Las pruebas de integración corren contra
-una base de datos de prueba con Testcontainers y Postgres antes de cada
-release al entorno de piloto, y las \gls{uat} se realizan con el grupo
-piloto, según lo definido en el capítulo~\ref{cap:metodologia} y el OE8.
-La documentación de la \gls{api} se mantiene en Postman. Las métricas
-evaluadas sobre el conjunto de prueba se reportan en el
+Las pruebas del backend se escriben con JUnit 5 y Mockito, y las de
+integración corren con Testcontainers contra una base PostgreSQL real con
+pgvector, la misma imagen que se usa en producción. Las del frontend son
+pruebas de punta a punta con Playwright, que simulan la \gls{api} del
+backend, e incluyen controles automáticos de accesibilidad con axe-core;
+el código del frontend se revisa además con el analizador estático
+oxlint. El motor de \gls{matching} tiene sus propias pruebas en Python.
+El diseño inicial preveía Jest para el frontend, que no se usa: las
+pruebas del frontend quedaron en Playwright, que ejercita los flujos
+completos en un navegador real, el mismo entorno en el que corren el
+kill-switch y el aula.
+
+La metodología (capítulo~\ref{cap:metodologia}) fijaba una cobertura
+mínima del 70\,\% por módulo. En la implementación la cobertura se mide
+con JaCoCo sobre todo el backend, sin un umbral que corte la
+construcción: primero se mide y después se decide (ADR-000-05). Al
+14/10/2026 la suite del backend sumaba 661 pruebas sin fallas y una
+cobertura de líneas del 85,6\,\%. La suite exige JDK~21 y se ejecuta con
+\texttt{./mvnw -B test} (apéndice~\ref{apx:tecnicos}). Las \gls{uat} se
+realizan con el grupo piloto, según lo definido en el
+capítulo~\ref{cap:metodologia} y el OE8. Los resultados se reportan en el
 capítulo~\ref{cap:resultados}.
 
 \subsection{Despliegue}
 
-El control de versiones se lleva en GitHub, con ramas de feature y
-revisión antes de integrar a la rama principal. El pipeline de \gls{cicd}
-corre en GitHub Actions: ejecuta las pruebas automatizadas en cada pull
-request y, al integrarse a la rama principal, construye una imagen Docker
-del backend que se despliega automáticamente a la instancia de Coolify
---computadora propia durante el desarrollo, \gls{vps} durante el
-piloto-- mediante un webhook de despliegue. El monitoreo del \gls{mvp} se
-limita a los paneles nativos de Coolify (estado del contenedor, uso de
-recursos) y a los paneles propios de LiveKit Cloud, Supabase y Upstash;
-un sistema de monitoreo unificado, como Grafana, queda fuera del alcance
-del \gls{mvp}.
+El control de versiones se lleva en GitHub, con una rama por bloque de
+trabajo y revisión antes de integrar a la rama principal, que es la de
+producción y solo acepta cambios por \emph{pull request} con las pruebas en
+verde. El pipeline de \gls{cicd} corre en GitHub Actions con cinco
+flujos: \texttt{ci-backend} (pruebas del backend con Tesseract instalado y
+publicación del reporte de cobertura), \texttt{ci-frontend} (oxlint y
+Playwright), \texttt{ci-matching} (pruebas del motor), \texttt{ci-e2e}
+(una prueba nocturna que levanta la base, el motor y el backend reales y
+recorre por la \gls{api} el registro, la búsqueda semántica, la reserva y
+el pago en modo de prueba hasta la confirmación) y \texttt{deploy}, que en cada integración
+a la rama principal vuelve a correr las tres suites, publica las imágenes
+de los contenedores en GitHub Container Registry y llama al webhook de
+despliegue de Coolify. Las imágenes nunca se construyen en el servidor de
+producción; para volver atrás, alcanza con desplegar la imagen anterior.
+
+El monitoreo se apoya en el panel propio ``Salud de Infraestructura''
+de la administración, que consulta en vivo el estado de la base, el motor
+de \gls{matching}, MercadoPago, LiveKit y el \gls{ocr} (ADR-M8-01), más los
+paneles de Coolify (estado y recursos de cada contenedor) y de LiveKit
+Cloud. Un sistema de monitoreo unificado, como Grafana, queda fuera del
+alcance del \gls{mvp}.

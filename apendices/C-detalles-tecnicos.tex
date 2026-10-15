@@ -10,50 +10,299 @@ versiones de librerías, variables de entorno (sin secretos) y esquemas
 de base de datos. Reproducibilidad total es un marcador de excelencia.
 \end{guia}
 
-\section{Configuración de los modelos}
+Este apéndice reúne los detalles técnicos del sistema tal como están en
+la rama principal del repositorio de código (anexo~\ref{anx:repositorios})
+al 14/10/2026. La fuente de cada valor son estos archivos del repositorio:
+
+\begin{itemize}
+    \item \path{backend/pom.xml}, \path{frontend/package.json} y
+          \path{matching-service/requirements.txt} (dependencias);
+    \item \path{backend/src/main/resources/application.yml}
+          (configuración);
+    \item \path{backend/src/main/resources/db/migration} (migraciones de
+          la base de datos).
+\end{itemize}
+
+\section{Versiones del stack}
 
 \begin{table}[H]
     \centering
-    \caption{Hiperparámetros del modelo final (ejemplo de estructura)}
+    \caption{Versiones de las dependencias principales}
+    \label{tab:versiones-stack}
+    \small
+    \begin{tabularx}{\textwidth}{l l L}
+        \toprule
+        \tb{Componente} & \tb{Versión} & \tb{Fuente} \\
+        \midrule
+        Java (JDK) & 21 & \path{pom.xml}; el \texttt{maven-enforcer-plugin} exige \texttt{[21,22)} \\
+        Spring Boot & 4.1.1 & \path{pom.xml} (incluye Spring Security, Data JPA, Flyway, Quartz, Validation, Actuator) \\
+        jjwt (\gls{jwt}) & 0.13.0 & \path{pom.xml} \\
+        Testcontainers & la que fija Spring Boot 4.1.1 & \path{pom.xml} \\
+        JaCoCo & 0.8.13 & \path{pom.xml} \\
+        Tesseract (\gls{ocr}) & paquete del sistema & \path{backend/Dockerfile}: \texttt{tesseract-ocr} y \texttt{tesseract-ocr-spa} sobre \texttt{eclipse-temurin:21-jre} \\
+        Next.js & 16.3.6 & \path{package.json} \\
+        React & \texttt{\^{}19.2} & \path{package.json} \\
+        livekit-client & \texttt{\^{}2.22.3} & \path{package.json} \\
+        TensorFlow.js (y \texttt{wasm}) & 4.22.0 & \path{package.json} \\
+        NSFWJS & 4.3.0 & \path{package.json} \\
+        Playwright / axe-core & \texttt{\^{}1.63.0} / \texttt{\^{}4.13.0} & \path{package.json} \\
+        oxlint & \texttt{\^{}1.82.0} & \path{package.json} \\
+        Python (\gls{matching}) & 3.12 & \path{matching-service/Dockerfile} y CI \\
+        FastAPI & \texttt{>=0.141.1} & \path{requirements.txt} \\
+        sentence-transformers & \texttt{>=6.1.0} & \path{requirements.txt} \\
+        psycopg / pgvector (Python) & \texttt{>=3.3.6} / \texttt{>=0.5.0} & \path{requirements.txt} \\
+        PostgreSQL + pgvector & 16 & Imagen \path{pgvector/pgvector:pg16} en \path{deploy/docker-compose.coolify.yml}; la misma usan las pruebas \\
+        Copia de seguridad & 16 & Imagen \path{eeshugerman/postgres-backup-s3:16} en el mismo archivo \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\section{Configuración de los modelos y parámetros}
+
+\sistema{} no entrena modelos propios: usa modelos preentrenados y
+parámetros de configuración que se pueden cambiar sin tocar el código.
+La tabla~\ref{tab:hiperparametros} lista los valores por defecto.
+
+\begin{table}[H]
+    \centering
+    \caption{Modelos y parámetros por defecto}
     \label{tab:hiperparametros}
     \small
-    \begin{tabular}{l l l}
+    \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.8cm} >{\raggedright\arraybackslash}p{4.2cm} L}
         \toprule
-        \tb{Parámetro} & \tb{Valor} & \tb{Criterio de selección} \\
+        \tb{Parámetro} & \tb{Valor} & \tb{Fuente / criterio} \\
         \midrule
-        \completar{n\_estimators} & \completar{500} & \completar{búsqueda en grilla, validación cruzada 5 pliegues} \\
-        \completar{max\_depth} & \completar{8} & \completar{...} \\
+        Modelo de \gls{embeddings} & \texttt{paraphrase-}\allowbreak\texttt{multilingual-}\allowbreak\texttt{MiniLM-L12-v2}, 384 dimensiones & \path{matching-service/main.py}; multilingüe y ejecutable en CPU (ADR-M2-01) \\
+        Puntaje de un tutor & Máxima similitud coseno con cada uno de sus temas & ADR-M2-03 \\
+        Peso de la reputación & 0,05 (\path{MATCHING_PESO_REPUTACION}) & Solo desempata entre tutores de similitud parecida (ADR-M2-02) \\
+        Similitud mínima para mostrar & 0,3 (\path{MATCHING_SCORE_MINIMO}) & ADR-M2-02 \\
+        Clasificador del kill-switch & NSFWJS (MobileNetV2, 5 clases) & ADR-M3-01 \\
+        Umbral de detección & 0,85 en 3 muestras consecutivas; con un menor se suman las clases Porn, Hentai y Sexy, entre adultos solo Porn y Hentai & ADR-M3-07 \\
+        Intervalo de clasificación & 250~ms & Tabla de Tiempos del sistema \\
+        Transcripción & \texttt{gpt-4o-mini-transcribe} & ADR-M3-04 \\
+        Resumen & GPT-4o, temperatura 0,3 & ADR-M6-03 \\
+        Comisión de la plataforma & 27\,\% & Propiedad \texttt{marketplace-fee-percent}; BR-PAG-01, ADR-M5-05 \\
+        Piso de la tarifa por hora & \$6.140 (\path{TARIFA_PISO_HORA_ARS}) & BR-PAG-04 \\
+        Vigencia del \gls{jwt} & 60 minutos & \path{application.yml} \\
         \bottomrule
-    \end{tabular}
+    \end{tabularx}
 \end{table}
 
 \section{Datos utilizados}
 
-\completar{Identificador, fuente, versión, fecha de descarga, licencia y
-tamaño de cada conjunto de datos.}
+El único conjunto de datos que el sistema carga es el catálogo cerrado
+de materias, niveles y temas, sembrado por migración
+(\path{V20__m2_temas_seed.sql}) y ampliado luego a partir del
+catálogo vivo (ADR-M2-04). No se usa ningún conjunto de datos personales
+para entrenar o ajustar modelos. El relevamiento de precios de Superprof
+que respalda el capítulo~\ref{cap:economica} se conserva en
+\path{apendices/superprof-precios.csv} y se analiza en el
+apéndice~\ref{apx:precio}.
 
 \section{Arquitectura de la aplicación}
 
-\subsection{Stack tecnológico}
+\subsection{Estructura del repositorio}
 
-\begin{lstlisting}[caption={Dependencias principales (ejemplo)}, label={lst:dependencias}]
-python == 3.12
-scikit-learn == 1.5.0
-fastapi == 0.111.0
-postgresql == 16
+\begin{lstlisting}[caption={Carpetas principales del repositorio del sistema}, label={lst:dependencias}]
+backend/            Spring Boot: un paquete por modulo (identidad, matching,
+                    aula, reservas, pagos, resumen, reputacion, admin,
+                    seguridad) y migraciones Flyway
+frontend/           Next.js: aplicacion web y pruebas Playwright (tests/)
+matching-service/   Python: FastAPI + sentence-transformers
+deploy/             docker-compose.coolify.yml (produccion)
+docs/               Constitucion, Tabla de Tiempos, specs, ADR (docs/adr),
+                    manual de operacion
+.github/workflows/  ci-backend, ci-frontend, ci-matching, ci-e2e, deploy
 \end{lstlisting}
 
 \subsection{Esquema de base de datos}
 
-\begin{lstlisting}[language=SQL, caption={Definición de tablas (ejemplo de código SQL)}, label={lst:esquema}]
-CREATE TABLE usuario (
-    id          SERIAL PRIMARY KEY,
-    correo      TEXT NOT NULL UNIQUE,
-    creado_en   TIMESTAMPTZ NOT NULL DEFAULT now()
+El esquema se construye con 47 migraciones de Flyway (\texttt{V1} a
+\texttt{V47} al 14/10/2026). Como ninguna migración aplicada se edita,
+las tablas iniciales se completan con migraciones posteriores. Los
+listados siguientes son extractos textuales de las migraciones.
+
+\begin{lstlisting}[language=SQL, caption={Usuarios (extracto de \texttt{V2\_\_m1\_identidad.sql})}, label={lst:esquema}]
+CREATE TABLE identidad.usuarios (
+    id                           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    dni                          VARCHAR(20) NOT NULL UNIQUE,
+    nombre                       VARCHAR(150) NOT NULL,
+    apellido                     VARCHAR(150) NOT NULL,
+    fecha_nacimiento             DATE NOT NULL,
+    tipo                         VARCHAR(20) NOT NULL
+                                 CHECK (tipo IN ('ADULTO', 'MENOR', 'TUTOR')),
+    capacidad_estudiante         BOOLEAN NOT NULL DEFAULT FALSE,
+    capacidad_adulto_responsable BOOLEAN NOT NULL DEFAULT FALSE,
+    adulto_responsable_id        UUID REFERENCES identidad.usuarios(id),
+    password_hash                VARCHAR(255) NOT NULL,
+    estado_cuenta                VARCHAR(20) NOT NULL DEFAULT 'ACTIVA'
+                                 CHECK (estado_cuenta IN ('ACTIVA', 'SUSPENDIDA')),
+    created_at                   TIMESTAMPTZ NOT NULL DEFAULT now(),
+    CONSTRAINT chk_adulto_tiene_capacidad CHECK (
+        tipo != 'ADULTO' OR (capacidad_estudiante OR capacidad_adulto_responsable)
+    ),
+    CONSTRAINT chk_menor_tiene_responsable CHECK (
+        (tipo = 'MENOR' AND adulto_responsable_id IS NOT NULL) OR
+        (tipo != 'MENOR' AND adulto_responsable_id IS NULL)
+    )
 );
 \end{lstlisting}
 
+\begin{lstlisting}[language=SQL, caption={Reservas (extractos de \texttt{V9\_\_m4\_reservas.sql} y \texttt{V30\_\_m4\_exclusion\_por\_rango.sql})}, label={lst:esquema-reservas}]
+CREATE TABLE reservas.reservas (
+    id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    pagador_id          UUID NOT NULL REFERENCES identidad.usuarios(id),
+    beneficiario_id     UUID NOT NULL REFERENCES identidad.usuarios(id),
+    tutor_id            UUID NOT NULL REFERENCES identidad.usuarios(id),
+    solicitud_origen_id UUID REFERENCES reservas.solicitudes_sesion(id),
+    horario             TIMESTAMPTZ NOT NULL,
+    precio              NUMERIC(10,2) NOT NULL CHECK (precio >= 0),
+    estado              VARCHAR(20) NOT NULL DEFAULT 'pendiente_pago'
+                        CHECK (estado IN ('pendiente_pago', 'confirmada', 'en_curso',
+                                          'finalizada', 'cancelada', 'no_show_estudiante',
+                                          'no_show_tutor', 'no_show_doble'))
+    -- (se omiten motivo_cancelacion, created_at y sus restricciones)
+);
+
+-- V30: sin superposicion de rangos horarios, por tutor y por alumno
+ALTER TABLE reservas.reservas ADD CONSTRAINT ex_reservas_rango_tutor
+    EXCLUDE USING gist (tutor_id WITH =, tstzrange(horario, horario_fin, '[)') WITH &&)
+    WHERE (estado <> 'cancelada');
+ALTER TABLE reservas.reservas ADD CONSTRAINT ex_reservas_rango_beneficiario
+    EXCLUDE USING gist (beneficiario_id WITH =, tstzrange(horario, horario_fin, '[)') WITH &&)
+    WHERE (estado <> 'cancelada');
+\end{lstlisting}
+
+\begin{lstlisting}[language=SQL, caption={Transacciones (extracto de \texttt{V11\_\_m5\_pagos.sql}) e índice semántico (\texttt{V7\_\_m2\_matching.sql})}, label={lst:esquema-pagos}]
+CREATE TABLE pagos.transacciones (
+    id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    reserva_id          UUID NOT NULL REFERENCES reservas.reservas(id),
+    mp_payment_id       VARCHAR        NOT NULL,
+    monto_bruto         NUMERIC(10, 2) NOT NULL CHECK (monto_bruto >= 0),
+    comision_plataforma NUMERIC(10, 2) NOT NULL
+                        CHECK (comision_plataforma >= 0 AND comision_plataforma <= monto_bruto),
+    estado              VARCHAR(20) NOT NULL DEFAULT 'retenido_escrow'
+                        CHECK (estado IN ('retenido_escrow', 'liberado',
+                                          'reembolsado', 'pausado_denuncia')),
+    liberar_at          TIMESTAMPTZ,
+    intentos_liberacion INT NOT NULL DEFAULT 0 CHECK (intentos_liberacion >= 0),
+    created_at          TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE matching.perfiles_tutor_matching (
+    tutor_id                UUID PRIMARY KEY REFERENCES identidad.usuarios(id),
+    materias_niveles_ids    UUID[] NOT NULL DEFAULT '{}',
+    embedding               VECTOR(384),
+    activo_para_matching    BOOLEAN NOT NULL DEFAULT FALSE
+);
+\end{lstlisting}
+
+El nombre \path{retenido_escrow} es anterior al modelo de cobro A
+(ADR-M5-02): con ese modelo el dinero ya está en la cuenta del tutor, y el
+estado indica que todavía no cerró la ventana lógica --hasta 24 horas
+después de la clase-- en la que \sistema{} puede ordenar el reembolso.
+
+\subsection{Diccionario de datos}
+
+La tabla~\ref{tab:diccionario} resume las tablas principales de cada
+esquema. El detalle de columnas, restricciones e índices está en la
+migración que se indica y en las que la completan.
+
+{\small
+\begin{xltabular}{\textwidth}{>{\raggedright\arraybackslash}p{4.6cm} L >{\raggedright\arraybackslash}p{1.8cm}}
+    \caption{Diccionario de datos: tablas principales}
+    \label{tab:diccionario} \\
+    \toprule
+    \tb{Tabla} & \tb{Contenido} & \tb{Migración} \\
+    \midrule
+    \endfirsthead
+    \toprule
+    \tb{Tabla} & \tb{Contenido} & \tb{Migración} \\
+    \midrule
+    \endhead
+    \bottomrule
+    \endfoot
+    \path{identidad.usuarios} & Cuenta de cada persona: \gls{dni} único, tipo (ADULTO, MENOR, TUTOR), capacidades del adulto, Adulto Responsable del menor, hash de la contraseña y estado de la cuenta & V2 \\
+    \path{identidad.credenciales_academicas} & Título, analítico o matrícula del tutor, con su estado de revisión e intentos & V2 \\
+    \path{identidad.autorizaciones_tutor} & Tutores que el Adulto Responsable autorizó para cada menor & V2 \\
+    \path{identidad.certificados_antecedentes_penales} & \gls{cap} del tutor: estado (pendiente, aprobado, rechazado, en revisión legal, vencido) y vencimiento & V6 \\
+    \path{identidad.aceptaciones_clausula} & Quién aceptó qué versión de los Términos y de la cláusula de grabación, y cuándo & V36 \\
+    \path{matching.temas} & Catálogo cerrado de temas por materia y nivel, con su \gls{embeddings} & V19, V42 \\
+    \path{matching.perfiles_tutor_matching} & \gls{embeddings} del perfil del tutor y si está activo para el \gls{matching} & V7 \\
+    \path{matching.temas_sugeridos} & Contador agregado de temas buscados sin tutor, sin datos de quién buscó & V43 \\
+    \path{reservas.franjas_disponibilidad} & Franjas semanales o puntuales que publica el tutor & V9 \\
+    \path{reservas.solicitudes_sesion} & Pedido de clase del menor, que no bloquea horario ni genera cobro & V9 \\
+    \path{reservas.reservas} & Clase reservada: pagador, beneficiario, tutor, horario, duración, precio congelado y estado & V9, V29, V46 \\
+    \path{reservas.paquetes} & Paquete mensual de cuatro clases con un solo pago & V46 \\
+    \path{aula.sesiones_aprendizaje} & Sesión de aula (1 a 1 con la reserva): asistencia y estado de la clase & V8 \\
+    \path{aula.alertas_seguridad} & Alertas del kill-switch y referencia al clip de evidencia & V8 \\
+    \path{aula.confirmaciones_killswitch} & Pregunta a la contraparte en la rama de adultos y su vencimiento & V12, V47 \\
+    \path{pagos.transacciones} & Cobro de cada reserva, comisión y estado del \gls{escrow} & V11 \\
+    \path{pagos.tarifas_tutor} & Precio por hora del tutor y configuración del paquete & V17, V31, V46 \\
+    \path{pagos.cuentas_mp_tutor} & Cuenta de MercadoPago conectada por \gls{oauth}, con los tokens cifrados & V39 \\
+    \path{resumen.resumenes_sesion} & Resumen generado y su estado & V15 \\
+    \path{reputacion.calificaciones} & Calificaciones bidireccionales por sesión & V14 \\
+    \path{seguridad.denuncias}, \path{seguridad.sanciones} & Denuncias con su estado y evidencia opcional; sanciones aplicadas & V13 \\
+    \path{admin.admins} & Administradores, vinculados a un usuario, con uno de dos roles & V16 \\
+    \path{admin.log_auditoria_admin} & Registro de cada acción de un administrador & V16 \\
+    \path{admin.notificaciones} & Avisos a usuarios y cola de salida del correo & V32 \\
+\end{xltabular}
+}
+
+Las tablas de Quartz (\path{QRTZ_*}) viven en el esquema
+\texttt{public} (ADR-000-01).
+
 \subsection{Variables de entorno}
 
-\completar{Nombre, propósito y ejemplo de valor de cada variable. Nunca
-incluir secretos reales.}
+La tabla~\ref{tab:variables-entorno} lista las variables que cambian el
+comportamiento del sistema en producción. Ninguna credencial se guarda en
+el repositorio: los valores secretos se cargan en Coolify.
+
+\begin{table}[H]
+    \centering
+    \caption{Variables de entorno principales (sin secretos)}
+    \label{tab:variables-entorno}
+    \small
+    \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{6.2cm} L}
+        \toprule
+        \tb{Variable} & \tb{Propósito (valor por defecto)} \\
+        \midrule
+        \path{TINKU_MENORES_SESIONES_HABILITADAS} & Habilita las clases con menores (\texttt{false}: piloto sin menores) \\
+        \path{TINKU_RESUMEN_ADICIONAL_HABILITADO} & Habilita el adicional de resumen (\texttt{false}) \\
+        \path{LLM_PROVEEDOR}, \path{LLM_API_KEY} & Activa la transcripción y el resumen con OpenAI solo si vale \texttt{gpt-4o}; vacío, no sale nada \\
+        \path{MP_CLIENT_ID}, \path{MP_CLIENT_SECRET}, \path{MP_OAUTH_REDIRECT_URI} & Aplicación de MercadoPago para el modelo A (\gls{oauth} por tutor) \\
+        \path{TINKU_CLAVE_CIFRADO} & Clave AES-256 que cifra los tokens de MercadoPago; sin ella no se conecta ninguna cuenta \\
+        \path{LIVEKIT_URL}, \path{LIVEKIT_API_KEY}, \path{LIVEKIT_API_SECRET} & Proyecto de LiveKit Cloud \\
+        \path{RESEND_API_KEY}, \path{EMAIL_REMITENTE} & Correo transaccional; vacíos, no se envía correo \\
+        \path{MATCHING_SERVICE_URL}, \path{MATCHING_SERVICE_TOKEN} & Dirección del motor de \gls{matching} y token compartido \\
+        \path{RATE_LIMIT_HEADER_IP} & Encabezado del que se toma la IP real del cliente detrás de Cloudflare \\
+        \path{OCR_COMANDO} & Programa de \gls{ocr} (\texttt{tesseract}) \\
+        \path{TARIFA_PISO_HORA_ARS} & Piso de la tarifa por hora (6140) \\
+        \path{TINKU_TAG} & Versión de las imágenes que despliega Coolify (\texttt{latest}); permite volver atrás \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\section{Ejecución de las pruebas}
+
+La suite del backend corre solo con JDK~21: el
+\texttt{maven-enforcer-plugin} rechaza otra versión y, en ese caso, no se
+ejecuta ninguna prueba. Las pruebas de integración necesitan Docker,
+porque Testcontainers levanta una base \path{pgvector/pgvector:pg16}.
+
+\begin{lstlisting}[caption={Ejecución de las suites}, label={lst:pruebas}]
+# backend (desde backend/, con JAVA_HOME apuntando a un JDK 21)
+./mvnw -B test        # reporte de cobertura: target/site/jacoco
+
+# frontend (desde frontend/)
+bun run lint          # oxlint
+bun run test:e2e      # Playwright + axe-core
+
+# motor de matching (desde matching-service/)
+uv run pytest -q
+\end{lstlisting}
+
+Al 14/10/2026 la suite del backend registraba 661 pruebas, 0 fallas, 0
+errores y 5 omitidas --las pruebas del \gls{ocr} real, que se saltean si
+el equipo no tiene Tesseract instalado y que en el CI sí corren--, con
+una cobertura de líneas del 85,6\,\% medida con JaCoCo (ADR-000-05).
