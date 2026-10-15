@@ -34,69 +34,342 @@ nadie a cargo. Y la pregunta de jurado: ¿quién lo mantiene cuando
 ustedes se reciben? Marco de referencia: \citet{pmi2021}.
 \end{guia}
 
-\completar{Desarrollo del capítulo.}
+\section{Enfoque y criterios}
 
-\section{\completar{Nombre de la sección}}
+Un riesgo es un evento incierto que, de ocurrir, afecta al menos a uno
+de los objetivos del proyecto; a diferencia de un problema, todavía no
+ocurrió y admite decisiones anticipadas \citep{pmi2021}. Cada riesgo de
+este capítulo se formula como ``debido a [causa], podría ocurrir
+[evento], lo que provocaría [efecto]'', se clasifica por su naturaleza
+(alcance, técnico, recursos, terceros, datos o cumplimiento), por su
+origen (interno, bajo control del proyecto, o externo) y por la etapa en
+que puede materializarse (antes de arrancar, durante el desarrollo, en
+el pasaje a producción o en la operación).
 
-\completar{Texto.}
+La \gls{exposicion} se calcula como el producto de la probabilidad y el
+impacto, ambos en una escala de 1 a 5
+(tabla~\ref{tab:exposicion}). Para este proyecto, las escalas se
+interpretan de la siguiente manera:
 
-% Matriz de exposición de la clase 11: probabilidad x impacto.
+\begin{itemize}
+    \item \textbf{Probabilidad.} 1: sin indicios de que ocurra; 3: hay
+          evidencia de que la causa existe; 5: la causa ya está presente y
+          nada la contiene.
+    \item \textbf{Impacto.} 1: demora de días sin efecto sobre los
+          objetivos; 3: afecta un objetivo específico o reduce el
+          \gls{van} sin volverlo negativo; 5: impide el lanzamiento,
+          vuelve negativo el \gls{van} del escenario base o expone a
+          menores a un daño.
+\end{itemize}
+
+Las respuestas posibles son cuatro: \textbf{evitar} (eliminar la causa,
+cambiando el alcance o la actividad), \textbf{mitigar} (reducir la
+probabilidad o el impacto), \textbf{transferir} (trasladar el riesgo a un
+tercero mejor preparado) y \textbf{aceptar} (convivir con él,
+documentado y con un plan de contingencia).
+
+Los identificadores de los riesgos son estables: el registro de
+decisiones del sistema (anexo~\ref{anx:repositorios}) cita varios de
+ellos por su número ---por ejemplo, ADR-M5-05 remite a R-02 y R-07, y
+ADR-M1-04 a R-10---, por lo que la numeración no sigue el orden de
+exposición.
+
+\section{Identificación y evaluación}
+
+La tabla~\ref{tab:matriz-riesgos} presenta los diecisiete riesgos
+identificados, ordenados por exposición descendente. Las fuentes de
+identificación fueron la encuesta de validación
+(apéndice~\ref{apx:encuesta}), el modelo financiero
+(capítulo~\ref{cap:economica} y anexo~\ref{anx:modelo-financiero}), los
+registros de decisión y la documentación de operación del sistema
+(anexo~\ref{anx:repositorios}), la auditoría técnica y las pruebas en
+producción del capítulo~\ref{cap:resultados}, y las condiciones de los
+proveedores relevadas en el capítulo~\ref{cap:marco-tecnologico}. Su
+estado corresponde al 15 de octubre de 2026.
+
 \begin{table}[H]
     \centering
-    \caption{Matriz de exposición: probabilidad $\times$ impacto (escala de la cátedra)}
+    \caption{Ubicación de los riesgos en la matriz de exposición (probabilidad $\times$ impacto)}
     \label{tab:exposicion}
     \small
+    \setlength{\tabcolsep}{4pt}
     \begin{tabular}{l c c c c c}
         \toprule
         & \tb{1 Insignif.} & \tb{2 Menor} & \tb{3 Moderado} & \tb{4 Importante} & \tb{5 Severo} \\
         \midrule
-        \tb{5 Muy probable}   & \riesgoBajo{5}  & \riesgoMedio{10} & \riesgoAlto{15} & \riesgoAlto{20} & \riesgoAlto{25} \\
-        \tb{4 Probable}       & \riesgoBajo{4}  & \riesgoMedio{8}  & \riesgoAlto{12} & \riesgoAlto{16} & \riesgoAlto{20} \\
-        \tb{3 Posible}        & \riesgoBajo{3}  & \riesgoMedio{6}  & \riesgoMedio{9} & \riesgoAlto{12} & \riesgoAlto{15} \\
-        \tb{2 Poco probable}  & \riesgoBajo{2}  & \riesgoBajo{4}   & \riesgoMedio{6} & \riesgoMedio{8} & \riesgoMedio{10} \\
-        \tb{1 Muy improbable} & \riesgoBajo{1}  & \riesgoBajo{2}   & \riesgoBajo{3}  & \riesgoBajo{4}  & \riesgoBajo{5} \\
+        \tb{5 Muy probable}   & \riesgoBajo{}  & \riesgoMedio{} & \riesgoAlto{} & \riesgoAlto{} & \riesgoAlto{} \\
+        \tb{4 Probable}       & \riesgoBajo{}  & \riesgoMedio{} & \riesgoAlto{R-08} & \riesgoAlto{R-02, R-03} & \riesgoAlto{} \\
+        \tb{3 Posible}        & \riesgoBajo{}  & \riesgoMedio{R-06, R-13} & \riesgoMedio{R-11, R-14, R-15} & \riesgoAlto{R-05, R-07} & \riesgoAlto{R-04, R-17} \\
+        \tb{2 Poco probable}  & \riesgoBajo{}  & \riesgoBajo{}  & \riesgoMedio{} & \riesgoMedio{R-12, R-16} & \riesgoMedio{R-01, R-09, R-10} \\
+        \tb{1 Muy improbable} & \riesgoBajo{}  & \riesgoBajo{}  & \riesgoBajo{} & \riesgoBajo{} & \riesgoBajo{} \\
         \bottomrule
     \end{tabular}
 \end{table}
 
-\begin{ejemplo}[Ejemplo de la cátedra: así no / así sí]
-\textbf{Así no:} ``Puede fallar el servidor.'' No hay causa, no hay
-consecuencia y no se puede hacer nada con esa frase.
-
-\textbf{Así sí:} ``Debido a que el prototipo corre en una única VM sin
-réplica, podría caerse durante la demo, lo que impediría mostrar el
-resultado al jurado.''
-
-Cuatro respuestas posibles: \textbf{evitar} (sacar la causa: cambiar el
-alcance), \textbf{mitigar} (bajar probabilidad o impacto: repositorio con
-backup, ambiente de respaldo), \textbf{transferir} (que lo asuma un
-tercero: hosting administrado, librería probada) y \textbf{aceptar}
-(convivir con él, documentado, con responsable y contingencia).
-\end{ejemplo}
-
 % La matriz va apaisada (landscape) porque tiene muchas columnas.
-% Columnas: l = ancho fijo, p{..} = ancho fijo con corte de línea,
-% L = ancho automático (se reparte el espacio restante).
 \begin{landscape}
 \small
-\begin{xltabular}{\linewidth}{l L p{1.7cm} p{1.6cm} c c c L p{1.3cm} L}
-    \caption{Matriz de riesgos ordenada por exposición (ejemplo de estructura)}
+\begin{xltabular}{\linewidth}{l >{\raggedright\arraybackslash\hsize=1.3\hsize}X >{\raggedright\arraybackslash}p{2.3cm} >{\raggedright\arraybackslash}p{1.7cm} c c c >{\raggedright\arraybackslash\hsize=0.85\hsize}X >{\raggedright\arraybackslash}p{1.5cm} >{\raggedright\arraybackslash\hsize=0.85\hsize}X}
+    \caption{Matriz de riesgos ordenada por exposición}
     \label{tab:matriz-riesgos} \\
     \toprule
-    \tb{ID} & \tb{Descripción (causa, evento, efecto)} & \tb{Naturaleza} & \tb{Etapa} & \tb{P} & \tb{I} & \tb{E} & \tb{Respuesta} & \tb{Resp.} & \tb{Contingencia} \\
+    \tb{ID} & \tb{Descripción (causa, evento, efecto)} & \tb{Naturaleza (origen)} & \tb{Etapa} & \tb{P} & \tb{I} & \tb{E} & \tb{Respuesta} & \tb{Resp.} & \tb{Contingencia} \\
     \midrule
     \endfirsthead
     \toprule
-    \tb{ID} & \tb{Descripción (causa, evento, efecto)} & \tb{Naturaleza} & \tb{Etapa} & \tb{P} & \tb{I} & \tb{E} & \tb{Respuesta} & \tb{Resp.} & \tb{Contingencia} \\
+    \tb{ID} & \tb{Descripción (causa, evento, efecto)} & \tb{Naturaleza (origen)} & \tb{Etapa} & \tb{P} & \tb{I} & \tb{E} & \tb{Respuesta} & \tb{Resp.} & \tb{Contingencia} \\
     \midrule
     \endhead
     \bottomrule
     \endfoot
-    R-01 & Debido a que los requerimientos se relevan con un solo usuario, podría ocurrir que aparezcan funciones nuevas en cada revisión, lo que provocaría que el alcance no cierre antes de la entrega final. & Alcance & Durante & 4 & 5 & \riesgoAlto{20} & Mitigar: congelar el alcance del \gls{mvp} en el hito H4 & Autor & Recortar a los \gls{rf} de prioridad alta \\
-    R-02 & Debido a que el prototipo corre en una única VM sin réplica, podría caerse durante la demo, lo que impediría mostrar el resultado al jurado. & Técnico & Pasaje a producción & 3 & 5 & \riesgoAlto{15} & Mitigar: ambiente de respaldo y video de la demo & Autor & Mostrar el video y el ambiente local \\
-    R-03 & Debido a que la fuente de datos es una \gls{api} de terceros sin acuerdo de servicio, podría ocurrir que cambie o se cierre, lo que provocaría la pérdida del insumo del modelo. & Datos / terceros (externo) & Operación & 3 & 5 & \riesgoAlto{15} & Mitigar: descarga periódica y respaldo local & Autor & Reentrenar con el último respaldo \\
-    R-04 & Debido a que el hosting se cotiza en dólares y el presupuesto en pesos, podría ocurrir que el costo supere lo previsto, lo que provocaría la suspensión del entorno de producción. & Recursos (externo) & Operación & 3 & 3 & \riesgoMedio{9} & Transferir: hosting administrado con plan gratuito de respaldo & Autor & Migrar a entorno gratuito degradado \\
-    R-05 & Debido a que el equipo es de una persona, podría ocurrir una enfermedad o sobrecarga laboral, lo que provocaría atrasos en las entregas. & Recursos & Durante & 2 & 4 & \riesgoMedio{8} & Aceptar: no hay reemplazo posible; se documenta el avance semanalmente & Autor & Solicitar prórroga a la cátedra con evidencia \\
-    R-06 & \completar{...} & \completar{...} & \completar{...} & \completar{} & \completar{} & \riesgoBajo{\completar{}} & \completar{...} & \completar{...} & \completar{...} \\
+    R-02 & Debido a que solo el 35,2\,\% de los encuestados prefiere pagar dentro de una plataforma antes que por transferencia, y a que el tutor recibe el 66,96\,\% de su precio una vez descontadas la comisión de la plataforma y la de MercadoPago (ADR-M5-05), podría ocurrir que alumnos y tutores acuerden las clases siguientes por fuera después del primer contacto, lo que provocaría la pérdida de la comisión, única fuente de ingreso. & Terceros: usuarios (externo) & Operación & 4 & 4 & \riesgoAlto{16} & Mitigar: la verificación, la reputación, el cobro con ventana de reembolso y el resumen solo existen dentro de la plataforma & Autor & Revisar la comisión después del piloto con la métrica diferida en BR-PAG-03; una comisión de 23 a 25\,\% mantiene positivo el \gls{van} base (tabla~\ref{tab:sens-comision}) \\
+    R-03 & Debido a que el piloto se extiende del 27 de octubre al 27 de noviembre de 2026, el capítulo~\ref{cap:conclusiones} vence el 27 de octubre y un único desarrollador debe cerrar además las tareas previas al encendido de las clases con menores y las acciones operativas previas al piloto, podría ocurrir que la hipótesis deba responderse sin datos del piloto, lo que provocaría conclusiones sin evidencia suficiente. & Alcance (interno) & Durante & 4 & 4 & \riesgoAlto{16} & Mitigar: alcance del \gls{mvp} congelado; lo no esencial se difiere de forma explícita (video de presentación del tutor, firma digital del \gls{cap}, especialidades verificadas) & Autor & Presentar la respuesta a la hipótesis como preliminar y completarla con el piloto para la entrega final \\
+    R-04 & Debido a que el escenario pesimista tiene un \gls{van} de \usd{-4.410}, podría ocurrir que la demanda no alcance unas 5.858 sesiones anuales en promedio, lo que provocaría que la inversión no se recupere a la tasa exigida; por debajo de 1.774 a 2.194 sesiones anuales la operación ni siquiera cubre sus costos fijos (capítulo~\ref{cap:economica}). & Recursos: mercado (externo) & Operación & 3 & 5 & \riesgoAlto{15} & Mitigar: presupuesto de adquisición de usuarios y acuerdos institucionales (O-02) & Autor & Si a los 12 meses el volumen anualizado queda por debajo del umbral: revisar el modelo de negocio (segmentación de precios, clases grupales, acuerdos institucionales); si persiste, cierre ordenado \\
+    R-17 & Debido a que, después de las pruebas en producción del 14 de octubre de 2026, el plan de remediación registra que el despliegue quedó con el modo de pago simulado guardado en la base, la opción de clases con menores encendida y cuentas de prueba y de administración con contraseñas conocidas (acciones O-1 y O-3 a O-5), podría ocurrir que el piloto se abra a usuarios reales en ese estado, lo que provocaría reservas confirmadas sin cobro o la reserva de un menor real sin todas sus protecciones. & Cumplimiento y datos (interno) & Pasaje a producción & 3 & 5 & \riesgoAlto{15} & Evitar: las acciones O-1 a O-6 del plan de remediación son criterio de entrada al piloto & Autor & Desactivar el modo simulado desde el panel de administración (efecto inmediato, ADR-M5-01), volver a apagar la opción de menores y cambiar las contraseñas \\
+    R-05 & Debido a que el ticket del modelo (\usd{7,42} por sesión de 51 minutos) surge del precio promedio publicado en Superprof (\$13.392 por hora), mientras que la mediana de la disposición a pagar relevada en la encuesta es de \usd{4,56} por hora, podría ocurrir que el precio efectivo de las clases quede por debajo del ticket de equilibrio (\usd{5,87} por hora), lo que provocaría un \gls{van} base negativo. & Recursos: mercado (externo) & Operación & 3 & 4 & \riesgoAlto{12} & Mitigar: piso de tarifa de USD~4 por hora (BR-PAG-04), que protege los costos fijos pero no la inversión; medir el precio efectivo en el piloto & Autor & Si el ticket observado queda por debajo del de equilibrio: revisar comisión y piso con los datos del piloto (sección~\ref{sec:sensibilidad}) \\
+    R-07 & Debido a que solo 9 tutores respondieron la encuesta, a que el \gls{marketplace} es bilateral y a que el tutor recibe seis puntos menos de neto que con la comisión anterior (ADR-M5-05) y debe conectar su cuenta de MercadoPago para aparecer en las búsquedas (ADR-M5-02), podría ocurrir que no haya suficientes tutores verificados al iniciar el piloto, lo que provocaría búsquedas sin candidatos e impediría medir la aceptación del \gls{matching} (I-01). & Recursos: oferta (externo) & Antes de arrancar & 3 & 4 & \riesgoAlto{12} & Mitigar: reclutar tutores antes del piloto en la comunidad universitaria; recomendación por área cuando no hay coincidencia directa (FR-MATCH-011) & Autor & Acotar el piloto a una o dos materias con oferta suficiente \\
+    R-08 & Debido a que el 90,9\,\% de las respuestas de la encuesta proviene de la provincia de Buenos Aires y de la Ciudad Autónoma de Buenos Aires, podría ocurrir que la demanda y el precio del interior difieran de los relevados, lo que provocaría que la hipótesis de reducción de la brecha geográfica quede sin evidencia. & Datos (interno) & Antes de arrancar & 4 & 3 & \riesgoAlto{12} & Mitigar: reencuesta dirigida al interior y entrevistas a docentes de zonas rurales & Autor & Declarar la limitación y acotar el alcance de la conclusión \\
+    R-01 & Debido a que el kill-switch en el cliente todavía no tiene su prueba de punta a punta formal contra el servicio de video real ni la medición de latencia en dispositivos reales (T-M3-06f y T-M3-06g), y a que la exactitud del clasificador con contenido real no se probó, podría ocurrir que, al habilitar las clases con menores, una detección falle o llegue tarde, lo que provocaría la exposición de un menor a contenido inapropiado. & Técnico (interno) & Pasaje a producción & 2 & 5 & \riesgoMedio{10} & Evitar: piloto sin menores (opción de configuración de clases con menores apagada); el encendido exige cerrar T-M3-06f a T-M3-06i; sin clasificador listo el menor no entra al aula & Autor & Volver a apagar la opción de menores; ante una detección, corte, suspensión preventiva y revisión de la Alerta en 12 horas \\
+    R-09 & Debido a que el desarrollo y la operación dependen de una sola persona, podría ocurrir una enfermedad, una sobrecarga o un abandono, lo que provocaría la detención del desarrollo o de la operación. & Recursos (interno) & Operación & 2 & 5 & \riesgoMedio{10} & Aceptar: el modelo económico no admite un equipo rentado (capítulo~\ref{cap:economica}); documentación y pruebas reducen la dependencia & Autor & Prórroga ante la cátedra; en operación, pausa sin pérdida de datos y traspaso a partir del repositorio documentado \\
+    R-10 & Debido a que la verificación de antecedentes depende de la revisión manual del \gls{cap}, un documento que presenta el propio tutor y cuya firma digital no se verifica en el \gls{mvp}, podría ocurrir que un certificado adulterado o evaluado con un criterio incorrecto habilite a un tutor con antecedentes para dar clases a menores, lo que provocaría un daño grave al menor y responsabilidad legal para la plataforma. & Cumplimiento (interno) & Operación & 2 & 5 & \riesgoMedio{10} & Mitigar: \gls{cap} vigente (12 meses) obligatorio solo para dar clases a menores, revisado por el rol de Moderación y Seguridad, con criterio de rechazo definido con la asesoría legal presupuestada (ADR-M1-04) & Autor y asesoría legal & Suspensión inmediata, conservación del certificado y del registro de auditoría, y denuncia ante la autoridad \\
+    R-11 & Debido a que el modelo de cobro con conexión de la cuenta de MercadoPago de cada tutor se implementó según la documentación del proveedor y quedó pendiente de verificar en su entorno de pruebas (ADR-M5-02), podría ocurrir que en producción el reembolso total no devuelva el \texttt{marketplace\_fee}, que no pueda reembolsarse a un tutor que revocó el acceso o que el contrato de \gls{oauth} difiera del documentado, lo que provocaría reembolsos a cargo de la plataforma o reservas que no pueden cobrarse. & Técnico: terceros (externo) & Pasaje a producción & 3 & 3 & \riesgoMedio{9} & Mitigar: verificación en el entorno de pruebas con dos usuarios antes del cobro real; notificaciones idempotentes y conciliación periódica contra la \gls{api} (FR-PAG-017) & Autor & Modo de pago simulado (ADR-M5-01) y cola manual del rol de Soporte Financiero \\
+    R-14 & Debido a que todo el sistema corre en un único servidor propio, ubicado en un domicilio y sin IP fija (ADR-000-07), podría ocurrir un corte de luz, de internet o una falla del equipo, lo que provocaría que la plataforma quede fuera de línea mientras dure, incumpliendo la disponibilidad del 95\,\% mensual. & Técnico (interno) & Operación & 3 & 3 & \riesgoMedio{9} & Aceptar: alternativa compatible con el presupuesto de USD 0 a 100 mensuales y un único desarrollador; mitigación con copia diaria cifrada fuera del servidor y restauración documentada & Autor & Restaurar el último respaldo y desplegar las imágenes publicadas en otro servidor con la misma configuración \\
+    R-15 & Debido a que las pruebas exploratorias en producción encontraron tres hallazgos de severidad alta que la suite automatizada no detectaba, y a que su remediación quedó en ramas todavía no integradas a la rama principal, podría ocurrir que el piloto arranque con defectos de seguridad o de uso no detectados, lo que provocaría pérdida de confianza de los primeros usuarios. & Técnico (interno) & Pasaje a producción & 3 & 3 & \riesgoMedio{9} & Mitigar: cada hallazgo con una prueba que falla antes del arreglo; integrar la remediación y repetir las pruebas por rol antes del piloto & Autor & Corregir con prueba de regresión y desplegar la imagen corregida; volver a la imagen anterior si el arreglo falla \\
+    R-12 & Debido a la jurisprudencia laboral sobre repartidores de plataformas de delivery, podría ocurrir que un tutor reclame una relación de dependencia con la plataforma, lo que provocaría costos laborales no previstos. & Cumplimiento (externo) & Operación & 2 & 4 & \riesgoMedio{8} & Transferir: términos y condiciones redactados por asesoría legal; el tutor fija precio y horarios y cobra en su propia cuenta & Asesoría legal & Defensa legal con los registros de autonomía del tutor \\
+    R-16 & Debido a que el adicional de resumen graba el audio de la clase en el navegador del tutor y lo envía a un proveedor extranjero para transcribirlo (ADR-M3-04), podría ocurrir que la voz y los datos personales de los participantes se transfieran sin un consentimiento con validez legal suficiente, lo que provocaría un incumplimiento de la Ley 25.326. & Cumplimiento (interno) & Operación & 2 & 4 & \riesgoMedio{8} & Evitar: el adicional está apagado en producción hasta contar con el texto legal de la cláusula; nunca con menores; solo texto anonimizado llega al \gls{llm}; el audio se borra al transcribir (máximo 24 horas) & Autor y asesoría legal & Desactivar el adicional, solicitar la eliminación al proveedor y notificar a los titulares \\
+    R-06 & Debido a que los proveedores de \gls{llm} discontinúan modelos y modifican precios, podría ocurrir que el modelo de transcripción o el de resumen deje de estar disponible o se encarezca, lo que provocaría la interrupción del resumen o la pérdida de su margen. & Terceros (externo) & Operación & 3 & 2 & \riesgoMedio{6} & Mitigar: el backend accede al proveedor por un puerto intercambiable (\texttt{ResumenProveedor}) que, sin configuración, no envía nada; el precio del adicional se calcula sobre el costo (ADR-M5-06) & Autor & Cambiar de proveedor y ajustar el precio del adicional; si no es viable, suspenderlo sin afectar el núcleo \\
+    R-13 & Debido a que varios servicios se usan en planes gratuitos o se cotizan en dólares (LiveKit, Cloudflare, Resend, GitHub), podría ocurrir que un proveedor cambie las condiciones de su plan o sus tarifas, lo que provocaría un aumento de los costos fijos y una reducción del \gls{van}. & Terceros (externo) & Operación & 3 & 2 & \riesgoMedio{6} & Mitigar: despliegue en contenedores portables y presupuesto de video ya incluido en los costos fijos; el escenario base absorbe hasta unos \usd{469} mensuales adicionales & Autor & Cambiar de proveedor o de plan con la misma configuración de contenedores \\
 \end{xltabular}
 \end{landscape}
+
+\section{Tratamiento de los riesgos principales}
+
+Los diez primeros riesgos concentran la exposición del proyecto. Su
+tratamiento se detalla a continuación; el resto se monitorea.
+
+\begin{itemize}
+    \item \textbf{R-02, desintermediación (16).} Es el riesgo con mejor
+          respaldo empírico: el 34,1\,\% de los encuestados se mostró en
+          desacuerdo con pagar dentro de una plataforma
+          (apéndice~\ref{apx:encuesta}). La decisión de mantener la
+          comisión del \comision{} lo agrava, y el propio registro de
+          decisiones del sistema lo reconoce (ADR-M5-05): con la comisión
+          de MercadoPago a cargo del tutor, el descuento total sobre su
+          precio es del 33,04\,\%. La respuesta apunta a que el valor
+          diferencial solo exista dentro de \sistema{}: las funciones más
+          valoradas en la encuesta ---profesores verificados (58\,\%),
+          resumen automático (56,8\,\%) y pago seguro (48,9\,\%)--- dependen
+          de que la transacción ocurra en la plataforma. La contingencia
+          no es improvisada: el capítulo~\ref{cap:economica} muestra cuánto
+          puede bajar la comisión sin volver negativo el escenario base.
+    \item \textbf{R-03, alcance y cronograma (16).} Corresponde al
+          ``alcance que nunca cierra'' señalado por la cátedra. Al 14 de
+          octubre de 2026, la lista de tareas del sistema registraba 221
+          tareas completadas y 9 pendientes. De las pendientes, seis
+          corresponden al kill-switch en el cliente y a su encendido, y
+          tres se difirieron de forma explícita: la verificación
+          automática de la firma digital del \gls{cap} (opcional), el
+          video de presentación del tutor (fuera del \gls{mvp}) y las
+          especialidades verificadas contra registros oficiales
+          (ADR-M1-06). Cualquier funcionalidad nueva pasa al trabajo
+          futuro.
+    \item \textbf{R-04, inviabilidad económica (15).} Surge del escenario
+          pesimista del capítulo~\ref{cap:economica}. La contingencia
+          define un disparador medible y una decisión: si a los doce meses
+          el volumen anualizado no alcanza el umbral, se revisa el modelo
+          de negocio y, si no hay alternativa viable, se cierra la
+          operación de forma ordenada. Cancelar a tiempo un proyecto
+          inviable es una decisión de gestión, no un fracaso.
+    \item \textbf{R-17, estado operativo de producción (15).} Es un riesgo
+          que no existía en el diseño y surgió de una actividad de
+          verificación: para probar el aula en vivo y los pagos sin dinero
+          real, el despliegue de producción se usó como entorno de pruebas,
+          con datos sembrados y con la opción de menores encendida. El plan
+          de remediación lo registró y definió las acciones para revertirlo,
+          todas operativas y a cargo del autor. Se responde evitándolo:
+          ninguna de esas condiciones puede seguir vigente al abrir el
+          piloto. La lección es que un entorno de pruebas separado
+          (T-M3-06h), descartado al principio por costo de memoria
+          (ADR-000-07), deja de ser opcional cuando hay usuarios reales.
+    \item \textbf{R-05, precio efectivo (12).} El capítulo~\ref{cap:economica}
+          fija el ticket con precios de oferta publicados, no con la
+          disposición a pagar declarada en la encuesta, que es
+          aproximadamente la mitad. Ninguno de los dos es un precio
+          observado en la plataforma; el piloto es la primera fuente de
+          precios reales y el indicador que dispara la revisión.
+    \item \textbf{R-07, oferta de tutores (12).} Es la manifestación del
+          problema de arranque en frío (\gls{coldstart}) descrito en el
+          capítulo~\ref{cap:marco-teorico}, agravada por las condiciones
+          que el sistema exige al tutor para aparecer en las búsquedas:
+          identidad verificada, foto, cuenta de MercadoPago conectada y,
+          para dar clases a menores, el \gls{cap} vigente. Cada una se
+          justifica por sí misma (confianza, cobro directo al tutor,
+          seguridad del menor), pero en conjunto elevan la fricción del
+          lado más escaso del \gls{marketplace}.
+    \item \textbf{R-08, sesgo geográfico de la encuesta (12).} Afecta
+          directamente a la hipótesis central, que pone el foco en las
+          zonas con escasa oferta de tutores.
+    \item \textbf{R-01, kill-switch y clases con menores (10).} El
+          backend del kill-switch y el clasificador en el navegador están
+          implementados y se probaron en vivo, con salas de video reales,
+          en las dos ramas y ante la falla del clasificador
+          (capítulo~\ref{cap:resultados}). Faltan la prueba formal de punta
+          a punta, la medición en celulares reales y la decisión de
+          encendido. La respuesta es evitar: sin esas condiciones no se
+          habilitan clases con menores, y el sistema lo impone con una
+          opción de configuración que rechaza toda reserva o solicitud
+          para un menor.
+    \item \textbf{R-09, dependencia de una persona (10).} Se acepta
+          porque no existe una respuesta alternativa compatible con el
+          proyecto: el análisis económico mostró que un equipo rentado
+          torna negativo el \gls{van} en los tres escenarios. Aceptarlo no
+          equivale a ignorarlo: la Constitución del proyecto, las nueve
+          especificaciones, los 37 registros de decisión, el manual de
+          operación y una suite de 661 pruebas automatizadas
+          (capítulo~\ref{cap:resultados}) permiten que otra persona retome
+          el sistema.
+    \item \textbf{R-10, antecedentes de los tutores de menores (10).}
+          Una primera versión del sistema exigía el \gls{cap} a todos los
+          tutores y se retiró (ADR-M1-02) por dos motivos: la fricción en
+          el registro de tutores, el recurso más escaso de la plataforma
+          (R-07), y la necesidad de decidir la descalificación de un tutor
+          por sus antecedentes sin asesoría legal. La verificación se
+          reincorporó acotada (ADR-M1-04, implementada el 25 de septiembre
+          de 2026): el \gls{cap} vigente es obligatorio solo para dar
+          clases a menores, y al vencer se cancelan las clases futuras con
+          menores con reembolso total. Así, los tutores que enseñan a
+          adultos se registran sin fricción adicional. El riesgo residual
+          es la validez del documento y su evaluación manual, porque la
+          verificación automática de la firma digital quedó diferida.
+\end{itemize}
+
+Dos riesgos de exposición media merecen una mención por su respuesta. El
+\textbf{R-14} (punto único de falla) es el riesgo aceptado de forma
+explícita en el diseño de la infraestructura: se eligió concentrar todo
+en un servidor propio porque el plan gratuito de Vercel no admite uso
+comercial y un solo proveedor simplifica la operación para un único
+desarrollador (ADR-000-07). Aceptarlo exige que la mitigación exista de
+verdad: el manual de operación advierte que, mientras no estén cargadas
+las credenciales del almacenamiento externo, no hay copia de seguridad
+fuera del servidor, y prevé ensayar la restauración antes del piloto. El
+\textbf{R-16} (privacidad del audio) reemplaza a un riesgo que figuraba
+en una versión anterior de este capítulo ---el envío del audio de las
+clases directamente al \gls{llm}---, eliminado por diseño: el audio va
+solo al servicio de transcripción, el texto se anonimiza antes de llegar
+al modelo de resumen (ADR-M6-03) y las clases con un menor nunca se
+graban.
+
+\section{Riesgos que cancelan proyectos}
+
+La tabla~\ref{tab:riesgos-fatales} vincula los siete riesgos que la
+cátedra señala como causas de cancelación con los riesgos identificados.
+
+\begin{table}[H]
+    \centering
+    \caption{Riesgos fatales y su tratamiento en \sistema{}}
+    \label{tab:riesgos-fatales}
+    \small
+    \begin{tabularx}{\textwidth}{l L}
+        \toprule
+        \tb{Riesgo fatal} & \tb{Situación en \sistema{}} \\
+        \midrule
+        Alcance que no cierra     & R-03: alcance congelado, con las funcionalidades no esenciales diferidas de forma explícita \\
+        Pérdida del proveedor de datos & R-06, R-11 y R-13: los servicios de terceros se aíslan detrás de interfaces intercambiables, el resumen no envía nada sin configuración y existe un modo de operación sin cobro real \\
+        Equipo que se desarma     & R-09: aceptado, con documentación y pruebas que permiten el traspaso \\
+        Tecnología inadecuada     & R-01: el clasificador en el navegador funciona y se probó en vivo; faltan la medición en dispositivos reales y el encendido \\
+        Inviabilidad económica    & R-04 y R-05: viable en los escenarios base y optimista, con disparadores de revisión \\
+        Barrera ética o legal     & R-16 y R-17 se evitan; R-10 se mitiga con el \gls{cap} obligatorio para dar clases a menores; R-12 se transfiere \\
+        Falta de un responsable   & El autor es responsable de todos los riesgos internos; los de cumplimiento se comparten con la asesoría legal \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\section{Oportunidades}
+
+El análisis también identificó dos riesgos positivos, que se gestionan
+buscando que ocurran:
+
+\begin{itemize}
+    \item \textbf{O-01.} Debido a que el 56,8\,\% de los encuestados
+          valoró el resumen automático, podría ocurrir que una parte
+          relevante de las clases entre adultos lo contrate, lo que
+          provocaría un motivo adicional para pagar dentro de la
+          plataforma y reduciría la exposición a R-02. Su aporte económico
+          directo es pequeño, porque se cobra a costo más un 50\,\%
+          (sección~\ref{sec:adicional-resumen}). Respuesta: explotar,
+          habilitando el adicional en cuanto se resuelva R-16 y
+          destacándolo en el flujo de reserva.
+    \item \textbf{O-02.} Debido a que algunas jurisdicciones ya recurren a
+          escuelas mediadas por tecnología con docentes en las ciudades
+          \citep{olea}, podría ocurrir que una institución educativa o un
+          municipio contrate paquetes de sesiones, lo que provocaría un
+          volumen agregado superior al del escenario optimista. Respuesta:
+          mejorar la probabilidad, presentando el piloto a instituciones
+          del interior.
+\end{itemize}
+
+\section{Supuestos y restricciones}\label{sec:supuestos}
+
+Los supuestos son condiciones que se dan por ciertas para que el
+proyecto sea válido; si alguno falla, se convierte en un riesgo. Las
+restricciones son condiciones impuestas que limitan el tiempo, el costo o
+el alcance.
+
+\begin{table}[H]
+    \centering
+    \caption{Supuestos del proyecto y riesgo asociado si fallan}
+    \label{tab:supuestos}
+    \small
+    \begin{tabularx}{\textwidth}{l L l}
+        \toprule
+        \tb{ID} & \tb{Supuesto} & \tb{Si falla} \\
+        \midrule
+        S-01 & Los alumnos activos por año se ubican en la banda del escenario base (200 a 290) & R-04 \\
+        S-02 & Cada alumno activo toma tres clases por mes & R-04 \\
+        S-03 & El precio horario promedio publicado en Superprof (\$13.392) y una duración media de 51 minutos representan el ticket de la plataforma (\usd{7,42}) & R-05 \\
+        S-04 & El tipo de cambio se mantiene por debajo de unos \$2.281 por dólar, valor con el que se anula el \gls{van} base (apéndice~\ref{apx:precio}) & R-05 \\
+        S-05 & Las condiciones de los planes gratuitos y las tarifas de los proveedores se mantienen durante el horizonte & R-13 \\
+        S-06 & La mayoría de los pagos se realiza dentro de la plataforma & R-02 \\
+        S-07 & El reembolso total revierte también el \texttt{marketplace\_fee} de la plataforma (sección~\ref{sec:reembolsos}) & R-11 \\
+        S-08 & El servidor propio sostiene la disponibilidad del 95\,\% mensual que exige la Constitución del proyecto & R-14 \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{Restricciones del proyecto}
+    \label{tab:restricciones}
+    \small
+    \begin{tabularx}{\textwidth}{l L}
+        \toprule
+        \tb{Tipo} & \tb{Restricción} \\
+        \midrule
+        Tiempo    & Presentación final el 28 de noviembre de 2026, con entregas parciales por capítulo \\
+        Recursos  & Un único desarrollador, con una dedicación de 15 a 20 horas semanales \\
+        Costo     & Entre 0 y 100 USD mensuales durante el desarrollo y el piloto \\
+        Infraestructura & Un único servidor propio, sin entorno de pruebas separado mientras no haya usuarios reales (ADR-000-07) \\
+        Técnica   & Los organismos estatales (\gls{renaper}, Registro Nacional de Reincidencia, registros de títulos) no ofrecen \gls{api} públicas \\
+        Legal     & Ley 25.326 de protección de datos personales; tutores exclusivamente mayores de edad; piloto sin clases con menores \\
+        Alcance   & \gls{pwa} sin aplicaciones móviles nativas \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\section{Seguimiento y continuidad}
+
+Los riesgos se revisan en cada Sprint Review (capítulo~\ref{cap:metodologia}):
+se actualizan la probabilidad y el impacto, se incorporan los riesgos
+nuevos y se registran los que se materializaron como problemas. Durante
+la operación, los disparadores de las contingencias ---el volumen
+anualizado de sesiones para R-04, el ticket efectivo para R-05 y la tasa
+de recompra dentro de la plataforma para R-02--- se miden mensualmente.
+
+En cuanto a la pregunta de quién mantiene el sistema una vez finalizado
+el proyecto académico: el modelo económico prevé que el equipo fundador
+asuma el mantenimiento correctivo y evolutivo durante los cinco años
+evaluados, sin personal rentado (capítulo~\ref{cap:economica}). Si el
+proyecto no continuara, el cierre se haría de forma ordenada: aviso a
+los usuarios, reembolso de las reservas pendientes a través de
+MercadoPago, y exportación o eliminación de los datos personales
+conforme a la Ley 25.326.
