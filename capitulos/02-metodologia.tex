@@ -87,8 +87,12 @@ La investigación se delimita a los objetivos específicos OE1 a OE8
 definidos en el capítulo~\ref{cap:introduccion}, con foco en el diseño e
 implementación del \gls{mvp} de \sistema{} para el mercado argentino.
 Quedan fuera del alcance investigativo los mercados regionales, la
-integración con organismos estatales y los módulos de accesibilidad y
-suscripción premium, los cuales se documentan como trabajo futuro.
+integración con organismos estatales, los módulos de accesibilidad y
+suscripción premium y el asistente conversacional de repaso conceptual
+(sección~\ref{sec:alcance}), los cuales se documentan como trabajo
+futuro. El piloto se realiza sin clases con menores
+(sección~\ref{sec:limitaciones}), por lo que la validación no cubre ese
+flujo.
 
 \subsection{Marco teórico}
 
@@ -198,9 +202,11 @@ aunque útil para tareas diarias, no provee la planificación por
 objetivos ni los hitos verificables exigidos por el cronograma
 académico.
 
-Scrum organiza el trabajo en \textbf{sprints de dos semanas} con
-objetivos concretos, revisión del incremento al final de cada ciclo y un
-backlog priorizado. En este contexto unipersonal, el desarrollador
+Scrum organiza el trabajo en \textbf{sprints} con objetivos concretos,
+revisión del incremento al final de cada ciclo y un backlog priorizado.
+La duración de los sprints no es fija: se ajustó a los hitos académicos
+del cronograma y varía entre algo más de una semana y alrededor de un
+mes, según el bloque de trabajo (figura~\ref{fig:gantt}). En este contexto unipersonal, el desarrollador
 asume los roles de Product Owner, Scrum Master y Development Team,
 contando con el director del proyecto como stakeholder externo para la
 revisión académica. Los artefactos incluyen el Product Backlog, el
@@ -217,29 +223,51 @@ dimensiones principales de gestión:
 
 \begin{itemize}
     \item \textbf{Alcance:} definido por los nueve módulos del \gls{mvp}
-          descritos en el capítulo~\ref{cap:introduccion}. Requiere
-          aprobación explícita cualquier funcionalidad adicional para el
-          control del alcance, apoyándose en el uso del Product Backlog,
-          el Sprint Backlog y los incrementos funcionales.
-    \item \textbf{Tiempos:} el proyecto se estructura en sprints de dos
-          semanas a lo largo de seis meses entre junio y noviembre de
-          2026, con una dedicación estimada de 15 a 20 horas semanales e
-          hitos académicos inamovibles, integrando las ceremonias del
-          marco ágil adoptado.
+          descritos en el capítulo~\ref{cap:introduccion}
+          (sección~\ref{sec:alcance}): Identidad y Perfiles, Motor de
+          \gls{matching}, Aula Virtual, Reservas y Agenda, Motor de Pagos,
+          Resumen Automático, Calificaciones y Reputación, Panel de
+          Administración, y Denuncias y Seguridad. Cualquier
+          funcionalidad adicional requiere una enmienda explícita de los
+          principios del proyecto (Constitución del proyecto, Art.~VI), y
+          toda decisión técnica que se aparte de lo planificado se
+          registra como \gls{adr} en el repositorio del sistema
+          (anexo~\ref{anx:repositorios}). El control del alcance se
+          apoya, además, en el Product Backlog, el Sprint Backlog y los
+          incrementos funcionales.
+    \item \textbf{Tiempos:} el proyecto se estructura en sprints de
+          duración variable a lo largo de seis meses entre junio y
+          noviembre de 2026, con una dedicación estimada de 15 a 20 horas
+          semanales e hitos académicos inamovibles, integrando las
+          ceremonias del marco ágil adoptado.
     \item \textbf{Costos:} los costos operativos del \gls{mvp} se estiman
           entre cero y cien dólares mensuales durante el desarrollo,
-          cubiertos mediante planes gratuitos y de bajo costo en la nube,
-          detallándose plenamente en el capítulo~\ref{cap:economica}.
+          cubiertos mediante un servidor propio y planes gratuitos de los
+          servicios externos, detallándose plenamente en el
+          capítulo~\ref{cap:economica}.
     \item \textbf{Riesgos:} el análisis detallado se presenta en el
           capítulo~\ref{cap:riesgos}, contemplando factores como demoras
           en la integración de \gls{api} externas, costos de modelos de
           lenguaje superiores a los estimados y la dificultad para
           reclutar usuarios para el piloto.
-    \item \textbf{Calidad:} cada módulo desarrollado debe superar pruebas
-          unitarias con una cobertura mínima del 70\,\%, además de
-          sortear una batería de pruebas de integración previas al
-          piloto, midiendo la calidad percibida mediante los indicadores
-          específicos de la investigación.
+    \item \textbf{Calidad:} cada historia de usuario de las
+          especificaciones de los módulos se ejercita con al menos una
+          prueba de integración de punta a punta, y los casos borde que
+          cada especificación resuelve son casos de prueba obligatorios.
+          El backend se prueba con JUnit 5 y Testcontainers contra una
+          base PostgreSQL real; el frontend, con pruebas \gls{e2e} en
+          Playwright y controles de accesibilidad con axe-core; el motor
+          de \gls{matching}, con pytest. Las suites corren en integración
+          continua en cada cambio, y una prueba \gls{e2e} nocturna
+          recorre el camino crítico contra la base, el motor de
+          \gls{matching} y el backend reales. La planificación original
+          fijaba una cobertura mínima del 70\,\% por módulo; durante la
+          implementación se optó por medir primero la cobertura de
+          líneas con JaCoCo, sin un umbral que corte la compilación, y
+          decidir el umbral con el valor medido (ADR-000-05). Al
+          14 de octubre de 2026 el backend contaba con 661 pruebas y una
+          cobertura de líneas del 85,6\,\%. La calidad percibida se mide
+          mediante los indicadores específicos de la investigación.
     \item \textbf{Recursos:} un desarrollador full-stack con
           conocimientos en React, Java con Spring Boot, Python y bases de
           datos relacionales, junto al uso de herramientas tecnológicas de
@@ -273,19 +301,23 @@ desarrollo de manera que cada capítulo se apoye en trabajo ya realizado
         28 jul 2026 & Cap.~3 Marco teórico & Sprints 1--2: autenticación y perfiles de usuario (backend + frontend) \\
         18 ago 2026 & Cap.~4 Marco tecnológico & Sprints 3--4: motor de \gls{matching} IA + sistema de búsqueda y filtros \\
         8 sep 2026 & Cap.~5 Justificación económica & Sprints 5--6: reservas + integración MercadoPago \\
-        22 sep 2026 & Cap.~6 Análisis de riesgos & Sprint 7: aula virtual (LiveKit + Redis) \\
-        13 oct 2026 & Cap.~7 Resultados & Sprints 8--9: módulo IA educativa + sistema de reputación \\
+        22 sep 2026 & Cap.~6 Análisis de riesgos & Sprint 7: aula virtual (LiveKit) \\
+        13 oct 2026 & Cap.~7 Resultados & Sprints 8--9: resumen automático + sistema de reputación \\
         27 oct 2026 & Cap.~8 Conclusiones & Sprint 10: integración end-to-end, pruebas de sistema y correcciones \\
-        28 nov 2026 & Presentación final + producto funcional & Sprint 11: piloto con usuarios reales, análisis de resultados, documentación final \\
+        28 nov 2026 & Presentación final + producto funcional & Sprint 11: piloto con usuarios reales (adultos, sección~\ref{sec:limitaciones}), análisis de resultados, documentación final \\
         \bottomrule
     \end{tabularx}
 \end{table}
 
-Cabe aclarar que Redis en el Sprint 7 cubre el estado propio de la
-aplicación --chat en tiempo real, límite de tasa de peticiones-- y no el
-estado interno de LiveKit, que al usarse en su modalidad Cloud queda
-gestionado del lado del proveedor sin intervención del backend. La
-figura~\ref{fig:gantt} muestra la línea de tiempo completa.
+La planificación original incluía Redis en el Sprint 7 para el estado
+propio de la aplicación --chat en tiempo real y límite de tasa de
+peticiones--. Durante la implementación se descartó para operar una
+dependencia menos (ADR-000-04): el límite de tasa se lleva en la memoria
+del único proceso del backend, el estado de la sala vive en LiveKit y en
+PostgreSQL, y no hay un módulo de chat propio, ya que los mensajes de
+texto del aula viajan por el canal de datos de LiveKit. La
+tabla~\ref{tab:hitos} y la figura~\ref{fig:gantt} presentan la
+planificación, con la línea de tiempo completa.
 
 \begin{figure}[H]
     \centering
@@ -305,7 +337,7 @@ figura~\ref{fig:gantt} muestra la línea de tiempo completa.
         \ganttbar{Sprints 3--4 --- Matching IA}{2026-07-28}{2026-08-18} \\
         \ganttbar{Sprints 5--6 --- Reservas y pagos}{2026-08-18}{2026-09-08} \\
         \ganttbar{Sprint 7 --- Aula virtual}{2026-09-08}{2026-09-22} \\
-        \ganttbar{Sprints 8--9 --- IA educativa y reputación}{2026-09-22}{2026-10-13} \\
+        \ganttbar{Sprints 8--9 --- Resumen y reputación}{2026-09-22}{2026-10-13} \\
         \ganttbar{Sprint 10 --- Integración}{2026-10-13}{2026-10-27} \\
         \ganttbar{Sprint 11 --- Piloto}{2026-10-27}{2026-11-27} \\
         \ganttmilestone{Entrega final}{2026-11-28}
@@ -329,12 +361,26 @@ técnicas como parte del seguimiento diario.
 
 Para el diseño de interfaz se empleará Figma en la elaboración de
 prototipos de alta fidelidad, mientras que Postman servirá para la
-documentación y prueba de los endpoints de la \gls{api} REST, y Jest se
-configurará como marco de pruebas unitarias del frontend, mientras que
-JUnit 5 junto con Mockito cumplen ese rol en el backend Spring Boot,
-ambos integrados en el pipeline de integración continua mediante GitHub
-Actions. Para el despliegue, el backend se empaqueta como imagen Docker
-y se publica mediante Coolify, una plataforma de despliegue autoalojada
-que gestiona contenedores, certificados y variables de entorno de forma
-equivalente a un PaaS gestionado, alojada primero en infraestructura
-propia del desarrollador y migrada a un \gls{vps} antes del piloto.
+documentación y prueba de los endpoints de la \gls{api} \gls{rest}. En
+el backend Spring Boot, las pruebas se escriben con JUnit 5 y Mockito, y
+las de integración usan Testcontainers para correr contra una base
+PostgreSQL real; la cobertura se mide con JaCoCo. En el frontend, las
+pruebas \gls{e2e} se escriben con Playwright --con la \gls{api}
+simulada y controles de accesibilidad con axe-core-- y el código se
+revisa con el analizador estático oxlint; la planificación original
+preveía Jest para las pruebas unitarias del frontend, pero se optó por
+Playwright, que prueba los flujos tal como los recorre el usuario. El
+motor de \gls{matching} se prueba con pytest. Todas las suites están
+integradas en el pipeline de integración continua mediante GitHub
+Actions, y la rama principal solo admite cambios con las suites en
+verde. Para el despliegue, cada componente se empaqueta como imagen
+Docker, construida por GitHub Actions y publicada en el registro de
+contenedores de GitHub, y se ejecuta mediante Coolify, una plataforma de
+despliegue autoalojada que gestiona contenedores y variables de entorno
+de forma equivalente a un \gls{paas} gestionado. Coolify corre en un
+servidor propio, publicado en internet mediante Cloudflare Tunnel, que
+además cifra el tráfico entre los usuarios y el servidor. La planificación original
+preveía migrar a un \gls{vps} alquilado antes del piloto; se mantuvo
+el servidor propio por simplicidad operativa y costo, aceptando un
+punto único de falla para el piloto (ADR-000-07,
+sección~\ref{sec:limitaciones}).

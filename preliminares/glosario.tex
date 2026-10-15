@@ -45,9 +45,11 @@
 
 \newglossaryentry{matching}{
     name={matching},
-    description={Proceso por el cual el sistema cruza los perfiles de
-    alumnos y tutores para recomendar la combinación más compatible, en
-    el caso de Tinku mediante similitud semántica de sus descripciones}
+    description={Proceso por el cual el sistema cruza lo que busca un
+    alumno con los perfiles de los tutores para recomendar los más
+    compatibles. En Tinku, la relevancia de cada tutor es la mayor
+    similitud semántica entre el texto de la búsqueda y cada uno de los
+    temas del catálogo que ese tutor eligió enseñar}
 }
 
 \newglossaryentry{marketplace}{
@@ -66,10 +68,13 @@
 
 \newglossaryentry{escrow}{
     name={escrow},
-    description={Mecanismo de pago en el que el dinero del comprador se
-    retiene en un intermediario y solo se libera al vendedor cuando la
-    contraprestación se efectiviza, reduciendo el riesgo de fraude en
-    plataformas bilaterales}
+    description={Mecanismo de protección del pago en plataformas
+    bilaterales que demora la liquidación definitiva hasta que la
+    contraprestación se efectiviza, reduciendo el riesgo de fraude. En
+    Tinku no hay retención de fondos: el pago ingresa directamente a la
+    cuenta de MercadoPago del tutor, y el escrow es una ventana lógica de
+    24 horas posterior a la sesión durante la cual la plataforma puede
+    ordenar el reembolso; una denuncia sobre la sesión la pausa}
 }
 
 \newglossaryentry{coldstart}{
