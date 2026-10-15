@@ -43,12 +43,25 @@ compite la oferta de \sistema{}.
 \section{Traslado al ticket promedio}
 
 El ticket del modelo es un promedio ya ponderado por la mezcla de
-duraciones (Ec.~\ref{eq:duracion}, $\bar{d}=51$ minutos), por lo que el
-precio horario se multiplica por $51/60 = 0{,}85$ y se convierte a dólares
-al tipo de cambio de \$1.535 por USD (Ec.~\ref{eq:ticket}), el que fija
-el piso tarifario de la plataforma. El resultado es un ticket de
-\usd{7,42}, con un margen neto por sesión de \usd{1,5552} a la comisión
-del \comision{}.
+duraciones (Ec.~\ref{eq:duracion}, $\bar{d}=51$ minutos, una duración
+media supuesta), por lo que el precio horario se multiplica por
+$51/60 = 0{,}85$ y se convierte a dólares al tipo de cambio de \$1.535
+por USD (Ec.~\ref{eq:ticket}), el mismo con el que el sistema expresa en
+pesos el piso de tarifa de USD 4 por hora (\$6.140,
+sección~\ref{sec:piso-tarifa}). El resultado es un ticket de \usd{7,42}.
+Con el reparto del cobro que implementa el sistema
+(sección~\ref{sec:costos-variables}), la plataforma percibe la comisión
+completa del \comision{}, \usd{2,0034} por sesión, y el tutor recibe el
+66,96\,\% del precio, una vez descontada también la comisión de
+MercadoPago.
+
+El precio horario promedio del relevamiento (\$13.392,43) supera
+holgadamente al piso de tarifa (\$6.140). Aun así, 78 de los 414 avisos
+relevados (19\,\%), entre ellos los 36 publicados a \$1.990, declaran un
+precio por hora inferior al piso: esos profesores no podrían publicar su
+tarifa actual en \sistema{}. El precio horario con el que el \gls{van} del
+escenario base se anula, unos \$9.010, queda entre el primer cuartil y la
+mediana del relevamiento; 129 avisos (31\,\%) están por debajo de él.
 
 El tipo de cambio es un parámetro del modelo. La
 tabla~\ref{tab:sens-precio} muestra cómo cambian el ticket, los puntos de
@@ -60,23 +73,27 @@ manteniendo el resto de los supuestos.
     \caption{Sensibilidad del escenario base al tipo de cambio}
     \label{tab:sens-precio}
     \small
-    \begin{tabularx}{\textwidth}{r r r r r r r}
+    \begin{tabularx}{\textwidth}{r R R R R R R}
         \toprule
         \tb{ARS/USD} & \tb{Ticket} & \tb{Margen} & \tb{Sesiones eq.\ Año 1} & \tb{Sesiones eq.\ Año 5} & \tb{VAN (USD)} & \tb{TIR} \\
         \midrule
-        1.400 & 8,13 & 1,70 & 2.474 & 3.072 &  7.851 & 26,70\,\% \\
-        \tb{1.535} & \tb{7,42} & \tb{1,56} & \tb{2.710} & \tb{3.366} & \tb{3.573} & \tb{20,47\,\%} \\
-        1.700 & 6,70 & 1,40 & 3.001 & 3.728 & $-767$ & 13,79\,\% \\
-        1.900 & 5,99 & 1,26 & 3.357 & 4.170 & $-5.045$ & 6,69\,\% \\
-        \midrule
-        \multicolumn{1}{l}{Modelo previo (USD 7, IA por sesión)} & 7,00 & 1,44 & 2.924 & 3.631 & 308 & 15,48\,\% \\
+        1.400 & 8,13 & 2,20 & 1.620 & 2.002 & 24.380 & 48,56\,\% \\
+        \tb{1.535} & \tb{7,42} & \tb{2,00} & \tb{1.774} & \tb{2.194} & \tb{18.869} & \tb{41,57\,\%} \\
+        1.700 & 6,70 & 1,81 & 1.965 & 2.430 & 13.279 & 34,20\,\% \\
+        1.900 & 5,99 & 1,62 & 2.198 & 2.717 &  7.767 & 26,58\,\% \\
+        2.100 & 5,42 & 1,46 & 2.429 & 3.003 &  3.342 & 20,13\,\% \\
         \bottomrule
     \end{tabularx}
 \end{table}
 
-Cuanto más pesos cuesta el dólar, menos dólares equivale el precio local
-y peor resulta el modelo: por encima de aproximadamente \$1.670 por USD el
-\gls{van} del escenario base pasa a ser negativo.
+El margen de la tabla es la comisión completa del \comision{} sobre el
+ticket, porque la comisión de MercadoPago la paga el tutor
+(sección~\ref{sec:costos-variables}), y los costos fijos son los de la
+tabla~\ref{tab:costos-fijos}. Cuanto más pesos cuesta el dólar, menos
+dólares equivale el precio local y peor resulta el modelo: por encima de
+aproximadamente \$2.281 por USD el \gls{van} del escenario base pasa a ser
+negativo. En la versión anterior del modelo, que restaba la comisión de
+MercadoPago como costo de la plataforma, ese umbral era de unos \$1.670.
 
 \section{Limitaciones}
 

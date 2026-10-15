@@ -60,14 +60,25 @@ mide creación de valor y la \gls{tir} mide rendimiento.
     \end{tabularx}
 \end{table}
 
-Todos los cálculos se apoyan en un modelo financiero parametrizado
-construido en planilla de cálculo, en el cual los indicadores están
-formulados con las funciones nativas \texttt{NPV} e \texttt{IRR}. Esto
-permite que al modificar cualquier supuesto de entrada —el ticket
-promedio, la comisión, las horas de desarrollo o el volumen de
-sesiones— los tres escenarios, el \gls{van} y la \gls{tir} se
-recalculen de forma inmediata. El modelo se incluye como anexo del
-presente trabajo.
+Todos los cálculos se apoyan en un modelo financiero parametrizado, en el
+cual el \gls{van}, la \gls{tir} y los períodos de repago se calculan con
+las expresiones de la sección~\ref{sec:indicadores-formulas}. Esto permite
+que al modificar cualquier supuesto de entrada —el ticket promedio, la
+comisión, las horas de desarrollo o el volumen de sesiones— los tres
+escenarios, el \gls{van} y la \gls{tir} se recalculen de forma inmediata.
+Cada parámetro de entrada se declara en las tablas de este capítulo, con
+su origen, de modo que todos los resultados son reproducibles a partir de
+ellas.
+
+Los parámetros que dependen del funcionamiento de la plataforma
+—comisión, reparto del cobro con MercadoPago, piso de tarifa, duración de
+las clases, precio del resumen y paquete mensual— se tomaron del sistema
+efectivamente implementado y de sus registros de decisión de arquitectura (\glspl{adr}), que
+viven en el repositorio del sistema (anexo~\ref{anx:repositorios}). Una
+versión anterior de este capítulo suponía que la plataforma pagaba la
+comisión de MercadoPago; el sistema implementado no funciona así
+(sección~\ref{sec:costos-variables}), y todas las cifras de este capítulo
+se recalcularon con el reparto real.
 
 \section{Justificación institucional, legal, ambiental y social}
 
@@ -86,11 +97,22 @@ comprobable:
           Nación (artículos 25, 26, 682 y 690), exigiendo que la cuenta
           pagadora pertenezca siempre a un adulto responsable para
           resguardar patrimonialmente a los menores. En materia
-          impositiva, la retención de fondos vía MercadoPago Marketplace
-          funciona como un mecanismo de formalización tributaria (similar
-          a los esquemas de retención de AFIP para plataformas digitales),
-          mitigando además los riesgos de relación de dependencia laboral
-          encubierta. Asimismo, la plataforma aplica el principio de
+          impositiva, el cobro se resuelve con MercadoPago Marketplace en
+          el llamado \emph{modelo A} (ADR-M5-02): cada tutor conecta su
+          propia cuenta de MercadoPago, el dinero de la clase ingresa a
+          esa cuenta y la plataforma percibe únicamente su comisión,
+          mediante el campo \texttt{marketplace\_fee} del pago. \sistema{}
+          no recauda ni retiene fondos de terceros: el \gls{escrow} es una
+          ventana lógica de 24 horas durante la cual la plataforma todavía
+          puede ordenar un reembolso. Se descartó la alternativa de
+          recaudar todo en la cuenta de la plataforma y transferir luego a
+          cada tutor porque hacía ingresar el monto bruto de todas las
+          clases como ingreso propio, con su carga impositiva, y obligaba a
+          transferencias manuales semanales (ADR-M5-02). La formalización
+          que el sistema aporta es otra: cada cobro queda registrado en la
+          cuenta del tutor y la plataforma le permite exportar sus cobros
+          del mes, con los datos del adulto pagador, para facturar y
+          declarar ante la \gls{arca} (ex AFIP). Asimismo, la plataforma aplica el principio de
           minimización de datos para cumplir estrictamente con la Ley de
           Protección de Datos Personales (Ley 25.326).
     \item \textbf{Justificación institucional:} \sistema{} se desarrolla
@@ -102,22 +124,41 @@ comprobable:
           académico en un ecosistema digital y virtual, se elimina la
           necesidad de desplazamiento físico de alumnos y tutores,
           reduciendo la huella de carbono asociada al transporte. A nivel
-          de infraestructura tecnológica, se prioriza la eficiencia
-          mediante servicios gestionados de bajo consumo, evitando el
-          aprovisionamiento permanente de servidores dedicados.
+          de infraestructura tecnológica, se dimensiona al mínimo: todos
+          los servicios propios (base de datos, motor de \gls{matching},
+          backend y frontend) corren como contenedores en un único servidor
+          preexistente administrado con Coolify, sin réplicas ni entorno de
+          pruebas duplicado, y las imágenes se construyen fuera de él, en
+          GitHub Actions (ADR-000-07). La detección de contenido inapropiado
+          del kill-switch se ejecuta en el navegador de cada participante y
+          no en el servidor.
 \end{itemize}
 
 \section{Modelo de monetización y alternativas descartadas}
 
-El ingreso de \sistema{} proviene de una única fuente: una
+El ingreso que se modela proviene de una única fuente: una
 \textbf{comisión de plataforma del \comision{} sobre el precio de cada
-sesión}, descontada exclusivamente del pago que recibe el tutor. El
-ticket promedio se fija en \textbf{USD 7,42 por sesión}, derivado del
-relevamiento de precios de Superprof descripto en la
-sección~\ref{sec:origen-ticket}. El estudiante abona el precio final fijado por el docente, sin cargos de
-servicio adicionales visibles. Se excluyen explícitamente vías de ingreso
-como la publicidad, la venta de datos o las suscripciones premium durante
-la etapa de \gls{mvp}.
+sesión} (regla BR-PAG-01 del sistema, ADR-M5-05), descontada
+exclusivamente del pago que recibe el tutor. El ticket promedio se fija en
+\textbf{USD 7,42 por sesión}, derivado del relevamiento de precios de
+Superprof descripto en la sección~\ref{sec:origen-ticket}. El estudiante
+abona el precio final fijado por el docente, sin cargos de servicio
+visibles: la comisión nunca aparece como línea aparte. El único cargo
+adicional es el resumen automático, opcional y de precio a costo
+(sección~\ref{sec:adicional-resumen}), que no se incorpora al flujo de
+fondos. Se excluyen explícitamente vías de ingreso como la publicidad, la
+venta de datos o las suscripciones premium durante la etapa de \gls{mvp}.
+
+Además de la clase suelta, el sistema ofrece un \textbf{paquete mensual}
+de cuatro clases semanales, con una vigencia de cuatro semanas y un único
+pago (ADR-M5-03). El tutor decide si lo habilita y puede aplicarle un
+descuento de 0 a 30\,\% sobre su precio por hora, sin quedar por debajo
+del piso de tarifa (sección~\ref{sec:piso-tarifa}); la comisión se calcula
+clase por clase sobre el precio con descuento. El paquete no agrega una
+fuente de ingreso: es la misma comisión sobre un ticket eventualmente
+menor. Como no hay datos de su adopción, el modelo base no lo incluye y su
+efecto se evalúa como sensibilidad del ticket
+(sección~\ref{sec:sensibilidad}).
 
 Durante el diseño del modelo de negocio se evaluaron y descartaron dos
 metodologías alternativas de intermediación:
@@ -147,8 +188,9 @@ declarados fue de \$5.544.467 y el promedio de \$13.392,43 por hora
 modelo trabaja con una duración media de 51 minutos por sesión
 (ecuación~\ref{eq:duracion}), el precio horario se pondera por
 $51/60 = 0{,}85$ y se convierte a dólares al tipo de cambio de
-\$1.535 por USD, el mismo que fija el piso tarifario de la plataforma
-(BNA, 09/09/2026; estimación propia declarada como tal):
+\$1.535 por USD, el mismo con el que el sistema expresa en pesos el piso
+de tarifa (sección~\ref{sec:piso-tarifa}) y el precio del resumen (BNA,
+09/09/2026; estimación propia declarada como tal):
 
 \begin{equation}
     \text{Ticket} = \frac{13.392{,}43 \times 0{,}85}{1.535} = \usd{7{,}42}.
@@ -159,60 +201,115 @@ El tipo de cambio es un parámetro del modelo y no un dato: la
 sensibilidad del resultado frente a él se presenta en el
 apéndice~\ref{apx:precio}.
 
-\subsection{Calibración de la comisión}
+\subsection{Calibración de la comisión}\label{sec:calibracion-comision}
 
-La comisión del \comision{} no es un supuesto arbitrario sino el
-resultado de un análisis de punto de equilibrio. Una primera
-formulación del modelo adoptó una comisión del 15\,\%, valor que
-posiciona a la plataforma por debajo de toda la banda de Preply
-(18\,\% a 33\,\%). Sin embargo, al incorporar al modelo los costos
-financieros de la pasarela de pago y proyectar un volumen de demanda
-realista para un \gls{mvp}, esa comisión arrojaba un \gls{van} negativo
-en los tres escenarios: el margen resultante no alcanzaba a cubrir los
-costos fijos de operación.
+La comisión se calibró en tres etapas, y la última cambia el sentido del
+\comision{}. Una primera formulación del modelo adoptó una comisión del
+15\,\%, valor que posiciona a la plataforma por debajo de toda la banda de
+Preply (18\,\% a 33\,\%) \citep{preply}. Sin embargo, al incorporar al
+modelo los costos financieros de la pasarela de pago y proyectar un
+volumen de demanda realista para un \gls{mvp}, esa comisión arrojaba un
+\gls{van} negativo en los tres escenarios.
 
-La comisión se recalibró entonces al \comision{}, valor que continúa
-dentro de la banda de mercado vigente (18\,\% a 33\,\%) y por debajo de
-su extremo superior. Con el ticket de USD 7 originalmente supuesto, ese
-valor era el mínimo necesario para que el escenario base alcanzara un
-\gls{van} no negativo. Con el ticket actualizado a USD 7,42 el umbral
-baja a aproximadamente el 25,7\,\%, por lo que el \comision{} se
-mantiene como una comisión con margen de seguridad de poco más de un
-punto porcentual. Es una restricción del modelo que se declara
-explícitamente: por debajo de ese umbral, y manteniendo el resto de los
-supuestos constantes, el proyecto no se justifica económicamente.
+La comisión se recalibró entonces al \comision{}. En esa versión del
+modelo la comisión de MercadoPago (6,04\,\%) se restaba como un costo de
+la plataforma y, con un ticket de USD 7 y un costo de \gls{ia} imputado a
+cada sesión, el \gls{van} del escenario base se anulaba con una comisión
+de aproximadamente 26,9\,\%: el \comision{} era, en efecto, el mínimo
+necesario. Con el ticket actualizado a USD 7,42 y el costo de \gls{ia}
+fuera de la sesión, ese umbral había bajado a aproximadamente 25,3\,\%.
+
+Ambas cifras quedaron superadas. El sistema implementado cobra con el
+modelo A (ADR-M5-02), en el que MercadoPago descuenta su comisión de los
+fondos del tutor y la plataforma recibe el \comision{} completo
+(sección~\ref{sec:costos-variables}); además, la partida fija de
+procesamiento de \gls{llm} se eliminó por no tener contraparte en el
+sistema (sección~\ref{sec:costos-recurrentes}). Con el modelo corregido,
+el \gls{van} del escenario base se anula con una comisión de
+\textbf{aproximadamente 18,2\,\%}. La afirmación anterior de que el
+\comision{} era el mínimo para que el proyecto se justificara deja, por lo
+tanto, de ser cierta: el \comision{} se mantiene como una decisión del
+dueño del producto (ADR-M5-05) con un margen de unos nueve puntos
+porcentuales sobre el equilibrio del escenario base, cuyo fundamento se
+expone en la sección~\ref{sec:fundamento-comision}.
 
 \subsection{Unidad de cobro y duración de las sesiones}
 
-La plataforma admite sesiones de duración variable, con un mínimo
-facturable de 30 minutos y una duración estándar de 60 minutos. Esta
-distinción es económicamente relevante porque los costos variables de
-procesamiento de \gls{ia} (transcripción y resumen automatizado) escalan
-con la duración real del audio procesado, no con la cantidad de sesiones.
-Imputar un costo fijo por sesión sobrestimaría el costo de las clases
-cortas.
+El tutor fija un precio por hora y quien reserva elige la duración de la
+clase entre 30 y 180 minutos, en bloques de 30 (regla FR-RES-023 del
+sistema); el precio de la sesión es el precio por hora multiplicado por la
+duración elegida y queda congelado en la reserva. La duración es, por lo
+tanto, económicamente relevante: el ticket por sesión crece con ella, y
+también el costo de \gls{ia} del resumen opcional, que escala con los
+minutos de audio procesados y no con la cantidad de sesiones.
 
-Por tal motivo, el modelo parametriza el costo de \gls{ia} por minuto
-de audio y no por sesión. Asumiendo que un 30\,\% de las sesiones utiliza
-el mínimo de 30 minutos, la duración promedio ponderada resulta:
+El sistema no fija una duración típica y, antes del piloto, no hay datos
+de la distribución real. El modelo trabaja con una \textbf{duración media
+supuesta}, que se declara como estimación propia: se asume que un
+30\,\% de las sesiones usa el bloque mínimo de 30 minutos y el resto dura
+60 minutos, de modo que la duración promedio ponderada resulta:
 
 \begin{equation}
     \bar{d} = 60 \times (1 - 0{,}30) + 30 \times 0{,}30 = 51 \text{ minutos.}
     \label{eq:duracion}
 \end{equation}
 
+Las clases de 90 a 180 minutos que el sistema admite no se incluyen en la
+mezcla; si se dictaran, elevarían el ticket promedio. La
+sensibilidad del resultado frente a la duración media se presenta en la
+sección~\ref{sec:sensibilidad}.
+
 El ticket promedio de \usd{7,42} se interpreta como el promedio ya
 ponderado sobre esa misma mezcla de duraciones y precios horarios. El
-procesamiento de \gls{ia} ya no se imputa a cada sesión: pasó a ser un
-servicio opcional que el estudiante contrata y que se cobra aparte, tal
-como se describe a continuación.
+procesamiento de \gls{ia} no se imputa a cada sesión: es un servicio
+opcional que quien paga contrata y que se cobra aparte, tal como se
+describe a continuación.
+
+\subsection{Piso de la tarifa por hora}\label{sec:piso-tarifa}
+
+El precio lo fija el tutor, pero el sistema no le permite fijar un precio
+por hora inferior a un piso de \textbf{USD 4 por hora}, expresado en
+pesos: \textbf{\$6.140} al tipo de cambio de \$1.535 (regla BR-PAG-04).
+El valor es un parámetro que un administrador revisa una vez por mes, sin
+consumir una \gls{api} de tipo de cambio, y no es retroactivo: una tarifa
+ya guardada por debajo sigue vigente hasta que el tutor la edita. El
+descuento del paquete mensual tampoco puede llevar el precio por hora por
+debajo del piso.
+
+El modelo permite cuantificar qué protege ese piso y qué no. Una clase de
+duración media (51 minutos) al piso cuesta \usd{3,40}; con el reparto del
+modelo A (sección~\ref{sec:costos-variables}) le deja a la plataforma
+\usd{0,918} (\usd{1,08} por hora de clase) y al tutor \usd{2,28}, una vez
+descontada la comisión de MercadoPago. Si todas las sesiones de cada
+escenario se dictaran al piso:
+
+\begin{itemize}
+    \item en el \textbf{escenario base}, la comisión cubriría los costos
+          fijos de todos los años (bastaría un precio de \usd{2,26} por
+          hora), pero no recuperaría la inversión: el \gls{van} sería de
+          \usd{-12.340};
+    \item en el \textbf{escenario pesimista}, la comisión ya no cubriría
+          los costos fijos del Año 2 (flujo de \usd{-40}): el precio por
+          hora que los cubre en todos los años de ese escenario es de
+          aproximadamente \usd{4,04}, prácticamente el piso.
+\end{itemize}
+
+El piso, entonces, no garantiza la viabilidad del proyecto, que depende
+del ticket promedio: el \gls{van} del escenario base se anula con unos
+\usd{5,87} por hora (sección~\ref{sec:sensibilidad}), por encima del piso.
+Lo que el piso asegura es una cota inferior: con un volumen como el del
+escenario pesimista, una tarifa por debajo de él dejaría a la comisión sin
+cubrir siquiera los costos fijos de operación. Esa es la lectura que
+sostiene el cálculo de la afirmación con la que el sistema fundamenta la
+regla («por debajo, la comisión no cubre la operación»).
 
 \subsection{Resumen automático como adicional opcional}\label{sec:adicional-resumen}
 
 Al reservar una clase, quien paga puede sumar un resumen automático de la
 sesión (transcripción y síntesis por \gls{ia}). Es un servicio opcional,
 disponible solo en clases entre adultos y con el consentimiento de ambas
-partes, y su precio se fija a costo más un 50\,\%:
+partes —con un menor nunca se contrata ni se graba—, y su precio se fija a
+costo más un 50\,\% (ADR-M5-06):
 
 \begin{equation}
     P_{\text{resumen}}(d) = 1{,}50 \times C_{\text{IA}}(d),
@@ -241,7 +338,7 @@ su fuente, son los de la tabla~\ref{tab:parametros-ia}.
           & Tarifa de lista de GPT-4o: USD 2,50 por millón de tokens \citep{openaipricing2026}
           & $2{,}5\times10^{-6}$ \\
         $\tau$ --- tokens de transcripción por minuto
-          & Estimación propia: unos 13.000 tokens por hora de clase (10.000 a 15.000 según el diseño del módulo)
+          & Estimación propia: unos 13.000 tokens por hora de clase (10.000 a 15.000 según el diseño del módulo), redondeada a 217 por minuto, el valor que usa el sistema
           & 217 \\
         $c_s$ --- salida del LLM (por token)
           & Tarifa de lista de GPT-4o: USD 10,00 por millón de tokens \citep{openaipricing2026}
@@ -257,25 +354,30 @@ Con esos valores, el costo de \gls{ia} es de unos USD 0,22 por hora de clase,
 de los cuales unos USD 0,18 corresponden a la transcripción. La
 tabla~\ref{tab:precio-resumen} muestra el precio resultante según la
 duración, convertido al tipo de cambio de \$1.535 por USD y redondeado
-hacia arriba a la decena de pesos. La columna final es lo que le queda a
-la plataforma después de la comisión de la pasarela (6,04\,\% sobre el
-precio cobrado, incluido el adicional).
+hacia arriba a la decena de pesos; los montos en pesos son los que cobra
+el sistema. El adicional ingresa \textbf{íntegro a la plataforma}: se suma
+al \texttt{marketplace\_fee} de la sesión y la comisión del \comision{} no
+se calcula sobre él (regla BR-PAG-11). La comisión de MercadoPago sobre el
+adicional, en cambio, se descuenta de los fondos del tutor junto con la de
+la clase (modelo A, ADR-M5-02): son \usd{0,017} en una clase de duración
+media. Por eso la columna final es el margen de la plataforma, precio
+menos costo de \gls{ia}, sin descontar la pasarela.
 
 \begin{table}[H]
     \centering
     \caption{Costo y precio del resumen según la duración de la clase}
     \label{tab:precio-resumen}
     \small
-    \begin{tabularx}{\textwidth}{r r r r r}
+    \begin{tabularx}{\textwidth}{l R R R R}
         \toprule
-        \tb{Duración} & \tb{Costo de IA (USD)} & \tb{Precio (USD)} & \tb{Precio (ARS)} & \tb{Neto de pasarela (USD)} \\
+        \tb{Duración} & \tb{Costo de IA (USD)} & \tb{Precio (USD)} & \tb{Precio (ARS)} & \tb{Margen de la plataforma (USD)} \\
         \midrule
-        30 min  & 0,1147 & 0,1720 &   270 & 0,0469 \\
-        51 min (promedio) & 0,1890 & 0,2835 &   440 & 0,0774 \\
-        60 min  & 0,2209 & 0,3313 &   510 & 0,0904 \\
-        90 min  & 0,3272 & 0,4907 &   760 & 0,1339 \\
-        120 min & 0,4334 & 0,6501 & 1.000 & 0,1774 \\
-        180 min & 0,6459 & 0,9688 & 1.490 & 0,2644 \\
+        30 min  & 0,1147 & 0,1720 &   270 & 0,0573 \\
+        51 min (promedio) & 0,1891 & 0,2836 &   440 & 0,0945 \\
+        60 min  & 0,2209 & 0,3314 &   510 & 0,1105 \\
+        90 min  & 0,3272 & 0,4908 &   760 & 0,1636 \\
+        120 min & 0,4335 & 0,6502 & 1.000 & 0,2167 \\
+        180 min & 0,6461 & 0,9691 & 1.490 & 0,3230 \\
         \bottomrule
     \end{tabularx}
 \end{table}
@@ -284,10 +386,10 @@ Tres consecuencias de este diseño son relevantes para la evaluación:
 
 \begin{itemize}
     \item \textbf{No es una fuente de ingreso relevante.} El adicional se
-          fija a costo más un 50\,\%, y una vez descontada la pasarela deja
-          USD 0,077 por resumen de duración promedio. Si, a modo de
-          referencia, uno de cada cinco estudiantes lo contratara en el
-          escenario base, el aporte sería de unos USD 135 anuales. Por eso
+          fija a costo más un 50\,\%, y deja a la plataforma USD 0,0945
+          por resumen de duración promedio. Si, a modo de referencia, se
+          contratara en una de cada cinco sesiones del escenario base, el
+          aporte sería de unos USD 165 anuales. Por eso
           \textbf{no se incorpora al flujo de fondos}: su función es
           ofrecer el servicio sin que el costo de \gls{ia} recaiga sobre
           las sesiones que no lo usan.
@@ -298,11 +400,18 @@ Tres consecuencias de este diseño son relevantes para la evaluación:
           siete veces mayor). Al pasar a cobrarse aparte y en proporción
           a la duración, las sesiones sin resumen no cargan costo de
           \gls{ia} y el margen unitario base sube en esa cantidad.
-    \item \textbf{Riesgo de falla.} Si el resumen no llega a generarse, el
-          adicional se reembolsa íntegro, pero el costo de transcripción
-          ya incurrido no se recupera. No se cuantifica en el modelo base
-          y se declara como una restricción del análisis; su magnitud es
-          de centavos de dólar por incidente.
+    \item \textbf{Riesgo de falla.} Si el resumen no llega a generarse, se
+          reembolsa el monto exacto del adicional —una de las dos
+          excepciones a la regla de reembolsos totales
+          (sección~\ref{sec:reembolsos})—, pero el costo de transcripción
+          ya incurrido no se recupera. Además, si MercadoPago prorrateara
+          ese reembolso parcial entre el tutor y la plataforma, la
+          diferencia que se le descuente al tutor la devuelve la
+          plataforma por la cola de reembolsos manuales (ADR-M5-02,
+          pendiente de verificar en el entorno de pruebas de MercadoPago).
+          Nada de esto se cuantifica en el modelo base y se declara como
+          una restricción del análisis; su magnitud es de centavos de dólar
+          por incidente.
 \end{itemize}
 
 Las tarifas de lista se verificaron en fuentes secundarias y en la
@@ -321,6 +430,15 @@ tarifas de mercado según el perfil, los costos administrativos de puesta
 en marcha y una reserva de contingencia. La
 tabla~\ref{tab:inversion} presenta el desglose.
 
+La partida de personal es una \textbf{valorización a precio de mercado}
+y no una medición del esfuerzo real. El desarrollo efectivo lo lleva
+adelante un único desarrollador; la tabla estima cuánto costaría
+construir el mismo producto contratando los cuatro perfiles a tarifas de
+mercado, que es el costo de oportunidad relevante para evaluar la
+inversión con independencia de quién la ejecute. Las horas por perfil son,
+por lo tanto, una estimación propia del trabajo que el producto requiere,
+no un registro de horas trabajadas.
+
 \begin{table}[H]
     \centering
     \caption{Inversión inicial desglosada por rol y concepto (en USD)}
@@ -334,7 +452,7 @@ tabla~\ref{tab:inversion} presenta el desglose.
         Personal       & Mid --- backend y pasarela de pagos              & 250 hs & 30 & 7.500 \\
         Personal       & Junior --- frontend \gls{pwa} e interfaz         & 250 hs & 15 & 3.750 \\
         Personal       & Junior --- \gls{uat} y pruebas                   & 120 hs & 15 & 1.800 \\
-        Infraestructura & Cloud de desarrollo (Supabase, Vercel, LiveKit) & 6 meses & 0 & 0 \\
+        Infraestructura & Servidor propio preexistente y capas gratuitas (LiveKit, GitHub) & 6 meses & 0 & 0 \\
         Administrativo & Registro de dominio                              & 1 año  & 15 & 15 \\
         Legal          & Asesoría en privacidad de datos y TyC            & único  & 800 & 800 \\
         Riesgo         & Contingencia por imprevistos (10\,\% del desarrollo) & único & 2.265 & 2.265 \\
@@ -348,8 +466,10 @@ Las tarifas horarias por perfil (USD 50 para el rol senior, USD 30 para
 el semi-senior y USD 15 para los roles junior) se adoptan como estimación
 propia basada en valores de mercado para desarrollo remoto en la región,
 y se declaran como tal. Las horas asignadas a los perfiles mid y junior
-se dimensionaron considerando que el uso de servicios gestionados
-(Supabase como backend) y de bibliotecas de componentes reduce
+se dimensionaron considerando que el uso de un marco de desarrollo maduro
+para el backend (Java con Spring Boot, ADR-000-02), de una única base de
+datos PostgreSQL que también aloja el índice semántico (pgvector,
+ADR-M2-01) y de bibliotecas de componentes para la interfaz reduce
 sustancialmente el trabajo de construcción desde cero.
 
 La reserva de contingencia del 10\,\% sobre el costo de desarrollo se
@@ -358,15 +478,25 @@ tardía de defectos. Su inclusión responde a un criterio conservador: un
 presupuesto de desarrollo sin margen de imprevistos presenta un riesgo de
 desvío elevado.
 
-La infraestructura durante el desarrollo se aprovisiona íntegramente sobre
-las capas gratuitas de los proveedores seleccionados, por lo que no
-genera erogación en el Año 0. Como referencia del costo alternativo,
-un \gls{vps} de recursos medios de un proveedor local (8 vCore/16~GB)
-cuesta \usd{158,7} mensuales y los planes de entrada arrancan en
-\usd{7,71} mensuales \citep{lightnode2026}; la arquitectura elegida
-evita esa erogación durante la etapa de construcción.
+La infraestructura durante el desarrollo no genera erogación en el
+Año 0: todos los servicios propios corren en un servidor preexistente
+del desarrollador, administrado con Coolify y publicado mediante un túnel
+de Cloudflare, y los servicios de terceros se usan en sus capas gratuitas
+(ADR-000-07). Esta decisión reemplazó al diseño inicial, que repartía la
+infraestructura entre Supabase (base de datos), Vercel (frontend) y un
+\gls{vps} alquilado: el plan gratuito de Vercel no admite uso comercial y
+concentrar todo en un solo servidor simplifica la operación para un único
+desarrollador, dentro del presupuesto de infraestructura de USD 0 a 100
+mensuales que el proyecto se fijó para el desarrollo. El costo aceptado es
+un único punto de falla —un corte de luz o de conectividad del servidor
+deja la plataforma fuera de línea—, mitigado con respaldos diarios
+cifrados fuera del servidor, y la decisión se revisa si la operación
+crece. Como referencia del costo alternativo de alquilar un \gls{vps}, uno
+de recursos medios de un proveedor local (8 vCore/16~GB) cuesta
+\usd{158,7} mensuales y los planes de entrada arrancan en \usd{7,71}
+mensuales \citep{lightnode2026}.
 
-\subsection{Costos recurrentes post-lanzamiento}
+\subsection{Costos recurrentes post-lanzamiento}\label{sec:costos-recurrentes}
 
 Los costos operativos se proyectan mensualmente y se anualizan para el
 flujo de fondos. La tabla~\ref{tab:costos-fijos} muestra su evolución a
@@ -381,33 +511,47 @@ lo largo del horizonte de evaluación.
         \toprule
         \tb{Categoría} & \tb{Concepto} & \tb{Año 1} & \tb{Año 2} & \tb{Año 3} & \tb{Año 4} & \tb{Año 5} \\
         \midrule
-        Infraestructura & Servidores y base de datos       & 45    & 45    & 50    & 55    & 60 \\
+        Infraestructura & Servidor, base de datos y respaldos & 45    & 45    & 50    & 55    & 60 \\
         Infraestructura & Transmisión de video (LiveKit)   & 60    & 60    & 65    & 70    & 75 \\
-        Infraestructura & Procesamiento \gls{llm} (base)   & 55    & 55    & 60    & 65    & 70 \\
         Administrativo  & Honorarios contables             & 150   & 150   & 150   & 150   & 150 \\
         Administrativo  & Renovación de dominio            & 1,25  & 1,25  & 1,25  & 1,25  & 1,25 \\
         Comercial       & Adquisición de usuarios          & 40    & 50    & 60    & 70    & 80 \\
         \midrule
-        \multicolumn{2}{l}{\tb{Total mensual}}             & \tb{351,25} & \tb{361,25} & \tb{386,25} & \tb{411,25} & \tb{436,25} \\
-        \multicolumn{2}{l}{\tb{Total anual}}               & \tb{4.215}  & \tb{4.335}  & \tb{4.635}  & \tb{4.935}  & \tb{5.235} \\
+        \multicolumn{2}{l}{\tb{Total mensual}}             & \tb{296,25} & \tb{306,25} & \tb{326,25} & \tb{346,25} & \tb{366,25} \\
+        \multicolumn{2}{l}{\tb{Total anual}}               & \tb{3.555}  & \tb{3.675}  & \tb{3.915}  & \tb{4.155}  & \tb{4.395} \\
         \bottomrule
     \end{tabularx}
 \end{table}
 
-Dos decisiones de este cuadro merecen justificación explícita:
+Tres decisiones de este cuadro merecen justificación explícita:
 
 \begin{itemize}
+    \item \textbf{Sin partida fija de procesamiento de \gls{llm}.} Una
+          versión anterior del cuadro incluía una partida de
+          \usd{55} a \usd{70} mensuales de «procesamiento \gls{llm}
+          (base)». El sistema implementado no tiene un consumo base de
+          \gls{llm}: el único uso es el resumen automático, que se cobra
+          aparte a costo más un 50\,\% a quien lo contrata
+          (sección~\ref{sec:adicional-resumen}); los embeddings del
+          \gls{matching} se calculan con un modelo propio en el servidor
+          y el \gls{ocr} del documento de identidad también corre en él,
+          sin \gls{api} paga. La partida se eliminó: mantenerla
+          imputaba un costo sin contraparte. Su efecto sobre los
+          indicadores se muestra por separado en la
+          sección~\ref{sec:sensibilidad}.
     \item \textbf{Ausencia de equipo de soporte rentado.} El modelo no
           incorpora personal técnico contratado dentro de los costos
-          fijos durante los cinco años proyectados. Un análisis de
-          sensibilidad sobre esta variable mostró que, con el volumen de
-          sesiones proyectado, sostener un equipo de soporte
-          —aun escalonando su incorporación— vuelve el proyecto
-          inviable en los tres escenarios. El mantenimiento correctivo y
-          evolutivo queda a cargo del equipo fundador. La incorporación
-          de soporte pago se difiere hasta que el volumen efectivo de
-          sesiones lo justifique, lo cual constituye una restricción
-          operativa declarada del modelo y no un supuesto de costo cero.
+          fijos durante los cinco años proyectados. Con el volumen de
+          sesiones proyectado, el escenario base admite como máximo unos
+          \usd{469} mensuales constantes de costo adicional antes de que
+          el \gls{van} se anule (sección~\ref{sec:sensibilidad}): a la
+          tarifa junior de la tabla~\ref{tab:inversion} (\usd{15} por
+          hora) equivale a unas 31 horas mensuales, una dedicación parcial
+          y no un equipo. El mantenimiento correctivo y evolutivo queda a
+          cargo del equipo fundador. La incorporación de soporte pago se
+          difiere hasta que el volumen efectivo de sesiones lo justifique,
+          lo cual constituye una restricción operativa declarada del
+          modelo y no un supuesto de costo cero.
     \item \textbf{Presupuesto de adquisición de usuarios.} Se incorpora
           una partida de marketing, modesta pero creciente, dado que la
           proyección de demanda no se sostiene por sí sola: un modelo que
@@ -415,45 +559,80 @@ Dos decisiones de este cuadro merecen justificación explícita:
           adquisición incurre en una inconsistencia interna.
 \end{itemize}
 
-\subsection{Costos variables por transacción}
+\subsection{Costos variables por transacción y reparto del cobro}\label{sec:costos-variables}
 
-Además de los costos fijos, cada sesión concretada genera costos
-variables que se deducen del ingreso bruto. La
-tabla~\ref{tab:unit-economics} presenta la economía unitaria completa de
-una sesión promedio.
+El reparto de cada pago lo determina el modelo de cobro que el sistema
+implementa (modelo A, ADR-M5-02). Cada tutor conecta su cuenta de
+MercadoPago y la orden de pago se crea con esa cuenta como vendedora; la
+plataforma percibe su comisión mediante el campo \texttt{marketplace\_fee}.
+En ese esquema, MercadoPago descuenta primero su propia comisión de
+procesamiento (6,04\,\% con IVA, para dinero disponible de forma
+inmediata) de los fondos del vendedor —el tutor— y la comisión de la
+plataforma se descuenta del saldo restante. La
+tabla~\ref{tab:unit-economics} presenta la economía unitaria de una
+sesión promedio con ese reparto.
 
 \begin{table}[H]
     \centering
-    \caption{Economía unitaria por sesión (en USD)}
+    \caption{Economía unitaria y reparto de una sesión promedio (en USD)}
     \label{tab:unit-economics}
     \small
     \begin{tabularx}{\textwidth}{L L r}
         \toprule
         \tb{Concepto} & \tb{Cálculo} & \tb{Valor} \\
         \midrule
-        Ticket promedio de la sesión          & Precio fijado por el tutor       & 7,4200 \\
-        Comisión bruta de plataforma          & Ticket $\times$ \comision{}      & 2,0034 \\
-        Costo de pasarela de pago             & Ticket $\times$ 6,04\,\%         & $-0{,}4482$ \\
+        Ticket promedio de la sesión          & Precio fijado por el tutor              & 7,4200 \\
+        Comisión de MercadoPago (a cargo del tutor) & Ticket $\times$ 6,04\,\%          & $-0{,}4482$ \\
+        Comisión de plataforma (\texttt{marketplace\_fee}) & Ticket $\times$ \comision{} & $-2{,}0034$ \\
         \midrule
-        \tb{Margen neto por sesión}           &                                  & \tb{1,5552} \\
+        \tb{Neto que recibe el tutor}         & Ticket $\times$ 66,96\,\%               & \tb{4,9684} \\
+        \tb{Margen de la plataforma por sesión} & Ticket $\times$ \comision{}           & \tb{2,0034} \\
         \bottomrule
     \end{tabularx}
 \end{table}
 
-El costo de la pasarela de pago corresponde a la comisión de
-procesamiento de MercadoPago con dinero disponible de forma inmediata,
-incrementada por el IVA que grava dicha comisión. Es un costo real
-de cobranza y resulta conceptualmente distinto de la comisión de
-plataforma, que constituye el ingreso del proyecto. Su omisión en una
-formulación preliminar del modelo sobrestimaba el margen neto en
-aproximadamente un 29\,\% (0,4482 sobre 1,5552).
+El tutor recibe, entonces, $1 - 0{,}27 - 0{,}0604 = 66{,}96\,\%$ del
+precio que fija: unos \usd{4,97} por sesión promedio o, al precio horario
+promedio del relevamiento (\$13.392,43), unos \$8.968 por hora. La pantalla
+de precio del tutor le muestra ese neto aproximado, con la comisión de la
+plataforma y la estimada de MercadoPago por separado (regla FR-PAG-019);
+es aproximado porque la tasa real de MercadoPago depende del plazo de
+acreditación que tenga configurado cada cuenta. Ese neto es parte de la
+propuesta de valor para el tutor y, a la vez, el punto sensible del
+modelo: el descuento total sobre su precio es del 33,04\,\%, y cuanto
+menor es su neto mayor es el incentivo a acordar las clases por fuera de
+la plataforma (sección~\ref{sec:fundamento-comision}).
 
-Se reconoce además la existencia de fricción financiera adicional
-—retenciones de ingresos brutos, percepciones impositivas y
-contracargos— cuya magnitud depende de la jurisdicción y del
-comportamiento efectivo de los usuarios. No se cuantifica en el modelo
-base y se trata como una sensibilidad adicional sobre el margen, lo cual
-se declara como una restricción del análisis.
+\paragraph{Cambio respecto de la versión anterior del modelo.} La versión
+anterior de este capítulo restaba la comisión de MercadoPago
+(\usd{0,4482} por sesión) como un costo de cobranza de la plataforma y
+obtenía un margen de \usd{1,5552} por sesión. Ese tratamiento correspondía
+al diseño inicial, en el que todo el dinero ingresaba a la cuenta de la
+plataforma y se transfería después a cada tutor. El sistema descartó ese
+esquema porque obligaba a recaudar fondos de terceros, con su carga
+impositiva y transferencias manuales (ADR-M5-02), y también descartó que
+la plataforma absorbiera la comisión de MercadoPago dentro del modelo A,
+porque exigiría conocer la comisión real de cada pago, variable según la
+cuenta de cada tutor (ADR-M5-05). El registro de decisiones del sistema
+declara explícitamente la discrepancia y señala que el ajuste corresponde
+a esta evaluación y no al código (ADR-M5-05). Con el reparto real, el
+margen de la plataforma es la comisión completa, \usd{2,0034} por sesión,
+un 29\,\% más que en la versión anterior; la comisión de MercadoPago sigue
+existiendo, pero recae sobre el tutor.
+
+Se reconoce además la existencia de fricción financiera adicional sobre la
+comisión que factura la plataforma —retenciones de ingresos brutos,
+percepciones impositivas y contracargos— cuya magnitud depende de la
+jurisdicción y del comportamiento efectivo de los usuarios. Tampoco se
+modelan ciertos costos que el sistema pone a cargo de la plataforma: la
+diferencia de comisión en los reembolsos parciales que resuelve
+manualmente el área de soporte financiero ante una disputa (regla
+FR-PAG-010) y los reembolsos que la plataforma debe afrontar con fondos
+propios cuando el tutor revocó el acceso a su cuenta de MercadoPago con
+una ventana de reembolso abierta (ADR-M5-02). Ninguno de estos conceptos
+se cuantifica en el modelo base: se tratan como una sensibilidad adicional
+sobre el margen (sección~\ref{sec:sensibilidad}), lo cual se declara como
+una restricción del análisis.
 
 \section{Beneficios del proyecto}
 
@@ -472,13 +651,13 @@ sistematiza.
         \tb{Tipo} & \tb{Beneficio} & \tb{Cuantificación} \\
         \midrule
         Tangible   & Ingreso por comisión sobre sesiones concretadas
-                   & \usd{1,5552} de margen neto por sesión; es la única fuente de ingreso del flujo \\
-        Tangible   & Ahorro en infraestructura por arquitectura serverless
-                   & Evita \usd{7,71} a \usd{158,7} mensuales de un \gls{vps} dedicado \citep{lightnode2026} \\
+                   & \usd{2,0034} de margen por sesión; es la única fuente de ingreso del flujo \\
+        Tangible   & Infraestructura de desarrollo sin erogación (servidor propio preexistente, ADR-000-07)
+                   & Evita alquilar un \gls{vps} durante el Año 0, de \usd{7,71} a \usd{158,7} mensuales \citep{lightnode2026}; no se imputa al flujo \\
         Tangible   & Ahorro en desplazamiento para alumnos y tutores
                    & No se imputa al flujo del proyecto; es un excedente que capta el usuario \\
-        Intangible & Formalización tributaria del mercado de tutorías
-                   & Reduce exposición regulatoria y habilita escalabilidad institucional \\
+        Intangible & Formalización de los cobros de los tutores
+                   & Cada cobro ingresa a la cuenta de MercadoPago del tutor y se exporta para facturar ante la \gls{arca}; la plataforma no recauda fondos de terceros \\
         Intangible & Trazabilidad y seguridad en la interacción con menores
                    & Barrera de entrada frente a competidores informales \\
         Intangible & Acceso a apoyo escolar en zonas sin oferta presencial
@@ -487,8 +666,9 @@ sistematiza.
     \end{tabularx}
 \end{table}
 
-Únicamente el primer beneficio se incorpora al flujo de fondos. Los
-ahorros que captura el usuario final y los beneficios intangibles se
+Únicamente el primer beneficio se incorpora al flujo de fondos. El
+ahorro de infraestructura, los ahorros que captura el usuario final y los
+beneficios intangibles se
 declaran pero no se monetizan, con el fin de no sobrestimar la
 rentabilidad del proyecto.
 
@@ -574,9 +754,9 @@ sección~\ref{sec:sensibilidad}.
 El flujo de fondos cruza los ingresos derivados del volumen de sesiones
 contra los costos fijos anuales, imputando la inversión inicial
 íntegramente en el Año 0. Los ingresos netos de cada año se obtienen
-multiplicando las sesiones anuales por el margen neto unitario de
-\usd{1,5552}. La tabla~\ref{tab:flujo-caja} presenta el flujo del
-escenario base.
+multiplicando las sesiones anuales por el margen unitario de la
+plataforma, \usd{2,0034}. La tabla~\ref{tab:flujo-caja} presenta el flujo
+del escenario base.
 
 \begin{table}[H]
     \centering
@@ -588,26 +768,26 @@ escenario base.
         \tb{Concepto} & \tb{Año 0} & \tb{Año 1} & \tb{Año 2} & \tb{Año 3} & \tb{Año 4} & \tb{Año 5} \\
         \midrule
         Sesiones anuales       & 0 & 7.200 & 9.360 & 7.560 & 10.440 & 9.000 \\
-        Ingreso neto           & 0 & 11.198 & 14.557 & 11.758 & 16.237 & 13.997 \\
-        Costos fijos anuales   & 0 & $-4.215$ & $-4.335$ & $-4.635$ & $-4.935$ & $-5.235$ \\
+        Ingreso neto           & 0 & 14.424 & 18.752 & 15.146 & 20.915 & 18.031 \\
+        Costos fijos anuales   & 0 & $-3.555$ & $-3.675$ & $-3.915$ & $-4.155$ & $-4.395$ \\
         Inversión inicial      & $-25.730$ & 0 & 0 & 0 & 0 & 0 \\
         \midrule
-        \tb{Flujo neto}        & \tb{$-25.730$} & \tb{6.983} & \tb{10.222} & \tb{7.123} & \tb{11.302} & \tb{8.762} \\
-        \tb{Flujo acumulado}   & \tb{$-25.730$} & \tb{$-18.747$} & \tb{$-8.525$} & \tb{$-1.402$} & \tb{9.900} & \tb{18.662} \\
-        \tb{Flujo descontado}  & \tb{$-25.730$} & \tb{6.072} & \tb{7.729} & \tb{4.683} & \tb{6.462} & \tb{4.356} \\
-        \tb{Acum.\ descontado} & \tb{$-25.730$} & \tb{$-19.658$} & \tb{$-11.929$} & \tb{$-7.245$} & \tb{$-783$} & \tb{3.573} \\
+        \tb{Flujo neto}        & \tb{$-25.730$} & \tb{10.869} & \tb{15.077} & \tb{11.231} & \tb{16.760} & \tb{13.636} \\
+        \tb{Flujo acumulado}   & \tb{$-25.730$} & \tb{$-14.861$} & \tb{216} & \tb{11.447} & \tb{28.208} & \tb{41.843} \\
+        \tb{Flujo descontado}  & \tb{$-25.730$} & \tb{9.452} & \tb{11.400} & \tb{7.384} & \tb{9.583} & \tb{6.779} \\
+        \tb{Acum.\ descontado} & \tb{$-25.730$} & \tb{$-16.278$} & \tb{$-4.878$} & \tb{2.506} & \tb{12.089} & \tb{18.869} \\
         \bottomrule
     \end{tabularx}
 \end{table}
 
 La comparación entre las dos últimas filas ilustra el efecto del descuento:
-mientras el flujo acumulado nominal cambia de signo durante el Año 4, el
-acumulado descontado recién lo hace durante el Año 5. Esa
-distancia es, precisamente, el precio del tiempo.
+mientras el flujo acumulado nominal cambia de signo al cierre del Año 2,
+el acumulado descontado recién lo hace durante el Año 3. Esa distancia
+es, precisamente, el precio del tiempo.
 
 \section{Evaluación financiera}
 
-\subsection{Formulación de los indicadores}
+\subsection{Formulación de los indicadores}\label{sec:indicadores-formulas}
 
 El \gls{van} es la suma de todos los flujos del proyecto traídos al
 presente, incluida la inversión inicial:
@@ -664,9 +844,9 @@ calculados sobre el flujo de fondos de cada escenario.
         \toprule
         \tb{Escenario} & \tb{VAN (USD)} & \tb{TIR} & \tb{Repago simple} & \tb{Repago descontado} \\
         \midrule
-        Pesimista & $-14.499$ & $-10{,}57$\,\% & No recupera en 5 años & No recupera en 5 años \\
-        Base      & 3.573     & 20{,}47\,\%    & 3,12 años             & 4,18 años \\
-        Optimista & 29.284    & 53{,}06\,\%    & 1,74 años             & 2,13 años \\
+        Pesimista & $-4.410$  & 8{,}09\,\%     & 4,22 años             & No recupera en 5 años \\
+        Base      & 18.869    & 41{,}57\,\%    & 1,99 años             & 2,66 años \\
+        Optimista & 51.990    & 78{,}24\,\%    & 1,34 años             & 1,56 años \\
         \bottomrule
     \end{tabularx}
 \end{table}
@@ -674,124 +854,284 @@ calculados sobre el flujo de fondos de cada escenario.
 La lectura de cada indicador es la siguiente:
 
 \begin{itemize}
-    \item \textbf{\gls{van} del escenario base:} \usd{3.573}. Es positivo,
-          por lo que el proyecto crea valor por encima de la tasa exigida
-          del 15\,\% y se acepta: además de recuperar la inversión y
-          rendir el 15\,\% anual, deja un excedente equivalente a
-          aproximadamente el 14\,\% de la inversión de \usd{25.730},
-          expresado en dinero de hoy. El excedente es positivo pero
-          acotado.
-    \item \textbf{\gls{tir} del escenario base:} 20,47\,\%. Supera a la
-          tasa de corte del 15\,\% por 5,47 puntos porcentuales. Ese
+    \item \textbf{\gls{van} del escenario base:} \usd{18.869}. Es
+          positivo, por lo que el proyecto crea valor por encima de la tasa
+          exigida del 15\,\% y se acepta: además de recuperar la inversión
+          y rendir el 15\,\% anual, deja un excedente equivalente a
+          aproximadamente el 73\,\% de la inversión de \usd{25.730},
+          expresado en dinero de hoy.
+    \item \textbf{\gls{tir} del escenario base:} 41,57\,\%. Supera a la
+          tasa de corte del 15\,\% por 26,57 puntos porcentuales. Ese
           diferencial es el margen de seguridad: la tasa exigida podría
-          subir hasta casi el 20,5\,\% antes de que el proyecto dejara
+          subir hasta casi el 41,6\,\% antes de que el proyecto dejara
           de convenir.
-    \item \textbf{Período de repago:} 3,12 años en el escenario base. La
-          inversión nominal se recupera durante el Año 4, dentro del
-          horizonte de evaluación.
-    \item \textbf{Repago descontado:} 4,18 años. Medido en dinero de hoy,
-          el recupero se alcanza durante el Año 5, dentro del horizonte
-          proyectado aunque cerca de su final.
+    \item \textbf{Período de repago:} 1,99 años en el escenario base. La
+          inversión nominal se recupera al cierre del Año 2.
+    \item \textbf{Repago descontado:} 2,66 años. Medido en dinero de hoy,
+          el recupero se alcanza durante el Año 3, con más de dos años de
+          holgura dentro del horizonte proyectado.
 \end{itemize}
 
-En el escenario pesimista los cuatro indicadores son concluyentes: con un
-\gls{van} de \usd{-14.499} y una \gls{tir} negativa, los flujos ni
-siquiera alcanzan a devolver el capital nominal invertido. El escenario
-optimista, en cambio, presenta holgura en las cuatro métricas.
+El escenario pesimista, en cambio, no se justifica: con un \gls{van} de
+\usd{-4.410} y una \gls{tir} de 8,09\,\%, inferior a la tasa de corte,
+los flujos devuelven el capital nominal invertido (repago simple de 4,22
+años) pero no alcanzan a remunerarlo al 15\,\% exigido, y el repago
+descontado no se produce dentro del horizonte. El escenario optimista
+presenta holgura en las cuatro métricas.
+
+Estos resultados mejoran sustancialmente los de la versión anterior del
+modelo (\gls{van} base de \usd{3.573}, \gls{tir} de 20,47\,\% y
+\gls{van} pesimista de \usd{-14.499}). La diferencia no proviene de
+supuestos de demanda más favorables —los escenarios son los mismos— sino
+de dos correcciones de alineación con el sistema implementado, cuyo
+efecto se separa en la tabla~\ref{tab:puente}.
+
+\begin{table}[H]
+    \centering
+    \caption{Efecto de cada corrección sobre el escenario base}
+    \label{tab:puente}
+    \small
+    \begin{tabularx}{\textwidth}{L r r r r}
+        \toprule
+        \tb{Versión del modelo} & \tb{Margen por sesión} & \tb{VAN base} & \tb{TIR base} & \tb{Comisión de equilibrio} \\
+        \midrule
+        Anterior: pasarela a cargo de la plataforma y partida fija de \gls{llm} & 1,5552 & 3.573 & 20,47\,\% & $\approx$ 25,3\,\% \\
+        Reparto del modelo A (ADR-M5-02, ADR-M5-05) & 2,0034 & 16.459 & 38,43\,\% & $\approx$ 19,3\,\% \\
+        \tb{Vigente}: además, sin partida fija de \gls{llm} & \tb{2,0034} & \tb{18.869} & \tb{41,57\,\%} & \tb{$\approx$ 18,2\,\%} \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+El reparto del modelo A explica la mayor parte del cambio: confirma lo
+que el propio registro de decisiones del sistema anticipaba, que el
+modelo anterior era una cota inferior conservadora del margen real
+(ADR-M5-05). Con solo esa corrección, el escenario pesimista mejora de
+\usd{-14.499} a \usd{-6.820}; con ambas, a \usd{-4.410}.
 
 \section{Análisis de sensibilidad}\label{sec:sensibilidad}
 
-Los resultados de la sección anterior muestran que la viabilidad del
-proyecto no es robusta: depende críticamente de cuatro variables. El
-análisis de sensibilidad realizado sobre el modelo permite identificarlas
-y cuantificar su incidencia.
+Los resultados de la sección anterior dependen de un conjunto acotado de
+variables. El análisis de sensibilidad realizado sobre el modelo permite
+identificarlas y cuantificar su incidencia; en cada caso se modifica una
+variable y se mantiene constante el resto de los supuestos del escenario
+base.
 
 \begin{itemize}
     \item \textbf{Volumen de sesiones.} Es la variable de mayor impacto.
           El punto de equilibrio operativo se obtiene dividiendo los
-          costos fijos anuales por el margen neto unitario: en el Año 1
-          se requieren $4.215 / 1{,}5552 \approx 2.710$ sesiones anuales
-          para cubrir los costos fijos, y en el Año 5 aproximadamente
-          3.366. Por debajo de ese umbral la operación genera pérdidas
-          antes de considerar la recuperación de la inversión. Para que
-          el \gls{van} del escenario base no sea negativo, el promedio
-          anual de sesiones no puede caer por debajo de unas 8.020, un
-          8\,\% menos que las 8.712 del escenario base.
-    \item \textbf{Comisión de plataforma.} Manteniendo el resto de los
-          supuestos, el \gls{van} del escenario base se anula con una
-          comisión de aproximadamente 25,3\,\%. Con 25\,\% es de
-          \usd{-695}, con 23\,\% de \usd{-4.961} y con 21\,\% de
-          \usd{-9.228}; con 26\,\% resulta de \usd{1.438}. El \comision{}
-          adoptado queda así poco más de un punto porcentual por encima
-          del mínimo compatible con la aceptación del proyecto.
+          costos fijos anuales por el margen unitario: en el Año 1 se
+          requieren $3.555 / 2{,}0034 \approx 1.774$ sesiones anuales para
+          cubrir los costos fijos, y en el Año 5 aproximadamente 2.194.
+          Por debajo de ese umbral la operación genera pérdidas antes de
+          considerar la recuperación de la inversión. Para que el
+          \gls{van} del escenario base no sea negativo, el volumen puede
+          caer hasta un 32,8\,\% en todos los años: el promedio anual de
+          sesiones no puede bajar de unas 5.858, frente a las 8.712 del
+          escenario base.
+    \item \textbf{Comisión de plataforma.} El \gls{van} del escenario base
+          se anula con una comisión de aproximadamente 18,2\,\%. La
+          tabla~\ref{tab:sens-comision} muestra el efecto de otros valores
+          sobre el escenario base, sobre el pesimista y sobre el neto que
+          recibe el tutor.
     \item \textbf{Ticket promedio.} Con la comisión en \comision{}, el
           \gls{van} del escenario base se anula con un ticket de
-          aproximadamente \usd{6,83}, apenas por debajo del USD 7 con
-          que se había proyectado originalmente. Como el ticket depende del
-          tipo de cambio, el resultado es sensible a él (apéndice~\ref{apx:precio}).
+          aproximadamente \usd{4,99} por sesión de duración media, es
+          decir, unos \usd{5,87} por hora (\$9.010 al tipo de cambio de
+          \$1.535): un precio horario que queda entre el primer cuartil
+          (\$8.000) y la mediana (\$12.000) del relevamiento de Superprof.
+          Como el ticket depende del tipo de cambio, el resultado es
+          sensible a él: el \gls{van} base se anula por encima de unos
+          \$2.281 por USD (apéndice~\ref{apx:precio}).
+    \item \textbf{Paquete mensual con descuento.} El descuento de 0 a
+          30\,\% que el tutor puede aplicar al paquete (ADR-M5-03) reduce
+          el ticket de las clases vendidas en paquete. Si la mitad de las
+          sesiones se vendiera en paquetes con el descuento máximo, el
+          ticket efectivo bajaría a \usd{6,31} y el \gls{van} base a
+          \usd{10.228}; aun si todas las sesiones se vendieran así, el
+          ticket sería de \usd{5,19} y el \gls{van} base seguiría siendo
+          positivo (\usd{1.587}). El descuento medio que anula el \gls{van}
+          base es de 32,8\,\%, por encima del máximo que el sistema admite.
+          No se dispone de datos de adopción del paquete, por lo que estas
+          cifras son cotas y no una proyección.
+    \item \textbf{Duración media de las sesiones.} Como el precio de la
+          sesión es proporcional a su duración, el ticket se mueve con el
+          supuesto de 51 minutos (ecuación~\ref{eq:duracion}): con una
+          duración media de 45 minutos el ticket sería de \usd{6,54} y el
+          \gls{van} base de \usd{12.037}; con 60 minutos, de \usd{8,72} y
+          \usd{28.961}. El \gls{van} base se anula con una duración media
+          de unos 34 minutos, cercana al bloque mínimo de 30.
     \item \textbf{Estructura de costos fijos.} La incorporación de un
           equipo de soporte rentado —evaluada en una formulación previa
           del modelo con perfiles junior, mid y senior incorporados de
-          forma escalonada— torna negativo el \gls{van} en los tres
-          escenarios. Con el ticket actualizado, el escenario base podría
-          absorber como máximo un soporte de unos \usd{90} mensuales
-          constantes durante los cinco años antes de que el \gls{van} se
-          anule, lo que alcanza para una dedicación parcial y no para un
-          equipo. La operación con equipo fundador sigue siendo una
-          condición de viabilidad en esta etapa.
+          forma escalonada— tornaba negativo el \gls{van} en los tres
+          escenarios. Con el modelo vigente, el escenario base podría
+          absorber como máximo unos \usd{469} mensuales constantes de
+          costo adicional durante los cinco años antes de que el \gls{van}
+          se anule. Ese mismo margen es el que debe cubrir los costos que
+          la plataforma absorbe y el modelo no cuantifica
+          (sección~\ref{sec:costos-variables}): una dedicación parcial de
+          soporte y esos costos compiten por el mismo excedente.
+    \item \textbf{Partida fija de \gls{llm}.} Si se mantuviera la partida
+          de \usd{55} a \usd{70} mensuales que se eliminó
+          (sección~\ref{sec:costos-recurrentes}), el \gls{van} base sería
+          de \usd{16.459} y la comisión de equilibrio de aproximadamente
+          19,3\,\% (tabla~\ref{tab:puente}).
 \end{itemize}
+
+\begin{table}[H]
+    \centering
+    \caption{Sensibilidad a la comisión de plataforma}
+    \label{tab:sens-comision}
+    \small
+    \begin{tabularx}{\textwidth}{L r r r r}
+        \toprule
+        \tb{Comisión} & \tb{VAN base (USD)} & \tb{TIR base} & \tb{VAN pesimista (USD)} & \tb{Neto del tutor} \\
+        \midrule
+        18,2\,\% (equilibrio del base) & 0 & 15,00\,\% & $-15.653$ & 75,8\,\% \\
+        21\,\%   & 6.068   & 24,14\,\% & $-12.038$ & 72,96\,\% \\
+        23\,\%   & 10.335  & 30,18\,\% & $-9.495$  & 70,96\,\% \\
+        25\,\%   & 14.602  & 35,97\,\% & $-6.952$  & 68,96\,\% \\
+        \tb{\comision{} (vigente)} & \tb{18.869} & \tb{41,57\,\%} & \tb{$-4.410$} & \tb{66,96\,\%} \\
+        30\,\%   & 25.269  & 49,67\,\% & $-596$    & 63,96\,\% \\
+        33\,\%   & 31.669  & 57,50\,\% & 3.218     & 60,96\,\% \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
 
 Cabe señalar que la tasa de descuento afecta al \gls{van} y al repago
 descontado, pero no a la \gls{tir}, que depende exclusivamente del perfil
 de los flujos.
 
-\section{Política de reembolsos y su costo real}
+\subsection{Por qué se mantiene la comisión del \comision{}}\label{sec:fundamento-comision}
 
-Todo reembolso al estudiante se ejecuta de manera total a través de la
-\gls{api} de MercadoPago, nunca de forma parcial. Esta política tiene un
-costo real de cero para \sistema{}, ya que la pasarela reintegra su
-propia comisión de procesamiento junto con los fondos, evitando saldos
-negativos. Además, previene riesgos legales de retención indebida frente
-a la Ley de Defensa del Consumidor y reduce significativamente la
-exposición de la plataforma a contracargos.
+Con el modelo corregido, el escenario base tolera una comisión de hasta
+aproximadamente 18,2\,\%. El \comision{} no se mantiene, entonces, porque
+sea el mínimo que el proyecto necesita —eso dejó de ser cierto
+(sección~\ref{sec:calibracion-comision})—, sino por los siguientes
+fundamentos:
+
+\begin{itemize}
+    \item \textbf{Es la decisión vigente del dueño del producto.} El
+          sistema la fija en la regla BR-PAG-01 (ADR-M5-05), con
+          conocimiento de que el tutor recibe el 66,96\,\% del precio. La
+          misma decisión reemplazó a una comisión del 21\,\% que había
+          estado vigente durante el desarrollo (ADR-M5-04).
+    \item \textbf{Colchón frente al escenario pesimista.} Aun con el
+          \comision{}, el escenario pesimista tiene un \gls{van} de
+          \usd{-4.410}; para que se anule haría falta una comisión de
+          aproximadamente 30,5\,\%. Bajar la comisión al equilibrio del
+          escenario base dejaría el \gls{van} pesimista en
+          \usd{-15.653} (tabla~\ref{tab:sens-comision}). La holgura del
+          escenario base es la que permite absorber una demanda menor a la
+          proyectada.
+    \item \textbf{Costos que el modelo no cuantifica.} La plataforma
+          absorbe la diferencia de comisión en los reembolsos parciales
+          por disputa (FR-PAG-010), los reembolsos que debe afrontar con
+          fondos propios cuando un tutor revoca el acceso a su cuenta
+          (ADR-M5-02), la fricción impositiva sobre su comisión y el
+          soporte que hoy presta el equipo fundador. Todos compiten por el
+          mismo excedente, de unos \usd{469} mensuales en el escenario
+          base.
+    \item \textbf{Dentro de la banda de referencia.} El \comision{} se
+          ubica dentro de la banda de comisiones de Preply (18\,\% a
+          33\,\%) \citep{preply} y por debajo de su extremo superior, que
+          se descartó por el riesgo de desintermediación.
+\end{itemize}
+
+El costo de esta decisión recae sobre el tutor y se reconoce
+explícitamente. Al sumarse la comisión de MercadoPago, el descuento total
+sobre su precio es del 33,04\,\%: seis puntos más de lo que se había
+calibrado cuando la plataforma absorbía la pasarela. El propio registro
+de decisiones del sistema señala que, con ese neto, vuelven a pesar dos
+riesgos: la \textbf{desintermediación} —que tutor y alumno acuerden las
+clases siguientes por fuera de la plataforma— y la mayor dificultad para
+\textbf{sumar tutores} (ADR-M5-05). Por eso la comisión no se considera
+definitiva: la métrica con la que se revisará después del piloto quedó
+diferida deliberadamente hasta ese momento (regla BR-PAG-03), y la
+tabla~\ref{tab:sens-comision} muestra el margen disponible para hacerlo
+—una reducción a 23 o 25\,\% mantiene el escenario base con \gls{van}
+positivo— a costa de agravar el pesimista.
+
+\section{Política de reembolsos y su costo real}\label{sec:reembolsos}
+
+La regla general del sistema es que todo reembolso a quien pagó es
+\textbf{total}: se ejecuta a través de la \gls{api} de MercadoPago sin
+indicar monto, y está prohibido el reembolso parcial automático que
+traslade la comisión al estudiante (regla FR-PAG-009). La regla previene
+riesgos legales de retención indebida frente a la Ley de Defensa del
+Consumidor y reduce la exposición de la plataforma a contracargos. Tiene
+dos excepciones automáticas y una manual:
+
+\begin{itemize}
+    \item el \textbf{adicional de resumen} que no llega a generarse se
+          devuelve por su monto exacto, con un reembolso parcial (regla
+          BR-PAG-11);
+    \item la \textbf{clase de un paquete mensual} que no se dicta por
+          falta del tutor se devuelve por el precio de esa clase; lo que
+          MercadoPago no reintegre de su comisión en ese parcial queda a
+          cargo del tutor (regla FR-PAG-022, ADR-M5-03);
+    \item los \textbf{reembolsos parciales por disputa} los resuelve
+          manualmente el área de soporte financiero, y la diferencia de
+          comisión la absorbe la plataforma (regla FR-PAG-010).
+\end{itemize}
+
+El costo de un reembolso total para la plataforma se considera nulo: deja
+de percibir la comisión de una sesión que no se concretó, y el modelo solo
+computa ingresos de sesiones concretadas. Esa conclusión descansa en un
+\textbf{supuesto} que se declara: que el reembolso total revierte tanto
+la comisión de MercadoPago como el \texttt{marketplace\_fee} de la
+plataforma. El sistema dejó esa verificación pendiente en el entorno de
+pruebas de MercadoPago (ADR-M5-02); si no se cumpliera, el reembolso
+tendría un costo que el modelo no incluye.
 
 \section{Conclusión de la evaluación económica}
 
-El proyecto se justifica económicamente, pero bajo condiciones
-estrictas que corresponde explicitar.
+El proyecto se justifica económicamente, bajo condiciones que corresponde
+explicitar.
 
 En el escenario base, los cuatro indicadores apuntan en la misma
-dirección: el \gls{van} es positivo (\usd{3.573}), la \gls{tir} supera la
-tasa de corte (20,47\,\% frente a 15\,\%) y tanto el repago simple como
-el descontado se producen dentro del horizonte de cinco años. Conforme al
-criterio de decisión estándar, el proyecto se acepta. El escenario
-optimista confirma esa conclusión con holgura.
+dirección: el \gls{van} es positivo (\usd{18.869}), la \gls{tir} supera
+holgadamente la tasa de corte (41,57\,\% frente a 15\,\%) y tanto el
+repago simple (1,99 años) como el descontado (2,66 años) se producen
+dentro de los primeros tres años del horizonte. Conforme al criterio de
+decisión estándar, el proyecto se acepta. El escenario optimista confirma
+esa conclusión con holgura.
 
-Sin embargo, los márgenes del escenario base son estrechos y el escenario
-pesimista resulta claramente no viable. De ello se desprenden tres
-condiciones de viabilidad:
+Estos resultados reemplazan a los de la versión anterior del capítulo,
+que restaba la comisión de MercadoPago como costo de la plataforma. Con
+el modelo de cobro que el sistema implementa, esa comisión la paga el
+tutor, que recibe el 66,96\,\% de su precio, y la plataforma percibe el
+\comision{} completo. El escenario pesimista sigue sin justificarse
+(\gls{van} de \usd{-4.410}): recupera el capital nominal invertido, pero
+no lo remunera a la tasa exigida. De ello se desprenden tres condiciones
+de viabilidad:
 
 \begin{enumerate}
-    \item \textbf{Sostener un volumen mínimo de entre 2.710 (Año 1) y
-          3.366 (Año 5) sesiones anuales}, umbral por debajo del cual la
-          operación no cubre siquiera sus costos fijos, y de unas 8.020
+    \item \textbf{Sostener un volumen mínimo de entre 1.774 (Año 1) y
+          2.194 (Año 5) sesiones anuales}, umbral por debajo del cual la
+          operación no cubre siquiera sus costos fijos, y de unas 5.858
           sesiones anuales en promedio para que el \gls{van} no sea
           negativo.
-    \item \textbf{Mantener la comisión cerca del \comision{}}, dado que
-          por debajo de aproximadamente 25,3\,\% el \gls{van} se
-          vuelve negativo con la estructura de costos proyectada.
+    \item \textbf{No bajar la comisión por debajo de aproximadamente
+          18,2\,\%}, valor con el que el \gls{van} del escenario base se
+          anula. El \comision{} vigente deja un margen de unos nueve
+          puntos porcentuales, que se mantiene deliberadamente como
+          colchón frente al escenario pesimista y a los costos que el
+          modelo no cuantifica, y que se revisará después del piloto
+          considerando su efecto sobre el neto del tutor y el riesgo de
+          desintermediación.
     \item \textbf{Operar sin equipo de soporte rentado}, o con una
-          dedicación parcial que no supere unos \usd{90} mensuales,
-          durante el horizonte evaluado, difiriendo la incorporación de un
-          equipo hasta que el volumen efectivo la justifique.
+          dedicación parcial que, sumada a los costos no modelados, no
+          supere unos \usd{469} mensuales, durante el horizonte evaluado,
+          difiriendo la incorporación de un equipo hasta que el volumen
+          efectivo la justifique.
 \end{enumerate}
 
 Que el escenario pesimista no resulte viable no invalida el proyecto,
 sino que delimita con precisión el terreno en que debe moverse. Ante una
 tracción inferior a la proyectada, las alternativas disponibles no pasan
-por reducir costos —el margen de recorte ya está agotado— sino por
-revisar el modelo de negocio: segmentar la oferta por niveles de precio,
-incorporar modalidades de clase grupal que eleven el ingreso por hora de
-tutor, o explorar acuerdos institucionales que aporten volumen agregado.
-El análisis de riesgos del capítulo siguiente retoma estas
-contingencias.
+por reducir costos —el margen de recorte es escaso— sino por revisar el
+modelo de negocio: segmentar la oferta por niveles de precio, incorporar
+modalidades de clase grupal que eleven el ingreso por hora de tutor, o
+explorar acuerdos institucionales que aporten volumen agregado. El
+análisis de riesgos del capítulo siguiente retoma estas contingencias.
