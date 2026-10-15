@@ -1,0 +1,24 @@
+' Estilo común de los diagramas UML de Tinku
+skinparam dpi 150
+skinparam shadowing false
+skinparam defaultFontName Helvetica
+skinparam defaultFontSize 12
+skinparam ArrowColor #333333
+skinparam BorderColor #333333
+skinparam roundCorner 8
+skinparam ActivityBackgroundColor #EEF3FB
+skinparam ActivityBorderColor #2F5A9E
+skinparam StateBackgroundColor #EEF3FB
+skinparam StateBorderColor #2F5A9E
+skinparam ClassBackgroundColor #FFFFFF
+skinparam ClassBorderColor #2F5A9E
+skinparam ClassHeaderBackgroundColor #EEF3FB
+skinparam ComponentBackgroundColor #EEF3FB
+skinparam ComponentBorderColor #2F5A9E
+skinparam UsecaseBackgroundColor #EEF3FB
+skinparam UsecaseBorderColor #2F5A9E
+skinparam ParticipantBackgroundColor #EEF3FB
+skinparam ParticipantBorderColor #2F5A9E
+skinparam PackageBackgroundColor #FAFAFA
+skinparam NoteBackgroundColor #FFF8E1
+skinparam NoteBorderColor #C9A227

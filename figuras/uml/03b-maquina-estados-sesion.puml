@@ -1,0 +1,48 @@
+@startuml 03b-maquina-estados-sesion
+!include _estilo.iuml
+title Diagrama de máquina de estados — Sesión de Aprendizaje y Transacción (escrow)
+
+state "SesionAprendizaje" as SA {
+  state "no_iniciada" as NI
+  state "en_curso" as EC
+  state "finalizada" as FI
+  state "interrumpida" as IN
+  state "finalizada_anticipada" as FA
+  [*] --> NI : ReservaConfirmadaEvent /\nprogramarSesion()
+  NI --> EC : primer ingreso (webhook LiveKit)\n/ inicioReal = ahora
+  NI --> FA : T+10 [no entró nadie] / no-show
+  EC --> FA : T+10 [entró uno solo] / no-show
+  EC --> FI : finalizar() / corte automático [≥ 50 %]
+  EC --> IN : corte automático [< 50 %]
+  EC --> FA : corte automático [< 50 % y el par\nse rompió antes del fin agendado]
+  EC --> FI : kill-switch (rama menor o\nrama adultos confirmada)
+  FI --> [*]
+  IN --> [*]
+  FA --> [*]
+}
+
+state "Transaccion (EstadoTransaccion)" as TX {
+  state "retenido_escrow" as RE
+  state "liberado" as LI
+  state "reembolsado" as RB
+  state "pausado_denuncia" as PD
+  state "pausado_alerta" as PA
+  [*] --> RE : pago aprobado\n(o bypass)
+  RE --> LI : fin + 24 h / no-show del alumno /\ncancelación tardía del pagador
+  RE --> RB : interrumpida / no-show del tutor o doble /\ncancelación ≥ 24 h o por el tutor
+  RE --> PD : denuncia.registrada
+  RE --> PA : kill-switch
+  PD --> PA : kill-switch
+  PD --> RE : denuncia infundada\n/ liberarAt = ahora + 24 h
+  PD --> LI : denuncia fundada
+  PD --> RB : denuncia escalada
+  PA --> RB : alerta.resuelta
+  LI --> [*]
+  RB --> [*]
+}
+note bottom of TX
+  Modelo A (ADR-M5-02): el pago entra a la cuenta del tutor.
+  "Escrow" = ventana lógica en la que Tinku puede reembolsar;
+  "liberado" = la ventana cerró y el pago sigue aprobado.
+end note
+@enduml
