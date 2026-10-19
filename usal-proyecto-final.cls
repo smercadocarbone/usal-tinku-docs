@@ -462,9 +462,9 @@
 \newcommand{\glosarios}{%
     \cleardoublepage
     \bookmarksetup{startatroot}
-    \printglossary[type=main]
-    \printglossary[type=\acronymtype]
-    \printglossary[type=symbols]
+    \printglossary[type=main, title=\USAL@glossary, toctitle=\USAL@glossary]
+    \printglossary[type=\acronymtype, title=\USAL@acronyms, toctitle=\USAL@acronyms]
+    \printglossary[type=symbols, title=\USAL@symbols, toctitle=\USAL@symbols]
 }
 
 \newcommand{\printlogos}[2][2cm]{
