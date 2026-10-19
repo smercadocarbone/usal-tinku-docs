@@ -1,0 +1,7136 @@
+{
+ "tablas": [
+  {
+   "esquema": "admin",
+   "tabla": "admins",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": "gen_random_uuid()",
+     "comentario": null
+    },
+    {
+     "nombre": "usuario_id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "rol",
+     "tipo": "character varying(30)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "activo",
+     "tipo": "boolean",
+     "no_nulo": true,
+     "default": "true",
+     "comentario": null
+    },
+    {
+     "nombre": "created_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": true,
+     "default": "now()",
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "admins_rol_check",
+     "tipo": "c",
+     "columnas": [
+      "rol"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK (((rol)::text = ANY ((ARRAY['MODERACION_SEGURIDAD'::character varying, 'SOPORTE_FINANCIERO'::character varying])::text[])))"
+    },
+    {
+     "nombre": "admins_usuario_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "usuario_id"
+     ],
+     "ref_esquema": "identidad",
+     "ref_tabla": "usuarios",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (usuario_id) REFERENCES identidad.usuarios(id)"
+    },
+    {
+     "nombre": "admins_pkey",
+     "tipo": "p",
+     "columnas": [
+      "id"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (id)"
+    },
+    {
+     "nombre": "admins_usuario_id_key",
+     "tipo": "u",
+     "columnas": [
+      "usuario_id"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "UNIQUE (usuario_id)"
+    }
+   ],
+   "indices": [
+    {
+     "nombre": "idx_admins_rol",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_admins_rol ON admin.admins USING btree (rol)"
+    }
+   ]
+  },
+  {
+   "esquema": "admin",
+   "tabla": "log_auditoria_admin",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": "gen_random_uuid()",
+     "comentario": null
+    },
+    {
+     "nombre": "admin_id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "accion",
+     "tipo": "character varying(100)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "entidad_tipo",
+     "tipo": "character varying(60)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "entidad_id",
+     "tipo": "character varying(64)",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "detalle",
+     "tipo": "jsonb",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "created_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": true,
+     "default": "now()",
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "log_auditoria_admin_admin_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "admin_id"
+     ],
+     "ref_esquema": "admin",
+     "ref_tabla": "admins",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (admin_id) REFERENCES admin.admins(id)"
+    },
+    {
+     "nombre": "log_auditoria_admin_pkey",
+     "tipo": "p",
+     "columnas": [
+      "id"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (id)"
+    }
+   ],
+   "indices": []
+  },
+  {
+   "esquema": "admin",
+   "tabla": "mapeo_origen_rol",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "origen_modulo",
+     "tipo": "character varying(60)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "rol_asignado",
+     "tipo": "character varying(30)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "mapeo_origen_rol_rol_asignado_check",
+     "tipo": "c",
+     "columnas": [
+      "rol_asignado"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK (((rol_asignado)::text = ANY ((ARRAY['MODERACION_SEGURIDAD'::character varying, 'SOPORTE_FINANCIERO'::character varying])::text[])))"
+    },
+    {
+     "nombre": "mapeo_origen_rol_pkey",
+     "tipo": "p",
+     "columnas": [
+      "origen_modulo"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (origen_modulo)"
+    }
+   ],
+   "indices": []
+  },
+  {
+   "esquema": "admin",
+   "tabla": "notificaciones",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "destinatario_id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "tipo",
+     "tipo": "character varying(40)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "datos",
+     "tipo": "jsonb",
+     "no_nulo": true,
+     "default": "'{}'::jsonb",
+     "comentario": null
+    },
+    {
+     "nombre": "creada_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": true,
+     "default": "now()",
+     "comentario": null
+    },
+    {
+     "nombre": "leida_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "enviada_email_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "intentos_email",
+     "tipo": "integer",
+     "no_nulo": true,
+     "default": "0",
+     "comentario": null
+    },
+    {
+     "nombre": "proximo_intento_email_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "email_descartado_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "notificaciones_destinatario_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "destinatario_id"
+     ],
+     "ref_esquema": "identidad",
+     "ref_tabla": "usuarios",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (destinatario_id) REFERENCES identidad.usuarios(id)"
+    },
+    {
+     "nombre": "notificaciones_pkey",
+     "tipo": "p",
+     "columnas": [
+      "id"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (id)"
+    }
+   ],
+   "indices": [
+    {
+     "nombre": "ix_notificaciones_destinatario",
+     "unico": false,
+     "definicion": "CREATE INDEX ix_notificaciones_destinatario ON admin.notificaciones USING btree (destinatario_id, creada_at DESC)"
+    },
+    {
+     "nombre": "ix_notificaciones_email_pendiente",
+     "unico": false,
+     "definicion": "CREATE INDEX ix_notificaciones_email_pendiente ON admin.notificaciones USING btree (proximo_intento_email_at) WHERE ((enviada_email_at IS NULL) AND (email_descartado_at IS NULL))"
+    }
+   ]
+  },
+  {
+   "esquema": "admin",
+   "tabla": "nps_respuestas",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "usuario_id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "puntaje",
+     "tipo": "smallint",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "created_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": true,
+     "default": "now()",
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "nps_respuestas_puntaje_check",
+     "tipo": "c",
+     "columnas": [
+      "puntaje"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK (((puntaje >= 0) AND (puntaje <= 10)))"
+    },
+    {
+     "nombre": "nps_respuestas_usuario_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "usuario_id"
+     ],
+     "ref_esquema": "identidad",
+     "ref_tabla": "usuarios",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (usuario_id) REFERENCES identidad.usuarios(id)"
+    },
+    {
+     "nombre": "nps_respuestas_pkey",
+     "tipo": "p",
+     "columnas": [
+      "usuario_id"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (usuario_id)"
+    }
+   ],
+   "indices": [
+    {
+     "nombre": "idx_nps_respuestas_created",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_nps_respuestas_created ON admin.nps_respuestas USING btree (created_at)"
+    }
+   ]
+  },
+  {
+   "esquema": "admin",
+   "tabla": "tickets_soporte",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": "gen_random_uuid()",
+     "comentario": null
+    },
+    {
+     "nombre": "usuario_id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "origen_modulo",
+     "tipo": "character varying(60)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "asunto",
+     "tipo": "character varying(200)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "detalle",
+     "tipo": "character varying(1000)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "estado",
+     "tipo": "character varying(20)",
+     "no_nulo": true,
+     "default": "'ABIERTO'::character varying",
+     "comentario": null
+    },
+    {
+     "nombre": "rol_asignado",
+     "tipo": "character varying(30)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "creado_en",
+     "tipo": "timestamp with time zone",
+     "no_nulo": true,
+     "default": "now()",
+     "comentario": null
+    },
+    {
+     "nombre": "resuelto_en",
+     "tipo": "timestamp with time zone",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "tickets_soporte_estado_check",
+     "tipo": "c",
+     "columnas": [
+      "estado"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK (((estado)::text = ANY ((ARRAY['ABIERTO'::character varying, 'EN_PROCESO'::character varying, 'RESUELTO'::character varying, 'CERRADO'::character varying])::text[])))"
+    },
+    {
+     "nombre": "tickets_soporte_rol_asignado_check",
+     "tipo": "c",
+     "columnas": [
+      "rol_asignado"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK (((rol_asignado)::text = ANY ((ARRAY['MODERACION_SEGURIDAD'::character varying, 'SOPORTE_FINANCIERO'::character varying])::text[])))"
+    },
+    {
+     "nombre": "tickets_soporte_origen_modulo_fkey",
+     "tipo": "f",
+     "columnas": [
+      "origen_modulo"
+     ],
+     "ref_esquema": "admin",
+     "ref_tabla": "mapeo_origen_rol",
+     "ref_columnas": [
+      "origen_modulo"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (origen_modulo) REFERENCES admin.mapeo_origen_rol(origen_modulo)"
+    },
+    {
+     "nombre": "tickets_soporte_usuario_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "usuario_id"
+     ],
+     "ref_esquema": "identidad",
+     "ref_tabla": "usuarios",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (usuario_id) REFERENCES identidad.usuarios(id)"
+    },
+    {
+     "nombre": "tickets_soporte_pkey",
+     "tipo": "p",
+     "columnas": [
+      "id"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (id)"
+    }
+   ],
+   "indices": [
+    {
+     "nombre": "idx_tickets_rol_estado",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_tickets_rol_estado ON admin.tickets_soporte USING btree (rol_asignado, estado)"
+    }
+   ]
+  },
+  {
+   "esquema": "aula",
+   "tabla": "alertas_seguridad",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": "gen_random_uuid()",
+     "comentario": null
+    },
+    {
+     "nombre": "sesion_id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "rama",
+     "tipo": "character varying(10)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "detectado_id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "clip_url",
+     "tipo": "character varying(500)",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "clip_retencion_hasta",
+     "tipo": "timestamp with time zone",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "estado",
+     "tipo": "character varying(30)",
+     "no_nulo": true,
+     "default": "'pendiente_revision'::character varying",
+     "comentario": null
+    },
+    {
+     "nombre": "created_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": true,
+     "default": "now()",
+     "comentario": null
+    },
+    {
+     "nombre": "descargo_texto",
+     "tipo": "character varying(300)",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "descargo_recibido_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "alertas_seguridad_estado_check",
+     "tipo": "c",
+     "columnas": [
+      "estado"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK (((estado)::text = ANY ((ARRAY['pendiente_revision'::character varying, 'resuelta_reactivacion'::character varying, 'resuelta_baja'::character varying])::text[])))"
+    },
+    {
+     "nombre": "alertas_seguridad_rama_check",
+     "tipo": "c",
+     "columnas": [
+      "rama"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK (((rama)::text = ANY ((ARRAY['menor'::character varying, 'adultos'::character varying])::text[])))"
+    },
+    {
+     "nombre": "alertas_seguridad_detectado_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "detectado_id"
+     ],
+     "ref_esquema": "identidad",
+     "ref_tabla": "usuarios",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (detectado_id) REFERENCES identidad.usuarios(id)"
+    },
+    {
+     "nombre": "alertas_seguridad_sesion_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "sesion_id"
+     ],
+     "ref_esquema": "aula",
+     "ref_tabla": "sesiones_aprendizaje",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (sesion_id) REFERENCES aula.sesiones_aprendizaje(id)"
+    },
+    {
+     "nombre": "alertas_seguridad_pkey",
+     "tipo": "p",
+     "columnas": [
+      "id"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (id)"
+    }
+   ],
+   "indices": [
+    {
+     "nombre": "idx_alertas_seguridad_estado",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_alertas_seguridad_estado ON aula.alertas_seguridad USING btree (estado)"
+    },
+    {
+     "nombre": "idx_alertas_seguridad_sesion",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_alertas_seguridad_sesion ON aula.alertas_seguridad USING btree (sesion_id)"
+    }
+   ]
+  },
+  {
+   "esquema": "aula",
+   "tabla": "confirmaciones_killswitch",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": "gen_random_uuid()",
+     "comentario": null
+    },
+    {
+     "nombre": "sesion_id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "detectado_id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "respondido_id",
+     "tipo": "uuid",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "vio",
+     "tipo": "boolean",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "created_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": true,
+     "default": "now()",
+     "comentario": null
+    },
+    {
+     "nombre": "responded_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "vence_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "vencida",
+     "tipo": "boolean",
+     "no_nulo": true,
+     "default": "false",
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "confirmaciones_killswitch_detectado_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "detectado_id"
+     ],
+     "ref_esquema": "identidad",
+     "ref_tabla": "usuarios",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (detectado_id) REFERENCES identidad.usuarios(id)"
+    },
+    {
+     "nombre": "confirmaciones_killswitch_sesion_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "sesion_id"
+     ],
+     "ref_esquema": "aula",
+     "ref_tabla": "sesiones_aprendizaje",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (sesion_id) REFERENCES aula.sesiones_aprendizaje(id)"
+    },
+    {
+     "nombre": "confirmaciones_killswitch_pkey",
+     "tipo": "p",
+     "columnas": [
+      "id"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (id)"
+    },
+    {
+     "nombre": "confirmaciones_killswitch_sesion_id_key",
+     "tipo": "u",
+     "columnas": [
+      "sesion_id"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "UNIQUE (sesion_id)"
+    }
+   ],
+   "indices": [
+    {
+     "nombre": "idx_confirmaciones_killswitch_sesion",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_confirmaciones_killswitch_sesion ON aula.confirmaciones_killswitch USING btree (sesion_id)"
+    }
+   ]
+  },
+  {
+   "esquema": "aula",
+   "tabla": "sesiones_aprendizaje",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": "gen_random_uuid()",
+     "comentario": null
+    },
+    {
+     "nombre": "reserva_id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "livekit_room_id",
+     "tipo": "character varying(100)",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "estado",
+     "tipo": "character varying(30)",
+     "no_nulo": true,
+     "default": "'no_iniciada'::character varying",
+     "comentario": null
+    },
+    {
+     "nombre": "inicio_real",
+     "tipo": "timestamp with time zone",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "fin_real",
+     "tipo": "timestamp with time zone",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "duracion_efectiva_segundos",
+     "tipo": "integer",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "created_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": true,
+     "default": "now()",
+     "comentario": null
+    },
+    {
+     "nombre": "updated_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": true,
+     "default": "now()",
+     "comentario": null
+    },
+    {
+     "nombre": "estudiante_joined_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "tutor_joined_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "duracion_agendada_segundos",
+     "tipo": "integer",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "tutor_conectado",
+     "tipo": "boolean",
+     "no_nulo": true,
+     "default": "false",
+     "comentario": null
+    },
+    {
+     "nombre": "estudiante_conectado",
+     "tipo": "boolean",
+     "no_nulo": true,
+     "default": "false",
+     "comentario": null
+    },
+    {
+     "nombre": "par_roto_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "audio_referencia",
+     "tipo": "character varying(300)",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "audio_recibido_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "audio_borrado_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "sesiones_aprendizaje_estado_check",
+     "tipo": "c",
+     "columnas": [
+      "estado"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK (((estado)::text = ANY ((ARRAY['no_iniciada'::character varying, 'en_curso'::character varying, 'finalizada'::character varying, 'finalizada_anticipada'::character varying, 'interrumpida'::character varying])::text[])))"
+    },
+    {
+     "nombre": "fk_sesiones_reserva",
+     "tipo": "f",
+     "columnas": [
+      "reserva_id"
+     ],
+     "ref_esquema": "reservas",
+     "ref_tabla": "reservas",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (reserva_id) REFERENCES reservas.reservas(id)"
+    },
+    {
+     "nombre": "sesiones_aprendizaje_pkey",
+     "tipo": "p",
+     "columnas": [
+      "id"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (id)"
+    },
+    {
+     "nombre": "sesiones_aprendizaje_reserva_id_key",
+     "tipo": "u",
+     "columnas": [
+      "reserva_id"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "UNIQUE (reserva_id)"
+    }
+   ],
+   "indices": [
+    {
+     "nombre": "idx_sesiones_aprendizaje_estado",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_sesiones_aprendizaje_estado ON aula.sesiones_aprendizaje USING btree (estado)"
+    }
+   ]
+  },
+  {
+   "esquema": "identidad",
+   "tabla": "aceptaciones_clausula",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": "gen_random_uuid()",
+     "comentario": null
+    },
+    {
+     "nombre": "usuario_id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "clausula",
+     "tipo": "character varying(50)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "version",
+     "tipo": "character varying(20)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "aceptada_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": true,
+     "default": "now()",
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "aceptaciones_clausula_usuario_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "usuario_id"
+     ],
+     "ref_esquema": "identidad",
+     "ref_tabla": "usuarios",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (usuario_id) REFERENCES identidad.usuarios(id)"
+    },
+    {
+     "nombre": "aceptaciones_clausula_pkey",
+     "tipo": "p",
+     "columnas": [
+      "id"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (id)"
+    },
+    {
+     "nombre": "aceptaciones_clausula_usuario_id_clausula_version_key",
+     "tipo": "u",
+     "columnas": [
+      "usuario_id",
+      "clausula",
+      "version"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "UNIQUE (usuario_id, clausula, version)"
+    }
+   ],
+   "indices": []
+  },
+  {
+   "esquema": "identidad",
+   "tabla": "autorizaciones_tutor",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": "gen_random_uuid()",
+     "comentario": null
+    },
+    {
+     "nombre": "adulto_responsable_id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "menor_id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "tutor_id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "no_confiable",
+     "tipo": "boolean",
+     "no_nulo": true,
+     "default": "false",
+     "comentario": null
+    },
+    {
+     "nombre": "created_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": true,
+     "default": "now()",
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "autorizaciones_tutor_adulto_responsable_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "adulto_responsable_id"
+     ],
+     "ref_esquema": "identidad",
+     "ref_tabla": "usuarios",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (adulto_responsable_id) REFERENCES identidad.usuarios(id)"
+    },
+    {
+     "nombre": "autorizaciones_tutor_menor_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "menor_id"
+     ],
+     "ref_esquema": "identidad",
+     "ref_tabla": "usuarios",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (menor_id) REFERENCES identidad.usuarios(id)"
+    },
+    {
+     "nombre": "autorizaciones_tutor_tutor_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "tutor_id"
+     ],
+     "ref_esquema": "identidad",
+     "ref_tabla": "usuarios",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (tutor_id) REFERENCES identidad.usuarios(id)"
+    },
+    {
+     "nombre": "autorizaciones_tutor_pkey",
+     "tipo": "p",
+     "columnas": [
+      "id"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (id)"
+    },
+    {
+     "nombre": "uq_autorizacion",
+     "tipo": "u",
+     "columnas": [
+      "adulto_responsable_id",
+      "menor_id",
+      "tutor_id"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "UNIQUE (adulto_responsable_id, menor_id, tutor_id)"
+    }
+   ],
+   "indices": []
+  },
+  {
+   "esquema": "identidad",
+   "tabla": "certificados_antecedentes_penales",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": "gen_random_uuid()",
+     "comentario": null
+    },
+    {
+     "nombre": "tutor_id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "archivo_url",
+     "tipo": "character varying(500)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "fecha_emision",
+     "tipo": "date",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "vence_at",
+     "tipo": "date",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "estado",
+     "tipo": "character varying(20)",
+     "no_nulo": true,
+     "default": "'PENDIENTE'::character varying",
+     "comentario": null
+    },
+    {
+     "nombre": "tiene_antecedentes",
+     "tipo": "boolean",
+     "no_nulo": true,
+     "default": "false",
+     "comentario": null
+    },
+    {
+     "nombre": "categoria_antecedente",
+     "tipo": "character varying(255)",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "numero_intento",
+     "tipo": "integer",
+     "no_nulo": true,
+     "default": "1",
+     "comentario": null
+    },
+    {
+     "nombre": "ciclo_espera_hasta",
+     "tipo": "timestamp with time zone",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "admin_revisor_id",
+     "tipo": "uuid",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "created_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": true,
+     "default": "now()",
+     "comentario": null
+    },
+    {
+     "nombre": "revisado_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "firma_estado",
+     "tipo": "character varying(30)",
+     "no_nulo": true,
+     "default": "'NO_VERIFICADA'::character varying",
+     "comentario": null
+    },
+    {
+     "nombre": "firma_detalle",
+     "tipo": "character varying(500)",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "firma_firmante",
+     "tipo": "character varying(300)",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "firma_sha256",
+     "tipo": "character varying(64)",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "firma_solicitud_id",
+     "tipo": "character varying(120)",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "firma_intentos",
+     "tipo": "integer",
+     "no_nulo": true,
+     "default": "0",
+     "comentario": null
+    },
+    {
+     "nombre": "firma_proximo_intento_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "firma_enviada_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "firma_verificada_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "certificados_antecedentes_penales_estado_check",
+     "tipo": "c",
+     "columnas": [
+      "estado"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK (((estado)::text = ANY ((ARRAY['PENDIENTE'::character varying, 'APROBADO'::character varying, 'RECHAZADO'::character varying, 'EN_REVISION_LEGAL'::character varying, 'VENCIDO'::character varying])::text[])))"
+    },
+    {
+     "nombre": "certificados_antecedentes_penales_firma_estado_check",
+     "tipo": "c",
+     "columnas": [
+      "firma_estado"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK (((firma_estado)::text = ANY ((ARRAY['NO_VERIFICADA'::character varying, 'PENDIENTE'::character varying, 'EN_PROCESO'::character varying, 'VALIDA'::character varying, 'INVALIDA'::character varying, 'FIRMANTE_NO_RECONOCIDO'::character varying, 'ERROR'::character varying])::text[])))"
+    },
+    {
+     "nombre": "certificados_antecedentes_penales_numero_intento_check",
+     "tipo": "c",
+     "columnas": [
+      "numero_intento"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK (((numero_intento >= 1) AND (numero_intento <= 3)))"
+    },
+    {
+     "nombre": "certificados_antecedentes_penales_tutor_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "tutor_id"
+     ],
+     "ref_esquema": "identidad",
+     "ref_tabla": "usuarios",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (tutor_id) REFERENCES identidad.usuarios(id)"
+    },
+    {
+     "nombre": "certificados_antecedentes_penales_pkey",
+     "tipo": "p",
+     "columnas": [
+      "id"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (id)"
+    }
+   ],
+   "indices": [
+    {
+     "nombre": "idx_cap_estado_vence",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_cap_estado_vence ON identidad.certificados_antecedentes_penales USING btree (estado, vence_at)"
+    },
+    {
+     "nombre": "idx_cap_firma_cola",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_cap_firma_cola ON identidad.certificados_antecedentes_penales USING btree (firma_estado, firma_proximo_intento_at)"
+    },
+    {
+     "nombre": "idx_cap_tutor",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_cap_tutor ON identidad.certificados_antecedentes_penales USING btree (tutor_id)"
+    }
+   ]
+  },
+  {
+   "esquema": "identidad",
+   "tabla": "consentimientos_menor",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": "gen_random_uuid()",
+     "comentario": null
+    },
+    {
+     "nombre": "menor_id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "adulto_responsable_id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "version_texto",
+     "tipo": "character varying(50)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "aceptado_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": true,
+     "default": "now()",
+     "comentario": null
+    },
+    {
+     "nombre": "revocado_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "consentimientos_menor_adulto_responsable_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "adulto_responsable_id"
+     ],
+     "ref_esquema": "identidad",
+     "ref_tabla": "usuarios",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (adulto_responsable_id) REFERENCES identidad.usuarios(id)"
+    },
+    {
+     "nombre": "consentimientos_menor_menor_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "menor_id"
+     ],
+     "ref_esquema": "identidad",
+     "ref_tabla": "usuarios",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (menor_id) REFERENCES identidad.usuarios(id)"
+    },
+    {
+     "nombre": "consentimientos_menor_pkey",
+     "tipo": "p",
+     "columnas": [
+      "id"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (id)"
+    }
+   ],
+   "indices": [
+    {
+     "nombre": "idx_consentimientos_menor",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_consentimientos_menor ON identidad.consentimientos_menor USING btree (menor_id)"
+    }
+   ]
+  },
+  {
+   "esquema": "identidad",
+   "tabla": "credencial_especialidades",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "credencial_id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "especialidad_id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "credencial_especialidades_credencial_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "credencial_id"
+     ],
+     "ref_esquema": "identidad",
+     "ref_tabla": "credenciales_academicas",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (credencial_id) REFERENCES identidad.credenciales_academicas(id)"
+    },
+    {
+     "nombre": "credencial_especialidades_especialidad_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "especialidad_id"
+     ],
+     "ref_esquema": "identidad",
+     "ref_tabla": "especialidades_tutor",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "c",
+     "definicion": "FOREIGN KEY (especialidad_id) REFERENCES identidad.especialidades_tutor(id) ON DELETE CASCADE"
+    },
+    {
+     "nombre": "credencial_especialidades_pkey",
+     "tipo": "p",
+     "columnas": [
+      "credencial_id",
+      "especialidad_id"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (credencial_id, especialidad_id)"
+    }
+   ],
+   "indices": [
+    {
+     "nombre": "idx_credencial_especialidades_esp",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_credencial_especialidades_esp ON identidad.credencial_especialidades USING btree (especialidad_id)"
+    }
+   ]
+  },
+  {
+   "esquema": "identidad",
+   "tabla": "credenciales_academicas",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": "gen_random_uuid()",
+     "comentario": null
+    },
+    {
+     "nombre": "tutor_id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "tipo_documento",
+     "tipo": "character varying(30)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "archivo_url",
+     "tipo": "character varying(500)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "estado",
+     "tipo": "character varying(20)",
+     "no_nulo": true,
+     "default": "'PENDIENTE'::character varying",
+     "comentario": null
+    },
+    {
+     "nombre": "numero_intento",
+     "tipo": "integer",
+     "no_nulo": true,
+     "default": "1",
+     "comentario": null
+    },
+    {
+     "nombre": "ciclo_espera_hasta",
+     "tipo": "timestamp with time zone",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "admin_revisor_id",
+     "tipo": "uuid",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "created_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": true,
+     "default": "now()",
+     "comentario": null
+    },
+    {
+     "nombre": "revisado_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "institucion",
+     "tipo": "character varying(200)",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "denominacion",
+     "tipo": "character varying(200)",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "anio_egreso",
+     "tipo": "integer",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "es_digital",
+     "tipo": "boolean",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "enlace_verificacion",
+     "tipo": "character varying(500)",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "nombre_coincide",
+     "tipo": "boolean",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "metodo_verificacion",
+     "tipo": "character varying(20)",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "motivo_rechazo",
+     "tipo": "character varying(30)",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "detalle_rechazo",
+     "tipo": "character varying(500)",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "credenciales_academicas_anio_egreso_check",
+     "tipo": "c",
+     "columnas": [
+      "anio_egreso"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK (((anio_egreso >= 1900) AND (anio_egreso <= 2100)))"
+    },
+    {
+     "nombre": "credenciales_academicas_estado_check",
+     "tipo": "c",
+     "columnas": [
+      "estado"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK (((estado)::text = ANY ((ARRAY['PENDIENTE'::character varying, 'APROBADO'::character varying, 'RECHAZADO'::character varying])::text[])))"
+    },
+    {
+     "nombre": "credenciales_academicas_metodo_verificacion_check",
+     "tipo": "c",
+     "columnas": [
+      "metodo_verificacion"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK (((metodo_verificacion)::text = ANY ((ARRAY['REGISTRO_OFICIAL'::character varying, 'SOLO_DOCUMENTO'::character varying])::text[])))"
+    },
+    {
+     "nombre": "credenciales_academicas_motivo_rechazo_check",
+     "tipo": "c",
+     "columnas": [
+      "motivo_rechazo"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK (((motivo_rechazo)::text = ANY ((ARRAY['ILEGIBLE'::character varying, 'NO_ES_TITULO'::character varying, 'NOMBRE_NO_COINCIDE'::character varying, 'NO_FIGURA_EN_REGISTRO'::character varying, 'DATOS_NO_COINCIDEN'::character varying, 'ENLACE_INVALIDO'::character varying, 'OTRO'::character varying])::text[])))"
+    },
+    {
+     "nombre": "credenciales_academicas_numero_intento_check",
+     "tipo": "c",
+     "columnas": [
+      "numero_intento"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK (((numero_intento >= 1) AND (numero_intento <= 3)))"
+    },
+    {
+     "nombre": "credenciales_academicas_tipo_documento_check",
+     "tipo": "c",
+     "columnas": [
+      "tipo_documento"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK (((tipo_documento)::text = ANY ((ARRAY['TITULO'::character varying, 'CERTIFICADO_ANALITICO'::character varying, 'MATRICULA'::character varying, 'SECUNDARIO'::character varying, 'TERCIARIO_NO_DOCENTE'::character varying, 'PROFESORADO'::character varying, 'UNIVERSITARIO'::character varying, 'ALUMNO_UNIVERSITARIO'::character varying, 'MATRICULA_PROFESIONAL'::character varying, 'OTRO'::character varying])::text[])))"
+    },
+    {
+     "nombre": "credenciales_academicas_tutor_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "tutor_id"
+     ],
+     "ref_esquema": "identidad",
+     "ref_tabla": "usuarios",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (tutor_id) REFERENCES identidad.usuarios(id)"
+    },
+    {
+     "nombre": "credenciales_academicas_pkey",
+     "tipo": "p",
+     "columnas": [
+      "id"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (id)"
+    }
+   ],
+   "indices": [
+    {
+     "nombre": "idx_credenciales_estado",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_credenciales_estado ON identidad.credenciales_academicas USING btree (estado)"
+    },
+    {
+     "nombre": "idx_credenciales_tutor",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_credenciales_tutor ON identidad.credenciales_academicas USING btree (tutor_id)"
+    }
+   ]
+  },
+  {
+   "esquema": "identidad",
+   "tabla": "especialidades_tutor",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": "gen_random_uuid()",
+     "comentario": null
+    },
+    {
+     "nombre": "tutor_id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "materia",
+     "tipo": "character varying(100)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "nivel_maximo",
+     "tipo": "character varying(20)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "created_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": true,
+     "default": "now()",
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "especialidades_tutor_nivel_maximo_check",
+     "tipo": "c",
+     "columnas": [
+      "nivel_maximo"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK (((nivel_maximo)::text = ANY ((ARRAY['PRIMARIO'::character varying, 'SECUNDARIO'::character varying, 'UNIVERSITARIO'::character varying])::text[])))"
+    },
+    {
+     "nombre": "especialidades_tutor_tutor_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "tutor_id"
+     ],
+     "ref_esquema": "identidad",
+     "ref_tabla": "usuarios",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (tutor_id) REFERENCES identidad.usuarios(id)"
+    },
+    {
+     "nombre": "especialidades_tutor_pkey",
+     "tipo": "p",
+     "columnas": [
+      "id"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (id)"
+    },
+    {
+     "nombre": "uq_especialidad_tutor_materia",
+     "tipo": "u",
+     "columnas": [
+      "tutor_id",
+      "materia"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "UNIQUE (tutor_id, materia)"
+    }
+   ],
+   "indices": [
+    {
+     "nombre": "idx_especialidades_tutor",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_especialidades_tutor ON identidad.especialidades_tutor USING btree (tutor_id)"
+    }
+   ]
+  },
+  {
+   "esquema": "identidad",
+   "tabla": "intentos_credencial",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "tutor_id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "veces_ciclo_agotado",
+     "tipo": "integer",
+     "no_nulo": true,
+     "default": "0",
+     "comentario": null
+    },
+    {
+     "nombre": "proximo_intento_permitido",
+     "tipo": "timestamp with time zone",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "updated_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": true,
+     "default": "now()",
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "intentos_credencial_tutor_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "tutor_id"
+     ],
+     "ref_esquema": "identidad",
+     "ref_tabla": "usuarios",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (tutor_id) REFERENCES identidad.usuarios(id)"
+    },
+    {
+     "nombre": "intentos_credencial_pkey",
+     "tipo": "p",
+     "columnas": [
+      "tutor_id"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (tutor_id)"
+    }
+   ],
+   "indices": []
+  },
+  {
+   "esquema": "identidad",
+   "tabla": "intentos_ocr",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "dni",
+     "tipo": "character varying(20)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "intentos_consumidos",
+     "tipo": "integer",
+     "no_nulo": true,
+     "default": "0",
+     "comentario": null
+    },
+    {
+     "nombre": "proximo_intento_permitido",
+     "tipo": "timestamp with time zone",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "updated_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": true,
+     "default": "now()",
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "intentos_ocr_intentos_consumidos_check",
+     "tipo": "c",
+     "columnas": [
+      "intentos_consumidos"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK ((intentos_consumidos >= 0))"
+    },
+    {
+     "nombre": "intentos_ocr_pkey",
+     "tipo": "p",
+     "columnas": [
+      "dni"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (dni)"
+    }
+   ],
+   "indices": []
+  },
+  {
+   "esquema": "identidad",
+   "tabla": "tokens_reset_password",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "usuario_id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "token_hash",
+     "tipo": "character varying(64)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "expira_en",
+     "tipo": "timestamp with time zone",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "usado_en",
+     "tipo": "timestamp with time zone",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "created_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": true,
+     "default": "now()",
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "tokens_reset_password_usuario_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "usuario_id"
+     ],
+     "ref_esquema": "identidad",
+     "ref_tabla": "usuarios",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (usuario_id) REFERENCES identidad.usuarios(id)"
+    },
+    {
+     "nombre": "tokens_reset_password_pkey",
+     "tipo": "p",
+     "columnas": [
+      "id"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (id)"
+    },
+    {
+     "nombre": "tokens_reset_password_token_hash_key",
+     "tipo": "u",
+     "columnas": [
+      "token_hash"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "UNIQUE (token_hash)"
+    }
+   ],
+   "indices": [
+    {
+     "nombre": "ix_tokens_reset_password_usuario",
+     "unico": false,
+     "definicion": "CREATE INDEX ix_tokens_reset_password_usuario ON identidad.tokens_reset_password USING btree (usuario_id)"
+    }
+   ]
+  },
+  {
+   "esquema": "identidad",
+   "tabla": "usuarios",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": "gen_random_uuid()",
+     "comentario": null
+    },
+    {
+     "nombre": "dni",
+     "tipo": "character varying(20)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "nombre",
+     "tipo": "character varying(150)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "apellido",
+     "tipo": "character varying(150)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "fecha_nacimiento",
+     "tipo": "date",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "tipo",
+     "tipo": "character varying(20)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "capacidad_estudiante",
+     "tipo": "boolean",
+     "no_nulo": true,
+     "default": "false",
+     "comentario": null
+    },
+    {
+     "nombre": "capacidad_adulto_responsable",
+     "tipo": "boolean",
+     "no_nulo": true,
+     "default": "false",
+     "comentario": null
+    },
+    {
+     "nombre": "adulto_responsable_id",
+     "tipo": "uuid",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "password_hash",
+     "tipo": "character varying(255)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "estado_cuenta",
+     "tipo": "character varying(20)",
+     "no_nulo": true,
+     "default": "'ACTIVA'::character varying",
+     "comentario": null
+    },
+    {
+     "nombre": "created_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": true,
+     "default": "now()",
+     "comentario": null
+    },
+    {
+     "nombre": "activo_para_matching",
+     "tipo": "boolean",
+     "no_nulo": true,
+     "default": "false",
+     "comentario": null
+    },
+    {
+     "nombre": "email",
+     "tipo": "character varying(255)",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "bio",
+     "tipo": "character varying(500)",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "foto_ref",
+     "tipo": "text",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "credentials_version",
+     "tipo": "integer",
+     "no_nulo": true,
+     "default": "0",
+     "comentario": null
+    },
+    {
+     "nombre": "acepta_menores",
+     "tipo": "boolean",
+     "no_nulo": true,
+     "default": "true",
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "chk_adulto_tiene_capacidad",
+     "tipo": "c",
+     "columnas": [
+      "tipo",
+      "capacidad_estudiante",
+      "capacidad_adulto_responsable"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK ((((tipo)::text <> 'ADULTO'::text) OR (capacidad_estudiante OR capacidad_adulto_responsable)))"
+    },
+    {
+     "nombre": "chk_menor_tiene_responsable",
+     "tipo": "c",
+     "columnas": [
+      "tipo",
+      "adulto_responsable_id"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK (((((tipo)::text = 'MENOR'::text) AND (adulto_responsable_id IS NOT NULL)) OR (((tipo)::text <> 'MENOR'::text) AND (adulto_responsable_id IS NULL))))"
+    },
+    {
+     "nombre": "chk_usuarios_estado_cuenta",
+     "tipo": "c",
+     "columnas": [
+      "estado_cuenta"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK (((estado_cuenta)::text = ANY ((ARRAY['ACTIVA'::character varying, 'SUSPENDIDA'::character varying, 'BAJA'::character varying])::text[])))"
+    },
+    {
+     "nombre": "usuarios_tipo_check",
+     "tipo": "c",
+     "columnas": [
+      "tipo"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK (((tipo)::text = ANY ((ARRAY['ADULTO'::character varying, 'MENOR'::character varying, 'TUTOR'::character varying])::text[])))"
+    },
+    {
+     "nombre": "usuarios_adulto_responsable_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "adulto_responsable_id"
+     ],
+     "ref_esquema": "identidad",
+     "ref_tabla": "usuarios",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (adulto_responsable_id) REFERENCES identidad.usuarios(id)"
+    },
+    {
+     "nombre": "usuarios_pkey",
+     "tipo": "p",
+     "columnas": [
+      "id"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (id)"
+    },
+    {
+     "nombre": "usuarios_dni_key",
+     "tipo": "u",
+     "columnas": [
+      "dni"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "UNIQUE (dni)"
+    }
+   ],
+   "indices": [
+    {
+     "nombre": "idx_usuarios_adulto_responsable",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_usuarios_adulto_responsable ON identidad.usuarios USING btree (adulto_responsable_id)"
+    },
+    {
+     "nombre": "idx_usuarios_tipo",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_usuarios_tipo ON identidad.usuarios USING btree (tipo)"
+    },
+    {
+     "nombre": "uq_usuarios_email",
+     "unico": true,
+     "definicion": "CREATE UNIQUE INDEX uq_usuarios_email ON identidad.usuarios USING btree (email) WHERE (email IS NOT NULL)"
+    }
+   ]
+  },
+  {
+   "esquema": "matching",
+   "tabla": "busquedas_guardadas",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": "gen_random_uuid()",
+     "comentario": null
+    },
+    {
+     "nombre": "usuario_id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "texto_busqueda",
+     "tipo": "character varying(500)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "created_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": true,
+     "default": "now()",
+     "comentario": null
+    },
+    {
+     "nombre": "filtros",
+     "tipo": "jsonb",
+     "no_nulo": true,
+     "default": "'{}'::jsonb",
+     "comentario": null
+    },
+    {
+     "nombre": "huella",
+     "tipo": "character varying(64)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "busquedas_guardadas_usuario_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "usuario_id"
+     ],
+     "ref_esquema": "identidad",
+     "ref_tabla": "usuarios",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (usuario_id) REFERENCES identidad.usuarios(id)"
+    },
+    {
+     "nombre": "busquedas_guardadas_pkey",
+     "tipo": "p",
+     "columnas": [
+      "id"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (id)"
+    }
+   ],
+   "indices": [
+    {
+     "nombre": "idx_busquedas_guardadas_usuario",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_busquedas_guardadas_usuario ON matching.busquedas_guardadas USING btree (usuario_id)"
+    },
+    {
+     "nombre": "uq_busquedas_guardadas_usuario_huella",
+     "unico": true,
+     "definicion": "CREATE UNIQUE INDEX uq_busquedas_guardadas_usuario_huella ON matching.busquedas_guardadas USING btree (usuario_id, huella)"
+    }
+   ]
+  },
+  {
+   "esquema": "matching",
+   "tabla": "evaluacion_aceptaciones",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": "gen_random_uuid()",
+     "comentario": null
+    },
+    {
+     "nombre": "busqueda_id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "tutor_id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "posicion",
+     "tipo": "integer",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "tipo",
+     "tipo": "character varying(10)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "created_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": true,
+     "default": "now()",
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "evaluacion_aceptaciones_posicion_check",
+     "tipo": "c",
+     "columnas": [
+      "posicion"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK ((posicion >= 1))"
+    },
+    {
+     "nombre": "evaluacion_aceptaciones_tipo_check",
+     "tipo": "c",
+     "columnas": [
+      "tipo"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK (((tipo)::text = ANY ((ARRAY['PERFIL'::character varying, 'RESERVA'::character varying])::text[])))"
+    },
+    {
+     "nombre": "evaluacion_aceptaciones_busqueda_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "busqueda_id"
+     ],
+     "ref_esquema": "matching",
+     "ref_tabla": "evaluacion_busquedas",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "c",
+     "definicion": "FOREIGN KEY (busqueda_id) REFERENCES matching.evaluacion_busquedas(id) ON DELETE CASCADE"
+    },
+    {
+     "nombre": "evaluacion_aceptaciones_tutor_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "tutor_id"
+     ],
+     "ref_esquema": "identidad",
+     "ref_tabla": "usuarios",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (tutor_id) REFERENCES identidad.usuarios(id)"
+    },
+    {
+     "nombre": "evaluacion_aceptaciones_pkey",
+     "tipo": "p",
+     "columnas": [
+      "id"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (id)"
+    },
+    {
+     "nombre": "uq_evaluacion_aceptacion",
+     "tipo": "u",
+     "columnas": [
+      "busqueda_id",
+      "tutor_id",
+      "tipo"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "UNIQUE (busqueda_id, tutor_id, tipo)"
+    }
+   ],
+   "indices": []
+  },
+  {
+   "esquema": "matching",
+   "tabla": "evaluacion_busquedas",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": "gen_random_uuid()",
+     "comentario": null
+    },
+    {
+     "nombre": "usuario_id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "longitud_texto",
+     "tipo": "integer",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "cantidad_resultados",
+     "tipo": "integer",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "tutor_ids",
+     "tipo": "uuid[]",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "created_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": true,
+     "default": "now()",
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "evaluacion_busquedas_cantidad_resultados_check",
+     "tipo": "c",
+     "columnas": [
+      "cantidad_resultados"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK ((cantidad_resultados >= 0))"
+    },
+    {
+     "nombre": "evaluacion_busquedas_longitud_texto_check",
+     "tipo": "c",
+     "columnas": [
+      "longitud_texto"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK ((longitud_texto >= 0))"
+    },
+    {
+     "nombre": "evaluacion_busquedas_usuario_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "usuario_id"
+     ],
+     "ref_esquema": "identidad",
+     "ref_tabla": "usuarios",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (usuario_id) REFERENCES identidad.usuarios(id)"
+    },
+    {
+     "nombre": "evaluacion_busquedas_pkey",
+     "tipo": "p",
+     "columnas": [
+      "id"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (id)"
+    }
+   ],
+   "indices": [
+    {
+     "nombre": "idx_evaluacion_busquedas_created",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_evaluacion_busquedas_created ON matching.evaluacion_busquedas USING btree (created_at)"
+    }
+   ]
+  },
+  {
+   "esquema": "matching",
+   "tabla": "materias_niveles",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": "gen_random_uuid()",
+     "comentario": null
+    },
+    {
+     "nombre": "nivel",
+     "tipo": "character varying(20)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "materia",
+     "tipo": "character varying(100)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "materias_niveles_nivel_check",
+     "tipo": "c",
+     "columnas": [
+      "nivel"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK (((nivel)::text = ANY ((ARRAY['primario'::character varying, 'secundario'::character varying, 'universitario'::character varying])::text[])))"
+    },
+    {
+     "nombre": "materias_niveles_pkey",
+     "tipo": "p",
+     "columnas": [
+      "id"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (id)"
+    },
+    {
+     "nombre": "uq_materia_nivel",
+     "tipo": "u",
+     "columnas": [
+      "nivel",
+      "materia"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "UNIQUE (nivel, materia)"
+    }
+   ],
+   "indices": [
+    {
+     "nombre": "idx_materias_niveles_nivel",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_materias_niveles_nivel ON matching.materias_niveles USING btree (nivel)"
+    }
+   ]
+  },
+  {
+   "esquema": "matching",
+   "tabla": "perfiles_tutor_matching",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "tutor_id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "materias_niveles_ids",
+     "tipo": "uuid[]",
+     "no_nulo": true,
+     "default": "'{}'::uuid[]",
+     "comentario": null
+    },
+    {
+     "nombre": "embedding",
+     "tipo": "vector(384)",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "activo_para_matching",
+     "tipo": "boolean",
+     "no_nulo": true,
+     "default": "false",
+     "comentario": null
+    },
+    {
+     "nombre": "tema_ids",
+     "tipo": "uuid[]",
+     "no_nulo": true,
+     "default": "'{}'::uuid[]",
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "perfiles_tutor_matching_tutor_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "tutor_id"
+     ],
+     "ref_esquema": "identidad",
+     "ref_tabla": "usuarios",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (tutor_id) REFERENCES identidad.usuarios(id)"
+    },
+    {
+     "nombre": "perfiles_tutor_matching_pkey",
+     "tipo": "p",
+     "columnas": [
+      "tutor_id"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (tutor_id)"
+    }
+   ],
+   "indices": [
+    {
+     "nombre": "idx_perfiles_tutor_matching_tema_ids",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_perfiles_tutor_matching_tema_ids ON matching.perfiles_tutor_matching USING gin (tema_ids)"
+    }
+   ]
+  },
+  {
+   "esquema": "matching",
+   "tabla": "temas",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": "gen_random_uuid()",
+     "comentario": null
+    },
+    {
+     "nombre": "trayecto_id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "nombre",
+     "tipo": "text",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "descripcion",
+     "tipo": "text",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "orden",
+     "tipo": "integer",
+     "no_nulo": true,
+     "default": "0",
+     "comentario": null
+    },
+    {
+     "nombre": "embedding",
+     "tipo": "vector(384)",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "embedding_fuente",
+     "tipo": "text",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "temas_trayecto_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "trayecto_id"
+     ],
+     "ref_esquema": "matching",
+     "ref_tabla": "trayectos",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (trayecto_id) REFERENCES matching.trayectos(id)"
+    },
+    {
+     "nombre": "temas_pkey",
+     "tipo": "p",
+     "columnas": [
+      "id"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (id)"
+    },
+    {
+     "nombre": "uq_tema",
+     "tipo": "u",
+     "columnas": [
+      "trayecto_id",
+      "nombre"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "UNIQUE (trayecto_id, nombre)"
+    }
+   ],
+   "indices": []
+  },
+  {
+   "esquema": "matching",
+   "tabla": "temas_sugeridos",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": "gen_random_uuid()",
+     "comentario": null
+    },
+    {
+     "nombre": "texto",
+     "tipo": "text",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "veces",
+     "tipo": "integer",
+     "no_nulo": true,
+     "default": "1",
+     "comentario": null
+    },
+    {
+     "nombre": "nivel",
+     "tipo": "text",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "materia",
+     "tipo": "text",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "ultima_vez",
+     "tipo": "timestamp with time zone",
+     "no_nulo": true,
+     "default": "now()",
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "temas_sugeridos_pkey",
+     "tipo": "p",
+     "columnas": [
+      "id"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (id)"
+    },
+    {
+     "nombre": "temas_sugeridos_texto_key",
+     "tipo": "u",
+     "columnas": [
+      "texto"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "UNIQUE (texto)"
+    }
+   ],
+   "indices": [
+    {
+     "nombre": "idx_temas_sugeridos_veces",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_temas_sugeridos_veces ON matching.temas_sugeridos USING btree (veces DESC, ultima_vez DESC)"
+    }
+   ]
+  },
+  {
+   "esquema": "matching",
+   "tabla": "trayectos",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": "gen_random_uuid()",
+     "comentario": null
+    },
+    {
+     "nombre": "nivel",
+     "tipo": "text",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "anio_o_carrera",
+     "tipo": "text",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "materia",
+     "tipo": "text",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "trayectos_nivel_check",
+     "tipo": "c",
+     "columnas": [
+      "nivel"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK ((nivel = ANY (ARRAY['primario'::text, 'secundario'::text, 'universitario'::text])))"
+    },
+    {
+     "nombre": "trayectos_pkey",
+     "tipo": "p",
+     "columnas": [
+      "id"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (id)"
+    },
+    {
+     "nombre": "uq_trayecto",
+     "tipo": "u",
+     "columnas": [
+      "nivel",
+      "anio_o_carrera",
+      "materia"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "UNIQUE (nivel, anio_o_carrera, materia)"
+    }
+   ],
+   "indices": []
+  },
+  {
+   "esquema": "pagos",
+   "tabla": "cuentas_mp_tutor",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "tutor_id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "mp_user_id",
+     "tipo": "character varying(40)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "access_token_cifrado",
+     "tipo": "bytea",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "refresh_token_cifrado",
+     "tipo": "bytea",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "public_key",
+     "tipo": "character varying(100)",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "expira_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "estado",
+     "tipo": "character varying(20)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "conectada_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": true,
+     "default": "now()",
+     "comentario": null
+    },
+    {
+     "nombre": "updated_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": true,
+     "default": "now()",
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "cuentas_mp_tutor_estado_check",
+     "tipo": "c",
+     "columnas": [
+      "estado"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK (((estado)::text = ANY ((ARRAY['CONECTADA'::character varying, 'REVOCADA'::character varying, 'ERROR'::character varying])::text[])))"
+    },
+    {
+     "nombre": "cuentas_mp_tutor_tutor_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "tutor_id"
+     ],
+     "ref_esquema": "identidad",
+     "ref_tabla": "usuarios",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (tutor_id) REFERENCES identidad.usuarios(id)"
+    },
+    {
+     "nombre": "cuentas_mp_tutor_pkey",
+     "tipo": "p",
+     "columnas": [
+      "tutor_id"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (tutor_id)"
+    }
+   ],
+   "indices": [
+    {
+     "nombre": "uq_cuentas_mp_user",
+     "unico": true,
+     "definicion": "CREATE UNIQUE INDEX uq_cuentas_mp_user ON pagos.cuentas_mp_tutor USING btree (mp_user_id) WHERE ((estado)::text = 'CONECTADA'::text)"
+    }
+   ]
+  },
+  {
+   "esquema": "pagos",
+   "tabla": "oauth_estados",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "state",
+     "tipo": "character varying(64)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "tutor_id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "code_verifier",
+     "tipo": "character varying(128)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "expira_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "oauth_estados_tutor_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "tutor_id"
+     ],
+     "ref_esquema": "identidad",
+     "ref_tabla": "usuarios",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (tutor_id) REFERENCES identidad.usuarios(id)"
+    },
+    {
+     "nombre": "oauth_estados_pkey",
+     "tipo": "p",
+     "columnas": [
+      "state"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (state)"
+    }
+   ],
+   "indices": []
+  },
+  {
+   "esquema": "pagos",
+   "tabla": "pasarela_estado",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "id",
+     "tipo": "smallint",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "habilitada",
+     "tipo": "boolean",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "updated_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "updated_by",
+     "tipo": "uuid",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "pasarela_estado_id_check",
+     "tipo": "c",
+     "columnas": [
+      "id"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK ((id = 1))"
+    },
+    {
+     "nombre": "pasarela_estado_updated_by_fkey",
+     "tipo": "f",
+     "columnas": [
+      "updated_by"
+     ],
+     "ref_esquema": "identidad",
+     "ref_tabla": "usuarios",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (updated_by) REFERENCES identidad.usuarios(id)"
+    },
+    {
+     "nombre": "pasarela_estado_pkey",
+     "tipo": "p",
+     "columnas": [
+      "id"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (id)"
+    }
+   ],
+   "indices": []
+  },
+  {
+   "esquema": "pagos",
+   "tabla": "precios_referencia_regional",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "provincia",
+     "tipo": "character varying",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "version",
+     "tipo": "integer",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "valor_sugerido",
+     "tipo": "numeric(10,2)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "vigente_desde",
+     "tipo": "timestamp with time zone",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "precios_referencia_regional_version_check",
+     "tipo": "c",
+     "columnas": [
+      "version"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK ((version >= 1))"
+    },
+    {
+     "nombre": "precios_referencia_regional_pkey",
+     "tipo": "p",
+     "columnas": [
+      "provincia",
+      "version"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (provincia, version)"
+    }
+   ],
+   "indices": []
+  },
+  {
+   "esquema": "pagos",
+   "tabla": "preferencias_pago",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "reserva_id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "preference_id",
+     "tipo": "character varying(100)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "created_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": true,
+     "default": "now()",
+     "comentario": null
+    },
+    {
+     "nombre": "conciliado_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "intentos_conciliacion",
+     "tipo": "integer",
+     "no_nulo": true,
+     "default": "0",
+     "comentario": null
+    },
+    {
+     "nombre": "alertado_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "preferencias_pago_reserva_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "reserva_id"
+     ],
+     "ref_esquema": "reservas",
+     "ref_tabla": "reservas",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (reserva_id) REFERENCES reservas.reservas(id)"
+    },
+    {
+     "nombre": "preferencias_pago_pkey",
+     "tipo": "p",
+     "columnas": [
+      "reserva_id"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (reserva_id)"
+    }
+   ],
+   "indices": [
+    {
+     "nombre": "idx_preferencias_sin_conciliar",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_preferencias_sin_conciliar ON pagos.preferencias_pago USING btree (created_at) WHERE (conciliado_at IS NULL)"
+    }
+   ]
+  },
+  {
+   "esquema": "pagos",
+   "tabla": "tarifas_tutor",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "tutor_id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "precio_hora",
+     "tipo": "numeric(10,2)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "updated_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": true,
+     "default": "now()",
+     "comentario": null
+    },
+    {
+     "nombre": "paquete_habilitado",
+     "tipo": "boolean",
+     "no_nulo": true,
+     "default": "false",
+     "comentario": null
+    },
+    {
+     "nombre": "paquete_descuento_porcentaje",
+     "tipo": "integer",
+     "no_nulo": true,
+     "default": "0",
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "tarifas_tutor_paquete_descuento_porcentaje_check",
+     "tipo": "c",
+     "columnas": [
+      "paquete_descuento_porcentaje"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK (((paquete_descuento_porcentaje >= 0) AND (paquete_descuento_porcentaje <= 30)))"
+    },
+    {
+     "nombre": "tarifas_tutor_precio_sesion_check",
+     "tipo": "c",
+     "columnas": [
+      "precio_hora"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK ((precio_hora >= (0)::numeric))"
+    },
+    {
+     "nombre": "tarifas_tutor_tutor_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "tutor_id"
+     ],
+     "ref_esquema": "identidad",
+     "ref_tabla": "usuarios",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (tutor_id) REFERENCES identidad.usuarios(id)"
+    },
+    {
+     "nombre": "tarifas_tutor_pkey",
+     "tipo": "p",
+     "columnas": [
+      "tutor_id"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (tutor_id)"
+    }
+   ],
+   "indices": []
+  },
+  {
+   "esquema": "pagos",
+   "tabla": "transacciones",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": "gen_random_uuid()",
+     "comentario": null
+    },
+    {
+     "nombre": "reserva_id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "mp_payment_id",
+     "tipo": "character varying",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "monto_bruto",
+     "tipo": "numeric(10,2)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "comision_plataforma",
+     "tipo": "numeric(10,2)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "estado",
+     "tipo": "character varying(20)",
+     "no_nulo": true,
+     "default": "'retenido_escrow'::character varying",
+     "comentario": null
+    },
+    {
+     "nombre": "liberar_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "intentos_liberacion",
+     "tipo": "integer",
+     "no_nulo": true,
+     "default": "0",
+     "comentario": null
+    },
+    {
+     "nombre": "created_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": true,
+     "default": "now()",
+     "comentario": null
+    },
+    {
+     "nombre": "en_bypass",
+     "tipo": "boolean",
+     "no_nulo": true,
+     "default": "false",
+     "comentario": null
+    },
+    {
+     "nombre": "monto_adicional_resumen",
+     "tipo": "numeric(10,2)",
+     "no_nulo": true,
+     "default": "0",
+     "comentario": null
+    },
+    {
+     "nombre": "adicional_reembolsado_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "adicional_reembolso_estado",
+     "tipo": "character varying(20)",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "adicional_reembolso_intentos",
+     "tipo": "integer",
+     "no_nulo": true,
+     "default": "0",
+     "comentario": null
+    },
+    {
+     "nombre": "adicional_reembolso_error",
+     "tipo": "character varying(300)",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "adicional_reembolso_nota",
+     "tipo": "character varying(300)",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "reembolso_parcial_monto",
+     "tipo": "numeric(10,2)",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "reembolso_parcial_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "transacciones_adicional_reembolso_estado_check",
+     "tipo": "c",
+     "columnas": [
+      "adicional_reembolso_estado"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK (((adicional_reembolso_estado)::text = ANY ((ARRAY['PENDIENTE'::character varying, 'FALLIDO'::character varying, 'HECHO'::character varying, 'RESUELTO_MANUAL'::character varying])::text[])))"
+    },
+    {
+     "nombre": "transacciones_check",
+     "tipo": "c",
+     "columnas": [
+      "comision_plataforma",
+      "monto_bruto"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK (((comision_plataforma >= (0)::numeric) AND (comision_plataforma <= monto_bruto)))"
+    },
+    {
+     "nombre": "transacciones_estado_check",
+     "tipo": "c",
+     "columnas": [
+      "estado"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK (((estado)::text = ANY ((ARRAY['retenido_escrow'::character varying, 'liberado'::character varying, 'reembolsado'::character varying, 'pausado_denuncia'::character varying, 'pausado_alerta'::character varying])::text[])))"
+    },
+    {
+     "nombre": "transacciones_intentos_liberacion_check",
+     "tipo": "c",
+     "columnas": [
+      "intentos_liberacion"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK ((intentos_liberacion >= 0))"
+    },
+    {
+     "nombre": "transacciones_monto_bruto_check",
+     "tipo": "c",
+     "columnas": [
+      "monto_bruto"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK ((monto_bruto >= (0)::numeric))"
+    },
+    {
+     "nombre": "transacciones_reserva_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "reserva_id"
+     ],
+     "ref_esquema": "reservas",
+     "ref_tabla": "reservas",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (reserva_id) REFERENCES reservas.reservas(id)"
+    },
+    {
+     "nombre": "transacciones_pkey",
+     "tipo": "p",
+     "columnas": [
+      "id"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (id)"
+    }
+   ],
+   "indices": [
+    {
+     "nombre": "idx_transacciones_escrow_liberar",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_transacciones_escrow_liberar ON pagos.transacciones USING btree (estado, liberar_at)"
+    },
+    {
+     "nombre": "idx_transacciones_reserva",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_transacciones_reserva ON pagos.transacciones USING btree (reserva_id)"
+    },
+    {
+     "nombre": "uq_transacciones_mp_payment",
+     "unico": true,
+     "definicion": "CREATE UNIQUE INDEX uq_transacciones_mp_payment ON pagos.transacciones USING btree (mp_payment_id)"
+    },
+    {
+     "nombre": "uq_transacciones_reserva",
+     "unico": true,
+     "definicion": "CREATE UNIQUE INDEX uq_transacciones_reserva ON pagos.transacciones USING btree (reserva_id)"
+    }
+   ]
+  },
+  {
+   "esquema": "public",
+   "tabla": "qrtz_blob_triggers",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "sched_name",
+     "tipo": "character varying(120)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "trigger_name",
+     "tipo": "character varying(200)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "trigger_group",
+     "tipo": "character varying(200)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "blob_data",
+     "tipo": "bytea",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "qrtz_blob_triggers_sched_name_trigger_name_trigger_group_fkey",
+     "tipo": "f",
+     "columnas": [
+      "sched_name",
+      "trigger_name",
+      "trigger_group"
+     ],
+     "ref_esquema": "public",
+     "ref_tabla": "qrtz_triggers",
+     "ref_columnas": [
+      "sched_name",
+      "trigger_name",
+      "trigger_group"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (sched_name, trigger_name, trigger_group) REFERENCES qrtz_triggers(sched_name, trigger_name, trigger_group)"
+    },
+    {
+     "nombre": "qrtz_blob_triggers_pkey",
+     "tipo": "p",
+     "columnas": [
+      "sched_name",
+      "trigger_name",
+      "trigger_group"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (sched_name, trigger_name, trigger_group)"
+    }
+   ],
+   "indices": []
+  },
+  {
+   "esquema": "public",
+   "tabla": "qrtz_calendars",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "sched_name",
+     "tipo": "character varying(120)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "calendar_name",
+     "tipo": "character varying(200)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "calendar",
+     "tipo": "bytea",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "qrtz_calendars_pkey",
+     "tipo": "p",
+     "columnas": [
+      "sched_name",
+      "calendar_name"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (sched_name, calendar_name)"
+    }
+   ],
+   "indices": []
+  },
+  {
+   "esquema": "public",
+   "tabla": "qrtz_cron_triggers",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "sched_name",
+     "tipo": "character varying(120)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "trigger_name",
+     "tipo": "character varying(200)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "trigger_group",
+     "tipo": "character varying(200)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "cron_expression",
+     "tipo": "character varying(120)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "time_zone_id",
+     "tipo": "character varying(80)",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "qrtz_cron_triggers_sched_name_trigger_name_trigger_group_fkey",
+     "tipo": "f",
+     "columnas": [
+      "sched_name",
+      "trigger_name",
+      "trigger_group"
+     ],
+     "ref_esquema": "public",
+     "ref_tabla": "qrtz_triggers",
+     "ref_columnas": [
+      "sched_name",
+      "trigger_name",
+      "trigger_group"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (sched_name, trigger_name, trigger_group) REFERENCES qrtz_triggers(sched_name, trigger_name, trigger_group)"
+    },
+    {
+     "nombre": "qrtz_cron_triggers_pkey",
+     "tipo": "p",
+     "columnas": [
+      "sched_name",
+      "trigger_name",
+      "trigger_group"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (sched_name, trigger_name, trigger_group)"
+    }
+   ],
+   "indices": []
+  },
+  {
+   "esquema": "public",
+   "tabla": "qrtz_fired_triggers",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "sched_name",
+     "tipo": "character varying(120)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "entry_id",
+     "tipo": "character varying(95)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "trigger_name",
+     "tipo": "character varying(200)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "trigger_group",
+     "tipo": "character varying(200)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "instance_name",
+     "tipo": "character varying(200)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "fired_time",
+     "tipo": "bigint",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "sched_time",
+     "tipo": "bigint",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "priority",
+     "tipo": "integer",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "state",
+     "tipo": "character varying(16)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "job_name",
+     "tipo": "character varying(200)",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "job_group",
+     "tipo": "character varying(200)",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "is_nonconcurrent",
+     "tipo": "boolean",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "requests_recovery",
+     "tipo": "boolean",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "qrtz_fired_triggers_pkey",
+     "tipo": "p",
+     "columnas": [
+      "sched_name",
+      "entry_id"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (sched_name, entry_id)"
+    }
+   ],
+   "indices": [
+    {
+     "nombre": "idx_qrtz_ft_inst_job_req_rcvry",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_qrtz_ft_inst_job_req_rcvry ON public.qrtz_fired_triggers USING btree (sched_name, instance_name, requests_recovery)"
+    },
+    {
+     "nombre": "idx_qrtz_ft_j_g",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_qrtz_ft_j_g ON public.qrtz_fired_triggers USING btree (sched_name, job_name, job_group)"
+    },
+    {
+     "nombre": "idx_qrtz_ft_jg",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_qrtz_ft_jg ON public.qrtz_fired_triggers USING btree (sched_name, job_group)"
+    },
+    {
+     "nombre": "idx_qrtz_ft_t_g",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_qrtz_ft_t_g ON public.qrtz_fired_triggers USING btree (sched_name, trigger_name, trigger_group)"
+    },
+    {
+     "nombre": "idx_qrtz_ft_tg",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_qrtz_ft_tg ON public.qrtz_fired_triggers USING btree (sched_name, trigger_group)"
+    },
+    {
+     "nombre": "idx_qrtz_ft_trig_inst_name",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_qrtz_ft_trig_inst_name ON public.qrtz_fired_triggers USING btree (sched_name, instance_name)"
+    }
+   ]
+  },
+  {
+   "esquema": "public",
+   "tabla": "qrtz_job_details",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "sched_name",
+     "tipo": "character varying(120)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "job_name",
+     "tipo": "character varying(200)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "job_group",
+     "tipo": "character varying(200)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "description",
+     "tipo": "character varying(250)",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "job_class_name",
+     "tipo": "character varying(250)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "is_durable",
+     "tipo": "boolean",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "is_nonconcurrent",
+     "tipo": "boolean",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "is_update_data",
+     "tipo": "boolean",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "requests_recovery",
+     "tipo": "boolean",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "job_data",
+     "tipo": "bytea",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "qrtz_job_details_pkey",
+     "tipo": "p",
+     "columnas": [
+      "sched_name",
+      "job_name",
+      "job_group"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (sched_name, job_name, job_group)"
+    }
+   ],
+   "indices": [
+    {
+     "nombre": "idx_qrtz_j_grp",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_qrtz_j_grp ON public.qrtz_job_details USING btree (sched_name, job_group)"
+    },
+    {
+     "nombre": "idx_qrtz_j_req_recovery",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_qrtz_j_req_recovery ON public.qrtz_job_details USING btree (sched_name, requests_recovery)"
+    }
+   ]
+  },
+  {
+   "esquema": "public",
+   "tabla": "qrtz_locks",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "sched_name",
+     "tipo": "character varying(120)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "lock_name",
+     "tipo": "character varying(40)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "qrtz_locks_pkey",
+     "tipo": "p",
+     "columnas": [
+      "sched_name",
+      "lock_name"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (sched_name, lock_name)"
+    }
+   ],
+   "indices": []
+  },
+  {
+   "esquema": "public",
+   "tabla": "qrtz_paused_trigger_grps",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "sched_name",
+     "tipo": "character varying(120)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "trigger_group",
+     "tipo": "character varying(200)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "qrtz_paused_trigger_grps_pkey",
+     "tipo": "p",
+     "columnas": [
+      "sched_name",
+      "trigger_group"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (sched_name, trigger_group)"
+    }
+   ],
+   "indices": []
+  },
+  {
+   "esquema": "public",
+   "tabla": "qrtz_scheduler_state",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "sched_name",
+     "tipo": "character varying(120)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "instance_name",
+     "tipo": "character varying(200)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "last_checkin_time",
+     "tipo": "bigint",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "checkin_interval",
+     "tipo": "bigint",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "qrtz_scheduler_state_pkey",
+     "tipo": "p",
+     "columnas": [
+      "sched_name",
+      "instance_name"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (sched_name, instance_name)"
+    }
+   ],
+   "indices": []
+  },
+  {
+   "esquema": "public",
+   "tabla": "qrtz_simple_triggers",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "sched_name",
+     "tipo": "character varying(120)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "trigger_name",
+     "tipo": "character varying(200)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "trigger_group",
+     "tipo": "character varying(200)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "repeat_count",
+     "tipo": "bigint",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "repeat_interval",
+     "tipo": "bigint",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "times_triggered",
+     "tipo": "bigint",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "qrtz_simple_triggers_sched_name_trigger_name_trigger_group_fkey",
+     "tipo": "f",
+     "columnas": [
+      "sched_name",
+      "trigger_name",
+      "trigger_group"
+     ],
+     "ref_esquema": "public",
+     "ref_tabla": "qrtz_triggers",
+     "ref_columnas": [
+      "sched_name",
+      "trigger_name",
+      "trigger_group"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (sched_name, trigger_name, trigger_group) REFERENCES qrtz_triggers(sched_name, trigger_name, trigger_group)"
+    },
+    {
+     "nombre": "qrtz_simple_triggers_pkey",
+     "tipo": "p",
+     "columnas": [
+      "sched_name",
+      "trigger_name",
+      "trigger_group"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (sched_name, trigger_name, trigger_group)"
+    }
+   ],
+   "indices": []
+  },
+  {
+   "esquema": "public",
+   "tabla": "qrtz_simprop_triggers",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "sched_name",
+     "tipo": "character varying(120)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "trigger_name",
+     "tipo": "character varying(200)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "trigger_group",
+     "tipo": "character varying(200)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "str_prop_1",
+     "tipo": "character varying(512)",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "str_prop_2",
+     "tipo": "character varying(512)",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "str_prop_3",
+     "tipo": "character varying(512)",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "int_prop_1",
+     "tipo": "integer",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "int_prop_2",
+     "tipo": "integer",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "long_prop_1",
+     "tipo": "bigint",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "long_prop_2",
+     "tipo": "bigint",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "dec_prop_1",
+     "tipo": "numeric(13,4)",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "dec_prop_2",
+     "tipo": "numeric(13,4)",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "bool_prop_1",
+     "tipo": "boolean",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "bool_prop_2",
+     "tipo": "boolean",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "qrtz_simprop_triggers_sched_name_trigger_name_trigger_grou_fkey",
+     "tipo": "f",
+     "columnas": [
+      "sched_name",
+      "trigger_name",
+      "trigger_group"
+     ],
+     "ref_esquema": "public",
+     "ref_tabla": "qrtz_triggers",
+     "ref_columnas": [
+      "sched_name",
+      "trigger_name",
+      "trigger_group"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (sched_name, trigger_name, trigger_group) REFERENCES qrtz_triggers(sched_name, trigger_name, trigger_group)"
+    },
+    {
+     "nombre": "qrtz_simprop_triggers_pkey",
+     "tipo": "p",
+     "columnas": [
+      "sched_name",
+      "trigger_name",
+      "trigger_group"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (sched_name, trigger_name, trigger_group)"
+    }
+   ],
+   "indices": []
+  },
+  {
+   "esquema": "public",
+   "tabla": "qrtz_triggers",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "sched_name",
+     "tipo": "character varying(120)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "trigger_name",
+     "tipo": "character varying(200)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "trigger_group",
+     "tipo": "character varying(200)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "job_name",
+     "tipo": "character varying(200)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "job_group",
+     "tipo": "character varying(200)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "description",
+     "tipo": "character varying(250)",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "next_fire_time",
+     "tipo": "bigint",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "prev_fire_time",
+     "tipo": "bigint",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "priority",
+     "tipo": "integer",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "trigger_state",
+     "tipo": "character varying(16)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "trigger_type",
+     "tipo": "character varying(8)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "start_time",
+     "tipo": "bigint",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "end_time",
+     "tipo": "bigint",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "calendar_name",
+     "tipo": "character varying(200)",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "misfire_instr",
+     "tipo": "smallint",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "job_data",
+     "tipo": "bytea",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "qrtz_triggers_sched_name_job_name_job_group_fkey",
+     "tipo": "f",
+     "columnas": [
+      "sched_name",
+      "job_name",
+      "job_group"
+     ],
+     "ref_esquema": "public",
+     "ref_tabla": "qrtz_job_details",
+     "ref_columnas": [
+      "sched_name",
+      "job_name",
+      "job_group"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (sched_name, job_name, job_group) REFERENCES qrtz_job_details(sched_name, job_name, job_group)"
+    },
+    {
+     "nombre": "qrtz_triggers_pkey",
+     "tipo": "p",
+     "columnas": [
+      "sched_name",
+      "trigger_name",
+      "trigger_group"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (sched_name, trigger_name, trigger_group)"
+    }
+   ],
+   "indices": [
+    {
+     "nombre": "idx_qrtz_t_c",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_qrtz_t_c ON public.qrtz_triggers USING btree (sched_name, calendar_name)"
+    },
+    {
+     "nombre": "idx_qrtz_t_g",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_qrtz_t_g ON public.qrtz_triggers USING btree (sched_name, trigger_group)"
+    },
+    {
+     "nombre": "idx_qrtz_t_j",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_qrtz_t_j ON public.qrtz_triggers USING btree (sched_name, job_name, job_group)"
+    },
+    {
+     "nombre": "idx_qrtz_t_jg",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_qrtz_t_jg ON public.qrtz_triggers USING btree (sched_name, job_group)"
+    },
+    {
+     "nombre": "idx_qrtz_t_n_g_state",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_qrtz_t_n_g_state ON public.qrtz_triggers USING btree (sched_name, trigger_group, trigger_state)"
+    },
+    {
+     "nombre": "idx_qrtz_t_n_state",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_qrtz_t_n_state ON public.qrtz_triggers USING btree (sched_name, trigger_name, trigger_group, trigger_state)"
+    },
+    {
+     "nombre": "idx_qrtz_t_next_fire_time",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_qrtz_t_next_fire_time ON public.qrtz_triggers USING btree (sched_name, next_fire_time)"
+    },
+    {
+     "nombre": "idx_qrtz_t_nft_misfire",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_qrtz_t_nft_misfire ON public.qrtz_triggers USING btree (sched_name, misfire_instr, next_fire_time)"
+    },
+    {
+     "nombre": "idx_qrtz_t_nft_st",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_qrtz_t_nft_st ON public.qrtz_triggers USING btree (sched_name, trigger_state, next_fire_time)"
+    },
+    {
+     "nombre": "idx_qrtz_t_nft_st_misfire",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_qrtz_t_nft_st_misfire ON public.qrtz_triggers USING btree (sched_name, misfire_instr, next_fire_time, trigger_state)"
+    },
+    {
+     "nombre": "idx_qrtz_t_nft_st_misfire_grp",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_qrtz_t_nft_st_misfire_grp ON public.qrtz_triggers USING btree (sched_name, misfire_instr, next_fire_time, trigger_group, trigger_state)"
+    },
+    {
+     "nombre": "idx_qrtz_t_state",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_qrtz_t_state ON public.qrtz_triggers USING btree (sched_name, trigger_state)"
+    }
+   ]
+  },
+  {
+   "esquema": "reputacion",
+   "tabla": "calificaciones",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": "gen_random_uuid()",
+     "comentario": null
+    },
+    {
+     "nombre": "sesion_id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "autor_id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "direccion",
+     "tipo": "character varying(30)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "estrellas",
+     "tipo": "smallint",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "comentario",
+     "tipo": "character varying(1000)",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "editable_hasta",
+     "tipo": "timestamp with time zone",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "created_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": true,
+     "default": "now()",
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "calificaciones_direccion_check",
+     "tipo": "c",
+     "columnas": [
+      "direccion"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK (((direccion)::text = ANY ((ARRAY['estudiante_a_tutor'::character varying, 'tutor_a_estudiante'::character varying])::text[])))"
+    },
+    {
+     "nombre": "calificaciones_estrellas_check",
+     "tipo": "c",
+     "columnas": [
+      "estrellas"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK (((estrellas >= 1) AND (estrellas <= 5)))"
+    },
+    {
+     "nombre": "calificaciones_autor_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "autor_id"
+     ],
+     "ref_esquema": "identidad",
+     "ref_tabla": "usuarios",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (autor_id) REFERENCES identidad.usuarios(id)"
+    },
+    {
+     "nombre": "calificaciones_sesion_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "sesion_id"
+     ],
+     "ref_esquema": "aula",
+     "ref_tabla": "sesiones_aprendizaje",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (sesion_id) REFERENCES aula.sesiones_aprendizaje(id)"
+    },
+    {
+     "nombre": "calificaciones_pkey",
+     "tipo": "p",
+     "columnas": [
+      "id"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (id)"
+    },
+    {
+     "nombre": "uq_calificacion_por_sesion_autor_direccion",
+     "tipo": "u",
+     "columnas": [
+      "sesion_id",
+      "autor_id",
+      "direccion"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "UNIQUE (sesion_id, autor_id, direccion)"
+    }
+   ],
+   "indices": [
+    {
+     "nombre": "idx_calificaciones_sesion",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_calificaciones_sesion ON reputacion.calificaciones USING btree (sesion_id)"
+    },
+    {
+     "nombre": "idx_calificaciones_tutor_direccion",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_calificaciones_tutor_direccion ON reputacion.calificaciones USING btree (direccion)"
+    }
+   ]
+  },
+  {
+   "esquema": "reputacion",
+   "tabla": "senales_implicitas_tutor",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "tutor_id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "puntualidad_promedio",
+     "tipo": "numeric(5,4)",
+     "no_nulo": true,
+     "default": "1.0",
+     "comentario": null
+    },
+    {
+     "nombre": "tasa_recontratacion",
+     "tipo": "numeric(5,4)",
+     "no_nulo": true,
+     "default": "0.0",
+     "comentario": null
+    },
+    {
+     "nombre": "tasa_cancelacion_noshow",
+     "tipo": "numeric(5,4)",
+     "no_nulo": true,
+     "default": "0.0",
+     "comentario": null
+    },
+    {
+     "nombre": "tiempo_respuesta_promedio_min",
+     "tipo": "integer",
+     "no_nulo": true,
+     "default": "0",
+     "comentario": null
+    },
+    {
+     "nombre": "sesiones_dictadas_total",
+     "tipo": "integer",
+     "no_nulo": true,
+     "default": "0",
+     "comentario": null
+    },
+    {
+     "nombre": "updated_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": true,
+     "default": "now()",
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "senales_implicitas_tutor_tutor_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "tutor_id"
+     ],
+     "ref_esquema": "identidad",
+     "ref_tabla": "usuarios",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (tutor_id) REFERENCES identidad.usuarios(id)"
+    },
+    {
+     "nombre": "senales_implicitas_tutor_pkey",
+     "tipo": "p",
+     "columnas": [
+      "tutor_id"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (tutor_id)"
+    }
+   ],
+   "indices": []
+  },
+  {
+   "esquema": "reservas",
+   "tabla": "franjas_disponibilidad",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": "gen_random_uuid()",
+     "comentario": null
+    },
+    {
+     "nombre": "tutor_id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "dia_semana",
+     "tipo": "smallint",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "fecha_especifica",
+     "tipo": "date",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "hora_inicio",
+     "tipo": "time without time zone",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "hora_fin",
+     "tipo": "time without time zone",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "activa",
+     "tipo": "boolean",
+     "no_nulo": true,
+     "default": "true",
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "chk_franja_modo",
+     "tipo": "c",
+     "columnas": [
+      "dia_semana",
+      "fecha_especifica"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK ((((dia_semana IS NOT NULL) AND (fecha_especifica IS NULL)) OR ((dia_semana IS NULL) AND (fecha_especifica IS NOT NULL))))"
+    },
+    {
+     "nombre": "franjas_disponibilidad_check",
+     "tipo": "c",
+     "columnas": [
+      "hora_fin",
+      "hora_inicio"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK ((hora_fin > hora_inicio))"
+    },
+    {
+     "nombre": "franjas_disponibilidad_dia_semana_check",
+     "tipo": "c",
+     "columnas": [
+      "dia_semana"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK (((dia_semana >= 0) AND (dia_semana <= 6)))"
+    },
+    {
+     "nombre": "franjas_disponibilidad_tutor_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "tutor_id"
+     ],
+     "ref_esquema": "identidad",
+     "ref_tabla": "usuarios",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (tutor_id) REFERENCES identidad.usuarios(id)"
+    },
+    {
+     "nombre": "franjas_disponibilidad_pkey",
+     "tipo": "p",
+     "columnas": [
+      "id"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (id)"
+    },
+    {
+     "nombre": "ex_franjas_puntual_sin_superposicion",
+     "tipo": "x",
+     "columnas": [
+      "tutor_id",
+      "fecha_especifica"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "EXCLUDE USING gist (tutor_id WITH =, fecha_especifica WITH =, tsrange((fecha_especifica + hora_inicio), (fecha_especifica + hora_fin), '[)'::text) WITH &&) WHERE ((activa AND (fecha_especifica IS NOT NULL)))"
+    },
+    {
+     "nombre": "ex_franjas_semanal_sin_superposicion",
+     "tipo": "x",
+     "columnas": [
+      "tutor_id",
+      "dia_semana"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "EXCLUDE USING gist (tutor_id WITH =, dia_semana WITH =, tsrange(('2000-01-01'::date + hora_inicio), ('2000-01-01'::date + hora_fin), '[)'::text) WITH &&) WHERE ((activa AND (dia_semana IS NOT NULL)))"
+    }
+   ],
+   "indices": [
+    {
+     "nombre": "idx_franjas_tutor_activa",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_franjas_tutor_activa ON reservas.franjas_disponibilidad USING btree (tutor_id, activa)"
+    }
+   ]
+  },
+  {
+   "esquema": "reservas",
+   "tabla": "notas_clase",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "reserva_id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "texto",
+     "tipo": "character varying(1000)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "created_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": true,
+     "default": "now()",
+     "comentario": null
+    },
+    {
+     "nombre": "updated_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": true,
+     "default": "now()",
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "notas_clase_reserva_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "reserva_id"
+     ],
+     "ref_esquema": "reservas",
+     "ref_tabla": "reservas",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (reserva_id) REFERENCES reservas.reservas(id)"
+    },
+    {
+     "nombre": "notas_clase_pkey",
+     "tipo": "p",
+     "columnas": [
+      "reserva_id"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (reserva_id)"
+    }
+   ],
+   "indices": []
+  },
+  {
+   "esquema": "reservas",
+   "tabla": "paquetes",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "pagador_id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "beneficiario_id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "tutor_id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "reserva_ancla_id",
+     "tipo": "uuid",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "cantidad_clases",
+     "tipo": "integer",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "duracion_minutos",
+     "tipo": "integer",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "descuento_porcentaje",
+     "tipo": "integer",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "precio_total",
+     "tipo": "numeric(10,2)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "estado",
+     "tipo": "character varying(20)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "vigente_hasta",
+     "tipo": "timestamp with time zone",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "created_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": true,
+     "default": "now()",
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "paquetes_cantidad_clases_check",
+     "tipo": "c",
+     "columnas": [
+      "cantidad_clases"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK ((cantidad_clases > 0))"
+    },
+    {
+     "nombre": "paquetes_descuento_porcentaje_check",
+     "tipo": "c",
+     "columnas": [
+      "descuento_porcentaje"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK (((descuento_porcentaje >= 0) AND (descuento_porcentaje <= 30)))"
+    },
+    {
+     "nombre": "paquetes_estado_check",
+     "tipo": "c",
+     "columnas": [
+      "estado"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK (((estado)::text = ANY ((ARRAY['pendiente_pago'::character varying, 'confirmado'::character varying, 'cancelado'::character varying])::text[])))"
+    },
+    {
+     "nombre": "paquetes_precio_total_check",
+     "tipo": "c",
+     "columnas": [
+      "precio_total"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK ((precio_total >= (0)::numeric))"
+    },
+    {
+     "nombre": "fk_paquetes_reserva_ancla",
+     "tipo": "f",
+     "columnas": [
+      "reserva_ancla_id"
+     ],
+     "ref_esquema": "reservas",
+     "ref_tabla": "reservas",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (reserva_ancla_id) REFERENCES reservas.reservas(id)"
+    },
+    {
+     "nombre": "paquetes_beneficiario_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "beneficiario_id"
+     ],
+     "ref_esquema": "identidad",
+     "ref_tabla": "usuarios",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (beneficiario_id) REFERENCES identidad.usuarios(id)"
+    },
+    {
+     "nombre": "paquetes_pagador_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "pagador_id"
+     ],
+     "ref_esquema": "identidad",
+     "ref_tabla": "usuarios",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (pagador_id) REFERENCES identidad.usuarios(id)"
+    },
+    {
+     "nombre": "paquetes_tutor_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "tutor_id"
+     ],
+     "ref_esquema": "identidad",
+     "ref_tabla": "usuarios",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (tutor_id) REFERENCES identidad.usuarios(id)"
+    },
+    {
+     "nombre": "paquetes_pkey",
+     "tipo": "p",
+     "columnas": [
+      "id"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (id)"
+    }
+   ],
+   "indices": []
+  },
+  {
+   "esquema": "reservas",
+   "tabla": "pedidos_previos",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "reserva_id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "texto",
+     "tipo": "character varying(1000)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "created_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": true,
+     "default": "now()",
+     "comentario": null
+    },
+    {
+     "nombre": "updated_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": true,
+     "default": "now()",
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "pedidos_previos_reserva_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "reserva_id"
+     ],
+     "ref_esquema": "reservas",
+     "ref_tabla": "reservas",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (reserva_id) REFERENCES reservas.reservas(id)"
+    },
+    {
+     "nombre": "pedidos_previos_pkey",
+     "tipo": "p",
+     "columnas": [
+      "reserva_id"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (reserva_id)"
+    }
+   ],
+   "indices": []
+  },
+  {
+   "esquema": "reservas",
+   "tabla": "pedidos_reprogramacion",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "reserva_id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "horario_original",
+     "tipo": "timestamp with time zone",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "horario_propuesto",
+     "tipo": "timestamp with time zone",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "motivo",
+     "tipo": "character varying(300)",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "estado",
+     "tipo": "character varying(20)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "created_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": true,
+     "default": "now()",
+     "comentario": null
+    },
+    {
+     "nombre": "resuelto_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "pedidos_reprogramacion_estado_check",
+     "tipo": "c",
+     "columnas": [
+      "estado"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK (((estado)::text = ANY ((ARRAY['pendiente'::character varying, 'aceptado'::character varying, 'rechazado'::character varying, 'vencido'::character varying, 'retirado'::character varying])::text[])))"
+    },
+    {
+     "nombre": "pedidos_reprogramacion_reserva_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "reserva_id"
+     ],
+     "ref_esquema": "reservas",
+     "ref_tabla": "reservas",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (reserva_id) REFERENCES reservas.reservas(id)"
+    },
+    {
+     "nombre": "pedidos_reprogramacion_pkey",
+     "tipo": "p",
+     "columnas": [
+      "id"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (id)"
+    }
+   ],
+   "indices": [
+    {
+     "nombre": "uq_pedido_reprogramacion_pendiente",
+     "unico": true,
+     "definicion": "CREATE UNIQUE INDEX uq_pedido_reprogramacion_pendiente ON reservas.pedidos_reprogramacion USING btree (reserva_id) WHERE ((estado)::text = 'pendiente'::text)"
+    }
+   ]
+  },
+  {
+   "esquema": "reservas",
+   "tabla": "reservas",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": "gen_random_uuid()",
+     "comentario": null
+    },
+    {
+     "nombre": "pagador_id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "beneficiario_id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "tutor_id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "solicitud_origen_id",
+     "tipo": "uuid",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "horario",
+     "tipo": "timestamp with time zone",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "precio",
+     "tipo": "numeric(10,2)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "estado",
+     "tipo": "character varying(20)",
+     "no_nulo": true,
+     "default": "'pendiente_pago'::character varying",
+     "comentario": null
+    },
+    {
+     "nombre": "motivo_cancelacion",
+     "tipo": "character varying(30)",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "created_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": true,
+     "default": "now()",
+     "comentario": null
+    },
+    {
+     "nombre": "duracion_minutos",
+     "tipo": "integer",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "horario_fin",
+     "tipo": "timestamp with time zone",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "resumen_contratado",
+     "tipo": "boolean",
+     "no_nulo": true,
+     "default": "false",
+     "comentario": null
+    },
+    {
+     "nombre": "precio_adicional_resumen",
+     "tipo": "numeric(10,2)",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "paquete_id",
+     "tipo": "uuid",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "chk_motivo_solo_si_cancelada",
+     "tipo": "c",
+     "columnas": [
+      "estado",
+      "motivo_cancelacion"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK (((((estado)::text = 'cancelada'::text) AND (motivo_cancelacion IS NOT NULL)) OR (((estado)::text <> 'cancelada'::text) AND (motivo_cancelacion IS NULL))))"
+    },
+    {
+     "nombre": "chk_reservas_duracion",
+     "tipo": "c",
+     "columnas": [
+      "duracion_minutos"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK ((((duracion_minutos >= 30) AND (duracion_minutos <= 180)) AND ((duracion_minutos % 30) = 0)))"
+    },
+    {
+     "nombre": "chk_reservas_fin_posterior",
+     "tipo": "c",
+     "columnas": [
+      "horario_fin",
+      "horario"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK ((horario_fin > horario))"
+    },
+    {
+     "nombre": "ck_reservas_tutor_no_es_parte",
+     "tipo": "c",
+     "columnas": [
+      "tutor_id",
+      "pagador_id",
+      "beneficiario_id"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK (((tutor_id <> pagador_id) AND (tutor_id <> beneficiario_id)))"
+    },
+    {
+     "nombre": "reservas_adicional_resumen_check",
+     "tipo": "c",
+     "columnas": [
+      "resumen_contratado",
+      "precio_adicional_resumen"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK ((resumen_contratado = (precio_adicional_resumen IS NOT NULL)))"
+    },
+    {
+     "nombre": "reservas_estado_check",
+     "tipo": "c",
+     "columnas": [
+      "estado"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK (((estado)::text = ANY ((ARRAY['pendiente_pago'::character varying, 'confirmada'::character varying, 'en_curso'::character varying, 'finalizada'::character varying, 'cancelada'::character varying, 'no_show_estudiante'::character varying, 'no_show_tutor'::character varying, 'no_show_doble'::character varying])::text[])))"
+    },
+    {
+     "nombre": "reservas_motivo_cancelacion_check",
+     "tipo": "c",
+     "columnas": [
+      "motivo_cancelacion"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK (((motivo_cancelacion)::text = ANY ((ARRAY['voluntaria'::character varying, 'timeout_pago'::character varying, 'revocacion_autorizacion'::character varying, 'sancion'::character varying, 'cap_vencido'::character varying])::text[])))"
+    },
+    {
+     "nombre": "reservas_precio_check",
+     "tipo": "c",
+     "columnas": [
+      "precio"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK ((precio >= (0)::numeric))"
+    },
+    {
+     "nombre": "reservas_beneficiario_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "beneficiario_id"
+     ],
+     "ref_esquema": "identidad",
+     "ref_tabla": "usuarios",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (beneficiario_id) REFERENCES identidad.usuarios(id)"
+    },
+    {
+     "nombre": "reservas_pagador_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "pagador_id"
+     ],
+     "ref_esquema": "identidad",
+     "ref_tabla": "usuarios",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (pagador_id) REFERENCES identidad.usuarios(id)"
+    },
+    {
+     "nombre": "reservas_paquete_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "paquete_id"
+     ],
+     "ref_esquema": "reservas",
+     "ref_tabla": "paquetes",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (paquete_id) REFERENCES reservas.paquetes(id)"
+    },
+    {
+     "nombre": "reservas_solicitud_origen_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "solicitud_origen_id"
+     ],
+     "ref_esquema": "reservas",
+     "ref_tabla": "solicitudes_sesion",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (solicitud_origen_id) REFERENCES reservas.solicitudes_sesion(id)"
+    },
+    {
+     "nombre": "reservas_tutor_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "tutor_id"
+     ],
+     "ref_esquema": "identidad",
+     "ref_tabla": "usuarios",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (tutor_id) REFERENCES identidad.usuarios(id)"
+    },
+    {
+     "nombre": "reservas_pkey",
+     "tipo": "p",
+     "columnas": [
+      "id"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (id)"
+    },
+    {
+     "nombre": "ex_reservas_rango_beneficiario",
+     "tipo": "x",
+     "columnas": [
+      "beneficiario_id"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "EXCLUDE USING gist (beneficiario_id WITH =, tstzrange(horario, horario_fin, '[)'::text) WITH &&) WHERE (((estado)::text <> 'cancelada'::text))"
+    },
+    {
+     "nombre": "ex_reservas_rango_tutor",
+     "tipo": "x",
+     "columnas": [
+      "tutor_id"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "EXCLUDE USING gist (tutor_id WITH =, tstzrange(horario, horario_fin, '[)'::text) WITH &&) WHERE (((estado)::text <> 'cancelada'::text))"
+    }
+   ],
+   "indices": [
+    {
+     "nombre": "idx_reservas_beneficiario_horario",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_reservas_beneficiario_horario ON reservas.reservas USING btree (beneficiario_id, horario)"
+    },
+    {
+     "nombre": "idx_reservas_paquete",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_reservas_paquete ON reservas.reservas USING btree (paquete_id) WHERE (paquete_id IS NOT NULL)"
+    },
+    {
+     "nombre": "idx_reservas_tutor_horario",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_reservas_tutor_horario ON reservas.reservas USING btree (tutor_id, horario)"
+    }
+   ]
+  },
+  {
+   "esquema": "reservas",
+   "tabla": "solicitudes_sesion",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": "gen_random_uuid()",
+     "comentario": null
+    },
+    {
+     "nombre": "menor_id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "tutor_id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "horario_propuesto",
+     "tipo": "timestamp with time zone",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "estado",
+     "tipo": "character varying(20)",
+     "no_nulo": true,
+     "default": "'pendiente'::character varying",
+     "comentario": null
+    },
+    {
+     "nombre": "created_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": true,
+     "default": "now()",
+     "comentario": null
+    },
+    {
+     "nombre": "expira_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "duracion_minutos",
+     "tipo": "integer",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "chk_solicitudes_duracion",
+     "tipo": "c",
+     "columnas": [
+      "duracion_minutos"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK ((((duracion_minutos >= 30) AND (duracion_minutos <= 180)) AND ((duracion_minutos % 30) = 0)))"
+    },
+    {
+     "nombre": "solicitudes_sesion_check",
+     "tipo": "c",
+     "columnas": [
+      "expira_at",
+      "created_at"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK ((expira_at > created_at))"
+    },
+    {
+     "nombre": "solicitudes_sesion_estado_check",
+     "tipo": "c",
+     "columnas": [
+      "estado"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK (((estado)::text = ANY ((ARRAY['pendiente'::character varying, 'convertida'::character varying, 'expirada'::character varying, 'rechazada'::character varying])::text[])))"
+    },
+    {
+     "nombre": "solicitudes_sesion_menor_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "menor_id"
+     ],
+     "ref_esquema": "identidad",
+     "ref_tabla": "usuarios",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (menor_id) REFERENCES identidad.usuarios(id)"
+    },
+    {
+     "nombre": "solicitudes_sesion_tutor_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "tutor_id"
+     ],
+     "ref_esquema": "identidad",
+     "ref_tabla": "usuarios",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (tutor_id) REFERENCES identidad.usuarios(id)"
+    },
+    {
+     "nombre": "solicitudes_sesion_pkey",
+     "tipo": "p",
+     "columnas": [
+      "id"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (id)"
+    }
+   ],
+   "indices": [
+    {
+     "nombre": "idx_solicitudes_expiracion",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_solicitudes_expiracion ON reservas.solicitudes_sesion USING btree (estado, expira_at)"
+    },
+    {
+     "nombre": "idx_solicitudes_menor_estado",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_solicitudes_menor_estado ON reservas.solicitudes_sesion USING btree (menor_id, estado)"
+    }
+   ]
+  },
+  {
+   "esquema": "resumen",
+   "tabla": "resumenes_sesion",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": "gen_random_uuid()",
+     "comentario": null
+    },
+    {
+     "nombre": "sesion_id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "estado",
+     "tipo": "character varying(30)",
+     "no_nulo": true,
+     "default": "'pendiente'::character varying",
+     "comentario": null
+    },
+    {
+     "nombre": "prompt_anonimizado",
+     "tipo": "text",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "transcript_anonimizado",
+     "tipo": "text",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "resumen_final",
+     "tipo": "text",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "intentos",
+     "tipo": "integer",
+     "no_nulo": true,
+     "default": "0",
+     "comentario": null
+    },
+    {
+     "nombre": "proximo_reintento_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "recordatorio_pendiente",
+     "tipo": "boolean",
+     "no_nulo": true,
+     "default": "false",
+     "comentario": null
+    },
+    {
+     "nombre": "suspendido_seguridad",
+     "tipo": "boolean",
+     "no_nulo": true,
+     "default": "false",
+     "comentario": null
+    },
+    {
+     "nombre": "created_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": true,
+     "default": "now()",
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "resumenes_sesion_estado_check",
+     "tipo": "c",
+     "columnas": [
+      "estado"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK (((estado)::text = ANY ((ARRAY['pendiente'::character varying, 'generado'::character varying, 'suspendido_seguridad'::character varying, 'reintento_agotado'::character varying, 'fallido'::character varying])::text[])))"
+    },
+    {
+     "nombre": "resumenes_sesion_intentos_check",
+     "tipo": "c",
+     "columnas": [
+      "intentos"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK ((intentos >= 0))"
+    },
+    {
+     "nombre": "resumenes_sesion_sesion_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "sesion_id"
+     ],
+     "ref_esquema": "aula",
+     "ref_tabla": "sesiones_aprendizaje",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (sesion_id) REFERENCES aula.sesiones_aprendizaje(id)"
+    },
+    {
+     "nombre": "resumenes_sesion_pkey",
+     "tipo": "p",
+     "columnas": [
+      "id"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (id)"
+    },
+    {
+     "nombre": "resumenes_sesion_sesion_id_key",
+     "tipo": "u",
+     "columnas": [
+      "sesion_id"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "UNIQUE (sesion_id)"
+    }
+   ],
+   "indices": [
+    {
+     "nombre": "idx_resumenes_sesion_estado",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_resumenes_sesion_estado ON resumen.resumenes_sesion USING btree (estado)"
+    }
+   ]
+  },
+  {
+   "esquema": "seguridad",
+   "tabla": "denuncias",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": "gen_random_uuid()",
+     "comentario": null
+    },
+    {
+     "nombre": "denunciante_id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "denunciado_id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "sesion_id",
+     "tipo": "uuid",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "motivo",
+     "tipo": "character varying(40)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "evidencia_url",
+     "tipo": "character varying(500)",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "estado",
+     "tipo": "character varying(30)",
+     "no_nulo": true,
+     "default": "'REGISTRADA'::character varying",
+     "comentario": null
+    },
+    {
+     "nombre": "descargo_texto",
+     "tipo": "character varying(300)",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "descargo_recibido_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "descargo_vence_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "sla_resolucion_vence_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "prioridad_alta",
+     "tipo": "boolean",
+     "no_nulo": true,
+     "default": "false",
+     "comentario": null
+    },
+    {
+     "nombre": "admin_resolutor_id",
+     "tipo": "uuid",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "resuelta_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "created_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": true,
+     "default": "now()",
+     "comentario": null
+    },
+    {
+     "nombre": "descargo_historial",
+     "tipo": "text",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "denuncias_estado_check",
+     "tipo": "c",
+     "columnas": [
+      "estado"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK (((estado)::text = ANY ((ARRAY['REGISTRADA'::character varying, 'EN_REVISION'::character varying, 'RESUELTA_INFUNDADA'::character varying, 'RESUELTA_FUNDADA'::character varying, 'ESCALADA'::character varying])::text[])))"
+    },
+    {
+     "nombre": "denuncias_motivo_check",
+     "tipo": "c",
+     "columnas": [
+      "motivo"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK (((motivo)::text = ANY ((ARRAY['COMPORTAMIENTO_INAPROPIADO'::character varying, 'INCUMPLIMIENTO'::character varying, 'FRAUDE'::character varying, 'CONTENIDO_ILEGAL'::character varying, 'ACOSO'::character varying])::text[])))"
+    },
+    {
+     "nombre": "denuncias_admin_resolutor_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "admin_resolutor_id"
+     ],
+     "ref_esquema": "identidad",
+     "ref_tabla": "usuarios",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (admin_resolutor_id) REFERENCES identidad.usuarios(id)"
+    },
+    {
+     "nombre": "denuncias_denunciado_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "denunciado_id"
+     ],
+     "ref_esquema": "identidad",
+     "ref_tabla": "usuarios",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (denunciado_id) REFERENCES identidad.usuarios(id)"
+    },
+    {
+     "nombre": "denuncias_denunciante_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "denunciante_id"
+     ],
+     "ref_esquema": "identidad",
+     "ref_tabla": "usuarios",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (denunciante_id) REFERENCES identidad.usuarios(id)"
+    },
+    {
+     "nombre": "denuncias_sesion_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "sesion_id"
+     ],
+     "ref_esquema": "aula",
+     "ref_tabla": "sesiones_aprendizaje",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (sesion_id) REFERENCES aula.sesiones_aprendizaje(id)"
+    },
+    {
+     "nombre": "denuncias_pkey",
+     "tipo": "p",
+     "columnas": [
+      "id"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (id)"
+    }
+   ],
+   "indices": [
+    {
+     "nombre": "idx_denuncias_denunciado",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_denuncias_denunciado ON seguridad.denuncias USING btree (denunciado_id)"
+    },
+    {
+     "nombre": "idx_denuncias_estado",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_denuncias_estado ON seguridad.denuncias USING btree (estado)"
+    },
+    {
+     "nombre": "idx_denuncias_sesion",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_denuncias_sesion ON seguridad.denuncias USING btree (sesion_id)"
+    }
+   ]
+  },
+  {
+   "esquema": "seguridad",
+   "tabla": "sanciones",
+   "comentario": null,
+   "columnas": [
+    {
+     "nombre": "id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": "gen_random_uuid()",
+     "comentario": null
+    },
+    {
+     "nombre": "usuario_sancionado_id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "origen",
+     "tipo": "character varying(30)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "denuncia_id",
+     "tipo": "uuid",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "alerta_id",
+     "tipo": "uuid",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "tipo",
+     "tipo": "character varying(30)",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "dias_suspension",
+     "tipo": "integer",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "vigente_desde",
+     "tipo": "timestamp with time zone",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "vigente_hasta",
+     "tipo": "timestamp with time zone",
+     "no_nulo": false,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "admin_id",
+     "tipo": "uuid",
+     "no_nulo": true,
+     "default": null,
+     "comentario": null
+    },
+    {
+     "nombre": "created_at",
+     "tipo": "timestamp with time zone",
+     "no_nulo": true,
+     "default": "now()",
+     "comentario": null
+    }
+   ],
+   "restricciones": [
+    {
+     "nombre": "sanciones_check",
+     "tipo": "c",
+     "columnas": [
+      "origen",
+      "denuncia_id",
+      "alerta_id"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK (((((origen)::text = 'DENUNCIA'::text) AND (denuncia_id IS NOT NULL) AND (alerta_id IS NULL)) OR (((origen)::text = 'ALERTA_SEGURIDAD'::text) AND (alerta_id IS NOT NULL) AND (denuncia_id IS NULL))))"
+    },
+    {
+     "nombre": "sanciones_check1",
+     "tipo": "c",
+     "columnas": [
+      "tipo",
+      "dias_suspension",
+      "vigente_hasta"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK (((((tipo)::text = 'SUSPENSION_TEMPORAL'::text) AND (dias_suspension IS NOT NULL) AND (vigente_hasta IS NOT NULL)) OR (((tipo)::text <> 'SUSPENSION_TEMPORAL'::text) AND (dias_suspension IS NULL))))"
+    },
+    {
+     "nombre": "sanciones_dias_suspension_check",
+     "tipo": "c",
+     "columnas": [
+      "dias_suspension"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK ((dias_suspension = ANY (ARRAY[7, 15, 30])))"
+    },
+    {
+     "nombre": "sanciones_origen_check",
+     "tipo": "c",
+     "columnas": [
+      "origen"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK (((origen)::text = ANY ((ARRAY['DENUNCIA'::character varying, 'ALERTA_SEGURIDAD'::character varying])::text[])))"
+    },
+    {
+     "nombre": "sanciones_tipo_check",
+     "tipo": "c",
+     "columnas": [
+      "tipo"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "CHECK (((tipo)::text = ANY ((ARRAY['ADVERTENCIA'::character varying, 'SUSPENSION_TEMPORAL'::character varying, 'SUSPENSION_DEFINITIVA'::character varying, 'BANEO_AUTORIDADES'::character varying])::text[])))"
+    },
+    {
+     "nombre": "sanciones_admin_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "admin_id"
+     ],
+     "ref_esquema": "identidad",
+     "ref_tabla": "usuarios",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (admin_id) REFERENCES identidad.usuarios(id)"
+    },
+    {
+     "nombre": "sanciones_alerta_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "alerta_id"
+     ],
+     "ref_esquema": "aula",
+     "ref_tabla": "alertas_seguridad",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (alerta_id) REFERENCES aula.alertas_seguridad(id)"
+    },
+    {
+     "nombre": "sanciones_denuncia_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "denuncia_id"
+     ],
+     "ref_esquema": "seguridad",
+     "ref_tabla": "denuncias",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (denuncia_id) REFERENCES seguridad.denuncias(id)"
+    },
+    {
+     "nombre": "sanciones_usuario_sancionado_id_fkey",
+     "tipo": "f",
+     "columnas": [
+      "usuario_sancionado_id"
+     ],
+     "ref_esquema": "identidad",
+     "ref_tabla": "usuarios",
+     "ref_columnas": [
+      "id"
+     ],
+     "al_borrar": "a",
+     "definicion": "FOREIGN KEY (usuario_sancionado_id) REFERENCES identidad.usuarios(id)"
+    },
+    {
+     "nombre": "sanciones_pkey",
+     "tipo": "p",
+     "columnas": [
+      "id"
+     ],
+     "ref_esquema": null,
+     "ref_tabla": null,
+     "ref_columnas": null,
+     "al_borrar": " ",
+     "definicion": "PRIMARY KEY (id)"
+    }
+   ],
+   "indices": [
+    {
+     "nombre": "idx_sanciones_origen",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_sanciones_origen ON seguridad.sanciones USING btree (origen, denuncia_id, alerta_id)"
+    },
+    {
+     "nombre": "idx_sanciones_usuario",
+     "unico": false,
+     "definicion": "CREATE INDEX idx_sanciones_usuario ON seguridad.sanciones USING btree (usuario_sancionado_id)"
+    }
+   ]
+  }
+ ],
+ "extensiones": [
+  {
+   "nombre": "btree_gist",
+   "version": "1.7"
+  },
+  {
+   "nombre": "pgcrypto",
+   "version": "1.3"
+  },
+  {
+   "nombre": "plpgsql",
+   "version": "1.0"
+  },
+  {
+   "nombre": "unaccent",
+   "version": "1.1"
+  },
+  {
+   "nombre": "vector",
+   "version": "0.8.7"
+  }
+ ],
+ "version_postgres": "16.15 (Debian 16.15-1.pgdg12+2)",
+ "migraciones": {
+  "admin.admins": [
+   16
+  ],
+  "admin.log_auditoria_admin": [
+   16
+  ],
+  "admin.mapeo_origen_rol": [
+   16
+  ],
+  "admin.notificaciones": [
+   32
+  ],
+  "admin.nps_respuestas": [
+   58
+  ],
+  "admin.tickets_soporte": [
+   16
+  ],
+  "aula.alertas_seguridad": [
+   8,
+   13
+  ],
+  "aula.confirmaciones_killswitch": [
+   12,
+   47
+  ],
+  "aula.sesiones_aprendizaje": [
+   8,
+   9,
+   10,
+   12,
+   26,
+   36
+  ],
+  "identidad.aceptaciones_clausula": [
+   36
+  ],
+  "identidad.autorizaciones_tutor": [
+   2
+  ],
+  "identidad.certificados_antecedentes_penales": [
+   6,
+   50
+  ],
+  "identidad.consentimientos_menor": [
+   2
+  ],
+  "identidad.credencial_especialidades": [
+   56
+  ],
+  "identidad.credenciales_academicas": [
+   2,
+   56
+  ],
+  "identidad.especialidades_tutor": [
+   56
+  ],
+  "identidad.intentos_credencial": [
+   5
+  ],
+  "identidad.intentos_ocr": [
+   4,
+   52
+  ],
+  "identidad.tokens_reset_password": [
+   23
+  ],
+  "identidad.usuarios": [
+   2,
+   6,
+   18,
+   27,
+   28,
+   33,
+   41
+  ],
+  "matching.busquedas_guardadas": [
+   7,
+   49
+  ],
+  "matching.evaluacion_aceptaciones": [
+   58
+  ],
+  "matching.evaluacion_busquedas": [
+   58
+  ],
+  "matching.materias_niveles": [
+   7
+  ],
+  "matching.perfiles_tutor_matching": [
+   7,
+   19
+  ],
+  "matching.temas": [
+   19,
+   42
+  ],
+  "matching.temas_sugeridos": [
+   43
+  ],
+  "matching.trayectos": [
+   19
+  ],
+  "pagos.cuentas_mp_tutor": [
+   39
+  ],
+  "pagos.oauth_estados": [
+   39
+  ],
+  "pagos.pasarela_estado": [
+   22
+  ],
+  "pagos.precios_referencia_regional": [
+   11
+  ],
+  "pagos.preferencias_pago": [
+   38
+  ],
+  "pagos.tarifas_tutor": [
+   17,
+   31,
+   46
+  ],
+  "pagos.transacciones": [
+   11,
+   22,
+   24,
+   25,
+   36,
+   40,
+   54
+  ],
+  "public.qrtz_blob_triggers": [],
+  "public.qrtz_calendars": [],
+  "public.qrtz_cron_triggers": [],
+  "public.qrtz_fired_triggers": [],
+  "public.qrtz_job_details": [],
+  "public.qrtz_locks": [],
+  "public.qrtz_paused_trigger_grps": [],
+  "public.qrtz_scheduler_state": [],
+  "public.qrtz_simple_triggers": [],
+  "public.qrtz_simprop_triggers": [],
+  "public.qrtz_triggers": [],
+  "reputacion.calificaciones": [
+   14
+  ],
+  "reputacion.senales_implicitas_tutor": [
+   14
+  ],
+  "reservas.franjas_disponibilidad": [
+   9,
+   34
+  ],
+  "reservas.notas_clase": [
+   44
+  ],
+  "reservas.paquetes": [
+   46
+  ],
+  "reservas.pedidos_previos": [
+   44
+  ],
+  "reservas.pedidos_reprogramacion": [
+   45
+  ],
+  "reservas.reservas": [
+   9,
+   29,
+   30,
+   35,
+   36,
+   37,
+   46
+  ],
+  "reservas.solicitudes_sesion": [
+   9,
+   29
+  ],
+  "resumen.resumenes_sesion": [
+   15
+  ],
+  "seguridad.denuncias": [
+   13,
+   48
+  ],
+  "seguridad.sanciones": [
+   13
+  ]
+ },
+ "ultima_migracion": {
+  "archivo": "V58__evaluacion_busquedas_nps.sql",
+  "fecha": "2026-10-18",
+  "commit_repo": "c848323",
+  "cantidad": 54
+ },
+ "generado": "2026-10-19"
+}

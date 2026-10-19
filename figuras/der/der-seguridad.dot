@@ -1,0 +1,19 @@
+digraph "seguridad" {
+  graph [rankdir=LR, fontname="Helvetica", fontsize=10, nodesep=0.2, ranksep=0.7, splines=spline, pad=0.1];
+  node [shape=plaintext, fontname="Helvetica", fontsize=10];
+  edge [color="#444444", arrowsize=0.8, penwidth=0.8];
+  "seguridad.denuncias" [label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="2"><tr><td bgcolor="#f8cbad" colspan="2" align="center"><b>denuncias</b></td></tr><tr><td align="left" port="id"><u>id</u></td><td align="left"><font color="#555555">uuid PK</font></td></tr><tr><td align="left" port="denunciante_id">denunciante_id</td><td align="left"><font color="#555555">uuid FK</font></td></tr><tr><td align="left" port="denunciado_id">denunciado_id</td><td align="left"><font color="#555555">uuid FK</font></td></tr><tr><td align="left" port="sesion_id"><i>sesion_id</i></td><td align="left"><font color="#555555">uuid FK</font></td></tr><tr><td align="left" port="admin_resolutor_id"><i>admin_resolutor_id</i></td><td align="left"><font color="#555555">uuid FK</font></td></tr><tr><td colspan="2" align="left"><font color="#555555" point-size="8"><i>+ 11 atributos</i></font></td></tr></table>>];
+  "seguridad.sanciones" [label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="2"><tr><td bgcolor="#f8cbad" colspan="2" align="center"><b>sanciones</b></td></tr><tr><td align="left" port="id"><u>id</u></td><td align="left"><font color="#555555">uuid PK</font></td></tr><tr><td align="left" port="usuario_sancionado_id">usuario_sancionado_id</td><td align="left"><font color="#555555">uuid FK</font></td></tr><tr><td align="left" port="denuncia_id"><i>denuncia_id</i></td><td align="left"><font color="#555555">uuid FK</font></td></tr><tr><td align="left" port="alerta_id"><i>alerta_id</i></td><td align="left"><font color="#555555">uuid FK</font></td></tr><tr><td align="left" port="admin_id">admin_id</td><td align="left"><font color="#555555">uuid FK</font></td></tr><tr><td colspan="2" align="left"><font color="#555555" point-size="8"><i>+ 6 atributos</i></font></td></tr></table>>];
+  "aula.alertas_seguridad#sanciones" [shape=box, style="rounded,filled,dashed", fillcolor="#fde9d9", label="aula.\nalertas_seguridad"];
+  "aula.sesiones_aprendizaje#denuncias" [shape=box, style="rounded,filled,dashed", fillcolor="#fde9d9", label="aula.\nsesiones_aprendizaje"];
+  "identidad.usuarios#denuncias" [shape=box, style="rounded,filled,dashed", fillcolor="#dbe9f6", label="identidad.\nusuarios"];
+  "identidad.usuarios#sanciones" [shape=box, style="rounded,filled,dashed", fillcolor="#dbe9f6", label="identidad.\nusuarios"];
+  "seguridad.denuncias":"admin_resolutor_id" -> "identidad.usuarios#denuncias" [dir=both, arrowtail="crowodot", arrowhead="teeodot"];
+  "seguridad.denuncias":"denunciado_id" -> "identidad.usuarios#denuncias" [dir=both, arrowtail="crowodot", arrowhead="teetee"];
+  "seguridad.denuncias":"denunciante_id" -> "identidad.usuarios#denuncias" [dir=both, arrowtail="crowodot", arrowhead="teetee"];
+  "seguridad.denuncias":"sesion_id" -> "aula.sesiones_aprendizaje#denuncias" [dir=both, arrowtail="crowodot", arrowhead="teeodot"];
+  "seguridad.sanciones":"admin_id" -> "identidad.usuarios#sanciones" [dir=both, arrowtail="crowodot", arrowhead="teetee"];
+  "seguridad.sanciones":"alerta_id" -> "aula.alertas_seguridad#sanciones" [dir=both, arrowtail="crowodot", arrowhead="teeodot"];
+  "seguridad.sanciones":"denuncia_id" -> "seguridad.denuncias" [dir=both, arrowtail="crowodot", arrowhead="teeodot"];
+  "seguridad.sanciones":"usuario_sancionado_id" -> "identidad.usuarios#sanciones" [dir=both, arrowtail="crowodot", arrowhead="teetee"];
+}
