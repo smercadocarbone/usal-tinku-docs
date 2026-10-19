@@ -227,8 +227,8 @@ el modo de baja conectividad.
     (visión por computadora en tiempo real), debe evaluarse su viabilidad
     dentro de los plazos del \gls{mvp}. En la implementación, el
     clasificador se integró en el navegador con NSFWJS sobre TensorFlow.js;
-    mientras no se cierre su verificación completa, el piloto corre sin
-    clases con menores (capítulo~\ref{cap:marco-tecnologico},
+    mientras no se cierre su verificación completa, las clases con menores
+    permanecen apagadas por defecto (capítulo~\ref{cap:marco-tecnologico},
     sección~\ref{sec:decisiones-implementacion}).
 
     \item[Reputación con fricción reducida (señales implícitas).] La
@@ -302,7 +302,7 @@ bases de datos relacionales como pgvector permiten búsquedas de similitud
 eficientes. \sistema{} usa pgvector: guarda los vectores en una columna
 de la misma base PostgreSQL que el resto del sistema, de modo que no hay
 un índice en memoria que reconstruir ni copiar al reiniciar el servicio,
-y el volumen del piloto no requiere las optimizaciones de FAISS para
+y el volumen previsto para la demostración y una primera operación no requiere las optimizaciones de FAISS para
 colecciones muy grandes. Los vectores se calculan con el modelo
 multilingüe \texttt{paraphrase-}\allowbreak\texttt{multilingual-}\allowbreak\texttt{MiniLM-L12-v2}, de 384
 dimensiones (capítulo~\ref{cap:marco-tecnologico},
