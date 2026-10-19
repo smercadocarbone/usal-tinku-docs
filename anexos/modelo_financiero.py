@@ -2,9 +2,11 @@
 """Modelo financiero del capítulo 5 (anexo II), reproducible.
 
 Recalcula los flujos, el VAN, la TIR y los repagos de los tres escenarios
-con los parámetros declarados en el capítulo 5, y agrega la variante que
+con los parámetros declarados en el capítulo 5, agrega la variante que
 valoriza el tiempo del fundador en soporte, moderación y revisión de
-credenciales (CAP y credencial académica).
+credenciales (CAP y credencial académica), los análisis de sensibilidad
+del capítulo 5 y del apéndice de precio, y una cota con la inversión
+valorizada a tarifas de contratista (USD 25.730).
 
 Uso:  python3 anexos/modelo_financiero.py
 Solo usa la biblioteca estándar.
@@ -16,7 +18,10 @@ Solo usa la biblioteca estándar.
 TICKET = 7.42                 # USD por sesión de 51 min (ecuación del ticket)
 COMISION = 0.27               # comisión de la plataforma (BR-PAG-01)
 MARGEN = TICKET * COMISION    # 2,0034 USD por sesión
-INVERSION = 25_730            # USD, Año 0 (tabla de inversión inicial)
+INVERSION = 10_279            # USD, Año 0 (tabla de inversión inicial)
+# Cota de referencia: inversión valorizada con las tarifas de contratista
+# (USD 50/30/15 por hora) de la versión anterior del capítulo 5.
+INVERSION_COTA = 25_730
 COSTOS_FIJOS = [3_555, 3_675, 3_915, 4_155, 4_395]   # USD por año
 TASA = 0.15                   # tasa de descuento anual en USD
 
@@ -95,8 +100,27 @@ def repago(flujos):
     return None
 
 
-def flujos(alumnos, factor_horas=None):
-    serie = [-INVERSION]
+def flujos_margen(alumnos, margen, inversion=None):
+    """Flujos sin costo del fundador con un margen por sesión arbitrario."""
+    serie = [-(INVERSION if inversion is None else inversion)]
+    for a, fijo in zip(alumnos, COSTOS_FIJOS):
+        serie.append(a * CLASES_POR_ALUMNO_MES * 12 * margen - fijo)
+    return serie
+
+
+def raiz(fn, bajo, alto):
+    """Bisección para fn creciente: devuelve x con fn(x) = 0."""
+    for _ in range(200):
+        medio = (bajo + alto) / 2
+        if fn(medio) > 0:
+            alto = medio
+        else:
+            bajo = medio
+    return medio
+
+
+def flujos(alumnos, factor_horas=None, inversion=None):
+    serie = [-(INVERSION if inversion is None else inversion)]
     for a, fijo in zip(alumnos, COSTOS_FIJOS):
         sesiones = a * CLASES_POR_ALUMNO_MES * 12
         costo_fundador = 0.0
@@ -138,6 +162,71 @@ def main():
     print()
     print(f"Costo mensual constante que anula el VAN base: USD {fmt(excedente_mensual)} "
           f"= {fmt(excedente_mensual / VALOR_HORA_USD)} h/mes al valor hora de convenio")
+    sensibilidades()
+    # Cota: los tres escenarios con la inversión a tarifas de contratista
+    print()
+    print(f"Cota con inversión de USD {fmt(INVERSION_COTA)} (sin costo del fundador):")
+    for esc, alumnos in ALUMNOS.items():
+        f = flujos(alumnos, inversion=INVERSION_COTA)
+        desc = [x / (1 + TASA) ** t for t, x in enumerate(f)]
+        rs, rd = repago(f), repago(desc)
+        print(f"  {esc}: VAN {fmt(van(f))} | TIR {fmt(tir(f) * 100, 2)} % | "
+              f"repago {fmt(rs, 2) if rs else 'no'} | descontado {fmt(rd, 2) if rd else 'no'}")
+    # Inversión máxima que mantiene el VAN >= 0 en cada escenario
+    print()
+    for esc, alumnos in ALUMNOS.items():
+        print(f"Inversión que anula el VAN {esc.lower()}: USD {fmt(van(flujos(alumnos)) + INVERSION)}")
+
+
+PRECIO_HORA_ARS = 13_392.43   # promedio del relevamiento de Superprof
+PISO_USD_HORA = 4             # piso de tarifa del sistema
+DURACION_MIN = 51
+NETO_MP = 0.0604              # comisión de MercadoPago a cargo del tutor
+
+
+def sensibilidades(inversion=None):
+    """Análisis de sensibilidad del capítulo 5 y del apéndice de precio.
+
+    Los tickets alternativos se redondean a centavos, como en el texto.
+    """
+    base, pes = ALUMNOS["Base"], ALUMNOS["Pesimista"]
+    v = lambda al, m: van(flujos_margen(al, m, inversion))
+    print()
+    print("Sensibilidad (escenario base salvo indicación):")
+    sesiones_base = sum(base) * CLASES_POR_ALUMNO_MES * 12 / 5
+    k = raiz(lambda k: v([a * k for a in base], MARGEN), 0, 1)
+    print(f"  Volumen: el VAN base se anula con una caída de {fmt((1 - k) * 100, 1)} % "
+          f"({fmt(k * sesiones_base)} sesiones anuales promedio, frente a {fmt(sesiones_base)})")
+    m_eq = raiz(lambda m: v(base, m), 0, 5)
+    t_eq = m_eq / COMISION
+    print(f"  Comisión que anula el VAN base: {fmt(m_eq / TICKET * 100, 1)} %; "
+          f"pesimista: {fmt(raiz(lambda m: v(pes, m), 0, 5) / TICKET * 100, 1)} %")
+    print(f"  Ticket que anula el VAN base: USD {fmt(t_eq, 2)} por sesión = USD "
+          f"{fmt(t_eq * 60 / DURACION_MIN, 2)} por hora = ARS {fmt(t_eq * 60 / DURACION_MIN * TIPO_CAMBIO)}; "
+          f"tipo de cambio que lo anula: {fmt(PRECIO_HORA_ARS * DURACION_MIN / 60 / t_eq)} ARS/USD")
+    t_piso = PISO_USD_HORA * DURACION_MIN / 60
+    print(f"  Todas las sesiones al piso de tarifa (ticket USD {fmt(t_piso, 2)}): VAN base {fmt(v(base, t_piso * COMISION))}")
+    for nombre, t in (("mitad en paquete con 30 %", TICKET * 0.85),
+                      ("todo en paquete con 30 %", TICKET * 0.70)):
+        print(f"  Paquete, {nombre}: ticket USD {fmt(t, 2)}, VAN base {fmt(v(base, t * COMISION))}")
+    print(f"  Descuento medio de paquete que anula el VAN base: {fmt((1 - t_eq / TICKET) * 100, 1)} %")
+    for d in (45, 60):
+        t = round(PRECIO_HORA_ARS / TIPO_CAMBIO * d / 60, 2)
+        print(f"  Duración {d} min: ticket USD {fmt(t, 2)}, VAN base {fmt(v(base, t * COMISION))}")
+    d_eq = raiz(lambda d: v(base, TICKET * d / DURACION_MIN * COMISION), 0, 120)
+    print(f"  Duración media que anula el VAN base: {fmt(d_eq, 1)} min")
+    print("  Comisión | VAN base | TIR base | VAN pesimista | neto del tutor")
+    for c in (m_eq / TICKET, 0.21, 0.23, 0.25, COMISION, 0.30, 0.33):
+        f = flujos_margen(base, TICKET * c, inversion)
+        print(f"  {fmt(c * 100, 1)} % | {fmt(van(f))} | {fmt(tir(f) * 100, 2)} % | "
+              f"{fmt(v(pes, TICKET * c))} | {fmt((1 - c - NETO_MP) * 100, 2)} %")
+    print("  Tipo de cambio | ticket | margen | sesiones eq. Año 1 | Año 5 | VAN base | TIR base")
+    for tc in (1_400, TIPO_CAMBIO, 1_700, 1_900, 2_100):
+        t = TICKET if tc == TIPO_CAMBIO else round(PRECIO_HORA_ARS * DURACION_MIN / 60 / tc, 2)
+        m = t * COMISION
+        f = flujos_margen(base, m, inversion)
+        print(f"  {fmt(tc)} | {fmt(t, 2)} | {fmt(m, 2)} | {fmt(COSTOS_FIJOS[0] / m)} | "
+              f"{fmt(COSTOS_FIJOS[-1] / m)} | {fmt(van(f))} | {fmt(tir(f) * 100, 2)} %")
 
 
 if __name__ == "__main__":
