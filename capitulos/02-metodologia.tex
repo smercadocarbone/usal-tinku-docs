@@ -90,9 +90,9 @@ Quedan fuera del alcance investigativo los mercados regionales, la
 integración con organismos estatales, los módulos de accesibilidad y
 suscripción premium y el asistente conversacional de repaso conceptual
 (sección~\ref{sec:alcance}), los cuales se documentan como trabajo
-futuro. El piloto se realiza sin clases con menores
-(sección~\ref{sec:limitaciones}), por lo que la validación no cubre ese
-flujo.
+futuro. La validación con usuarios se realiza sin menores de edad
+(sección~\ref{sec:limitaciones}), por lo que no cubre el flujo de las
+clases con menores.
 
 \subsection{Marco teórico}
 
@@ -118,7 +118,14 @@ capítulo~\ref{cap:marco-tecnologico}.
 \subsection{Indicadores}
 
 Los indicadores principales para verificar la hipótesis central se
-resumen en la tabla~\ref{tab:indicadores}.
+resumen en la tabla~\ref{tab:indicadores}. La planificación original
+los medía en un piloto con tutores y alumnos reales durante el
+Sprint~11; el piloto no se realizó (las razones se exponen en la
+sección~\ref{sec:sin-piloto}) y la validación se reformuló como una
+evaluación técnica reproducible y sesiones moderadas con usuarios
+adultos. Los cuatro indicadores conservan su sentido; cambian la fuente
+del dato y el umbral, que tiene que ser alcanzable con una muestra chica
+y declarada como tal.
 
 \begin{table}[H]
     \centering
@@ -129,13 +136,19 @@ resumen en la tabla~\ref{tab:indicadores}.
         \toprule
         \tb{ID} & \tb{Variable} & \tb{Indicador} & \tb{Umbral} \\
         \midrule
-        I-01 & Aceptación del \gls{matching} & Tasa de aceptación de las sugerencias del motor por parte del alumno & $> 60\,\%$ de recomendaciones aceptadas en el piloto \\
-        I-02 & Calidad percibida de la sesión & Puntuación promedio otorgada por los alumnos en el cuestionario post-sesión (escala 1 a 5) & $\geq 4{,}0$ \\
-        I-03 & Cobertura geográfica del piloto & Sesiones completadas entre usuarios de provincias distintas & Al menos 1 sesión exitosa entre dos provincias, incluyendo una del interior \\
-        I-04 & Satisfacción y recomendación & \gls{nps} del piloto & Porcentaje positivo (promotores $>$ detractores) \\
+        I-01 & Aceptación del \gls{matching} & (a) Evaluación offline con 120 búsquedas etiquetadas: rango recíproco medio (MRR) y \emph{recall@5}. (b) Sesiones moderadas: búsquedas con resultados en las que el usuario abrió el perfil o reservó a un tutor de los cinco primeros, sobre el total de búsquedas con resultados & (a) MRR $\geq 0{,}80$ y \emph{recall@5} $\geq 0{,}60$; (b) $> 60\,\%$ \\
+        I-02 & Calidad percibida de la sesión & Calificación promedio, de 1 a 5, del alumno al tutor en las clases de las sesiones moderadas & $\geq 4{,}0$ \\
+        I-03 & Cobertura geográfica & Clases de las sesiones moderadas entre participantes de provincias distintas, según la provincia declarada en el cuestionario & Al menos 1 clase entre dos provincias, incluyendo una del interior \\
+        I-04 & Satisfacción y recomendación & \gls{nps} de intención: pregunta de 0 a 10, una vez por persona, después de su primera clase & Positivo (promotores $>$ detractores) \\
         \bottomrule
     \end{tabularx}
 \end{table}
+
+Los indicadores de operación que un piloto habría permitido medir ---la
+recompra de clases dentro de la plataforma y el volumen anualizado de
+sesiones--- requieren usuarios que vuelvan a usar el sistema durante
+semanas y no pueden inferirse de sesiones moderadas: quedan como trabajo
+futuro (capítulo~\ref{cap:conclusiones}).
 
 \subsection{Técnicas de recolección de datos}
 
@@ -150,20 +163,43 @@ centralizada.
 
 \subsection{Instrumentos de recolección de datos}
 
-Se utilizarán entrevistas semiestructuradas aplicadas a una muestra de
+El plan original preveía entrevistas semiestructuradas a una muestra de
 al menos dos tutores particulares activos y cuatro alumnos o familias
-que hayan contratado tutorías, complementadas con un formulario breve en
-Google Forms orientado a estudiantes universitarios y familias con hijos
-en edad escolar, buscando un mínimo de 30 respuestas válidas. El guion
-de las entrevistas se transcribe en el apéndice~\ref{apx:entrevista} y
-la encuesta completa en el apéndice~\ref{apx:encuesta}.
+que hubieran contratado tutorías, complementadas con un formulario breve
+en Google Forms orientado a estudiantes universitarios y familias con
+hijos en edad escolar, buscando un mínimo de 30 respuestas válidas. La
+encuesta superó ese mínimo (88 respuestas, apéndice~\ref{apx:encuesta}),
+pero de las seis entrevistas previstas se realizaron dos, y ninguna al
+usuario objetivo: una a una docente de Educación Física en ejercicio, que
+no da clases particulares (25 de septiembre de 2026, presencial), y otra
+a una tutora particular del AMBA, que respondió por mensajes de audio un
+cuestionario de cinco preguntas y dejó dos sin abordar. Para acercar la
+muestra al plan se prepararon dos guiones más, para un tutor que dé
+clases virtuales y para una familia de una provincia del interior. Los
+guiones, la consigna de consentimiento y registro y las transcripciones
+están en el apéndice~\ref{apx:entrevista}.
+% TODO-AUTOR: completar tras la entrevista (actualizar cuántas entrevistas se hicieron y a quiénes, si se realizan las del tutor virtual y la familia del interior).
+
+El instrumento con usuarios que reemplaza al piloto son las
+\textbf{sesiones moderadas}: cada participante adulto completa un guion
+de tareas sobre la plataforma mientras piensa en voz alta, y al final
+responde el cuestionario de usabilidad SUS (\emph{System Usability
+Scale}) \citep{brooke1996} y la pregunta de recomendación del \gls{nps}
+\citep{reichheld2003}. El protocolo completo ---participantes,
+consentimiento, guion de tareas, cuestionario y planilla de
+resultados--- está en el apéndice~\ref{apx:sesiones}. La evaluación
+técnica usa, además, un conjunto de 120 búsquedas etiquetadas con un
+criterio documentado y un script de medición de latencias, ambos en el
+repositorio del sistema (anexo~\ref{anx:repositorios}).
 
 \subsection{Datos}
 
 Los datos a obtener consistirán en registros de audio provenientes de
 las entrevistas semiestructuradas y datos tabulares generados a partir
 de las respuestas numéricas y de selección múltiple del formulario
-digital.
+digital, a los que se suman la planilla de resultados de las sesiones
+moderadas (una fila por participante, sin nombres) y los resultados de
+la evaluación técnica.
 
 \subsection{Procesamiento de los datos}
 
@@ -175,8 +211,8 @@ evaluación estadística de las métricas.
 
 \subsection{Análisis de los datos}
 
-Los datos recolectados durante el piloto funcional y la validación de
-demanda se analizarán en relación con los indicadores definidos,
+Los datos recolectados en la evaluación técnica, las sesiones moderadas y
+la validación de demanda se analizarán en relación con los indicadores definidos,
 presentando los resultados estructurados en el
 capítulo~\ref{cap:resultados}.
 
@@ -249,7 +285,7 @@ dimensiones principales de gestión:
           capítulo~\ref{cap:riesgos}, contemplando factores como demoras
           en la integración de \gls{api} externas, costos de modelos de
           lenguaje superiores a los estimados y la dificultad para
-          reclutar usuarios para el piloto.
+          reclutar usuarios para la validación.
     \item \textbf{Calidad:} cada historia de usuario de las
           especificaciones de los módulos se ejercita con al menos una
           prueba de integración de punta a punta, y los casos borde que
@@ -275,7 +311,7 @@ dimensiones principales de gestión:
     \item \textbf{Satisfacción de los interesados:} se medirá a través de
           un sistema de calificaciones post-clase bidireccional para
           mantener altos estándares de calidad, complementándose con el
-          análisis del \gls{nps} del grupo piloto para comprobar el grado
+          análisis del \gls{nps} de las sesiones moderadas para comprobar el grado
           de utilidad percibida y la aplicabilidad de los resultados en
           escenarios reales.
 \end{itemize}
@@ -304,7 +340,7 @@ desarrollo de manera que cada capítulo se apoye en trabajo ya realizado
         22 sep 2026 & Cap.~6 Análisis de riesgos & Sprint 7: aula virtual (LiveKit) \\
         13 oct 2026 & Cap.~7 Resultados & Sprints 8--9: resumen automático + sistema de reputación \\
         27 oct 2026 & Cap.~8 Conclusiones & Sprint 10: integración end-to-end, pruebas de sistema y correcciones \\
-        28 nov 2026 & Presentación final + producto funcional & Sprint 11: piloto con usuarios reales (adultos, sección~\ref{sec:limitaciones}), análisis de resultados, documentación final \\
+        28 nov 2026 & Presentación final + producto funcional & Sprint 11: evaluación técnica y sesiones moderadas con usuarios adultos, en lugar del piloto con usuarios reales previsto originalmente (sección~\ref{sec:sin-piloto}); análisis de resultados y documentación final \\
         \bottomrule
     \end{tabularx}
 \end{table}
@@ -339,7 +375,7 @@ planificación, con la línea de tiempo completa.
         \ganttbar{Sprint 7 --- Aula virtual}{2026-09-08}{2026-09-22} \\
         \ganttbar{Sprints 8--9 --- Resumen y reputación}{2026-09-22}{2026-10-13} \\
         \ganttbar{Sprint 10 --- Integración}{2026-10-13}{2026-10-27} \\
-        \ganttbar{Sprint 11 --- Piloto}{2026-10-27}{2026-11-27} \\
+        \ganttbar{Sprint 11 --- Evaluación}{2026-10-27}{2026-11-27} \\
         \ganttmilestone{Entrega final}{2026-11-28}
     \end{ganttchart}
     \caption{Cronograma de sprints del proyecto (ciclo lectivo 2026)}
@@ -382,5 +418,5 @@ servidor propio, publicado en internet mediante Cloudflare Tunnel, que
 además cifra el tráfico entre los usuarios y el servidor. La planificación original
 preveía migrar a un \gls{vps} alquilado antes del piloto; se mantuvo
 el servidor propio por simplicidad operativa y costo, aceptando un
-punto único de falla para el piloto (ADR-000-07,
+punto único de falla para la demostración y la evaluación (ADR-000-07,
 sección~\ref{sec:limitaciones}).

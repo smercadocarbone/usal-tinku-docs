@@ -243,7 +243,7 @@ tanto, económicamente relevante: el ticket por sesión crece con ella, y
 también el costo de \gls{ia} del resumen opcional, que escala con los
 minutos de audio procesados y no con la cantidad de sesiones.
 
-El sistema no fija una duración típica y, antes del piloto, no hay datos
+El sistema no fija una duración típica y, sin operación con usuarios reales, no hay datos
 de la distribución real. El modelo trabaja con una \textbf{duración media
 supuesta}, que se declara como estimación propia: se asume que un
 30\,\% de las sesiones usa el bloque mínimo de 30 minutos y el resto dura
@@ -408,7 +408,7 @@ Tres consecuencias de este diseño son relevantes para la evaluación:
           ese reembolso parcial entre el tutor y la plataforma, la
           diferencia que se le descuente al tutor la devuelve la
           plataforma por la cola de reembolsos manuales (ADR-M5-02,
-          pendiente de verificar en el entorno de pruebas de MercadoPago).
+          pendiente de la prueba en el \emph{sandbox} de MercadoPago).
           Nada de esto se cuantifica en el modelo base y se declara como
           una restricción del análisis; su magnitud es de centavos de dólar
           por incidente.
@@ -490,7 +490,7 @@ desarrollador, dentro del presupuesto de infraestructura de USD 0 a 100
 mensuales que el proyecto se fijó para el desarrollo. El costo aceptado es
 un único punto de falla —un corte de luz o de conectividad del servidor
 deja la plataforma fuera de línea—, mitigado con respaldos diarios
-cifrados fuera del servidor (a activar antes del piloto), y la decisión se revisa si la operación
+cifrados fuera del servidor (a activar antes de abrir la plataforma a usuarios reales), y la decisión se revisa si la operación
 crece. Como referencia del costo alternativo de alquilar un \gls{vps}, uno
 de recursos medios de un proveedor local (8 vCore/16~GB) cuesta
 \usd{158,7} mensuales y los planes de entrada arrancan en \usd{7,71}
@@ -1158,7 +1158,7 @@ de decisiones del sistema señala que, con ese neto, vuelven a pesar dos
 riesgos: la \textbf{desintermediación} —que tutor y alumno acuerden las
 clases siguientes por fuera de la plataforma— y la mayor dificultad para
 \textbf{sumar tutores} (ADR-M5-05). Por eso la comisión no se considera
-definitiva: la métrica con la que se revisará después del piloto quedó
+definitiva: la métrica con la que se revisará con datos de operación real quedó
 diferida deliberadamente hasta ese momento (regla BR-PAG-03), y la
 tabla~\ref{tab:sens-comision} muestra el margen disponible para hacerlo
 —una reducción a 23 o 25\,\% mantiene el escenario base con \gls{van}
@@ -1192,8 +1192,11 @@ de percibir la comisión de una sesión que no se concretó, y el modelo solo
 computa ingresos de sesiones concretadas. Esa conclusión descansa en un
 \textbf{supuesto} que se declara: que el reembolso total revierte tanto
 la comisión de MercadoPago como el \texttt{marketplace\_fee} de la
-plataforma. El sistema dejó esa verificación pendiente en el entorno de
-pruebas de MercadoPago (ADR-M5-02); si no se cumpliera, el reembolso
+plataforma. El cobro se probó en Modo Bypass y con pruebas automáticas que
+simulan al cliente de MercadoPago, que no ejercitan ese comportamiento
+del proveedor; su verificación queda pendiente de la prueba en el
+\emph{sandbox} de MercadoPago (ADR-M5-02); si no se cumpliera, el reembolso
+% TODO-AUTOR: actualizar si se completa la prueba en sandbox
 tendría un costo que el modelo no incluye.
 
 \section{Conclusión de la evaluación económica}
@@ -1229,7 +1232,7 @@ de viabilidad:
           anula. El \comision{} vigente deja un margen de unos nueve
           puntos porcentuales, que se mantiene deliberadamente como
           colchón frente al escenario pesimista y a los costos que el
-          modelo no cuantifica, y que se revisará después del piloto
+          modelo no cuantifica, y que se revisará con datos de operación real
           considerando su efecto sobre el neto del tutor y el riesgo de
           desintermediación.
     \item \textbf{Operar sin equipo de soporte rentado}, o con una
