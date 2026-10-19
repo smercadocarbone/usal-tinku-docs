@@ -229,7 +229,7 @@ oferta presencial de tutores es escasa o inexistente.
           \gls{matching} propuesto.
 \end{enumerate}
 
-\paragraph{Objetivos reformulados durante la implementación.} Cuatro
+\paragraph{Objetivos reformulados durante la implementación.} Cinco
 objetivos específicos se redactaron antes de que se tomaran las
 decisiones que los afectan, y se reformularon para describir el sistema
 construido. Cada cambio queda registrado como \gls{adr} en el repositorio del sistema
@@ -270,6 +270,15 @@ sección~\ref{sec:decisiones-implementacion}:
           lo contiene, de modo que incorporarlo exigiría una enmienda
           explícita de los principios del proyecto (Constitución del
           proyecto, Art.~VI). Se documenta como trabajo futuro.
+    \item \textbf{OE8.} El grupo piloto de tutores y alumnos reales no
+          se realizó (decisión del 18 de octubre de 2026,
+          sección~\ref{sec:sin-piloto}). La validación funcional se
+          realiza mediante una evaluación técnica reproducible sobre la
+          plataforma desplegada ---incluida una evaluación offline del
+          \gls{matching}--- y sesiones moderadas con entre cinco y ocho
+          usuarios adultos, que miden usabilidad, satisfacción y
+          aceptación de las sugerencias sobre una versión de demostración
+          con datos de prueba y pagos simulados.
 \end{itemize}
 
 \section{Barreras e impedimentos}\label{sec:barreras}
@@ -395,10 +404,14 @@ principales son:
           cada sprint.
     \item \textbf{Integración y pruebas:} pruebas unitarias, de
           integración, \gls{e2e} y \gls{uat}.
-    \item \textbf{Piloto y validación:} lanzamiento controlado con grupo
-          reducido de tutores y alumnos reales --adultos, mientras las
-          clases con menores sigan deshabilitadas-- para validar la
-          hipótesis central.
+    \item \textbf{Validación:} evaluación técnica reproducible sobre la
+          plataforma desplegada y sesiones moderadas con usuarios adultos,
+          en las que cada participante recorre el circuito completo
+          (registro, búsqueda, reserva, pago de prueba, clase y
+          calificación) sobre una versión de demostración con datos de
+          prueba y sin transacciones reales. El lanzamiento controlado con
+          tutores y alumnos reales que preveía la planificación original
+          no se realizó (sección~\ref{sec:sin-piloto}).
     \item \textbf{Documentación y presentación:} elaboración del informe
           final y presentación del producto funcional.
 \end{itemize}
@@ -432,7 +445,7 @@ Coolify: cuatro contenedores (base de datos, motor de \gls{matching},
 backend y frontend) cuyas imágenes construye GitHub Actions, publicados
 en internet a través de Cloudflare Tunnel y con una copia de seguridad
 diaria y cifrada de la base en Cloudflare R2 (implementada; se activa al
-cargar las credenciales de R2, paso pendiente antes del piloto). En el diseño inicial se
+cargar las credenciales de R2, paso pendiente antes de abrir la plataforma a usuarios reales). En el diseño inicial se
 preveía repartir el sistema entre Supabase (base de datos), Vercel
 (frontend) y Upstash (Redis); se abandonó porque el plan gratuito de
 Vercel no admite uso comercial y porque concentrar todo en un solo
@@ -493,26 +506,36 @@ documentadas como propuestas para el trabajo a futuro.
 \section{Limitaciones}\label{sec:limitaciones}
 
 \begin{itemize}
-    \item \textbf{Límite de validación:} la validación de la hipótesis se
-          realizará con un grupo piloto acotado. Los resultados son
-          indicativos de la validez funcional del sistema, no
-          estadísticamente representativos del mercado total.
-    \item \textbf{Límite de piloto sin menores:} aunque el sistema está
-          diseñado para alumnos desde el nivel primario, el piloto corre
-          sin clases con menores. Una opción de configuración
+    \item \textbf{Límite de validación:} no se realizó un piloto con
+          tutores y alumnos reales. La evaluación con usuarios se limita a
+          entre cinco y ocho sesiones moderadas con personas adultas,
+          sobre datos de prueba y con pagos simulados; sus resultados son
+          evidencia exploratoria, no estadísticamente representativa del
+          mercado, y no permiten estimar indicadores de operación como la
+          recompra o el volumen anual de sesiones.
+    \item \textbf{Límite de transacciones:} los pagos de la evaluación
+          se hacen en Modo Bypass, sin dinero real; el cobro con
+          MercadoPago se probó con pruebas automáticas que simulan al
+          proveedor y su prueba en el \emph{sandbox} de MercadoPago está
+          pendiente. La comisión de la plataforma no se validó con cobros
+          reales.
+% TODO-AUTOR: actualizar si se completa la prueba en sandbox
+    \item \textbf{Límite de validación sin menores:} aunque el sistema
+          está diseñado para alumnos desde el nivel primario, ninguna
+          persona menor de edad participa de la evaluación y las clases
+          con menores permanecen deshabilitadas. Una opción de configuración
           (\texttt{tinku.menores.sesiones-habilitadas}) vale
           \texttt{false} por defecto y, mientras tanto, el sistema rechaza
           toda reserva o solicitud de sesión cuyo beneficiario sea un
           menor. Solo se habilita cuando estén cerrados el
           \emph{kill-switch} en el cliente y el \gls{cap} de los tutores
           de menores: al momento de esta redacción el \gls{cap} está
-          implementado y al \emph{kill-switch} en el cliente le resta su
-          prueba de punta a punta contra el servicio de video real, entre
-          otras tareas previas al encendido. Se prefirió demorar las
+          implementado y el \emph{kill-switch} en el cliente superó su
+          prueba de punta a punta contra el servicio de video real; restan
+          la medición en un teléfono físico y la decisión de encendido. Se prefirió demorar las
           clases con menores antes que habilitarlas sin todas sus
           protecciones (Constitución del proyecto, Art.~II). En
-          consecuencia, la validación del piloto no cubre el flujo con
-          menores.
+          consecuencia, la validación no cubre el flujo con menores.
     \item \textbf{Límite de verificación de tutores:} en el \gls{mvp}, la
           identidad se verifica con \gls{ocr} sobre el \gls{dni}, ejecutado con Tesseract en el
           propio servidor: controla la mayoría de edad, el nombre y que
@@ -542,7 +565,7 @@ documentadas como propuestas para el trabajo a futuro.
           o currículos oficiales del sistema educativo argentino, y
           depende de un proveedor externo: sin la configuración del
           proveedor, el sistema no lo genera.
-    \item \textbf{Límite geográfico del piloto:} la validación funcional
+    \item \textbf{Límite geográfico de la validación:} la validación funcional
           queda circunscripta al territorio argentino. La plataforma está
           diseñada para escalar regionalmente, pero dicha expansión
           excede el alcance de este trabajo.
@@ -557,7 +580,7 @@ documentadas como propuestas para el trabajo a futuro.
           datos, motor de \gls{matching}, backend y frontend-- corre en un
           único servidor propio, ubicado en un domicilio y sin dirección
           IP fija, y no en un proveedor con garantías de disponibilidad.
-          Es un punto único de falla aceptado para el piloto: un corte de
+          Es un punto único de falla aceptado para la demostración: un corte de
           luz o de internet deja la plataforma fuera de línea mientras
           dure. Se mitiga con la copia de seguridad diaria y cifrada fuera
           del servidor y con un procedimiento de restauración documentado
@@ -610,7 +633,7 @@ se quiere construir.
         \toprule
         \tb{Categoría} & \tb{Detalle} \\
         \midrule
-        Recursos humanos & 1 desarrollador full-stack (autor del proyecto). Tutores y alumnos para el grupo piloto de validación. \\
+        Recursos humanos & 1 desarrollador full-stack (autor del proyecto). Entre cinco y ocho personas adultas para las sesiones moderadas de validación. \\
         Infraestructura & Servidor propio ya existente, administrado con Coolify, con cuatro contenedores (PostgreSQL con pgvector, motor de \gls{matching}, backend y frontend) publicados mediante Cloudflare Tunnel; imágenes construidas por GitHub Actions y publicadas en el registro de contenedores de GitHub; copia de seguridad diaria y cifrada de la base en Cloudflare R2 (capa gratuita, 14 días de retención). Sin costo de alquiler de hosting; el presupuesto de infraestructura se mantiene entre USD 0 y 100 mensuales. El plan original (Vercel, Supabase, Upstash y migración a un \gls{vps} de 10 a 25 USD mensuales antes del piloto) se reemplazó por esta topología (ADR-000-07, sección~\ref{sec:alcance}). \\
         Servicios externos & Motor de \gls{matching} semántico: sentence-transformers (modelo \texttt{paraphrase-multilingual-MiniLM-L12-v2}, vectores de 384 dimensiones) con el índice en pgvector, con procesamiento local y sin costo de \gls{api} por consulta. Resumen de sesión: transcripción con \texttt{gpt-4o-mini-transcribe} (ADR-M3-04) y resumen con GPT-4o sobre el texto anonimizado (ADR-M6-03), con un costo que cubre el precio del adicional (capítulos \ref{cap:marco-tecnologico} y \ref{cap:economica}). MercadoPago: sin costo fijo, comisión por transacción, integrado con un cliente \gls{http} propio y conexión \gls{oauth} de cada tutor. LiveKit Cloud: plan gratuito Build de 5.000 minutos de participante por mes. Resend (plan gratuito) para el correo transaccional (ADR-000-06). \gls{ocr} con Tesseract local, sin servicio externo. \\
         Herramientas de desarrollo & OpenCode + Neovim (editor principal), GitHub y GitHub Actions (control de versiones e integración continua), Figma (diseño \gls{ux}), JUnit 5 con Testcontainers (pruebas del backend contra PostgreSQL real), Playwright con axe-core (pruebas \gls{e2e} y de accesibilidad del frontend), pytest (motor de \gls{matching}) y JaCoCo (medición de cobertura). La mención original de Jest se reemplazó porque las pruebas del frontend se resolvieron con Playwright. Todas en planes gratuitos o estudiantiles. \\

@@ -105,6 +105,57 @@ tabla~\ref{tab:flujo-caja}.
     \end{tabular}
 \end{table}
 
+\section{Variante con el costo del tiempo del fundador}
+
+La sección~\ref{sec:costo-fundador} agrega al flujo de cada año un costo
+por el tiempo que el fundador dedica al soporte, la moderación y la
+revisión de credenciales. La cadena de cálculo es la misma, con un paso
+adicional entre los pasos 1 y 2:
+
+\begin{enumerate}
+    \item horas mensuales$_t$ = sesiones mensuales$_t$ $\times$
+          (0,05 $\times$ 10 + 0,01 $\times$ 20 + 0,005 $\times$ 45)~min
+          $/$ 60 + tutores$_t$ $\times$ 2 documentos $/$ 12 $\times$
+          15~min $/$ 60 + 52 $/$ 12~h, con sesiones mensuales$_t$ =
+          alumnos activos$_t$ $\times$ 3 y tutores$_t$ = alumnos
+          activos$_t$ $/$ 4;
+    \item costo del fundador$_t$ = horas mensuales$_t$ $\times$ 12
+          $\times$ \usd{4,47} (\$1.316.632 $/$ 208~h $\times$ 13 $/$ 12,
+          al tipo de cambio de \$1.535);
+    \item flujo neto$_t$ = ingreso neto$_t$ $-$ costos fijos
+          anuales$_t$ $-$ costo del fundador$_t$.
+\end{enumerate}
+
+\begin{table}[H]
+    \centering
+    \caption{Flujos netos con el costo del fundador (en USD)}
+    \label{tab:flujos-fundador}
+    \small
+    \begin{tabularx}{\textwidth}{L R R R R R R}
+        \toprule
+        \tb{Escenario} & \tb{Año 0} & \tb{Año 1} & \tb{Año 2} & \tb{Año 3} & \tb{Año 4} & \tb{Año 5} \\
+        \midrule
+        Pesimista & $-25.730$ & 5.194  & 3.692  & 6.906  & 5.285  & 8.499 \\
+        Base      & $-25.730$ & 10.030 & 14.055 & 10.360 & 15.647 & 12.644 \\
+        Optimista & $-25.730$ & 15.556 & 25.108 & 19.341 & 28.773 & 23.007 \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+Los indicadores resultantes, junto con los de la variante sin ese costo
+y los de la variante con el doble de horas, se presentan en la
+tabla~\ref{tab:van-fundador}.
+
+\section{Reproducción del cálculo}
+
+El script \path{anexos/modelo_financiero.py} del repositorio de la tesis
+(anexo~\ref{anx:repositorios}) implementa esta cadena con la biblioteca
+estándar de Python y reproduce las tablas~\ref{tab:flujos-escenarios},
+\ref{tab:indicadores-anexo} y~\ref{tab:flujos-fundador}, la
+tabla~\ref{tab:van-fundador} y el excedente mensual de \usd{469} que
+anula el \gls{van} del escenario base. Se ejecuta con
+\texttt{python3 anexos/modelo\_financiero.py}.
+
 \section{Versiones anteriores del modelo}
 
 Las primeras versiones del modelo se construyeron en una planilla de
