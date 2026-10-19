@@ -722,4 +722,48 @@
 % color principal (como en CASSIE). Para dejarlos en negro:
 %\renewcommand*{\glstextformat}[1]{\textcolor{black}{#1}}
 \renewcommand{\glsnamefont}[1]{\textbf{#1}}
+% estilo de siglas: el primer uso imprime una sola vez la expansión y la
+% sigla, «expansión (SIGLA)». Si la sigla viene del inglés y la expansión
+% está en castellano, el original va en user1 y se agrega una sola vez:
+% «procesamiento de lenguaje natural (NLP, del inglés Natural Language
+% Processing)». En la lista de siglas sale «expansión (original)».
+\makeatletter
+\newcommand*{\usal@acrforeign}[1]{%
+  \ifglshasfield{useri}{#1}{, \USAL@fromenglish{} \emph{\glsentryuseri{#1}}}{}}
+\newacronymstyle{usal-long-short}%
+{%
+  \ifglshaslong{\glslabel}{\glsgenacfmt}{\glsgenentryfmt}%
+}%
+{%
+  \GlsUseAcrStyleDefs{long-short}%
+  \renewcommand*{\genacrfullformat}[2]{%
+   \glsentrylong{##1}##2\space
+   (\protect\firstacronymfont{\glsentryshort{##1}}\usal@acrforeign{##1})%
+  }%
+  \renewcommand*{\Genacrfullformat}[2]{%
+   \Glsentrylong{##1}##2\space
+   (\protect\firstacronymfont{\glsentryshort{##1}}\usal@acrforeign{##1})%
+  }%
+  \renewcommand*{\genplacrfullformat}[2]{%
+   \glsentrylongpl{##1}##2\space
+   (\protect\firstacronymfont{\glsentryshortpl{##1}}\usal@acrforeign{##1})%
+  }%
+  \renewcommand*{\Genplacrfullformat}[2]{%
+   \Glsentrylongpl{##1}##2\space
+   (\protect\firstacronymfont{\glsentryshortpl{##1}}\usal@acrforeign{##1})%
+  }%
+}
+\setacronymstyle{usal-long-short}
+% tabularx compone cada tabla varias veces para medir las columnas; sin
+% esto, la primera pasada de prueba consume el «primer uso» de una sigla
+% y la tabla (y el resto del texto) la muestra sin expansión.
+\AtBeginDocument{%
+  \ifdefined\TX@trial
+    \let\usal@TX@trial\TX@trial
+    \def\TX@trial#1{\usal@TX@trial{#1\let\glsifmeasuring\@firstoftwo}}%
+  \fi}
+% \siglaen{clave}{SIGLA}{expansión en castellano}{original en inglés}
+\newcommand*{\siglaen}[4]{%
+  \newacronym[user1={#4}, description={#3 (\emph{#4})}]{#1}{#2}{#3}}
+\makeatother
 \makeglossaries

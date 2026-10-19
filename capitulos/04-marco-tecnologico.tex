@@ -71,7 +71,7 @@ ADR-000-02).
 
 La única pieza propia que corre como proceso aparte es el \textbf{motor
 de \gls{matching}}, un servicio en Python que calcula los
-\gls{embeddings} y consulta la similitud semántica. Es una excepción
+\glspl{embeddings} y consulta la similitud semántica. Es una excepción
 explícita y documentada: el ecosistema de modelos de lenguaje que el
 motor necesita (sentence-transformers) es nativo de Python, y aislarlo
 evita mezclar dos entornos de ejecución en el mismo proceso. El backend
@@ -84,7 +84,7 @@ al beneficio.
 El diseño inicial describía un estilo ``cliente-servidor en capas'' en
 el que toda la \gls{ia} --incluido el \gls{matching}-- se delegaba a
 proveedores externos. Se reemplazó por el monolito modular porque los
-\gls{embeddings} los calcula \sistema{} con un modelo abierto, sin costo
+\glspl{embeddings} los calcula \sistema{} con un modelo abierto, sin costo
 por llamada y sin que los perfiles salgan del servidor; los proveedores
 externos quedaron acotados al video (LiveKit Cloud), el cobro
 (MercadoPago), la transcripción y el resumen (OpenAI) y el correo
@@ -109,7 +109,7 @@ responsabilidades.
         \midrule
         Cliente web (\gls{pwa}) & Interfaz para alumno, tutor, adulto responsable y administración; consume la \gls{api} \gls{rest} del backend. En el aula corre el clasificador del kill-switch sobre el video remoto y, solo con el adicional de resumen, graba el audio en el navegador del tutor & Next.js 16 + React 19; NSFWJS sobre TensorFlow.js; cliente de LiveKit \\
         Backend (monolito modular) & Lógica de negocio de los nueve módulos, autenticación y autorización por tipo de usuario y por acción, plazos de negocio persistidos, orquestación de los servicios externos & Java 21 + Spring Boot 4.1.1, Spring Security + \gls{jwt}, Quartz, JPA + Flyway \\
-        Motor de \gls{matching} & Cálculo de \gls{embeddings} de perfiles y temas, y consulta de similitud semántica contra la base & Python, FastAPI, sentence-transformers (\texttt{paraphrase-}\allowbreak\texttt{multilingual-}\allowbreak\texttt{MiniLM-L12-v2}, 384 dimensiones) \\
+        Motor de \gls{matching} & Cálculo de \glspl{embeddings} de perfiles y temas, y consulta de similitud semántica contra la base & Python, FastAPI, sentence-transformers (\texttt{paraphrase-}\allowbreak\texttt{multilingual-}\allowbreak\texttt{MiniLM-L12-v2}, 384 dimensiones) \\
         Base de datos & Persistencia de los nueve módulos (un esquema por módulo), índice semántico y tablas de Quartz & PostgreSQL 16 con pgvector, en contenedor propio \\
         Aula virtual & Transmisión de audio, video, pizarra y mensajes de texto entre tutor y alumno & LiveKit Cloud (\gls{webrtc}); el backend emite los tokens de sala y cierra las salas por la \gls{api} de LiveKit, sin \gls{sdk} \\
         Pasarela de pagos & Cobro con Checkout Pro en la cuenta de MercadoPago de cada tutor, conectada por \gls{oauth}; reembolsos durante la ventana de \gls{escrow} & MercadoPago, cliente HTTP propio (sin \gls{sdk}) \\
@@ -242,7 +242,7 @@ apéndice~\ref{apx:tecnicos}.
         \midrule
         Motor relacional & PostgreSQL 16 con la extensión pgvector (imagen \path{pgvector/pgvector:pg16}), en un contenedor propio con volumen persistente. Un solo motor y un esquema por módulo (\texttt{identidad}, \texttt{matching}, \texttt{aula}, \texttt{reservas}, \texttt{pagos}, \texttt{resumen}, \texttt{reputacion}, \texttt{admin}, \texttt{seguridad}) \\
         Conexión & El backend y el motor de \gls{matching} se conectan por JDBC y \texttt{psycopg} dentro de la red interna de los contenedores; la base no publica ningún puerto hacia internet \\
-        Índice semántico & Columna \texttt{vector(384)} de pgvector en la misma base: los \gls{embeddings} de perfiles y temas se guardan junto al resto de los datos y no hay un índice en memoria que reconstruir al reiniciar (ADR-M2-01) \\
+        Índice semántico & Columna \texttt{vector(384)} de pgvector en la misma base: los \glspl{embeddings} de perfiles y temas se guardan junto al resto de los datos y no hay un índice en memoria que reconstruir al reiniciar (ADR-M2-01) \\
         Estado en tiempo real & Sin Redis. El estado de la sala vive en LiveKit Cloud y en la base; los límites de pedidos por IP y el bloqueo por intentos de login se cuentan en memoria del backend, válido mientras haya una sola instancia (ADR-000-04) \\
         Migraciones & Flyway, con el esquema validado al arrancar (\texttt{ddl-auto: validate}): si el código y la base divergen, el backend no inicia. Una migración ya aplicada nunca se edita; las correcciones se agregan como migraciones nuevas \\
         Respaldo & Copia diaria de la base con \path{pg_dump}, cifrada y subida a Cloudflare R2, fuera del servidor, con 14 días de retención (ADR-000-07). El contenedor está desplegado; la copia sale del servidor recién cuando se cargan las credenciales de R2, paso pendiente antes del piloto \\
@@ -483,7 +483,7 @@ diseño inicial.
     Kill-switch & Una sola rama (cortar y bloquear); desenfoque del video entre adultos & NSFWJS en el navegador sobre el video remoto (cámara y pantalla), buffer rotativo de 30 segundos que se descarta salvo disparo. Con un menor corta directo, sin preguntar; entre adultos oculta el video del detectado y pide confirmación a la contraparte (plazo de 5 minutos). Evidencia: clip de 30 segundos que se sube solo ante un disparo y se conserva 30 días desde la resolución de la Alerta & ADR-M3-01, ADR-M3-07; Tabla de Tiempos \\
     Denuncias & Suspensión preventiva al denunciar; evidencia de la sesión preservada & La denuncia entra en revisión con 48 horas de descargo del denunciado y pausa el \gls{escrow} de esa sesión; evidencia opcional que adjunta el denunciante; el denunciado no conoce su identidad. La suspensión automática existe solo en las Alertas del kill-switch & Spec M9; minimización (no hay grabación que preservar) \\
     Menores & El menor puede reservar con un tutor autorizado & El menor tiene cuenta propia pero no paga, no autoriza tutores ni denuncia: pide una Solicitud de Sesión que su Adulto Responsable aprueba y paga. El piloto corre \textbf{sin menores}: la opción \path{tinku.menores.sesiones-habilitadas} queda apagada hasta cerrar el kill-switch en el cliente (T-M3-06) y el \gls{cap} (T02) & Constitución, art.~II; T-TES-10 \\
-    Cobro & \gls{escrow} que retiene los fondos en la cuenta de la plataforma; \gls{sdk} oficial de Java; reparto por \gls{oauth} ``abierto'' & Modelo A: cada tutor conecta su cuenta de MercadoPago por \gls{oauth} (con \gls{pkce}); la preferencia se crea con su token y el dinero entra a su cuenta; \sistema{} cobra su comisión con \path{marketplace_fee}. El \gls{escrow} es una ventana lógica de 24 horas en la que \sistema{} todavía puede reembolsar. Cliente HTTP propio, sin \gls{sdk} & ADR-M5-02: \sistema{} no recauda fondos de terceros \\
+    Cobro & \gls{escrow} que retiene los fondos en la cuenta de la plataforma; \gls{sdk} oficial de Java; reparto por \gls{oauth} ``abierto'' & Modelo A: cada tutor conecta su cuenta de MercadoPago por \gls{oauth} con \gls{pkce}; la preferencia se crea con su token y el dinero entra a su cuenta; \sistema{} cobra su comisión con \path{marketplace_fee}. El \gls{escrow} es una ventana lógica de 24 horas en la que \sistema{} todavía puede reembolsar. Cliente HTTP propio, sin \gls{sdk} & ADR-M5-02: \sistema{} no recauda fondos de terceros \\
     Comisión & \comision{} con la pasarela como costo de la plataforma & \comision{} sobre el bruto de cada sesión (BR-PAG-01), a cargo del tutor; MercadoPago descuenta su comisión (cerca del 6,04\,\%) de los fondos del tutor, que recibe el 66,96\,\% & ADR-M5-05, que declara la discrepancia con el modelo económico del capítulo~\ref{cap:economica} \\
     Reembolsos & Siempre totales, nunca parciales & Totales como regla general. Excepciones: el adicional de resumen (BR-PAG-11) y la clase de un paquete devuelta por falta del tutor (FR-PAG-022); parciales manuales por disputa (FR-PAG-010) & Spec M5, FR-PAG-009 (enmienda v2.5) \\
     Paquete mensual & --- & Cuatro clases semanales con un solo pago, vigencia de cuatro semanas y un descuento de 0 a 30\,\% que fija el tutor & ADR-M5-03 \\
