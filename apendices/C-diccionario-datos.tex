@@ -1,0 +1,1471 @@
+% ARCHIVO GENERADO por scripts/diccionario_datos.py — no editar a mano.
+% Esquema: V58__evaluacion_busquedas_nps.sql (2026-10-18), repositorio del sistema en c848323; generado el 2026-10-19.
+
+Las tablas siguientes describen las 47 tablas de dominio (374 columnas) de los nueve esquemas. Para cada columna se indica el tipo de PostgreSQL, si admite nulos, el valor por defecto y su papel en las claves: \textsc{pk} clave primaria, \textsc{fk} clave foránea (con la tabla a la que apunta), \textsc{uq} unicidad de la columna (\textsc{uq*}: forma parte de una unicidad compuesta, detallada al pie), \textsc{ck} restricción \texttt{CHECK} y \textsc{ex} restricción de exclusión. Al pie de cada tabla se transcriben las restricciones de tabla y los índices que no derivan de una clave, con la expresión que devuelve el catálogo de PostgreSQL, y las migraciones que crean o modifican la tabla.
+
+\begingroup\small
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{2.1cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-3.7cm-4\tabcolsep\relax}>{\centering\arraybackslash}p{1.6cm}@{}}
+\caption{Esquemas de la base de datos y cantidad de tablas}\label{tab:dd-esquemas}\\
+\toprule \tb{Esquema} & \tb{Contenido} & \tb{Tablas} \\ \midrule \endfirsthead
+\toprule \tb{Esquema} & \tb{Contenido} & \tb{Tablas} \\ \midrule \endhead
+\bottomrule \endfoot
+\texttt{identidad} & Módulo M1, identidad y perfiles: cuentas, vínculo menor--adulto responsable, autorizaciones, credenciales académicas, certificado de antecedentes penales (CAP), consentimientos y controles de reintento. & 11 \\
+\texttt{matching} & Módulo M2, motor de matching semántico: catálogo de trayectos y temas con sus embeddings, perfil de matching del tutor, búsquedas guardadas, temas sugeridos e instrumentación de la evaluación. & 8 \\
+\texttt{aula} & Módulo M3, aula virtual: sesión de aprendizaje de cada reserva y kill-switch (alertas de seguridad y confirmaciones). & 3 \\
+\texttt{reservas} & Módulo M4, reservas y agenda: franjas de disponibilidad, solicitudes de menores, reservas, paquetes mensuales, pedidos previos, notas de clase y pedidos de reprogramación. & 7 \\
+\texttt{pagos} & Módulo M5, motor de pagos: transacciones y retención, tarifas, preferencias y cuentas de MercadoPago, estado de la pasarela y precios de referencia. & 7 \\
+\texttt{resumen} & Módulo M6, resumen automático de la sesión. & 1 \\
+\texttt{reputacion} & Módulo M7, calificaciones y reputación. & 2 \\
+\texttt{admin} & Módulo M8, panel de administración: administradores, auditoría, soporte, notificaciones y NPS. & 6 \\
+\texttt{seguridad} & Módulo M9, denuncias, seguridad y moderación: denuncias y sanciones. & 2 \\
+\end{longtable}
+\endgroup
+
+\subsection{Esquema \texttt{identidad}}\label{sec:dd-identidad}
+
+Módulo M1, identidad y perfiles: cuentas, vínculo menor--adulto responsable, autorizaciones, credenciales académicas, certificado de antecedentes penales (CAP), consentimientos y controles de reintento.
+
+\needspace{12\baselineskip}
+\begingroup\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{2.55cm}>{\raggedright\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{0.75cm}>{\raggedright\arraybackslash}p{1.85cm}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-9.25cm-10\tabcolsep\relax}@{}}
+\caption[Diccionario de datos: \texttt{identidad.\allowbreak{}aceptaciones\_\allowbreak{}clausula}]{\texttt{identidad.\allowbreak{}aceptaciones\_\allowbreak{}clausula}: quién aceptó qué versión de cada cláusula y cuándo}\label{tab:dd-identidad-aceptaciones-clausula}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endfirsthead
+\multicolumn{6}{@{}l}{\scriptsize\itshape \texttt{identidad.\allowbreak{}aceptaciones\_\allowbreak{}clausula} (continuación)}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endhead
+\midrule\multicolumn{6}{r@{}}{\scriptsize\itshape continúa en la página siguiente}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\texttt{id} & \texttt{uuid} & no & \texttt{gen\_\allowbreak{}random\_\allowbreak{}uuid(\allowbreak{})} & PK & Identificador de la fila (UUID). \\
+\texttt{usuario\_\allowbreak{}id} & \texttt{uuid} & no &  & FK\,$\rightarrow$\,\texttt{identidad.\allowbreak{}usuarios} \newline UQ* & Usuario que aceptó. \\
+\texttt{clausula} & \texttt{varchar(\allowbreak{}50)} & no &  & UQ* & Cláusula aceptada (por ejemplo, \texttt{TERMINOS\_\allowbreak{}Y\_\allowbreak{}CONDICIONES} o \texttt{GRABACION\_\allowbreak{}AUDIO\_\allowbreak{}RESUMEN}). \\
+\texttt{version} & \texttt{varchar(\allowbreak{}20)} & no &  & UQ* & Versión aceptada de la cláusula. \\
+\texttt{aceptada\_\allowbreak{}at} & \texttt{timestamptz} & no & \texttt{now(\allowbreak{})} &  & Fecha y hora de la aceptación. \\
+\midrule
+\multicolumn{6}{@{}p{\textwidth}@{}}{\raggedright \textit{Migraciones:} V36. \newline \textit{Restricciones e índices:} \textsc{uq} \texttt{aceptaciones\_\allowbreak{}clausula\_\allowbreak{}usuario\_\allowbreak{}id\_\allowbreak{}clausula\_\allowbreak{}version\_\allowbreak{}key}: \texttt{UNIQUE (\allowbreak{}usuario\_\allowbreak{}id,\allowbreak{} clausula,\allowbreak{} version)}.}\\
+\end{longtable}
+\endgroup
+
+\needspace{12\baselineskip}
+\begingroup\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{2.55cm}>{\raggedright\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{0.75cm}>{\raggedright\arraybackslash}p{1.85cm}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-9.25cm-10\tabcolsep\relax}@{}}
+\caption[Diccionario de datos: \texttt{identidad.\allowbreak{}autorizaciones\_\allowbreak{}tutor}]{\texttt{identidad.\allowbreak{}autorizaciones\_\allowbreak{}tutor}: tutores que un adulto responsable autorizó para cada menor}\label{tab:dd-identidad-autorizaciones-tutor}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endfirsthead
+\multicolumn{6}{@{}l}{\scriptsize\itshape \texttt{identidad.\allowbreak{}autorizaciones\_\allowbreak{}tutor} (continuación)}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endhead
+\midrule\multicolumn{6}{r@{}}{\scriptsize\itshape continúa en la página siguiente}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\texttt{id} & \texttt{uuid} & no & \texttt{gen\_\allowbreak{}random\_\allowbreak{}uuid(\allowbreak{})} & PK & Identificador de la fila (UUID). \\
+\texttt{adulto\_\allowbreak{}responsable\_\allowbreak{}id} & \texttt{uuid} & no &  & FK\,$\rightarrow$\,\texttt{identidad.\allowbreak{}usuarios} \newline UQ* & Adulto responsable que autoriza. \\
+\texttt{menor\_\allowbreak{}id} & \texttt{uuid} & no &  & FK\,$\rightarrow$\,\texttt{identidad.\allowbreak{}usuarios} \newline UQ* & Menor para el que se autoriza al tutor. \\
+\texttt{tutor\_\allowbreak{}id} & \texttt{uuid} & no &  & FK\,$\rightarrow$\,\texttt{identidad.\allowbreak{}usuarios} \newline UQ* & Tutor autorizado. \\
+\texttt{no\_\allowbreak{}confiable} & \texttt{boolean} & no & \texttt{false} &  & Filtro privado del adulto responsable: el tutor deja de aparecerle en el matching, sin efecto en la reputación (FR-ID-009). \\
+\texttt{created\_\allowbreak{}at} & \texttt{timestamptz} & no & \texttt{now(\allowbreak{})} &  & Fecha y hora de creación. \\
+\midrule
+\multicolumn{6}{@{}p{\textwidth}@{}}{\raggedright \textit{Migraciones:} V2. \newline \textit{Restricciones e índices:} \textsc{uq} \texttt{uq\_\allowbreak{}autorizacion}: \texttt{UNIQUE (\allowbreak{}adulto\_\allowbreak{}responsable\_\allowbreak{}id,\allowbreak{} menor\_\allowbreak{}id,\allowbreak{} tutor\_\allowbreak{}id)}.}\\
+\end{longtable}
+\endgroup
+
+\needspace{12\baselineskip}
+\begingroup\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{2.55cm}>{\raggedright\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{0.75cm}>{\raggedright\arraybackslash}p{1.85cm}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-9.25cm-10\tabcolsep\relax}@{}}
+\caption[Diccionario de datos: \texttt{identidad.\allowbreak{}certificados\_\allowbreak{}antecedentes\_\allowbreak{}penales}]{\texttt{identidad.\allowbreak{}certificados\_\allowbreak{}antecedentes\_\allowbreak{}penales}: certificado de antecedentes penales (CAP) del tutor, su revisión y la verificación de la firma}\label{tab:dd-identidad-certificados-antecedentes-penales}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endfirsthead
+\multicolumn{6}{@{}l}{\scriptsize\itshape \texttt{identidad.\allowbreak{}certificados\_\allowbreak{}antecedentes\_\allowbreak{}penales} (continuación)}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endhead
+\midrule\multicolumn{6}{r@{}}{\scriptsize\itshape continúa en la página siguiente}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\texttt{id} & \texttt{uuid} & no & \texttt{gen\_\allowbreak{}random\_\allowbreak{}uuid(\allowbreak{})} & PK & Identificador de la fila (UUID). \\
+\texttt{tutor\_\allowbreak{}id} & \texttt{uuid} & no &  & FK\,$\rightarrow$\,\texttt{identidad.\allowbreak{}usuarios} & Tutor titular del certificado. \\
+\texttt{archivo\_\allowbreak{}url} & \texttt{varchar(\allowbreak{}500)} & no &  &  & Referencia al archivo subido. \\
+\texttt{fecha\_\allowbreak{}emision} & \texttt{date} & no &  &  & Fecha de emisión. \\
+\texttt{vence\_\allowbreak{}at} & \texttt{date} & no &  &  & Fecha de vencimiento. \\
+\texttt{estado} & \texttt{varchar(\allowbreak{}20)} & no & \texttt{'PENDIENTE'} & CK & \texttt{PENDIENTE}, \texttt{APROBADO}, \texttt{RECHAZADO}, \texttt{EN\_\allowbreak{}REVISION\_\allowbreak{}LEGAL} (nunca se resuelve sola) o \texttt{VENCIDO}. \\
+\texttt{tiene\_\allowbreak{}antecedentes} & \texttt{boolean} & no & \texttt{false} &  & El certificado registra antecedentes. \\
+\texttt{categoria\_\allowbreak{}antecedente} & \texttt{varchar(\allowbreak{}255)} & sí &  &  & Categoría del antecedente registrado. \\
+\texttt{numero\_\allowbreak{}intento} & \texttt{integer} & no & \texttt{1} & CK & Intento dentro del ciclo actual (1 a 3). \\
+\texttt{ciclo\_\allowbreak{}espera\_\allowbreak{}hasta} & \texttt{timestamptz} & sí &  &  & Mientras esté en el futuro, el tutor no puede subir otro certificado. \\
+\texttt{admin\_\allowbreak{}revisor\_\allowbreak{}id} & \texttt{uuid} & sí &  &  & Administrador que lo revisó (sin clave foránea). \\
+\texttt{created\_\allowbreak{}at} & \texttt{timestamptz} & no & \texttt{now(\allowbreak{})} &  & Fecha y hora de la carga. \\
+\texttt{revisado\_\allowbreak{}at} & \texttt{timestamptz} & sí &  &  & Fecha y hora de la revisión. \\
+\texttt{firma\_\allowbreak{}estado} & \texttt{varchar(\allowbreak{}30)} & no & \texttt{'NO\_\allowbreak{}VERIFICADA'} & CK & Verificación de la firma digital con el validador oficial: \texttt{NO\_\allowbreak{}VERIFICADA}, \texttt{PENDIENTE}, \texttt{EN\_\allowbreak{}PROCESO}, \texttt{VALIDA}, \texttt{INVALIDA}, \texttt{FIRMANTE\_\allowbreak{}NO\_\allowbreak{}RECONOCIDO} o \texttt{ERROR}. \\
+\texttt{firma\_\allowbreak{}detalle} & \texttt{varchar(\allowbreak{}500)} & sí &  &  & Detalle corto del resultado. \\
+\texttt{firma\_\allowbreak{}firmante} & \texttt{varchar(\allowbreak{}300)} & sí &  &  & Firmante que informa el validador. \\
+\texttt{firma\_\allowbreak{}sha256} & \texttt{varchar(\allowbreak{}64)} & sí &  &  & Hash del archivo enviado; el resultado vale solo si el validador informa el mismo. \\
+\texttt{firma\_\allowbreak{}solicitud\_\allowbreak{}id} & \texttt{varchar(\allowbreak{}120)} & sí &  &  & Identificador del pedido ante el validador. \\
+\texttt{firma\_\allowbreak{}intentos} & \texttt{integer} & no & \texttt{0} &  & Intentos de verificación. \\
+\texttt{firma\_\allowbreak{}proximo\_\allowbreak{}intento\_\allowbreak{}at} & \texttt{timestamptz} & sí &  &  & Próximo envío programado en la cola. \\
+\texttt{firma\_\allowbreak{}enviada\_\allowbreak{}at} & \texttt{timestamptz} & sí &  &  & Envío al validador. \\
+\texttt{firma\_\allowbreak{}verificada\_\allowbreak{}at} & \texttt{timestamptz} & sí &  &  & Recepción del resultado. \\
+\midrule
+\multicolumn{6}{@{}p{\textwidth}@{}}{\raggedright \textit{Migraciones:} V6, V50. \newline \textit{Restricciones e índices:} \textsc{ck} \texttt{certificados\_\allowbreak{}antecedentes\_\allowbreak{}penales\_\allowbreak{}estado\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}estado IN (\allowbreak{}'PENDIENTE',\allowbreak{} 'APROBADO',\allowbreak{} 'RECHAZADO',\allowbreak{} 'EN\_\allowbreak{}REVISION\_\allowbreak{}LEGAL',\allowbreak{} 'VENCIDO'))}; \textsc{ck} \texttt{certificados\_\allowbreak{}antecedentes\_\allowbreak{}penales\_\allowbreak{}firma\_\allowbreak{}estado\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}firma\_\allowbreak{}estado IN (\allowbreak{}'NO\_\allowbreak{}VERIFICADA',\allowbreak{} 'PENDIENTE',\allowbreak{} 'EN\_\allowbreak{}PROCESO',\allowbreak{} 'VALIDA',\allowbreak{} 'INVALIDA',\allowbreak{} 'FIRMANTE\_\allowbreak{}NO\_\allowbreak{}RECONOCIDO',\allowbreak{} 'ERROR'))}; \textsc{ck} \texttt{certificados\_\allowbreak{}antecedentes\_\allowbreak{}penales\_\allowbreak{}numero\_\allowbreak{}intento\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}(\allowbreak{}numero\_\allowbreak{}intento >= 1) AND (\allowbreak{}numero\_\allowbreak{}intento <= 3))}; \textsc{ix} \texttt{idx\_\allowbreak{}cap\_\allowbreak{}estado\_\allowbreak{}vence}: \texttt{(\allowbreak{}estado,\allowbreak{} vence\_\allowbreak{}at)}; \textsc{ix} \texttt{idx\_\allowbreak{}cap\_\allowbreak{}firma\_\allowbreak{}cola}: \texttt{(\allowbreak{}firma\_\allowbreak{}estado,\allowbreak{} firma\_\allowbreak{}proximo\_\allowbreak{}intento\_\allowbreak{}at)}; \textsc{ix} \texttt{idx\_\allowbreak{}cap\_\allowbreak{}tutor}: \texttt{tutor\_\allowbreak{}id}.}\\
+\end{longtable}
+\endgroup
+
+\needspace{12\baselineskip}
+\begingroup\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{2.55cm}>{\raggedright\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{0.75cm}>{\raggedright\arraybackslash}p{1.85cm}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-9.25cm-10\tabcolsep\relax}@{}}
+\caption[Diccionario de datos: \texttt{identidad.\allowbreak{}consentimientos\_\allowbreak{}menor}]{\texttt{identidad.\allowbreak{}consentimientos\_\allowbreak{}menor}: consentimiento del adulto responsable para el tratamiento de datos del menor, separado de los Términos}\label{tab:dd-identidad-consentimientos-menor}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endfirsthead
+\multicolumn{6}{@{}l}{\scriptsize\itshape \texttt{identidad.\allowbreak{}consentimientos\_\allowbreak{}menor} (continuación)}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endhead
+\midrule\multicolumn{6}{r@{}}{\scriptsize\itshape continúa en la página siguiente}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\texttt{id} & \texttt{uuid} & no & \texttt{gen\_\allowbreak{}random\_\allowbreak{}uuid(\allowbreak{})} & PK & Identificador de la fila (UUID). \\
+\texttt{menor\_\allowbreak{}id} & \texttt{uuid} & no &  & FK\,$\rightarrow$\,\texttt{identidad.\allowbreak{}usuarios} & Menor al que se refiere el consentimiento. \\
+\texttt{adulto\_\allowbreak{}responsable\_\allowbreak{}id} & \texttt{uuid} & no &  & FK\,$\rightarrow$\,\texttt{identidad.\allowbreak{}usuarios} & Adulto responsable que lo otorga. \\
+\texttt{version\_\allowbreak{}texto} & \texttt{varchar(\allowbreak{}50)} & no &  &  & Versión del texto aceptado. \\
+\texttt{aceptado\_\allowbreak{}at} & \texttt{timestamptz} & no & \texttt{now(\allowbreak{})} &  & Fecha y hora de la aceptación. \\
+\texttt{revocado\_\allowbreak{}at} & \texttt{timestamptz} & sí &  &  & Fecha y hora de la revocación; nulo si está vigente. \\
+\midrule
+\multicolumn{6}{@{}p{\textwidth}@{}}{\raggedright \textit{Migraciones:} V2. \newline \textit{Restricciones e índices:} \textsc{ix} \texttt{idx\_\allowbreak{}consentimientos\_\allowbreak{}menor}: \texttt{menor\_\allowbreak{}id}.}\\
+\end{longtable}
+\endgroup
+
+\needspace{12\baselineskip}
+\begingroup\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{2.55cm}>{\raggedright\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{0.75cm}>{\raggedright\arraybackslash}p{1.85cm}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-9.25cm-10\tabcolsep\relax}@{}}
+\caption[Diccionario de datos: \texttt{identidad.\allowbreak{}credencial\_\allowbreak{}especialidades}]{\texttt{identidad.\allowbreak{}credencial\_\allowbreak{}especialidades}: especialidades que cubre una credencial aprobada}\label{tab:dd-identidad-credencial-especialidades}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endfirsthead
+\multicolumn{6}{@{}l}{\scriptsize\itshape \texttt{identidad.\allowbreak{}credencial\_\allowbreak{}especialidades} (continuación)}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endhead
+\midrule\multicolumn{6}{r@{}}{\scriptsize\itshape continúa en la página siguiente}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\texttt{credencial\_\allowbreak{}id} & \texttt{uuid} & no &  & FK\,$\rightarrow$\,\texttt{identidad.\allowbreak{}credenciales\_\allowbreak{}academicas} \newline PK & Credencial aprobada. \\
+\texttt{especialidad\_\allowbreak{}id} & \texttt{uuid} & no &  & FK\,$\rightarrow$\,\texttt{identidad.\allowbreak{}especialidades\_\allowbreak{}tutor} \newline PK & Especialidad que cubre; se borra con la especialidad. \\
+\midrule
+\multicolumn{6}{@{}p{\textwidth}@{}}{\raggedright \textit{Migraciones:} V56. \newline \textit{Restricciones e índices:} \textsc{fk} \texttt{credencial\_\allowbreak{}especialidades\_\allowbreak{}especialidad\_\allowbreak{}id\_\allowbreak{}fkey}: ON DELETE CASCADE; \textsc{pk} compuesta: \texttt{credencial\_\allowbreak{}id,\allowbreak{} especialidad\_\allowbreak{}id}; \textsc{ix} \texttt{idx\_\allowbreak{}credencial\_\allowbreak{}especialidades\_\allowbreak{}esp}: \texttt{especialidad\_\allowbreak{}id}.}\\
+\end{longtable}
+\endgroup
+
+\needspace{12\baselineskip}
+\begingroup\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{2.55cm}>{\raggedright\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{0.75cm}>{\raggedright\arraybackslash}p{1.85cm}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-9.25cm-10\tabcolsep\relax}@{}}
+\caption[Diccionario de datos: \texttt{identidad.\allowbreak{}credenciales\_\allowbreak{}academicas}]{\texttt{identidad.\allowbreak{}credenciales\_\allowbreak{}academicas}: credencial académica que carga el tutor y su revisión}\label{tab:dd-identidad-credenciales-academicas}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endfirsthead
+\multicolumn{6}{@{}l}{\scriptsize\itshape \texttt{identidad.\allowbreak{}credenciales\_\allowbreak{}academicas} (continuación)}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endhead
+\midrule\multicolumn{6}{r@{}}{\scriptsize\itshape continúa en la página siguiente}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\texttt{id} & \texttt{uuid} & no & \texttt{gen\_\allowbreak{}random\_\allowbreak{}uuid(\allowbreak{})} & PK & Identificador de la fila (UUID). \\
+\texttt{tutor\_\allowbreak{}id} & \texttt{uuid} & no &  & FK\,$\rightarrow$\,\texttt{identidad.\allowbreak{}usuarios} & Tutor que cargó la credencial. \\
+\texttt{tipo\_\allowbreak{}documento} & \texttt{varchar(\allowbreak{}30)} & no &  & CK & Tipo de documento: los originales (\texttt{TITULO}, \texttt{CERTIFICADO\_\allowbreak{}ANALITICO}, \texttt{MATRICULA}) y los de V56 (\texttt{SECUNDARIO}, \texttt{PROFESORADO}, \texttt{UNIVERSITARIO}, etc.). \\
+\texttt{archivo\_\allowbreak{}url} & \texttt{varchar(\allowbreak{}500)} & no &  &  & Referencia al archivo subido. \\
+\texttt{estado} & \texttt{varchar(\allowbreak{}20)} & no & \texttt{'PENDIENTE'} & CK & \texttt{PENDIENTE}, \texttt{APROBADO} o \texttt{RECHAZADO}. \\
+\texttt{numero\_\allowbreak{}intento} & \texttt{integer} & no & \texttt{1} & CK & Intento dentro del ciclo actual (1 a 3). \\
+\texttt{ciclo\_\allowbreak{}espera\_\allowbreak{}hasta} & \texttt{timestamptz} & sí &  &  & Mientras esté en el futuro, el tutor no puede subir otra credencial (FR-ID-012). \\
+\texttt{admin\_\allowbreak{}revisor\_\allowbreak{}id} & \texttt{uuid} & sí &  &  & Administrador que la aprobó o rechazó (sin clave foránea). \\
+\texttt{created\_\allowbreak{}at} & \texttt{timestamptz} & no & \texttt{now(\allowbreak{})} &  & Fecha y hora de la carga. \\
+\texttt{revisado\_\allowbreak{}at} & \texttt{timestamptz} & sí &  &  & Fecha y hora de la revisión. \\
+\texttt{institucion} & \texttt{varchar(\allowbreak{}200)} & sí &  &  & Institución que emitió el título. \\
+\texttt{denominacion} & \texttt{varchar(\allowbreak{}200)} & sí &  &  & Denominación del título. \\
+\texttt{anio\_\allowbreak{}egreso} & \texttt{integer} & sí &  & CK & Año de egreso (1900 a 2100). \\
+\texttt{es\_\allowbreak{}digital} & \texttt{boolean} & sí &  &  & El documento es digital. \\
+\texttt{enlace\_\allowbreak{}verificacion} & \texttt{varchar(\allowbreak{}500)} & sí &  &  & Enlace de verificación del documento. \\
+\texttt{nombre\_\allowbreak{}coincide} & \texttt{boolean} & sí &  &  & Resultado del OCR contra el nombre del DNI: nulo, no se pudo comparar; falso, no coincide (marca para el administrador). \\
+\texttt{metodo\_\allowbreak{}verificacion} & \texttt{varchar(\allowbreak{}20)} & sí &  & CK & \texttt{REGISTRO\_\allowbreak{}OFICIAL} o \texttt{SOLO\_\allowbreak{}DOCUMENTO}. \\
+\texttt{motivo\_\allowbreak{}rechazo} & \texttt{varchar(\allowbreak{}30)} & sí &  & CK & Motivo codificado del rechazo. \\
+\texttt{detalle\_\allowbreak{}rechazo} & \texttt{varchar(\allowbreak{}500)} & sí &  &  & Detalle libre del rechazo. \\
+\midrule
+\multicolumn{6}{@{}p{\textwidth}@{}}{\raggedright \textit{Migraciones:} V2, V56. \newline \textit{Restricciones e índices:} \textsc{ck} \texttt{credenciales\_\allowbreak{}academicas\_\allowbreak{}anio\_\allowbreak{}egreso\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}(\allowbreak{}anio\_\allowbreak{}egreso >= 1900) AND (\allowbreak{}anio\_\allowbreak{}egreso <= 2100))}; \textsc{ck} \texttt{credenciales\_\allowbreak{}academicas\_\allowbreak{}estado\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}estado IN (\allowbreak{}'PENDIENTE',\allowbreak{} 'APROBADO',\allowbreak{} 'RECHAZADO'))}; \textsc{ck} \texttt{credenciales\_\allowbreak{}academicas\_\allowbreak{}metodo\_\allowbreak{}verificacion\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}metodo\_\allowbreak{}verificacion IN (\allowbreak{}'REGISTRO\_\allowbreak{}OFICIAL',\allowbreak{} 'SOLO\_\allowbreak{}DOCUMENTO'))}; \textsc{ck} \texttt{credenciales\_\allowbreak{}academicas\_\allowbreak{}motivo\_\allowbreak{}rechazo\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}motivo\_\allowbreak{}rechazo IN (\allowbreak{}'ILEGIBLE',\allowbreak{} 'NO\_\allowbreak{}ES\_\allowbreak{}TITULO',\allowbreak{} 'NOMBRE\_\allowbreak{}NO\_\allowbreak{}COINCIDE',\allowbreak{} 'NO\_\allowbreak{}FIGURA\_\allowbreak{}EN\_\allowbreak{}REGISTRO',\allowbreak{} 'DATOS\_\allowbreak{}NO\_\allowbreak{}COINCIDEN',\allowbreak{} 'ENLACE\_\allowbreak{}INVALIDO',\allowbreak{} 'OTRO'))}; \textsc{ck} \texttt{credenciales\_\allowbreak{}academicas\_\allowbreak{}numero\_\allowbreak{}intento\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}(\allowbreak{}numero\_\allowbreak{}intento >= 1) AND (\allowbreak{}numero\_\allowbreak{}intento <= 3))}; \textsc{ck} \texttt{credenciales\_\allowbreak{}academicas\_\allowbreak{}tipo\_\allowbreak{}documento\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}tipo\_\allowbreak{}documento IN (\allowbreak{}'TITULO',\allowbreak{} 'CERTIFICADO\_\allowbreak{}ANALITICO',\allowbreak{} 'MATRICULA',\allowbreak{} 'SECUNDARIO',\allowbreak{} 'TERCIARIO\_\allowbreak{}NO\_\allowbreak{}DOCENTE',\allowbreak{} 'PROFESORADO',\allowbreak{} 'UNIVERSITARIO',\allowbreak{} 'ALUMNO\_\allowbreak{}UNIVERSITARIO',\allowbreak{} 'MATRICULA\_\allowbreak{}PROFESIONAL',\allowbreak{} 'OTRO'))}; \textsc{ix} \texttt{idx\_\allowbreak{}credenciales\_\allowbreak{}estado}: \texttt{estado}; \textsc{ix} \texttt{idx\_\allowbreak{}credenciales\_\allowbreak{}tutor}: \texttt{tutor\_\allowbreak{}id}.}\\
+\end{longtable}
+\endgroup
+
+\needspace{12\baselineskip}
+\begingroup\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{2.55cm}>{\raggedright\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{0.75cm}>{\raggedright\arraybackslash}p{1.85cm}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-9.25cm-10\tabcolsep\relax}@{}}
+\caption[Diccionario de datos: \texttt{identidad.\allowbreak{}especialidades\_\allowbreak{}tutor}]{\texttt{identidad.\allowbreak{}especialidades\_\allowbreak{}tutor}: especialidades del tutor: materia y nivel máximo}\label{tab:dd-identidad-especialidades-tutor}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endfirsthead
+\multicolumn{6}{@{}l}{\scriptsize\itshape \texttt{identidad.\allowbreak{}especialidades\_\allowbreak{}tutor} (continuación)}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endhead
+\midrule\multicolumn{6}{r@{}}{\scriptsize\itshape continúa en la página siguiente}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\texttt{id} & \texttt{uuid} & no & \texttt{gen\_\allowbreak{}random\_\allowbreak{}uuid(\allowbreak{})} & PK & Identificador de la fila (UUID). \\
+\texttt{tutor\_\allowbreak{}id} & \texttt{uuid} & no &  & FK\,$\rightarrow$\,\texttt{identidad.\allowbreak{}usuarios} \newline UQ* & Tutor (de 1 a 3 especialidades, control del servicio). \\
+\texttt{materia} & \texttt{varchar(\allowbreak{}100)} & no &  & UQ* & Materia del catálogo de temas. \\
+\texttt{nivel\_\allowbreak{}maximo} & \texttt{varchar(\allowbreak{}20)} & no &  & CK & Nivel máximo que puede enseñar: \texttt{PRIMARIO}, \texttt{SECUNDARIO} o \texttt{UNIVERSITARIO}. \\
+\texttt{created\_\allowbreak{}at} & \texttt{timestamptz} & no & \texttt{now(\allowbreak{})} &  & Fecha y hora de creación. \\
+\midrule
+\multicolumn{6}{@{}p{\textwidth}@{}}{\raggedright \textit{Migraciones:} V56. \newline \textit{Restricciones e índices:} \textsc{ck} \texttt{especialidades\_\allowbreak{}tutor\_\allowbreak{}nivel\_\allowbreak{}maximo\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}nivel\_\allowbreak{}maximo IN (\allowbreak{}'PRIMARIO',\allowbreak{} 'SECUNDARIO',\allowbreak{} 'UNIVERSITARIO'))}; \textsc{uq} \texttt{uq\_\allowbreak{}especialidad\_\allowbreak{}tutor\_\allowbreak{}materia}: \texttt{UNIQUE (\allowbreak{}tutor\_\allowbreak{}id,\allowbreak{} materia)}; \textsc{ix} \texttt{idx\_\allowbreak{}especialidades\_\allowbreak{}tutor}: \texttt{tutor\_\allowbreak{}id}.}\\
+\end{longtable}
+\endgroup
+
+\needspace{12\baselineskip}
+\begingroup\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{2.55cm}>{\raggedright\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{0.75cm}>{\raggedright\arraybackslash}p{1.85cm}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-9.25cm-10\tabcolsep\relax}@{}}
+\caption[Diccionario de datos: \texttt{identidad.\allowbreak{}intentos\_\allowbreak{}credencial}]{\texttt{identidad.\allowbreak{}intentos\_\allowbreak{}credencial}: ciclos de carga de credencial agotados por tutor, para escalar la espera}\label{tab:dd-identidad-intentos-credencial}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endfirsthead
+\multicolumn{6}{@{}l}{\scriptsize\itshape \texttt{identidad.\allowbreak{}intentos\_\allowbreak{}credencial} (continuación)}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endhead
+\midrule\multicolumn{6}{r@{}}{\scriptsize\itshape continúa en la página siguiente}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\texttt{tutor\_\allowbreak{}id} & \texttt{uuid} & no &  & FK\,$\rightarrow$\,\texttt{identidad.\allowbreak{}usuarios} \newline PK & Tutor. \\
+\texttt{veces\_\allowbreak{}ciclo\_\allowbreak{}agotado} & \texttt{integer} & no & \texttt{0} &  & Veces que agotó el ciclo de reintentos; la espera se duplica en cada ciclo (24, 48, 96 h...). \\
+\texttt{proximo\_\allowbreak{}intento\_\allowbreak{}permitido} & \texttt{timestamptz} & sí &  &  & Hasta cuándo debe esperar antes del próximo ciclo. \\
+\texttt{updated\_\allowbreak{}at} & \texttt{timestamptz} & no & \texttt{now(\allowbreak{})} &  & Fecha y hora de la última modificación. \\
+\midrule
+\multicolumn{6}{@{}p{\textwidth}@{}}{\raggedright \textit{Migraciones:} V5.}\\
+\end{longtable}
+\endgroup
+
+\needspace{12\baselineskip}
+\begingroup\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{2.55cm}>{\raggedright\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{0.75cm}>{\raggedright\arraybackslash}p{1.85cm}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-9.25cm-10\tabcolsep\relax}@{}}
+\caption[Diccionario de datos: \texttt{identidad.\allowbreak{}intentos\_\allowbreak{}ocr}]{\texttt{identidad.\allowbreak{}intentos\_\allowbreak{}ocr}: fotos de DNI ilegibles por DNI declarado y espera entre ciclos}\label{tab:dd-identidad-intentos-ocr}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endfirsthead
+\multicolumn{6}{@{}l}{\scriptsize\itshape \texttt{identidad.\allowbreak{}intentos\_\allowbreak{}ocr} (continuación)}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endhead
+\midrule\multicolumn{6}{r@{}}{\scriptsize\itshape continúa en la página siguiente}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\texttt{dni} & \texttt{varchar(\allowbreak{}20)} & no &  & PK & DNI declarado por quien intenta registrarse. \\
+\texttt{intentos\_\allowbreak{}consumidos} & \texttt{integer} & no & \texttt{0} & CK & Fotos ilegibles en el ciclo actual; el tope lo fija la aplicación (V52). \\
+\texttt{proximo\_\allowbreak{}intento\_\allowbreak{}permitido} & \texttt{timestamptz} & sí &  &  & Hasta cuándo debe esperar antes de un nuevo ciclo; se compara al leer, sin trabajo programado. \\
+\texttt{updated\_\allowbreak{}at} & \texttt{timestamptz} & no & \texttt{now(\allowbreak{})} &  & Fecha y hora de la última modificación. \\
+\midrule
+\multicolumn{6}{@{}p{\textwidth}@{}}{\raggedright \textit{Migraciones:} V4, V52. \newline \textit{Restricciones e índices:} \textsc{ck} \texttt{intentos\_\allowbreak{}ocr\_\allowbreak{}intentos\_\allowbreak{}consumidos\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}intentos\_\allowbreak{}consumidos >= 0)}.}\\
+\end{longtable}
+\endgroup
+
+\needspace{12\baselineskip}
+\begingroup\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{2.55cm}>{\raggedright\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{0.75cm}>{\raggedright\arraybackslash}p{1.85cm}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-9.25cm-10\tabcolsep\relax}@{}}
+\caption[Diccionario de datos: \texttt{identidad.\allowbreak{}tokens\_\allowbreak{}reset\_\allowbreak{}password}]{\texttt{identidad.\allowbreak{}tokens\_\allowbreak{}reset\_\allowbreak{}password}: tokens de un solo uso para recuperar la contraseña}\label{tab:dd-identidad-tokens-reset-password}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endfirsthead
+\multicolumn{6}{@{}l}{\scriptsize\itshape \texttt{identidad.\allowbreak{}tokens\_\allowbreak{}reset\_\allowbreak{}password} (continuación)}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endhead
+\midrule\multicolumn{6}{r@{}}{\scriptsize\itshape continúa en la página siguiente}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\texttt{id} & \texttt{uuid} & no &  & PK & Identificador de la fila (UUID). \\
+\texttt{usuario\_\allowbreak{}id} & \texttt{uuid} & no &  & FK\,$\rightarrow$\,\texttt{identidad.\allowbreak{}usuarios} & Usuario que pidió la recuperación. \\
+\texttt{token\_\allowbreak{}hash} & \texttt{varchar(\allowbreak{}64)} & no &  & UQ & SHA-256 del token (64 caracteres hexadecimales); el token no se guarda. \\
+\texttt{expira\_\allowbreak{}en} & \texttt{timestamptz} & no &  &  & Vencimiento del token. \\
+\texttt{usado\_\allowbreak{}en} & \texttt{timestamptz} & sí &  &  & Uso del token; nulo si no se usó. \\
+\texttt{created\_\allowbreak{}at} & \texttt{timestamptz} & no & \texttt{now(\allowbreak{})} &  & Fecha y hora de creación. \\
+\midrule
+\multicolumn{6}{@{}p{\textwidth}@{}}{\raggedright \textit{Migraciones:} V23. \newline \textit{Restricciones e índices:} \textsc{ix} \texttt{ix\_\allowbreak{}tokens\_\allowbreak{}reset\_\allowbreak{}password\_\allowbreak{}usuario}: \texttt{usuario\_\allowbreak{}id}.}\\
+\end{longtable}
+\endgroup
+
+\needspace{12\baselineskip}
+\begingroup\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{2.55cm}>{\raggedright\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{0.75cm}>{\raggedright\arraybackslash}p{1.85cm}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-9.25cm-10\tabcolsep\relax}@{}}
+\caption[Diccionario de datos: \texttt{identidad.\allowbreak{}usuarios}]{\texttt{identidad.\allowbreak{}usuarios}: cuenta de cada persona registrada (adulto, menor o tutor)}\label{tab:dd-identidad-usuarios}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endfirsthead
+\multicolumn{6}{@{}l}{\scriptsize\itshape \texttt{identidad.\allowbreak{}usuarios} (continuación)}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endhead
+\midrule\multicolumn{6}{r@{}}{\scriptsize\itshape continúa en la página siguiente}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\texttt{id} & \texttt{uuid} & no & \texttt{gen\_\allowbreak{}random\_\allowbreak{}uuid(\allowbreak{})} & PK & Identificador de la cuenta (UUID). \\
+\texttt{dni} & \texttt{varchar(\allowbreak{}20)} & no &  & UQ & DNI de la persona; único. \\
+\texttt{nombre} & \texttt{varchar(\allowbreak{}150)} & no &  &  & Nombre. \\
+\texttt{apellido} & \texttt{varchar(\allowbreak{}150)} & no &  &  & Apellido. \\
+\texttt{fecha\_\allowbreak{}nacimiento} & \texttt{date} & no &  &  & Fecha de nacimiento. \\
+\texttt{tipo} & \texttt{varchar(\allowbreak{}20)} & no &  & CK & Tipo de cuenta: \texttt{ADULTO}, \texttt{MENOR} o \texttt{TUTOR}. \\
+\texttt{capacidad\_\allowbreak{}estudiante} & \texttt{boolean} & no & \texttt{false} & CK & El adulto toma clases como estudiante. Un \texttt{ADULTO} tiene al menos una de las dos capacidades. \\
+\texttt{capacidad\_\allowbreak{}adulto\_\allowbreak{}responsable} & \texttt{boolean} & no & \texttt{false} & CK & El adulto es adulto responsable de uno o más menores. \\
+\texttt{adulto\_\allowbreak{}responsable\_\allowbreak{}id} & \texttt{uuid} & sí &  & CK \newline FK\,$\rightarrow$\,\texttt{identidad.\allowbreak{}usuarios} & Adulto responsable del menor; obligatorio si y solo si el tipo es \texttt{MENOR}. \\
+\texttt{password\_\allowbreak{}hash} & \texttt{varchar(\allowbreak{}255)} & no &  &  & Hash de la contraseña. \\
+\texttt{estado\_\allowbreak{}cuenta} & \texttt{varchar(\allowbreak{}20)} & no & \texttt{'ACTIVA'} & CK & \texttt{ACTIVA}, \texttt{SUSPENDIDA} o \texttt{BAJA}; la baja anonimiza la cuenta en lugar de borrarla (ADR-M1-05). \\
+\texttt{created\_\allowbreak{}at} & \texttt{timestamptz} & no & \texttt{now(\allowbreak{})} &  & Fecha y hora del alta. \\
+\texttt{activo\_\allowbreak{}para\_\allowbreak{}matching} & \texttt{boolean} & no & \texttt{false} &  & El tutor aparece en el matching; lo apagan el vencimiento del CAP y las suspensiones (M9). \\
+\texttt{email} & \texttt{varchar(\allowbreak{}255)} & sí &  & UQ & Correo de contacto; único entre los no nulos. \\
+\texttt{bio} & \texttt{varchar(\allowbreak{}500)} & sí &  &  & Presentación del perfil público del tutor (hasta 500 caracteres). \\
+\texttt{foto\_\allowbreak{}ref} & \texttt{text} & sí &  &  & Referencia interna de la foto del perfil del tutor (no es una URL pública). \\
+\texttt{credentials\_\allowbreak{}version} & \texttt{integer} & no & \texttt{0} &  & Versión de credenciales: cambia al cambiar la contraseña e invalida los JWT emitidos antes. \\
+\texttt{acepta\_\allowbreak{}menores} & \texttt{boolean} & no & \texttt{true} &  & Preferencia del tutor de dar clases a menores; el requisito sigue siendo el CAP vigente. \\
+\midrule
+\multicolumn{6}{@{}p{\textwidth}@{}}{\raggedright \textit{Migraciones:} V2, V6, V18, V27, V28, V33, V41. \newline \textit{Restricciones e índices:} \textsc{ck} \texttt{chk\_\allowbreak{}adulto\_\allowbreak{}tiene\_\allowbreak{}capacidad}: \texttt{CHECK (\allowbreak{}(\allowbreak{}tipo <> 'ADULTO') OR (\allowbreak{}capacidad\_\allowbreak{}estudiante OR capacidad\_\allowbreak{}adulto\_\allowbreak{}responsable))}; \textsc{ck} \texttt{chk\_\allowbreak{}menor\_\allowbreak{}tiene\_\allowbreak{}responsable}: \texttt{CHECK (\allowbreak{}(\allowbreak{}(\allowbreak{}tipo = 'MENOR') AND (\allowbreak{}adulto\_\allowbreak{}responsable\_\allowbreak{}id IS NOT NULL)) OR (\allowbreak{}(\allowbreak{}tipo <> 'MENOR') AND (\allowbreak{}adulto\_\allowbreak{}responsable\_\allowbreak{}id IS NULL)))}; \textsc{ck} \texttt{chk\_\allowbreak{}usuarios\_\allowbreak{}estado\_\allowbreak{}cuenta}: \texttt{CHECK (\allowbreak{}estado\_\allowbreak{}cuenta IN (\allowbreak{}'ACTIVA',\allowbreak{} 'SUSPENDIDA',\allowbreak{} 'BAJA'))}; \textsc{ck} \texttt{usuarios\_\allowbreak{}tipo\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}tipo IN (\allowbreak{}'ADULTO',\allowbreak{} 'MENOR',\allowbreak{} 'TUTOR'))}; \textsc{ix} \texttt{idx\_\allowbreak{}usuarios\_\allowbreak{}adulto\_\allowbreak{}responsable}: \texttt{adulto\_\allowbreak{}responsable\_\allowbreak{}id}; \textsc{ix} \texttt{idx\_\allowbreak{}usuarios\_\allowbreak{}tipo}: \texttt{tipo}; \textsc{ix único} \texttt{uq\_\allowbreak{}usuarios\_\allowbreak{}email}: \texttt{email WHERE (\allowbreak{}email IS NOT NULL)}.}\\
+\end{longtable}
+\endgroup
+
+\subsection{Esquema \texttt{matching}}\label{sec:dd-matching}
+
+Módulo M2, motor de matching semántico: catálogo de trayectos y temas con sus embeddings, perfil de matching del tutor, búsquedas guardadas, temas sugeridos e instrumentación de la evaluación.
+
+\needspace{12\baselineskip}
+\begingroup\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{2.55cm}>{\raggedright\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{0.75cm}>{\raggedright\arraybackslash}p{1.85cm}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-9.25cm-10\tabcolsep\relax}@{}}
+\caption[Diccionario de datos: \texttt{matching.\allowbreak{}busquedas\_\allowbreak{}guardadas}]{\texttt{matching.\allowbreak{}busquedas\_\allowbreak{}guardadas}: búsquedas guardadas, que se vuelven a ejecutar}\label{tab:dd-matching-busquedas-guardadas}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endfirsthead
+\multicolumn{6}{@{}l}{\scriptsize\itshape \texttt{matching.\allowbreak{}busquedas\_\allowbreak{}guardadas} (continuación)}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endhead
+\midrule\multicolumn{6}{r@{}}{\scriptsize\itshape continúa en la página siguiente}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\texttt{id} & \texttt{uuid} & no & \texttt{gen\_\allowbreak{}random\_\allowbreak{}uuid(\allowbreak{})} & PK & Identificador de la fila (UUID). \\
+\texttt{usuario\_\allowbreak{}id} & \texttt{uuid} & no &  & FK\,$\rightarrow$\,\texttt{identidad.\allowbreak{}usuarios} \newline UQ* & Usuario que guardó la búsqueda. \\
+\texttt{texto\_\allowbreak{}busqueda} & \texttt{varchar(\allowbreak{}500)} & no &  &  & Texto de la búsqueda. \\
+\texttt{created\_\allowbreak{}at} & \texttt{timestamptz} & no & \texttt{now(\allowbreak{})} &  & Fecha y hora de creación. \\
+\texttt{filtros} & \texttt{jsonb} & no & \texttt{'\{\}'} &  & Filtros guardados (nivel, materia, nombre, precio máximo). \\
+\texttt{huella} & \texttt{varchar(\allowbreak{}64)} & no &  & UQ* & Huella del texto normalizado y los filtros; evita duplicados por usuario. \\
+\midrule
+\multicolumn{6}{@{}p{\textwidth}@{}}{\raggedright \textit{Migraciones:} V7, V49. \newline \textit{Restricciones e índices:} \textsc{ix} \texttt{idx\_\allowbreak{}busquedas\_\allowbreak{}guardadas\_\allowbreak{}usuario}: \texttt{usuario\_\allowbreak{}id}; \textsc{ix único} \texttt{uq\_\allowbreak{}busquedas\_\allowbreak{}guardadas\_\allowbreak{}usuario\_\allowbreak{}huella}: \texttt{(\allowbreak{}usuario\_\allowbreak{}id,\allowbreak{} huella)}.}\\
+\end{longtable}
+\endgroup
+
+\needspace{12\baselineskip}
+\begingroup\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{2.55cm}>{\raggedright\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{0.75cm}>{\raggedright\arraybackslash}p{1.85cm}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-9.25cm-10\tabcolsep\relax}@{}}
+\caption[Diccionario de datos: \texttt{matching.\allowbreak{}evaluacion\_\allowbreak{}aceptaciones}]{\texttt{matching.\allowbreak{}evaluacion\_\allowbreak{}aceptaciones}: tutores sugeridos cuyo perfil se abrió o que se reservaron (evaluación)}\label{tab:dd-matching-evaluacion-aceptaciones}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endfirsthead
+\multicolumn{6}{@{}l}{\scriptsize\itshape \texttt{matching.\allowbreak{}evaluacion\_\allowbreak{}aceptaciones} (continuación)}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endhead
+\midrule\multicolumn{6}{r@{}}{\scriptsize\itshape continúa en la página siguiente}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\texttt{id} & \texttt{uuid} & no & \texttt{gen\_\allowbreak{}random\_\allowbreak{}uuid(\allowbreak{})} & PK & Identificador de la fila (UUID). \\
+\texttt{busqueda\_\allowbreak{}id} & \texttt{uuid} & no &  & FK\,$\rightarrow$\,\texttt{matching.\allowbreak{}evaluacion\_\allowbreak{}busquedas} \newline UQ* & Búsqueda evaluada; se borra con ella. \\
+\texttt{tutor\_\allowbreak{}id} & \texttt{uuid} & no &  & FK\,$\rightarrow$\,\texttt{identidad.\allowbreak{}usuarios} \newline UQ* & Tutor elegido. \\
+\texttt{posicion} & \texttt{integer} & no &  & CK & Posición del tutor en la lista (1 = primero), calculada por el servidor. \\
+\texttt{tipo} & \texttt{varchar(\allowbreak{}10)} & no &  & CK \newline UQ* & \texttt{PERFIL} (se abrió) o \texttt{RESERVA} (se reservó). \\
+\texttt{created\_\allowbreak{}at} & \texttt{timestamptz} & no & \texttt{now(\allowbreak{})} &  & Fecha y hora de creación. \\
+\midrule
+\multicolumn{6}{@{}p{\textwidth}@{}}{\raggedright \textit{Migraciones:} V58. \newline \textit{Restricciones e índices:} \textsc{ck} \texttt{evaluacion\_\allowbreak{}aceptaciones\_\allowbreak{}posicion\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}posicion >= 1)}; \textsc{ck} \texttt{evaluacion\_\allowbreak{}aceptaciones\_\allowbreak{}tipo\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}tipo IN (\allowbreak{}'PERFIL',\allowbreak{} 'RESERVA'))}; \textsc{fk} \texttt{evaluacion\_\allowbreak{}aceptaciones\_\allowbreak{}busqueda\_\allowbreak{}id\_\allowbreak{}fkey}: ON DELETE CASCADE; \textsc{uq} \texttt{uq\_\allowbreak{}evaluacion\_\allowbreak{}aceptacion}: \texttt{UNIQUE (\allowbreak{}busqueda\_\allowbreak{}id,\allowbreak{} tutor\_\allowbreak{}id,\allowbreak{} tipo)}.}\\
+\end{longtable}
+\endgroup
+
+\needspace{12\baselineskip}
+\begingroup\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{2.55cm}>{\raggedright\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{0.75cm}>{\raggedright\arraybackslash}p{1.85cm}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-9.25cm-10\tabcolsep\relax}@{}}
+\caption[Diccionario de datos: \texttt{matching.\allowbreak{}evaluacion\_\allowbreak{}busquedas}]{\texttt{matching.\allowbreak{}evaluacion\_\allowbreak{}busquedas}: tutores mostrados en cada búsqueda (evaluación)}\label{tab:dd-matching-evaluacion-busquedas}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endfirsthead
+\multicolumn{6}{@{}l}{\scriptsize\itshape \texttt{matching.\allowbreak{}evaluacion\_\allowbreak{}busquedas} (continuación)}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endhead
+\midrule\multicolumn{6}{r@{}}{\scriptsize\itshape continúa en la página siguiente}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\texttt{id} & \texttt{uuid} & no & \texttt{gen\_\allowbreak{}random\_\allowbreak{}uuid(\allowbreak{})} & PK & Identificador de la fila (UUID). \\
+\texttt{usuario\_\allowbreak{}id} & \texttt{uuid} & no &  & FK\,$\rightarrow$\,\texttt{identidad.\allowbreak{}usuarios} & Usuario que buscó (nunca una cuenta menor). \\
+\texttt{longitud\_\allowbreak{}texto} & \texttt{integer} & no &  & CK & Longitud del texto buscado; el texto no se guarda. \\
+\texttt{cantidad\_\allowbreak{}resultados} & \texttt{integer} & no &  & CK & Cantidad de tutores devueltos. \\
+\texttt{tutor\_\allowbreak{}ids} & \texttt{uuid[]} & no &  &  & Tutores mostrados, en orden. \\
+\texttt{created\_\allowbreak{}at} & \texttt{timestamptz} & no & \texttt{now(\allowbreak{})} &  & Fecha y hora de creación. \\
+\midrule
+\multicolumn{6}{@{}p{\textwidth}@{}}{\raggedright \textit{Migraciones:} V58. \newline \textit{Restricciones e índices:} \textsc{ck} \texttt{evaluacion\_\allowbreak{}busquedas\_\allowbreak{}cantidad\_\allowbreak{}resultados\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}cantidad\_\allowbreak{}resultados >= 0)}; \textsc{ck} \texttt{evaluacion\_\allowbreak{}busquedas\_\allowbreak{}longitud\_\allowbreak{}texto\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}longitud\_\allowbreak{}texto >= 0)}; \textsc{ix} \texttt{idx\_\allowbreak{}evaluacion\_\allowbreak{}busquedas\_\allowbreak{}created}: \texttt{created\_\allowbreak{}at}.}\\
+\end{longtable}
+\endgroup
+
+\needspace{12\baselineskip}
+\begingroup\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{2.55cm}>{\raggedright\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{0.75cm}>{\raggedright\arraybackslash}p{1.85cm}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-9.25cm-10\tabcolsep\relax}@{}}
+\caption[Diccionario de datos: \texttt{matching.\allowbreak{}materias\_\allowbreak{}niveles}]{\texttt{matching.\allowbreak{}materias\_\allowbreak{}niveles}: catálogo original de materias por nivel (V7)}\label{tab:dd-matching-materias-niveles}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endfirsthead
+\multicolumn{6}{@{}l}{\scriptsize\itshape \texttt{matching.\allowbreak{}materias\_\allowbreak{}niveles} (continuación)}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endhead
+\midrule\multicolumn{6}{r@{}}{\scriptsize\itshape continúa en la página siguiente}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\texttt{id} & \texttt{uuid} & no & \texttt{gen\_\allowbreak{}random\_\allowbreak{}uuid(\allowbreak{})} & PK & Identificador de la fila (UUID). \\
+\texttt{nivel} & \texttt{varchar(\allowbreak{}20)} & no &  & CK \newline UQ* & \texttt{primario}, \texttt{secundario} o \texttt{universitario}. \\
+\texttt{materia} & \texttt{varchar(\allowbreak{}100)} & no &  & UQ* & Nombre de la materia. \\
+\midrule
+\multicolumn{6}{@{}p{\textwidth}@{}}{\raggedright \textit{Migraciones:} V7. \newline \textit{Restricciones e índices:} \textsc{ck} \texttt{materias\_\allowbreak{}niveles\_\allowbreak{}nivel\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}nivel IN (\allowbreak{}'primario',\allowbreak{} 'secundario',\allowbreak{} 'universitario'))}; \textsc{uq} \texttt{uq\_\allowbreak{}materia\_\allowbreak{}nivel}: \texttt{UNIQUE (\allowbreak{}nivel,\allowbreak{} materia)}; \textsc{ix} \texttt{idx\_\allowbreak{}materias\_\allowbreak{}niveles\_\allowbreak{}nivel}: \texttt{nivel}.}\\
+\end{longtable}
+\endgroup
+
+\needspace{12\baselineskip}
+\begingroup\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{2.55cm}>{\raggedright\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{0.75cm}>{\raggedright\arraybackslash}p{1.85cm}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-9.25cm-10\tabcolsep\relax}@{}}
+\caption[Diccionario de datos: \texttt{matching.\allowbreak{}perfiles\_\allowbreak{}tutor\_\allowbreak{}matching}]{\texttt{matching.\allowbreak{}perfiles\_\allowbreak{}tutor\_\allowbreak{}matching}: datos del tutor para el matching}\label{tab:dd-matching-perfiles-tutor-matching}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endfirsthead
+\multicolumn{6}{@{}l}{\scriptsize\itshape \texttt{matching.\allowbreak{}perfiles\_\allowbreak{}tutor\_\allowbreak{}matching} (continuación)}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endhead
+\midrule\multicolumn{6}{r@{}}{\scriptsize\itshape continúa en la página siguiente}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\texttt{tutor\_\allowbreak{}id} & \texttt{uuid} & no &  & FK\,$\rightarrow$\,\texttt{identidad.\allowbreak{}usuarios} \newline PK & Tutor. \\
+\texttt{materias\_\allowbreak{}niveles\_\allowbreak{}ids} & \texttt{uuid[]} & no & \texttt{'\{\}'} &  & Materias del catálogo de V7; reemplazadas por \texttt{tema\_\allowbreak{}ids} (V19). \\
+\texttt{embedding} & \texttt{vector(\allowbreak{}384)} & sí &  &  & Embedding del perfil (384 dimensiones); desde V42 el puntaje usa el embedding de cada tema. \\
+\texttt{activo\_\allowbreak{}para\_\allowbreak{}matching} & \texttt{boolean} & no & \texttt{false} &  & Indicador creado en V7; el que se consulta es \texttt{identidad.\allowbreak{}usuarios.\allowbreak{}activo\_\allowbreak{}para\_\allowbreak{}matching}. \\
+\texttt{tema\_\allowbreak{}ids} & \texttt{uuid[]} & no & \texttt{'\{\}'} &  & Temas del catálogo elegidos por el tutor (índice GIN). \\
+\midrule
+\multicolumn{6}{@{}p{\textwidth}@{}}{\raggedright \textit{Migraciones:} V7, V19. \newline \textit{Restricciones e índices:} \textsc{ix} \texttt{idx\_\allowbreak{}perfiles\_\allowbreak{}tutor\_\allowbreak{}matching\_\allowbreak{}tema\_\allowbreak{}ids}: \texttt{USING gin tema\_\allowbreak{}ids}.}\\
+\end{longtable}
+\endgroup
+
+\needspace{12\baselineskip}
+\begingroup\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{2.55cm}>{\raggedright\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{0.75cm}>{\raggedright\arraybackslash}p{1.85cm}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-9.25cm-10\tabcolsep\relax}@{}}
+\caption[Diccionario de datos: \texttt{matching.\allowbreak{}temas}]{\texttt{matching.\allowbreak{}temas}: temas del catálogo, unidad del matching, con su embedding}\label{tab:dd-matching-temas}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endfirsthead
+\multicolumn{6}{@{}l}{\scriptsize\itshape \texttt{matching.\allowbreak{}temas} (continuación)}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endhead
+\midrule\multicolumn{6}{r@{}}{\scriptsize\itshape continúa en la página siguiente}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\texttt{id} & \texttt{uuid} & no & \texttt{gen\_\allowbreak{}random\_\allowbreak{}uuid(\allowbreak{})} & PK & Identificador de la fila (UUID). \\
+\texttt{trayecto\_\allowbreak{}id} & \texttt{uuid} & no &  & FK\,$\rightarrow$\,\texttt{matching.\allowbreak{}trayectos} \newline UQ* & Trayecto al que pertenece. \\
+\texttt{nombre} & \texttt{text} & no &  & UQ* & Nombre del tema. \\
+\texttt{descripcion} & \texttt{text} & no &  &  & Qué contenidos abarca; es la fuente del embedding. \\
+\texttt{orden} & \texttt{integer} & no & \texttt{0} &  & Orden dentro del trayecto. \\
+\texttt{embedding} & \texttt{vector(\allowbreak{}384)} & sí &  &  & Embedding del tema (384 dimensiones, V42). \\
+\texttt{embedding\_\allowbreak{}fuente} & \texttt{text} & sí &  &  & Texto con el que se calculó el embedding; si cambia, se recalcula. \\
+\midrule
+\multicolumn{6}{@{}p{\textwidth}@{}}{\raggedright \textit{Migraciones:} V19, V42. \newline \textit{Restricciones e índices:} \textsc{uq} \texttt{uq\_\allowbreak{}tema}: \texttt{UNIQUE (\allowbreak{}trayecto\_\allowbreak{}id,\allowbreak{} nombre)}.}\\
+\end{longtable}
+\endgroup
+
+\needspace{12\baselineskip}
+\begingroup\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{2.55cm}>{\raggedright\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{0.75cm}>{\raggedright\arraybackslash}p{1.85cm}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-9.25cm-10\tabcolsep\relax}@{}}
+\caption[Diccionario de datos: \texttt{matching.\allowbreak{}temas\_\allowbreak{}sugeridos}]{\texttt{matching.\allowbreak{}temas\_\allowbreak{}sugeridos}: contador de temas buscados que el catálogo no cubre}\label{tab:dd-matching-temas-sugeridos}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endfirsthead
+\multicolumn{6}{@{}l}{\scriptsize\itshape \texttt{matching.\allowbreak{}temas\_\allowbreak{}sugeridos} (continuación)}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endhead
+\midrule\multicolumn{6}{r@{}}{\scriptsize\itshape continúa en la página siguiente}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\texttt{id} & \texttt{uuid} & no & \texttt{gen\_\allowbreak{}random\_\allowbreak{}uuid(\allowbreak{})} & PK & Identificador de la fila (UUID). \\
+\texttt{texto} & \texttt{text} & no &  & UQ & Texto buscado, normalizado; sin datos de quién buscó. \\
+\texttt{veces} & \texttt{integer} & no & \texttt{1} &  & Cantidad de veces que se buscó. \\
+\texttt{nivel} & \texttt{text} & sí &  &  & Nivel del tema del catálogo más parecido. \\
+\texttt{materia} & \texttt{text} & sí &  &  & Materia del tema del catálogo más parecido. \\
+\texttt{ultima\_\allowbreak{}vez} & \texttt{timestamptz} & no & \texttt{now(\allowbreak{})} &  & Última búsqueda. \\
+\midrule
+\multicolumn{6}{@{}p{\textwidth}@{}}{\raggedright \textit{Migraciones:} V43. \newline \textit{Restricciones e índices:} \textsc{ix} \texttt{idx\_\allowbreak{}temas\_\allowbreak{}sugeridos\_\allowbreak{}veces}: \texttt{(\allowbreak{}veces DESC,\allowbreak{} ultima\_\allowbreak{}vez DESC)}.}\\
+\end{longtable}
+\endgroup
+
+\needspace{12\baselineskip}
+\begingroup\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{2.55cm}>{\raggedright\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{0.75cm}>{\raggedright\arraybackslash}p{1.85cm}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-9.25cm-10\tabcolsep\relax}@{}}
+\caption[Diccionario de datos: \texttt{matching.\allowbreak{}trayectos}]{\texttt{matching.\allowbreak{}trayectos}: trayectos del catálogo: nivel, curso o carrera y materia}\label{tab:dd-matching-trayectos}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endfirsthead
+\multicolumn{6}{@{}l}{\scriptsize\itshape \texttt{matching.\allowbreak{}trayectos} (continuación)}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endhead
+\midrule\multicolumn{6}{r@{}}{\scriptsize\itshape continúa en la página siguiente}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\texttt{id} & \texttt{uuid} & no & \texttt{gen\_\allowbreak{}random\_\allowbreak{}uuid(\allowbreak{})} & PK & Identificador de la fila (UUID). \\
+\texttt{nivel} & \texttt{text} & no &  & CK \newline UQ* & \texttt{primario}, \texttt{secundario} o \texttt{universitario}. \\
+\texttt{anio\_\allowbreak{}o\_\allowbreak{}carrera} & \texttt{text} & no &  & UQ* & Curso o año (por ejemplo, «4°») o carrera. \\
+\texttt{materia} & \texttt{text} & no &  & UQ* & Materia. \\
+\midrule
+\multicolumn{6}{@{}p{\textwidth}@{}}{\raggedright \textit{Migraciones:} V19. \newline \textit{Restricciones e índices:} \textsc{ck} \texttt{trayectos\_\allowbreak{}nivel\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}nivel IN (\allowbreak{}'primario',\allowbreak{} 'secundario',\allowbreak{} 'universitario'))}; \textsc{uq} \texttt{uq\_\allowbreak{}trayecto}: \texttt{UNIQUE (\allowbreak{}nivel,\allowbreak{} anio\_\allowbreak{}o\_\allowbreak{}carrera,\allowbreak{} materia)}.}\\
+\end{longtable}
+\endgroup
+
+\subsection{Esquema \texttt{aula}}\label{sec:dd-aula}
+
+Módulo M3, aula virtual: sesión de aprendizaje de cada reserva y kill-switch (alertas de seguridad y confirmaciones).
+
+\needspace{12\baselineskip}
+\begingroup\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{2.55cm}>{\raggedright\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{0.75cm}>{\raggedright\arraybackslash}p{1.85cm}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-9.25cm-10\tabcolsep\relax}@{}}
+\caption[Diccionario de datos: \texttt{aula.\allowbreak{}alertas\_\allowbreak{}seguridad}]{\texttt{aula.\allowbreak{}alertas\_\allowbreak{}seguridad}: alertas del kill-switch}\label{tab:dd-aula-alertas-seguridad}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endfirsthead
+\multicolumn{6}{@{}l}{\scriptsize\itshape \texttt{aula.\allowbreak{}alertas\_\allowbreak{}seguridad} (continuación)}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endhead
+\midrule\multicolumn{6}{r@{}}{\scriptsize\itshape continúa en la página siguiente}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\texttt{id} & \texttt{uuid} & no & \texttt{gen\_\allowbreak{}random\_\allowbreak{}uuid(\allowbreak{})} & PK & Identificador de la fila (UUID). \\
+\texttt{sesion\_\allowbreak{}id} & \texttt{uuid} & no &  & FK\,$\rightarrow$\,\texttt{aula.\allowbreak{}sesiones\_\allowbreak{}aprendizaje} & Sesión en la que se activó el kill-switch. \\
+\texttt{rama} & \texttt{varchar(\allowbreak{}10)} & no &  & CK & \texttt{menor} o \texttt{adultos}; la decide el backend con datos de M1. \\
+\texttt{detectado\_\allowbreak{}id} & \texttt{uuid} & no &  & FK\,$\rightarrow$\,\texttt{identidad.\allowbreak{}usuarios} & Usuario señalado por la alerta. \\
+\texttt{clip\_\allowbreak{}url} & \texttt{varchar(\allowbreak{}500)} & sí &  &  & Clip de evidencia; se completa al subirlo. \\
+\texttt{clip\_\allowbreak{}retencion\_\allowbreak{}hasta} & \texttt{timestamptz} & sí &  &  & Fin de la retención del clip: 30 días desde la resolución. \\
+\texttt{estado} & \texttt{varchar(\allowbreak{}30)} & no & \texttt{'pendiente\_\allowbreak{}revision'} & CK & \texttt{pendiente\_\allowbreak{}revision}, \texttt{resuelta\_\allowbreak{}reactivacion} o \texttt{resuelta\_\allowbreak{}baja}. \\
+\texttt{created\_\allowbreak{}at} & \texttt{timestamptz} & no & \texttt{now(\allowbreak{})} &  & Fecha y hora de creación. \\
+\texttt{descargo\_\allowbreak{}texto} & \texttt{varchar(\allowbreak{}300)} & sí &  &  & Descargo del tutor (hasta 300 caracteres); no bloquea la resolución. \\
+\texttt{descargo\_\allowbreak{}recibido\_\allowbreak{}at} & \texttt{timestamptz} & sí &  &  & Recepción del descargo. \\
+\midrule
+\multicolumn{6}{@{}p{\textwidth}@{}}{\raggedright \textit{Migraciones:} V8, V13. \newline \textit{Restricciones e índices:} \textsc{ck} \texttt{alertas\_\allowbreak{}seguridad\_\allowbreak{}estado\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}estado IN (\allowbreak{}'pendiente\_\allowbreak{}revision',\allowbreak{} 'resuelta\_\allowbreak{}reactivacion',\allowbreak{} 'resuelta\_\allowbreak{}baja'))}; \textsc{ck} \texttt{alertas\_\allowbreak{}seguridad\_\allowbreak{}rama\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}rama IN (\allowbreak{}'menor',\allowbreak{} 'adultos'))}; \textsc{ix} \texttt{idx\_\allowbreak{}alertas\_\allowbreak{}seguridad\_\allowbreak{}estado}: \texttt{estado}; \textsc{ix} \texttt{idx\_\allowbreak{}alertas\_\allowbreak{}seguridad\_\allowbreak{}sesion}: \texttt{sesion\_\allowbreak{}id}.}\\
+\end{longtable}
+\endgroup
+
+\needspace{12\baselineskip}
+\begingroup\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{2.55cm}>{\raggedright\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{0.75cm}>{\raggedright\arraybackslash}p{1.85cm}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-9.25cm-10\tabcolsep\relax}@{}}
+\caption[Diccionario de datos: \texttt{aula.\allowbreak{}confirmaciones\_\allowbreak{}killswitch}]{\texttt{aula.\allowbreak{}confirmaciones\_\allowbreak{}killswitch}: confirmación de la contraparte en la rama de adultos del kill-switch}\label{tab:dd-aula-confirmaciones-killswitch}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endfirsthead
+\multicolumn{6}{@{}l}{\scriptsize\itshape \texttt{aula.\allowbreak{}confirmaciones\_\allowbreak{}killswitch} (continuación)}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endhead
+\midrule\multicolumn{6}{r@{}}{\scriptsize\itshape continúa en la página siguiente}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\texttt{id} & \texttt{uuid} & no & \texttt{gen\_\allowbreak{}random\_\allowbreak{}uuid(\allowbreak{})} & PK & Identificador de la fila (UUID). \\
+\texttt{sesion\_\allowbreak{}id} & \texttt{uuid} & no &  & FK\,$\rightarrow$\,\texttt{aula.\allowbreak{}sesiones\_\allowbreak{}aprendizaje} \newline UQ & Sesión (una confirmación por sesión). \\
+\texttt{detectado\_\allowbreak{}id} & \texttt{uuid} & no &  & FK\,$\rightarrow$\,\texttt{identidad.\allowbreak{}usuarios} & Usuario señalado. \\
+\texttt{respondido\_\allowbreak{}id} & \texttt{uuid} & sí &  &  & Participante que respondió; nulo mientras se espera (sin clave foránea). \\
+\texttt{vio} & \texttt{boolean} & sí &  &  & Respuesta: si vio contenido inapropiado; nula hasta que responda. \\
+\texttt{created\_\allowbreak{}at} & \texttt{timestamptz} & no & \texttt{now(\allowbreak{})} &  & Fecha y hora de creación. \\
+\texttt{responded\_\allowbreak{}at} & \texttt{timestamptz} & sí &  &  & Fecha y hora de la respuesta. \\
+\texttt{vence\_\allowbreak{}at} & \texttt{timestamptz} & sí &  &  & Plazo de respuesta; sin respuesta cuenta como «No». \\
+\texttt{vencida} & \texttt{boolean} & no & \texttt{false} &  & Venció sin respuesta. \\
+\midrule
+\multicolumn{6}{@{}p{\textwidth}@{}}{\raggedright \textit{Migraciones:} V12, V47. \newline \textit{Restricciones e índices:} \textsc{ix} \texttt{idx\_\allowbreak{}confirmaciones\_\allowbreak{}killswitch\_\allowbreak{}sesion}: \texttt{sesion\_\allowbreak{}id}.}\\
+\end{longtable}
+\endgroup
+
+\needspace{12\baselineskip}
+\begingroup\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{2.55cm}>{\raggedright\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{0.75cm}>{\raggedright\arraybackslash}p{1.85cm}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-9.25cm-10\tabcolsep\relax}@{}}
+\caption[Diccionario de datos: \texttt{aula.\allowbreak{}sesiones\_\allowbreak{}aprendizaje}]{\texttt{aula.\allowbreak{}sesiones\_\allowbreak{}aprendizaje}: sesión de aula de cada reserva}\label{tab:dd-aula-sesiones-aprendizaje}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endfirsthead
+\multicolumn{6}{@{}l}{\scriptsize\itshape \texttt{aula.\allowbreak{}sesiones\_\allowbreak{}aprendizaje} (continuación)}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endhead
+\midrule\multicolumn{6}{r@{}}{\scriptsize\itshape continúa en la página siguiente}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\texttt{id} & \texttt{uuid} & no & \texttt{gen\_\allowbreak{}random\_\allowbreak{}uuid(\allowbreak{})} & PK & Identificador de la fila (UUID). \\
+\texttt{reserva\_\allowbreak{}id} & \texttt{uuid} & no &  & FK\,$\rightarrow$\,\texttt{reservas.\allowbreak{}reservas} \newline UQ & Reserva de la sesión (relación 1 a 1). \\
+\texttt{livekit\_\allowbreak{}room\_\allowbreak{}id} & \texttt{varchar(\allowbreak{}100)} & sí &  &  & Sala de LiveKit; nula hasta 5 min antes del inicio (creación diferida). \\
+\texttt{estado} & \texttt{varchar(\allowbreak{}30)} & no & \texttt{'no\_\allowbreak{}iniciada'} & CK & \texttt{no\_\allowbreak{}iniciada}, \texttt{en\_\allowbreak{}curso}, \texttt{finalizada}, \texttt{finalizada\_\allowbreak{}anticipada} o \texttt{interrumpida}. \\
+\texttt{inicio\_\allowbreak{}real} & \texttt{timestamptz} & sí &  &  & Inicio efectivo. \\
+\texttt{fin\_\allowbreak{}real} & \texttt{timestamptz} & sí &  &  & Fin efectivo. \\
+\texttt{duracion\_\allowbreak{}efectiva\_\allowbreak{}segundos} & \texttt{integer} & sí &  &  & Duración efectiva, calculada al finalizar; M6 usa el umbral de 10 min. \\
+\texttt{created\_\allowbreak{}at} & \texttt{timestamptz} & no & \texttt{now(\allowbreak{})} &  & Fecha y hora de creación. \\
+\texttt{updated\_\allowbreak{}at} & \texttt{timestamptz} & no & \texttt{now(\allowbreak{})} &  & Fecha y hora de la última modificación. \\
+\texttt{estudiante\_\allowbreak{}joined\_\allowbreak{}at} & \texttt{timestamptz} & sí &  &  & Primer ingreso del estudiante (webhook de LiveKit). \\
+\texttt{tutor\_\allowbreak{}joined\_\allowbreak{}at} & \texttt{timestamptz} & sí &  &  & Primer ingreso del tutor (webhook de LiveKit). \\
+\texttt{duracion\_\allowbreak{}agendada\_\allowbreak{}segundos} & \texttt{integer} & sí &  &  & Duración agendada, congelada al programar; base de la regla del 50 \%. \\
+\texttt{tutor\_\allowbreak{}conectado} & \texttt{boolean} & no & \texttt{false} &  & El tutor está conectado. \\
+\texttt{estudiante\_\allowbreak{}conectado} & \texttt{boolean} & no & \texttt{false} &  & El estudiante está conectado. \\
+\texttt{par\_\allowbreak{}roto\_\allowbreak{}at} & \texttt{timestamptz} & sí &  &  & Desde cuándo falta alguno de los dos; nulo si están ambos o la clase no empezó. \\
+\texttt{audio\_\allowbreak{}referencia} & \texttt{varchar(\allowbreak{}300)} & sí &  &  & Referencia interna del audio grabado (solo con el adicional de resumen). \\
+\texttt{audio\_\allowbreak{}recibido\_\allowbreak{}at} & \texttt{timestamptz} & sí &  &  & Recepción del audio. \\
+\texttt{audio\_\allowbreak{}borrado\_\allowbreak{}at} & \texttt{timestamptz} & sí &  &  & Borrado del audio. \\
+\midrule
+\multicolumn{6}{@{}p{\textwidth}@{}}{\raggedright \textit{Migraciones:} V8, V9, V10, V12, V26, V36. \newline \textit{Restricciones e índices:} \textsc{ck} \texttt{sesiones\_\allowbreak{}aprendizaje\_\allowbreak{}estado\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}estado IN (\allowbreak{}'no\_\allowbreak{}iniciada',\allowbreak{} 'en\_\allowbreak{}curso',\allowbreak{} 'finalizada',\allowbreak{} 'finalizada\_\allowbreak{}anticipada',\allowbreak{} 'interrumpida'))}; \textsc{ix} \texttt{idx\_\allowbreak{}sesiones\_\allowbreak{}aprendizaje\_\allowbreak{}estado}: \texttt{estado}.}\\
+\end{longtable}
+\endgroup
+
+\subsection{Esquema \texttt{reservas}}\label{sec:dd-reservas}
+
+Módulo M4, reservas y agenda: franjas de disponibilidad, solicitudes de menores, reservas, paquetes mensuales, pedidos previos, notas de clase y pedidos de reprogramación.
+
+\needspace{12\baselineskip}
+\begingroup\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{2.55cm}>{\raggedright\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{0.75cm}>{\raggedright\arraybackslash}p{1.85cm}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-9.25cm-10\tabcolsep\relax}@{}}
+\caption[Diccionario de datos: \texttt{reservas.\allowbreak{}franjas\_\allowbreak{}disponibilidad}]{\texttt{reservas.\allowbreak{}franjas\_\allowbreak{}disponibilidad}: franjas de disponibilidad del tutor}\label{tab:dd-reservas-franjas-disponibilidad}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endfirsthead
+\multicolumn{6}{@{}l}{\scriptsize\itshape \texttt{reservas.\allowbreak{}franjas\_\allowbreak{}disponibilidad} (continuación)}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endhead
+\midrule\multicolumn{6}{r@{}}{\scriptsize\itshape continúa en la página siguiente}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\texttt{id} & \texttt{uuid} & no & \texttt{gen\_\allowbreak{}random\_\allowbreak{}uuid(\allowbreak{})} & PK & Identificador de la fila (UUID). \\
+\texttt{tutor\_\allowbreak{}id} & \texttt{uuid} & no &  & FK\,$\rightarrow$\,\texttt{identidad.\allowbreak{}usuarios} \newline EX & Tutor que publica la franja. \\
+\texttt{dia\_\allowbreak{}semana} & \texttt{smallint} & sí &  & CK \newline EX & Día de la semana (0 = domingo a 6 = sábado), en franjas semanales. \\
+\texttt{fecha\_\allowbreak{}especifica} & \texttt{date} & sí &  & CK \newline EX & Fecha, en franjas puntuales. \\
+\texttt{hora\_\allowbreak{}inicio} & \texttt{time} & no &  & CK & Hora de inicio. \\
+\texttt{hora\_\allowbreak{}fin} & \texttt{time} & no &  & CK & Hora de fin, posterior al inicio. \\
+\texttt{activa} & \texttt{boolean} & no & \texttt{true} &  & La franja está publicada. \\
+\midrule
+\multicolumn{6}{@{}p{\textwidth}@{}}{\raggedright \textit{Migraciones:} V9, V34. \newline \textit{Restricciones e índices:} \textsc{ck} \texttt{chk\_\allowbreak{}franja\_\allowbreak{}modo}: \texttt{CHECK (\allowbreak{}(\allowbreak{}(\allowbreak{}dia\_\allowbreak{}semana IS NOT NULL) AND (\allowbreak{}fecha\_\allowbreak{}especifica IS NULL)) OR (\allowbreak{}(\allowbreak{}dia\_\allowbreak{}semana IS NULL) AND (\allowbreak{}fecha\_\allowbreak{}especifica IS NOT NULL)))}; \textsc{ck} \texttt{franjas\_\allowbreak{}disponibilidad\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}hora\_\allowbreak{}fin > hora\_\allowbreak{}inicio)}; \textsc{ck} \texttt{franjas\_\allowbreak{}disponibilidad\_\allowbreak{}dia\_\allowbreak{}semana\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}(\allowbreak{}dia\_\allowbreak{}semana >= 0) AND (\allowbreak{}dia\_\allowbreak{}semana <= 6))}; \textsc{ex} \texttt{ex\_\allowbreak{}franjas\_\allowbreak{}puntual\_\allowbreak{}sin\_\allowbreak{}superposicion}: \texttt{EXCLUDE USING gist (\allowbreak{}tutor\_\allowbreak{}id WITH =,\allowbreak{} fecha\_\allowbreak{}especifica WITH =,\allowbreak{} tsrange(\allowbreak{}fecha\_\allowbreak{}especifica + hora\_\allowbreak{}inicio),\allowbreak{} (\allowbreak{}fecha\_\allowbreak{}especifica + hora\_\allowbreak{}fin),\allowbreak{} '[)') WITH \&\&) WHERE (\allowbreak{}(\allowbreak{}activa AND (\allowbreak{}fecha\_\allowbreak{}especifica IS NOT NULL))}; \textsc{ex} \texttt{ex\_\allowbreak{}franjas\_\allowbreak{}semanal\_\allowbreak{}sin\_\allowbreak{}superposicion}: \texttt{EXCLUDE USING gist (\allowbreak{}tutor\_\allowbreak{}id WITH =,\allowbreak{} dia\_\allowbreak{}semana WITH =,\allowbreak{} tsrange(\allowbreak{}'2000-01-01' + hora\_\allowbreak{}inicio),\allowbreak{} (\allowbreak{}'2000-01-01' + hora\_\allowbreak{}fin),\allowbreak{} '[)') WITH \&\&) WHERE (\allowbreak{}(\allowbreak{}activa AND (\allowbreak{}dia\_\allowbreak{}semana IS NOT NULL))}; \textsc{ix} \texttt{idx\_\allowbreak{}franjas\_\allowbreak{}tutor\_\allowbreak{}activa}: \texttt{(\allowbreak{}tutor\_\allowbreak{}id,\allowbreak{} activa)}.}\\
+\end{longtable}
+\endgroup
+
+\needspace{12\baselineskip}
+\begingroup\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{2.55cm}>{\raggedright\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{0.75cm}>{\raggedright\arraybackslash}p{1.85cm}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-9.25cm-10\tabcolsep\relax}@{}}
+\caption[Diccionario de datos: \texttt{reservas.\allowbreak{}notas\_\allowbreak{}clase}]{\texttt{reservas.\allowbreak{}notas\_\allowbreak{}clase}: nota del tutor al adulto responsable}\label{tab:dd-reservas-notas-clase}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endfirsthead
+\multicolumn{6}{@{}l}{\scriptsize\itshape \texttt{reservas.\allowbreak{}notas\_\allowbreak{}clase} (continuación)}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endhead
+\midrule\multicolumn{6}{r@{}}{\scriptsize\itshape continúa en la página siguiente}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\texttt{reserva\_\allowbreak{}id} & \texttt{uuid} & no &  & FK\,$\rightarrow$\,\texttt{reservas.\allowbreak{}reservas} \newline PK & Reserva finalizada con beneficiario menor (una nota por reserva). \\
+\texttt{texto} & \texttt{varchar(\allowbreak{}1000)} & no &  &  & Texto de la nota, hasta 1000 caracteres; la ven el adulto responsable y el tutor. \\
+\texttt{created\_\allowbreak{}at} & \texttt{timestamptz} & no & \texttt{now(\allowbreak{})} &  & Fecha y hora de creación. \\
+\texttt{updated\_\allowbreak{}at} & \texttt{timestamptz} & no & \texttt{now(\allowbreak{})} &  & Fecha y hora de la última modificación. \\
+\midrule
+\multicolumn{6}{@{}p{\textwidth}@{}}{\raggedright \textit{Migraciones:} V44.}\\
+\end{longtable}
+\endgroup
+
+\needspace{12\baselineskip}
+\begingroup\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{2.55cm}>{\raggedright\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{0.75cm}>{\raggedright\arraybackslash}p{1.85cm}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-9.25cm-10\tabcolsep\relax}@{}}
+\caption[Diccionario de datos: \texttt{reservas.\allowbreak{}paquetes}]{\texttt{reservas.\allowbreak{}paquetes}: paquetes mensuales de clases}\label{tab:dd-reservas-paquetes}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endfirsthead
+\multicolumn{6}{@{}l}{\scriptsize\itshape \texttt{reservas.\allowbreak{}paquetes} (continuación)}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endhead
+\midrule\multicolumn{6}{r@{}}{\scriptsize\itshape continúa en la página siguiente}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\texttt{id} & \texttt{uuid} & no &  & PK & Identificador de la fila (UUID). \\
+\texttt{pagador\_\allowbreak{}id} & \texttt{uuid} & no &  & FK\,$\rightarrow$\,\texttt{identidad.\allowbreak{}usuarios} & Quien paga. \\
+\texttt{beneficiario\_\allowbreak{}id} & \texttt{uuid} & no &  & FK\,$\rightarrow$\,\texttt{identidad.\allowbreak{}usuarios} & Quien toma las clases. \\
+\texttt{tutor\_\allowbreak{}id} & \texttt{uuid} & no &  & FK\,$\rightarrow$\,\texttt{identidad.\allowbreak{}usuarios} & Tutor. \\
+\texttt{reserva\_\allowbreak{}ancla\_\allowbreak{}id} & \texttt{uuid} & sí &  & FK\,$\rightarrow$\,\texttt{reservas.\allowbreak{}reservas} & Primera reserva del paquete, que ancla el pago. \\
+\texttt{cantidad\_\allowbreak{}clases} & \texttt{integer} & no &  & CK & Cantidad de clases (cuatro semanales). \\
+\texttt{duracion\_\allowbreak{}minutos} & \texttt{integer} & no &  &  & Duración de cada clase. \\
+\texttt{descuento\_\allowbreak{}porcentaje} & \texttt{integer} & no &  & CK & Descuento aplicado (0 a 30 \%). \\
+\texttt{precio\_\allowbreak{}total} & \texttt{numeric(\allowbreak{}10,\allowbreak{}2)} & no &  & CK & Precio total del paquete. \\
+\texttt{estado} & \texttt{varchar(\allowbreak{}20)} & no &  & CK & \texttt{pendiente\_\allowbreak{}pago}, \texttt{confirmado} o \texttt{cancelado}. \\
+\texttt{vigente\_\allowbreak{}hasta} & \texttt{timestamptz} & no &  &  & Fin de la vigencia del paquete. \\
+\texttt{created\_\allowbreak{}at} & \texttt{timestamptz} & no & \texttt{now(\allowbreak{})} &  & Fecha y hora de creación. \\
+\midrule
+\multicolumn{6}{@{}p{\textwidth}@{}}{\raggedright \textit{Migraciones:} V46. \newline \textit{Restricciones e índices:} \textsc{ck} \texttt{paquetes\_\allowbreak{}cantidad\_\allowbreak{}clases\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}cantidad\_\allowbreak{}clases > 0)}; \textsc{ck} \texttt{paquetes\_\allowbreak{}descuento\_\allowbreak{}porcentaje\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}(\allowbreak{}descuento\_\allowbreak{}porcentaje >= 0) AND (\allowbreak{}descuento\_\allowbreak{}porcentaje <= 30))}; \textsc{ck} \texttt{paquetes\_\allowbreak{}estado\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}estado IN (\allowbreak{}'pendiente\_\allowbreak{}pago',\allowbreak{} 'confirmado',\allowbreak{} 'cancelado'))}; \textsc{ck} \texttt{paquetes\_\allowbreak{}precio\_\allowbreak{}total\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}precio\_\allowbreak{}total >= 0)}.}\\
+\end{longtable}
+\endgroup
+
+\needspace{12\baselineskip}
+\begingroup\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{2.55cm}>{\raggedright\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{0.75cm}>{\raggedright\arraybackslash}p{1.85cm}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-9.25cm-10\tabcolsep\relax}@{}}
+\caption[Diccionario de datos: \texttt{reservas.\allowbreak{}pedidos\_\allowbreak{}previos}]{\texttt{reservas.\allowbreak{}pedidos\_\allowbreak{}previos}: pedido previo del pagador al tutor}\label{tab:dd-reservas-pedidos-previos}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endfirsthead
+\multicolumn{6}{@{}l}{\scriptsize\itshape \texttt{reservas.\allowbreak{}pedidos\_\allowbreak{}previos} (continuación)}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endhead
+\midrule\multicolumn{6}{r@{}}{\scriptsize\itshape continúa en la página siguiente}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\texttt{reserva\_\allowbreak{}id} & \texttt{uuid} & no &  & FK\,$\rightarrow$\,\texttt{reservas.\allowbreak{}reservas} \newline PK & Reserva (un pedido por reserva). \\
+\texttt{texto} & \texttt{varchar(\allowbreak{}1000)} & no &  &  & Texto del pedido, hasta 1000 caracteres; lo carga el pagador antes del inicio. \\
+\texttt{created\_\allowbreak{}at} & \texttt{timestamptz} & no & \texttt{now(\allowbreak{})} &  & Fecha y hora de creación. \\
+\texttt{updated\_\allowbreak{}at} & \texttt{timestamptz} & no & \texttt{now(\allowbreak{})} &  & Fecha y hora de la última modificación. \\
+\midrule
+\multicolumn{6}{@{}p{\textwidth}@{}}{\raggedright \textit{Migraciones:} V44.}\\
+\end{longtable}
+\endgroup
+
+\needspace{12\baselineskip}
+\begingroup\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{2.55cm}>{\raggedright\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{0.75cm}>{\raggedright\arraybackslash}p{1.85cm}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-9.25cm-10\tabcolsep\relax}@{}}
+\caption[Diccionario de datos: \texttt{reservas.\allowbreak{}pedidos\_\allowbreak{}reprogramacion}]{\texttt{reservas.\allowbreak{}pedidos\_\allowbreak{}reprogramacion}: pedidos de reprogramación del tutor}\label{tab:dd-reservas-pedidos-reprogramacion}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endfirsthead
+\multicolumn{6}{@{}l}{\scriptsize\itshape \texttt{reservas.\allowbreak{}pedidos\_\allowbreak{}reprogramacion} (continuación)}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endhead
+\midrule\multicolumn{6}{r@{}}{\scriptsize\itshape continúa en la página siguiente}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\texttt{id} & \texttt{uuid} & no &  & PK & Identificador de la fila (UUID). \\
+\texttt{reserva\_\allowbreak{}id} & \texttt{uuid} & no &  & FK\,$\rightarrow$\,\texttt{reservas.\allowbreak{}reservas} \newline UQ & Reserva a reprogramar; un solo pedido pendiente por reserva. \\
+\texttt{horario\_\allowbreak{}original} & \texttt{timestamptz} & no &  &  & Horario vigente al pedir. \\
+\texttt{horario\_\allowbreak{}propuesto} & \texttt{timestamptz} & no &  &  & Horario propuesto por el tutor. \\
+\texttt{motivo} & \texttt{varchar(\allowbreak{}300)} & sí &  &  & Motivo informado (hasta 300 caracteres). \\
+\texttt{estado} & \texttt{varchar(\allowbreak{}20)} & no &  & CK & \texttt{pendiente}, \texttt{aceptado}, \texttt{rechazado}, \texttt{vencido} o \texttt{retirado}. \\
+\texttt{created\_\allowbreak{}at} & \texttt{timestamptz} & no & \texttt{now(\allowbreak{})} &  & Fecha y hora de creación. \\
+\texttt{resuelto\_\allowbreak{}at} & \texttt{timestamptz} & sí &  &  & Fecha y hora de la resolución. \\
+\midrule
+\multicolumn{6}{@{}p{\textwidth}@{}}{\raggedright \textit{Migraciones:} V45. \newline \textit{Restricciones e índices:} \textsc{ck} \texttt{pedidos\_\allowbreak{}reprogramacion\_\allowbreak{}estado\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}estado IN (\allowbreak{}'pendiente',\allowbreak{} 'aceptado',\allowbreak{} 'rechazado',\allowbreak{} 'vencido',\allowbreak{} 'retirado'))}; \textsc{ix único} \texttt{uq\_\allowbreak{}pedido\_\allowbreak{}reprogramacion\_\allowbreak{}pendiente}: \texttt{reserva\_\allowbreak{}id WHERE (\allowbreak{}estado = 'pendiente')}.}\\
+\end{longtable}
+\endgroup
+
+\needspace{12\baselineskip}
+\begingroup\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{2.55cm}>{\raggedright\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{0.75cm}>{\raggedright\arraybackslash}p{1.85cm}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-9.25cm-10\tabcolsep\relax}@{}}
+\caption[Diccionario de datos: \texttt{reservas.\allowbreak{}reservas}]{\texttt{reservas.\allowbreak{}reservas}: clases reservadas}\label{tab:dd-reservas-reservas}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endfirsthead
+\multicolumn{6}{@{}l}{\scriptsize\itshape \texttt{reservas.\allowbreak{}reservas} (continuación)}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endhead
+\midrule\multicolumn{6}{r@{}}{\scriptsize\itshape continúa en la página siguiente}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\texttt{id} & \texttt{uuid} & no & \texttt{gen\_\allowbreak{}random\_\allowbreak{}uuid(\allowbreak{})} & PK & Identificador de la fila (UUID). \\
+\texttt{pagador\_\allowbreak{}id} & \texttt{uuid} & no &  & CK \newline FK\,$\rightarrow$\,\texttt{identidad.\allowbreak{}usuarios} & Quien paga: estudiante adulto o adulto responsable. \\
+\texttt{beneficiario\_\allowbreak{}id} & \texttt{uuid} & no &  & CK \newline FK\,$\rightarrow$\,\texttt{identidad.\allowbreak{}usuarios} \newline EX & Quien toma la clase. \\
+\texttt{tutor\_\allowbreak{}id} & \texttt{uuid} & no &  & CK \newline FK\,$\rightarrow$\,\texttt{identidad.\allowbreak{}usuarios} \newline EX & Tutor; distinto del pagador y del beneficiario. \\
+\texttt{solicitud\_\allowbreak{}origen\_\allowbreak{}id} & \texttt{uuid} & sí &  & FK\,$\rightarrow$\,\texttt{reservas.\allowbreak{}solicitudes\_\allowbreak{}sesion} & Solicitud del menor que originó la reserva, si la hay. \\
+\texttt{horario} & \texttt{timestamptz} & no &  & CK & Inicio de la clase. \\
+\texttt{precio} & \texttt{numeric(\allowbreak{}10,\allowbreak{}2)} & no &  & CK & Precio congelado al crear la reserva. \\
+\texttt{estado} & \texttt{varchar(\allowbreak{}20)} & no & \texttt{'pendiente\_\allowbreak{}pago'} & CK & \texttt{pendiente\_\allowbreak{}pago}, \texttt{confirmada}, \texttt{en\_\allowbreak{}curso}, \texttt{finalizada}, \texttt{cancelada}, \texttt{no\_\allowbreak{}show\_\allowbreak{}estudiante}, \texttt{no\_\allowbreak{}show\_\allowbreak{}tutor} o \texttt{no\_\allowbreak{}show\_\allowbreak{}doble}. \\
+\texttt{motivo\_\allowbreak{}cancelacion} & \texttt{varchar(\allowbreak{}30)} & sí &  & CK & Solo si está cancelada: \texttt{voluntaria}, \texttt{timeout\_\allowbreak{}pago}, \texttt{revocacion\_\allowbreak{}autorizacion}, \texttt{sancion} o \texttt{cap\_\allowbreak{}vencido}. \\
+\texttt{created\_\allowbreak{}at} & \texttt{timestamptz} & no & \texttt{now(\allowbreak{})} &  & Fecha y hora de creación. \\
+\texttt{duracion\_\allowbreak{}minutos} & \texttt{integer} & no &  & CK & Duración (30 a 180 min, múltiplo de 30). \\
+\texttt{horario\_\allowbreak{}fin} & \texttt{timestamptz} & no &  & CK & Fin de la clase (inicio + duración); sostiene la exclusión por rango. \\
+\texttt{resumen\_\allowbreak{}contratado} & \texttt{boolean} & no & \texttt{false} & CK & Se contrató el adicional de resumen. \\
+\texttt{precio\_\allowbreak{}adicional\_\allowbreak{}resumen} & \texttt{numeric(\allowbreak{}10,\allowbreak{}2)} & sí &  & CK & Precio congelado del adicional; presente si y solo si se contrató. \\
+\texttt{paquete\_\allowbreak{}id} & \texttt{uuid} & sí &  & FK\,$\rightarrow$\,\texttt{reservas.\allowbreak{}paquetes} & Paquete mensual al que pertenece, si corresponde. \\
+\midrule
+\multicolumn{6}{@{}p{\textwidth}@{}}{\raggedright \textit{Migraciones:} V9, V29, V30, V35, V36, V37, V46. \newline \textit{Restricciones e índices:} \textsc{ck} \texttt{chk\_\allowbreak{}motivo\_\allowbreak{}solo\_\allowbreak{}si\_\allowbreak{}cancelada}: \texttt{CHECK (\allowbreak{}(\allowbreak{}(\allowbreak{}estado = 'cancelada') AND (\allowbreak{}motivo\_\allowbreak{}cancelacion IS NOT NULL)) OR (\allowbreak{}(\allowbreak{}estado <> 'cancelada') AND (\allowbreak{}motivo\_\allowbreak{}cancelacion IS NULL)))}; \textsc{ck} \texttt{chk\_\allowbreak{}reservas\_\allowbreak{}duracion}: \texttt{CHECK (\allowbreak{}(\allowbreak{}(\allowbreak{}duracion\_\allowbreak{}minutos >= 30) AND (\allowbreak{}duracion\_\allowbreak{}minutos <= 180)) AND (\allowbreak{}(\allowbreak{}duracion\_\allowbreak{}minutos \% 30) = 0))}; \textsc{ck} \texttt{chk\_\allowbreak{}reservas\_\allowbreak{}fin\_\allowbreak{}posterior}: \texttt{CHECK (\allowbreak{}horario\_\allowbreak{}fin > horario)}; \textsc{ck} \texttt{ck\_\allowbreak{}reservas\_\allowbreak{}tutor\_\allowbreak{}no\_\allowbreak{}es\_\allowbreak{}parte}: \texttt{CHECK (\allowbreak{}(\allowbreak{}tutor\_\allowbreak{}id <> pagador\_\allowbreak{}id) AND (\allowbreak{}tutor\_\allowbreak{}id <> beneficiario\_\allowbreak{}id))}; \textsc{ck} \texttt{reservas\_\allowbreak{}adicional\_\allowbreak{}resumen\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}resumen\_\allowbreak{}contratado = (\allowbreak{}precio\_\allowbreak{}adicional\_\allowbreak{}resumen IS NOT NULL))}; \textsc{ck} \texttt{reservas\_\allowbreak{}estado\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}estado IN (\allowbreak{}'pendiente\_\allowbreak{}pago',\allowbreak{} 'confirmada',\allowbreak{} 'en\_\allowbreak{}curso',\allowbreak{} 'finalizada',\allowbreak{} 'cancelada',\allowbreak{} 'no\_\allowbreak{}show\_\allowbreak{}estudiante',\allowbreak{} 'no\_\allowbreak{}show\_\allowbreak{}tutor',\allowbreak{} 'no\_\allowbreak{}show\_\allowbreak{}doble'))}; \textsc{ck} \texttt{reservas\_\allowbreak{}motivo\_\allowbreak{}cancelacion\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}motivo\_\allowbreak{}cancelacion IN (\allowbreak{}'voluntaria',\allowbreak{} 'timeout\_\allowbreak{}pago',\allowbreak{} 'revocacion\_\allowbreak{}autorizacion',\allowbreak{} 'sancion',\allowbreak{} 'cap\_\allowbreak{}vencido'))}; \textsc{ck} \texttt{reservas\_\allowbreak{}precio\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}precio >= 0)}; \textsc{ex} \texttt{ex\_\allowbreak{}reservas\_\allowbreak{}rango\_\allowbreak{}beneficiario}: \texttt{EXCLUDE USING gist (\allowbreak{}beneficiario\_\allowbreak{}id WITH =,\allowbreak{} tstzrange(\allowbreak{}horario,\allowbreak{} horario\_\allowbreak{}fin,\allowbreak{} '[)') WITH \&\&) WHERE (\allowbreak{}estado <> 'cancelada')}; \textsc{ex} \texttt{ex\_\allowbreak{}reservas\_\allowbreak{}rango\_\allowbreak{}tutor}: \texttt{EXCLUDE USING gist (\allowbreak{}tutor\_\allowbreak{}id WITH =,\allowbreak{} tstzrange(\allowbreak{}horario,\allowbreak{} horario\_\allowbreak{}fin,\allowbreak{} '[)') WITH \&\&) WHERE (\allowbreak{}estado <> 'cancelada')}; \textsc{ix} \texttt{idx\_\allowbreak{}reservas\_\allowbreak{}beneficiario\_\allowbreak{}horario}: \texttt{(\allowbreak{}beneficiario\_\allowbreak{}id,\allowbreak{} horario)}; \textsc{ix} \texttt{idx\_\allowbreak{}reservas\_\allowbreak{}paquete}: \texttt{paquete\_\allowbreak{}id WHERE (\allowbreak{}paquete\_\allowbreak{}id IS NOT NULL)}; \textsc{ix} \texttt{idx\_\allowbreak{}reservas\_\allowbreak{}tutor\_\allowbreak{}horario}: \texttt{(\allowbreak{}tutor\_\allowbreak{}id,\allowbreak{} horario)}.}\\
+\end{longtable}
+\endgroup
+
+\needspace{12\baselineskip}
+\begingroup\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{2.55cm}>{\raggedright\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{0.75cm}>{\raggedright\arraybackslash}p{1.85cm}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-9.25cm-10\tabcolsep\relax}@{}}
+\caption[Diccionario de datos: \texttt{reservas.\allowbreak{}solicitudes\_\allowbreak{}sesion}]{\texttt{reservas.\allowbreak{}solicitudes\_\allowbreak{}sesion}: pedidos de clase de un menor}\label{tab:dd-reservas-solicitudes-sesion}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endfirsthead
+\multicolumn{6}{@{}l}{\scriptsize\itshape \texttt{reservas.\allowbreak{}solicitudes\_\allowbreak{}sesion} (continuación)}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endhead
+\midrule\multicolumn{6}{r@{}}{\scriptsize\itshape continúa en la página siguiente}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\texttt{id} & \texttt{uuid} & no & \texttt{gen\_\allowbreak{}random\_\allowbreak{}uuid(\allowbreak{})} & PK & Identificador de la fila (UUID). \\
+\texttt{menor\_\allowbreak{}id} & \texttt{uuid} & no &  & FK\,$\rightarrow$\,\texttt{identidad.\allowbreak{}usuarios} & Menor que pide la clase. \\
+\texttt{tutor\_\allowbreak{}id} & \texttt{uuid} & no &  & FK\,$\rightarrow$\,\texttt{identidad.\allowbreak{}usuarios} & Tutor pedido. \\
+\texttt{horario\_\allowbreak{}propuesto} & \texttt{timestamptz} & no &  &  & Horario propuesto. \\
+\texttt{estado} & \texttt{varchar(\allowbreak{}20)} & no & \texttt{'pendiente'} & CK & \texttt{pendiente}, \texttt{convertida}, \texttt{expirada} o \texttt{rechazada}. \\
+\texttt{created\_\allowbreak{}at} & \texttt{timestamptz} & no & \texttt{now(\allowbreak{})} & CK & Fecha y hora de creación. \\
+\texttt{expira\_\allowbreak{}at} & \texttt{timestamptz} & no &  & CK & Vencimiento (creación + 48 h); no bloquea horario ni genera cobro. \\
+\texttt{duracion\_\allowbreak{}minutos} & \texttt{integer} & no &  & CK & Duración pedida (30 a 180 min, múltiplo de 30). \\
+\midrule
+\multicolumn{6}{@{}p{\textwidth}@{}}{\raggedright \textit{Migraciones:} V9, V29. \newline \textit{Restricciones e índices:} \textsc{ck} \texttt{chk\_\allowbreak{}solicitudes\_\allowbreak{}duracion}: \texttt{CHECK (\allowbreak{}(\allowbreak{}(\allowbreak{}duracion\_\allowbreak{}minutos >= 30) AND (\allowbreak{}duracion\_\allowbreak{}minutos <= 180)) AND (\allowbreak{}(\allowbreak{}duracion\_\allowbreak{}minutos \% 30) = 0))}; \textsc{ck} \texttt{solicitudes\_\allowbreak{}sesion\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}expira\_\allowbreak{}at > created\_\allowbreak{}at)}; \textsc{ck} \texttt{solicitudes\_\allowbreak{}sesion\_\allowbreak{}estado\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}estado IN (\allowbreak{}'pendiente',\allowbreak{} 'convertida',\allowbreak{} 'expirada',\allowbreak{} 'rechazada'))}; \textsc{ix} \texttt{idx\_\allowbreak{}solicitudes\_\allowbreak{}expiracion}: \texttt{(\allowbreak{}estado,\allowbreak{} expira\_\allowbreak{}at)}; \textsc{ix} \texttt{idx\_\allowbreak{}solicitudes\_\allowbreak{}menor\_\allowbreak{}estado}: \texttt{(\allowbreak{}menor\_\allowbreak{}id,\allowbreak{} estado)}.}\\
+\end{longtable}
+\endgroup
+
+\subsection{Esquema \texttt{pagos}}\label{sec:dd-pagos}
+
+Módulo M5, motor de pagos: transacciones y retención, tarifas, preferencias y cuentas de MercadoPago, estado de la pasarela y precios de referencia.
+
+\needspace{12\baselineskip}
+\begingroup\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{2.55cm}>{\raggedright\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{0.75cm}>{\raggedright\arraybackslash}p{1.85cm}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-9.25cm-10\tabcolsep\relax}@{}}
+\caption[Diccionario de datos: \texttt{pagos.\allowbreak{}cuentas\_\allowbreak{}mp\_\allowbreak{}tutor}]{\texttt{pagos.\allowbreak{}cuentas\_\allowbreak{}mp\_\allowbreak{}tutor}: cuenta de MercadoPago conectada por cada tutor}\label{tab:dd-pagos-cuentas-mp-tutor}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endfirsthead
+\multicolumn{6}{@{}l}{\scriptsize\itshape \texttt{pagos.\allowbreak{}cuentas\_\allowbreak{}mp\_\allowbreak{}tutor} (continuación)}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endhead
+\midrule\multicolumn{6}{r@{}}{\scriptsize\itshape continúa en la página siguiente}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\texttt{tutor\_\allowbreak{}id} & \texttt{uuid} & no &  & FK\,$\rightarrow$\,\texttt{identidad.\allowbreak{}usuarios} \newline PK & Tutor. \\
+\texttt{mp\_\allowbreak{}user\_\allowbreak{}id} & \texttt{varchar(\allowbreak{}40)} & no &  & UQ & Usuario de MercadoPago; único entre las cuentas conectadas. \\
+\texttt{access\_\allowbreak{}token\_\allowbreak{}cifrado} & \texttt{bytea} & no &  &  & Token de acceso cifrado (AES-256-GCM, clave fuera de la base). \\
+\texttt{refresh\_\allowbreak{}token\_\allowbreak{}cifrado} & \texttt{bytea} & sí &  &  & Token de renovación cifrado. \\
+\texttt{public\_\allowbreak{}key} & \texttt{varchar(\allowbreak{}100)} & sí &  &  & Clave pública de la cuenta. \\
+\texttt{expira\_\allowbreak{}at} & \texttt{timestamptz} & no &  &  & Vencimiento del token de acceso. \\
+\texttt{estado} & \texttt{varchar(\allowbreak{}20)} & no &  & CK & \texttt{CONECTADA}, \texttt{REVOCADA} o \texttt{ERROR}. \\
+\texttt{conectada\_\allowbreak{}at} & \texttt{timestamptz} & no & \texttt{now(\allowbreak{})} &  & Fecha y hora de la conexión. \\
+\texttt{updated\_\allowbreak{}at} & \texttt{timestamptz} & no & \texttt{now(\allowbreak{})} &  & Fecha y hora de la última modificación. \\
+\midrule
+\multicolumn{6}{@{}p{\textwidth}@{}}{\raggedright \textit{Migraciones:} V39. \newline \textit{Restricciones e índices:} \textsc{ck} \texttt{cuentas\_\allowbreak{}mp\_\allowbreak{}tutor\_\allowbreak{}estado\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}estado IN (\allowbreak{}'CONECTADA',\allowbreak{} 'REVOCADA',\allowbreak{} 'ERROR'))}; \textsc{ix único} \texttt{uq\_\allowbreak{}cuentas\_\allowbreak{}mp\_\allowbreak{}user}: \texttt{mp\_\allowbreak{}user\_\allowbreak{}id WHERE (\allowbreak{}estado = 'CONECTADA')}.}\\
+\end{longtable}
+\endgroup
+
+\needspace{12\baselineskip}
+\begingroup\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{2.55cm}>{\raggedright\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{0.75cm}>{\raggedright\arraybackslash}p{1.85cm}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-9.25cm-10\tabcolsep\relax}@{}}
+\caption[Diccionario de datos: \texttt{pagos.\allowbreak{}oauth\_\allowbreak{}estados}]{\texttt{pagos.\allowbreak{}oauth\_\allowbreak{}estados}: estado transitorio del flujo OAuth con MercadoPago}\label{tab:dd-pagos-oauth-estados}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endfirsthead
+\multicolumn{6}{@{}l}{\scriptsize\itshape \texttt{pagos.\allowbreak{}oauth\_\allowbreak{}estados} (continuación)}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endhead
+\midrule\multicolumn{6}{r@{}}{\scriptsize\itshape continúa en la página siguiente}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\texttt{state} & \texttt{varchar(\allowbreak{}64)} & no &  & PK & Parámetro \texttt{state} del flujo (protección CSRF). \\
+\texttt{tutor\_\allowbreak{}id} & \texttt{uuid} & no &  & FK\,$\rightarrow$\,\texttt{identidad.\allowbreak{}usuarios} & Tutor que conecta su cuenta. \\
+\texttt{code\_\allowbreak{}verifier} & \texttt{varchar(\allowbreak{}128)} & no &  &  & Verificador PKCE. \\
+\texttt{expira\_\allowbreak{}at} & \texttt{timestamptz} & no &  &  & Vencimiento (minutos). \\
+\midrule
+\multicolumn{6}{@{}p{\textwidth}@{}}{\raggedright \textit{Migraciones:} V39.}\\
+\end{longtable}
+\endgroup
+
+\needspace{12\baselineskip}
+\begingroup\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{2.55cm}>{\raggedright\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{0.75cm}>{\raggedright\arraybackslash}p{1.85cm}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-9.25cm-10\tabcolsep\relax}@{}}
+\caption[Diccionario de datos: \texttt{pagos.\allowbreak{}pasarela\_\allowbreak{}estado}]{\texttt{pagos.\allowbreak{}pasarela\_\allowbreak{}estado}: estado global de la pasarela de pagos (fila única)}\label{tab:dd-pagos-pasarela-estado}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endfirsthead
+\multicolumn{6}{@{}l}{\scriptsize\itshape \texttt{pagos.\allowbreak{}pasarela\_\allowbreak{}estado} (continuación)}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endhead
+\midrule\multicolumn{6}{r@{}}{\scriptsize\itshape continúa en la página siguiente}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\texttt{id} & \texttt{smallint} & no &  & CK \newline PK & Siempre 1 (fila única). \\
+\texttt{habilitada} & \texttt{boolean} & no &  &  & Verdadero: cobro real por MercadoPago; falso: modo bypass. \\
+\texttt{updated\_\allowbreak{}at} & \texttt{timestamptz} & no &  &  & Fecha y hora de la última modificación. \\
+\texttt{updated\_\allowbreak{}by} & \texttt{uuid} & sí &  & FK\,$\rightarrow$\,\texttt{identidad.\allowbreak{}usuarios} & Usuario administrador que hizo el último cambio. \\
+\midrule
+\multicolumn{6}{@{}p{\textwidth}@{}}{\raggedright \textit{Migraciones:} V22. \newline \textit{Restricciones e índices:} \textsc{ck} \texttt{pasarela\_\allowbreak{}estado\_\allowbreak{}id\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}id = 1)}.}\\
+\end{longtable}
+\endgroup
+
+\needspace{12\baselineskip}
+\begingroup\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{2.55cm}>{\raggedright\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{0.75cm}>{\raggedright\arraybackslash}p{1.85cm}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-9.25cm-10\tabcolsep\relax}@{}}
+\caption[Diccionario de datos: \texttt{pagos.\allowbreak{}precios\_\allowbreak{}referencia\_\allowbreak{}regional}]{\texttt{pagos.\allowbreak{}precios\_\allowbreak{}referencia\_\allowbreak{}regional}: precio de referencia por provincia, versionado}\label{tab:dd-pagos-precios-referencia-regional}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endfirsthead
+\multicolumn{6}{@{}l}{\scriptsize\itshape \texttt{pagos.\allowbreak{}precios\_\allowbreak{}referencia\_\allowbreak{}regional} (continuación)}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endhead
+\midrule\multicolumn{6}{r@{}}{\scriptsize\itshape continúa en la página siguiente}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\texttt{provincia} & \texttt{varchar} & no &  & PK & Provincia. \\
+\texttt{version} & \texttt{integer} & no &  & CK \newline PK & Versión del precio (desde 1); la vigente es la mayor. \\
+\texttt{valor\_\allowbreak{}sugerido} & \texttt{numeric(\allowbreak{}10,\allowbreak{}2)} & no &  &  & Precio de referencia sugerido. \\
+\texttt{vigente\_\allowbreak{}desde} & \texttt{timestamptz} & no &  &  & Inicio de la vigencia. \\
+\midrule
+\multicolumn{6}{@{}p{\textwidth}@{}}{\raggedright \textit{Migraciones:} V11. \newline \textit{Restricciones e índices:} \textsc{ck} \texttt{precios\_\allowbreak{}referencia\_\allowbreak{}regional\_\allowbreak{}version\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}version >= 1)}; \textsc{pk} compuesta: \texttt{provincia,\allowbreak{} version}.}\\
+\end{longtable}
+\endgroup
+
+\needspace{12\baselineskip}
+\begingroup\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{2.55cm}>{\raggedright\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{0.75cm}>{\raggedright\arraybackslash}p{1.85cm}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-9.25cm-10\tabcolsep\relax}@{}}
+\caption[Diccionario de datos: \texttt{pagos.\allowbreak{}preferencias\_\allowbreak{}pago}]{\texttt{pagos.\allowbreak{}preferencias\_\allowbreak{}pago}: preferencias de MercadoPago generadas por reserva}\label{tab:dd-pagos-preferencias-pago}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endfirsthead
+\multicolumn{6}{@{}l}{\scriptsize\itshape \texttt{pagos.\allowbreak{}preferencias\_\allowbreak{}pago} (continuación)}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endhead
+\midrule\multicolumn{6}{r@{}}{\scriptsize\itshape continúa en la página siguiente}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\texttt{reserva\_\allowbreak{}id} & \texttt{uuid} & no &  & FK\,$\rightarrow$\,\texttt{reservas.\allowbreak{}reservas} \newline PK & Reserva para la que se generó la preferencia. \\
+\texttt{preference\_\allowbreak{}id} & \texttt{varchar(\allowbreak{}100)} & no &  &  & Identificador de la preferencia en MercadoPago. \\
+\texttt{created\_\allowbreak{}at} & \texttt{timestamptz} & no & \texttt{now(\allowbreak{})} &  & Fecha y hora de creación. \\
+\texttt{conciliado\_\allowbreak{}at} & \texttt{timestamptz} & sí &  &  & Momento en que la reserva ya tiene su transacción. \\
+\texttt{intentos\_\allowbreak{}conciliacion} & \texttt{integer} & no & \texttt{0} &  & Intentos del barrido de conciliación. \\
+\texttt{alertado\_\allowbreak{}at} & \texttt{timestamptz} & sí &  &  & Aviso a Soporte por un pago aprobado que no se pudo atribuir. \\
+\midrule
+\multicolumn{6}{@{}p{\textwidth}@{}}{\raggedright \textit{Migraciones:} V38. \newline \textit{Restricciones e índices:} \textsc{ix} \texttt{idx\_\allowbreak{}preferencias\_\allowbreak{}sin\_\allowbreak{}conciliar}: \texttt{created\_\allowbreak{}at WHERE (\allowbreak{}conciliado\_\allowbreak{}at IS NULL)}.}\\
+\end{longtable}
+\endgroup
+
+\needspace{12\baselineskip}
+\begingroup\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{2.55cm}>{\raggedright\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{0.75cm}>{\raggedright\arraybackslash}p{1.85cm}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-9.25cm-10\tabcolsep\relax}@{}}
+\caption[Diccionario de datos: \texttt{pagos.\allowbreak{}tarifas\_\allowbreak{}tutor}]{\texttt{pagos.\allowbreak{}tarifas\_\allowbreak{}tutor}: tarifa vigente del tutor y configuración del paquete}\label{tab:dd-pagos-tarifas-tutor}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endfirsthead
+\multicolumn{6}{@{}l}{\scriptsize\itshape \texttt{pagos.\allowbreak{}tarifas\_\allowbreak{}tutor} (continuación)}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endhead
+\midrule\multicolumn{6}{r@{}}{\scriptsize\itshape continúa en la página siguiente}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\texttt{tutor\_\allowbreak{}id} & \texttt{uuid} & no &  & FK\,$\rightarrow$\,\texttt{identidad.\allowbreak{}usuarios} \newline PK & Tutor (una tarifa vigente por tutor). \\
+\texttt{precio\_\allowbreak{}hora} & \texttt{numeric(\allowbreak{}10,\allowbreak{}2)} & no &  & CK & Precio por hora (V31; antes, por sesión). \\
+\texttt{updated\_\allowbreak{}at} & \texttt{timestamptz} & no & \texttt{now(\allowbreak{})} &  & Fecha y hora de la última modificación. \\
+\texttt{paquete\_\allowbreak{}habilitado} & \texttt{boolean} & no & \texttt{false} &  & El tutor ofrece el paquete mensual. \\
+\texttt{paquete\_\allowbreak{}descuento\_\allowbreak{}porcentaje} & \texttt{integer} & no & \texttt{0} & CK & Descuento del paquete (0 a 30 \%). \\
+\midrule
+\multicolumn{6}{@{}p{\textwidth}@{}}{\raggedright \textit{Migraciones:} V17, V31, V46. \newline \textit{Restricciones e índices:} \textsc{ck} \texttt{tarifas\_\allowbreak{}tutor\_\allowbreak{}paquete\_\allowbreak{}descuento\_\allowbreak{}porcentaje\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}(\allowbreak{}paquete\_\allowbreak{}descuento\_\allowbreak{}porcentaje >= 0) AND (\allowbreak{}paquete\_\allowbreak{}descuento\_\allowbreak{}porcentaje <= 30))}; \textsc{ck} \texttt{tarifas\_\allowbreak{}tutor\_\allowbreak{}precio\_\allowbreak{}sesion\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}precio\_\allowbreak{}hora >= 0)}.}\\
+\end{longtable}
+\endgroup
+
+\needspace{12\baselineskip}
+\begingroup\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{2.55cm}>{\raggedright\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{0.75cm}>{\raggedright\arraybackslash}p{1.85cm}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-9.25cm-10\tabcolsep\relax}@{}}
+\caption[Diccionario de datos: \texttt{pagos.\allowbreak{}transacciones}]{\texttt{pagos.\allowbreak{}transacciones}: cobro de cada reserva y estado de la retención}\label{tab:dd-pagos-transacciones}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endfirsthead
+\multicolumn{6}{@{}l}{\scriptsize\itshape \texttt{pagos.\allowbreak{}transacciones} (continuación)}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endhead
+\midrule\multicolumn{6}{r@{}}{\scriptsize\itshape continúa en la página siguiente}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\texttt{id} & \texttt{uuid} & no & \texttt{gen\_\allowbreak{}random\_\allowbreak{}uuid(\allowbreak{})} & PK & Identificador de la fila (UUID). \\
+\texttt{reserva\_\allowbreak{}id} & \texttt{uuid} & no &  & FK\,$\rightarrow$\,\texttt{reservas.\allowbreak{}reservas} \newline UQ & Reserva cobrada (una transacción por reserva). \\
+\texttt{mp\_\allowbreak{}payment\_\allowbreak{}id} & \texttt{varchar} & no &  & UQ & Identificador del pago en MercadoPago; único. \\
+\texttt{monto\_\allowbreak{}bruto} & \texttt{numeric(\allowbreak{}10,\allowbreak{}2)} & no &  & CK & Monto cobrado. \\
+\texttt{comision\_\allowbreak{}plataforma} & \texttt{numeric(\allowbreak{}10,\allowbreak{}2)} & no &  & CK & Comisión de la plataforma (no mayor que el monto bruto). \\
+\texttt{estado} & \texttt{varchar(\allowbreak{}20)} & no & \texttt{'retenido\_\allowbreak{}escrow'} & CK & \texttt{retenido\_\allowbreak{}escrow}, \texttt{liberado}, \texttt{reembolsado}, \texttt{pausado\_\allowbreak{}denuncia} o \texttt{pausado\_\allowbreak{}alerta}. \\
+\texttt{liberar\_\allowbreak{}at} & \texttt{timestamptz} & sí &  &  & Fin de la sesión + 24 h; nulo hasta que la sesión termine. \\
+\texttt{intentos\_\allowbreak{}liberacion} & \texttt{integer} & no & \texttt{0} & CK & Fallos del trabajo de liberación. \\
+\texttt{created\_\allowbreak{}at} & \texttt{timestamptz} & no & \texttt{now(\allowbreak{})} &  & Fecha y hora de creación. \\
+\texttt{en\_\allowbreak{}bypass} & \texttt{boolean} & no & \texttt{false} &  & Nació en modo bypass: no hay dinero real en MercadoPago. \\
+\texttt{monto\_\allowbreak{}adicional\_\allowbreak{}resumen} & \texttt{numeric(\allowbreak{}10,\allowbreak{}2)} & no & \texttt{0} &  & Monto del adicional de resumen, íntegro para la plataforma. \\
+\texttt{adicional\_\allowbreak{}reembolsado\_\allowbreak{}at} & \texttt{timestamptz} & sí &  &  & Reembolso del adicional. \\
+\texttt{adicional\_\allowbreak{}reembolso\_\allowbreak{}estado} & \texttt{varchar(\allowbreak{}20)} & sí &  & CK & \texttt{PENDIENTE}, \texttt{FALLIDO}, \texttt{HECHO} o \texttt{RESUELTO\_\allowbreak{}MANUAL}. \\
+\texttt{adicional\_\allowbreak{}reembolso\_\allowbreak{}intentos} & \texttt{integer} & no & \texttt{0} &  & Intentos del reembolso del adicional. \\
+\texttt{adicional\_\allowbreak{}reembolso\_\allowbreak{}error} & \texttt{varchar(\allowbreak{}300)} & sí &  &  & Último error del reembolso del adicional. \\
+\texttt{adicional\_\allowbreak{}reembolso\_\allowbreak{}nota} & \texttt{varchar(\allowbreak{}300)} & sí &  &  & Constancia de Soporte Financiero al resolverlo manualmente. \\
+\texttt{reembolso\_\allowbreak{}parcial\_\allowbreak{}monto} & \texttt{numeric(\allowbreak{}10,\allowbreak{}2)} & sí &  &  & Monto del reembolso parcial manual (uno por transacción). \\
+\texttt{reembolso\_\allowbreak{}parcial\_\allowbreak{}at} & \texttt{timestamptz} & sí &  &  & Fecha y hora del reembolso parcial. \\
+\midrule
+\multicolumn{6}{@{}p{\textwidth}@{}}{\raggedright \textit{Migraciones:} V11, V22, V24, V25, V36, V40, V54. \newline \textit{Restricciones e índices:} \textsc{ck} \texttt{transacciones\_\allowbreak{}adicional\_\allowbreak{}reembolso\_\allowbreak{}estado\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}adicional\_\allowbreak{}reembolso\_\allowbreak{}estado IN (\allowbreak{}'PENDIENTE',\allowbreak{} 'FALLIDO',\allowbreak{} 'HECHO',\allowbreak{} 'RESUELTO\_\allowbreak{}MANUAL'))}; \textsc{ck} \texttt{transacciones\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}(\allowbreak{}comision\_\allowbreak{}plataforma >= 0) AND (\allowbreak{}comision\_\allowbreak{}plataforma <= monto\_\allowbreak{}bruto))}; \textsc{ck} \texttt{transacciones\_\allowbreak{}estado\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}estado IN (\allowbreak{}'retenido\_\allowbreak{}escrow',\allowbreak{} 'liberado',\allowbreak{} 'reembolsado',\allowbreak{} 'pausado\_\allowbreak{}denuncia',\allowbreak{} 'pausado\_\allowbreak{}alerta'))}; \textsc{ck} \texttt{transacciones\_\allowbreak{}intentos\_\allowbreak{}liberacion\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}intentos\_\allowbreak{}liberacion >= 0)}; \textsc{ck} \texttt{transacciones\_\allowbreak{}monto\_\allowbreak{}bruto\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}monto\_\allowbreak{}bruto >= 0)}; \textsc{ix} \texttt{idx\_\allowbreak{}transacciones\_\allowbreak{}escrow\_\allowbreak{}liberar}: \texttt{(\allowbreak{}estado,\allowbreak{} liberar\_\allowbreak{}at)}; \textsc{ix} \texttt{idx\_\allowbreak{}transacciones\_\allowbreak{}reserva}: \texttt{reserva\_\allowbreak{}id}; \textsc{ix único} \texttt{uq\_\allowbreak{}transacciones\_\allowbreak{}mp\_\allowbreak{}payment}: \texttt{mp\_\allowbreak{}payment\_\allowbreak{}id}; \textsc{ix único} \texttt{uq\_\allowbreak{}transacciones\_\allowbreak{}reserva}: \texttt{reserva\_\allowbreak{}id}.}\\
+\end{longtable}
+\endgroup
+
+\subsection{Esquema \texttt{resumen}}\label{sec:dd-resumen}
+
+Módulo M6, resumen automático de la sesión.
+
+\needspace{12\baselineskip}
+\begingroup\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{2.55cm}>{\raggedright\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{0.75cm}>{\raggedright\arraybackslash}p{1.85cm}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-9.25cm-10\tabcolsep\relax}@{}}
+\caption[Diccionario de datos: \texttt{resumen.\allowbreak{}resumenes\_\allowbreak{}sesion}]{\texttt{resumen.\allowbreak{}resumenes\_\allowbreak{}sesion}: resumen automático de cada sesión}\label{tab:dd-resumen-resumenes-sesion}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endfirsthead
+\multicolumn{6}{@{}l}{\scriptsize\itshape \texttt{resumen.\allowbreak{}resumenes\_\allowbreak{}sesion} (continuación)}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endhead
+\midrule\multicolumn{6}{r@{}}{\scriptsize\itshape continúa en la página siguiente}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\texttt{id} & \texttt{uuid} & no & \texttt{gen\_\allowbreak{}random\_\allowbreak{}uuid(\allowbreak{})} & PK & Identificador de la fila (UUID). \\
+\texttt{sesion\_\allowbreak{}id} & \texttt{uuid} & no &  & FK\,$\rightarrow$\,\texttt{aula.\allowbreak{}sesiones\_\allowbreak{}aprendizaje} \newline UQ & Sesión resumida (un resumen por sesión, no regenerable). \\
+\texttt{estado} & \texttt{varchar(\allowbreak{}30)} & no & \texttt{'pendiente'} & CK & \texttt{pendiente}, \texttt{generado}, \texttt{suspendido\_\allowbreak{}seguridad}, \texttt{reintento\_\allowbreak{}agotado} o \texttt{fallido}. \\
+\texttt{prompt\_\allowbreak{}anonimizado} & \texttt{text} & sí &  &  & Prompt final, ya anonimizado. \\
+\texttt{transcript\_\allowbreak{}anonimizado} & \texttt{text} & sí &  &  & Transcripción anonimizada; se guarda siempre. \\
+\texttt{resumen\_\allowbreak{}final} & \texttt{text} & sí &  &  & Salida del modelo de lenguaje; nula hasta generar. \\
+\texttt{intentos} & \texttt{integer} & no & \texttt{0} & CK & Intentos de generación. \\
+\texttt{proximo\_\allowbreak{}reintento\_\allowbreak{}at} & \texttt{timestamptz} & sí &  &  & Próximo reintento (espera de 5 min, 15 min y 1 h). \\
+\texttt{recordatorio\_\allowbreak{}pendiente} & \texttt{boolean} & no & \texttt{false} &  & Falta el recordatorio único de las 24 h. \\
+\texttt{suspendido\_\allowbreak{}seguridad} & \texttt{boolean} & no & \texttt{false} &  & Hay una denuncia o alerta activa sobre la sesión. \\
+\texttt{created\_\allowbreak{}at} & \texttt{timestamptz} & no & \texttt{now(\allowbreak{})} &  & Fecha y hora de creación. \\
+\midrule
+\multicolumn{6}{@{}p{\textwidth}@{}}{\raggedright \textit{Migraciones:} V15. \newline \textit{Restricciones e índices:} \textsc{ck} \texttt{resumenes\_\allowbreak{}sesion\_\allowbreak{}estado\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}estado IN (\allowbreak{}'pendiente',\allowbreak{} 'generado',\allowbreak{} 'suspendido\_\allowbreak{}seguridad',\allowbreak{} 'reintento\_\allowbreak{}agotado',\allowbreak{} 'fallido'))}; \textsc{ck} \texttt{resumenes\_\allowbreak{}sesion\_\allowbreak{}intentos\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}intentos >= 0)}; \textsc{ix} \texttt{idx\_\allowbreak{}resumenes\_\allowbreak{}sesion\_\allowbreak{}estado}: \texttt{estado}.}\\
+\end{longtable}
+\endgroup
+
+\subsection{Esquema \texttt{reputacion}}\label{sec:dd-reputacion}
+
+Módulo M7, calificaciones y reputación.
+
+\needspace{12\baselineskip}
+\begingroup\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{2.55cm}>{\raggedright\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{0.75cm}>{\raggedright\arraybackslash}p{1.85cm}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-9.25cm-10\tabcolsep\relax}@{}}
+\caption[Diccionario de datos: \texttt{reputacion.\allowbreak{}calificaciones}]{\texttt{reputacion.\allowbreak{}calificaciones}: calificaciones bidireccionales por sesión}\label{tab:dd-reputacion-calificaciones}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endfirsthead
+\multicolumn{6}{@{}l}{\scriptsize\itshape \texttt{reputacion.\allowbreak{}calificaciones} (continuación)}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endhead
+\midrule\multicolumn{6}{r@{}}{\scriptsize\itshape continúa en la página siguiente}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\texttt{id} & \texttt{uuid} & no & \texttt{gen\_\allowbreak{}random\_\allowbreak{}uuid(\allowbreak{})} & PK & Identificador de la fila (UUID). \\
+\texttt{sesion\_\allowbreak{}id} & \texttt{uuid} & no &  & FK\,$\rightarrow$\,\texttt{aula.\allowbreak{}sesiones\_\allowbreak{}aprendizaje} \newline UQ* & Sesión calificada. \\
+\texttt{autor\_\allowbreak{}id} & \texttt{uuid} & no &  & FK\,$\rightarrow$\,\texttt{identidad.\allowbreak{}usuarios} \newline UQ* & Autor de la calificación. \\
+\texttt{direccion} & \texttt{varchar(\allowbreak{}30)} & no &  & CK \newline UQ* & \texttt{estudiante\_\allowbreak{}a\_\allowbreak{}tutor} o \texttt{tutor\_\allowbreak{}a\_\allowbreak{}estudiante}; se deriva del rol del autor. \\
+\texttt{estrellas} & \texttt{smallint} & no &  & CK & Puntaje de 1 a 5. \\
+\texttt{comentario} & \texttt{varchar(\allowbreak{}1000)} & sí &  &  & Comentario; solo en \texttt{estudiante\_\allowbreak{}a\_\allowbreak{}tutor}. \\
+\texttt{editable\_\allowbreak{}hasta} & \texttt{timestamptz} & no &  &  & Creación + 48 h. \\
+\texttt{created\_\allowbreak{}at} & \texttt{timestamptz} & no & \texttt{now(\allowbreak{})} &  & Fecha y hora de creación. \\
+\midrule
+\multicolumn{6}{@{}p{\textwidth}@{}}{\raggedright \textit{Migraciones:} V14. \newline \textit{Restricciones e índices:} \textsc{ck} \texttt{calificaciones\_\allowbreak{}direccion\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}direccion IN (\allowbreak{}'estudiante\_\allowbreak{}a\_\allowbreak{}tutor',\allowbreak{} 'tutor\_\allowbreak{}a\_\allowbreak{}estudiante'))}; \textsc{ck} \texttt{calificaciones\_\allowbreak{}estrellas\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}(\allowbreak{}estrellas >= 1) AND (\allowbreak{}estrellas <= 5))}; \textsc{uq} \texttt{uq\_\allowbreak{}calificacion\_\allowbreak{}por\_\allowbreak{}sesion\_\allowbreak{}autor\_\allowbreak{}direccion}: \texttt{UNIQUE (\allowbreak{}sesion\_\allowbreak{}id,\allowbreak{} autor\_\allowbreak{}id,\allowbreak{} direccion)}; \textsc{ix} \texttt{idx\_\allowbreak{}calificaciones\_\allowbreak{}sesion}: \texttt{sesion\_\allowbreak{}id}; \textsc{ix} \texttt{idx\_\allowbreak{}calificaciones\_\allowbreak{}tutor\_\allowbreak{}direccion}: \texttt{direccion}.}\\
+\end{longtable}
+\endgroup
+
+\needspace{12\baselineskip}
+\begingroup\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{2.55cm}>{\raggedright\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{0.75cm}>{\raggedright\arraybackslash}p{1.85cm}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-9.25cm-10\tabcolsep\relax}@{}}
+\caption[Diccionario de datos: \texttt{reputacion.\allowbreak{}senales\_\allowbreak{}implicitas\_\allowbreak{}tutor}]{\texttt{reputacion.\allowbreak{}senales\_\allowbreak{}implicitas\_\allowbreak{}tutor}: señales implícitas agregadas por tutor}\label{tab:dd-reputacion-senales-implicitas-tutor}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endfirsthead
+\multicolumn{6}{@{}l}{\scriptsize\itshape \texttt{reputacion.\allowbreak{}senales\_\allowbreak{}implicitas\_\allowbreak{}tutor} (continuación)}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endhead
+\midrule\multicolumn{6}{r@{}}{\scriptsize\itshape continúa en la página siguiente}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\texttt{tutor\_\allowbreak{}id} & \texttt{uuid} & no &  & FK\,$\rightarrow$\,\texttt{identidad.\allowbreak{}usuarios} \newline PK & Tutor. \\
+\texttt{puntualidad\_\allowbreak{}promedio} & \texttt{numeric(\allowbreak{}5,\allowbreak{}4)} & no & \texttt{1.\allowbreak{}0} &  & Puntualidad promedio (0 a 1). \\
+\texttt{tasa\_\allowbreak{}recontratacion} & \texttt{numeric(\allowbreak{}5,\allowbreak{}4)} & no & \texttt{0.\allowbreak{}0} &  & Tasa de recontratación. \\
+\texttt{tasa\_\allowbreak{}cancelacion\_\allowbreak{}noshow} & \texttt{numeric(\allowbreak{}5,\allowbreak{}4)} & no & \texttt{0.\allowbreak{}0} &  & Tasa de cancelaciones y ausencias. \\
+\texttt{tiempo\_\allowbreak{}respuesta\_\allowbreak{}promedio\_\allowbreak{}min} & \texttt{integer} & no & \texttt{0} &  & Tiempo de respuesta promedio, en minutos. \\
+\texttt{sesiones\_\allowbreak{}dictadas\_\allowbreak{}total} & \texttt{integer} & no & \texttt{0} &  & Sesiones dictadas en total. \\
+\texttt{updated\_\allowbreak{}at} & \texttt{timestamptz} & no & \texttt{now(\allowbreak{})} &  & Fecha y hora de la última modificación. \\
+\midrule
+\multicolumn{6}{@{}p{\textwidth}@{}}{\raggedright \textit{Migraciones:} V14.}\\
+\end{longtable}
+\endgroup
+
+\subsection{Esquema \texttt{admin}}\label{sec:dd-admin}
+
+Módulo M8, panel de administración: administradores, auditoría, soporte, notificaciones y NPS.
+
+\needspace{12\baselineskip}
+\begingroup\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{2.55cm}>{\raggedright\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{0.75cm}>{\raggedright\arraybackslash}p{1.85cm}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-9.25cm-10\tabcolsep\relax}@{}}
+\caption[Diccionario de datos: \texttt{admin.\allowbreak{}admins}]{\texttt{admin.\allowbreak{}admins}: personal interno con rol de administración}\label{tab:dd-admin-admins}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endfirsthead
+\multicolumn{6}{@{}l}{\scriptsize\itshape \texttt{admin.\allowbreak{}admins} (continuación)}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endhead
+\midrule\multicolumn{6}{r@{}}{\scriptsize\itshape continúa en la página siguiente}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\texttt{id} & \texttt{uuid} & no & \texttt{gen\_\allowbreak{}random\_\allowbreak{}uuid(\allowbreak{})} & PK & Identificador de la fila (UUID). \\
+\texttt{usuario\_\allowbreak{}id} & \texttt{uuid} & no &  & FK\,$\rightarrow$\,\texttt{identidad.\allowbreak{}usuarios} \newline UQ & Cuenta de usuario del administrador (1 a 1). \\
+\texttt{rol} & \texttt{varchar(\allowbreak{}30)} & no &  & CK & \texttt{MODERACION\_\allowbreak{}SEGURIDAD} o \texttt{SOPORTE\_\allowbreak{}FINANCIERO} (un único rol). \\
+\texttt{activo} & \texttt{boolean} & no & \texttt{true} &  & El administrador está habilitado. \\
+\texttt{created\_\allowbreak{}at} & \texttt{timestamptz} & no & \texttt{now(\allowbreak{})} &  & Fecha y hora de creación. \\
+\midrule
+\multicolumn{6}{@{}p{\textwidth}@{}}{\raggedright \textit{Migraciones:} V16. \newline \textit{Restricciones e índices:} \textsc{ck} \texttt{admins\_\allowbreak{}rol\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}rol IN (\allowbreak{}'MODERACION\_\allowbreak{}SEGURIDAD',\allowbreak{} 'SOPORTE\_\allowbreak{}FINANCIERO'))}; \textsc{ix} \texttt{idx\_\allowbreak{}admins\_\allowbreak{}rol}: \texttt{rol}.}\\
+\end{longtable}
+\endgroup
+
+\needspace{12\baselineskip}
+\begingroup\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{2.55cm}>{\raggedright\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{0.75cm}>{\raggedright\arraybackslash}p{1.85cm}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-9.25cm-10\tabcolsep\relax}@{}}
+\caption[Diccionario de datos: \texttt{admin.\allowbreak{}log\_\allowbreak{}auditoria\_\allowbreak{}admin}]{\texttt{admin.\allowbreak{}log\_\allowbreak{}auditoria\_\allowbreak{}admin}: registro de auditoría de acciones administrativas (solo inserción)}\label{tab:dd-admin-log-auditoria-admin}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endfirsthead
+\multicolumn{6}{@{}l}{\scriptsize\itshape \texttt{admin.\allowbreak{}log\_\allowbreak{}auditoria\_\allowbreak{}admin} (continuación)}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endhead
+\midrule\multicolumn{6}{r@{}}{\scriptsize\itshape continúa en la página siguiente}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\texttt{id} & \texttt{uuid} & no & \texttt{gen\_\allowbreak{}random\_\allowbreak{}uuid(\allowbreak{})} & PK & Identificador de la fila (UUID). \\
+\texttt{admin\_\allowbreak{}id} & \texttt{uuid} & no &  & FK\,$\rightarrow$\,\texttt{admin.\allowbreak{}admins} & Administrador que actuó. \\
+\texttt{accion} & \texttt{varchar(\allowbreak{}100)} & no &  &  & Acción realizada. \\
+\texttt{entidad\_\allowbreak{}tipo} & \texttt{varchar(\allowbreak{}60)} & no &  &  & Tipo de entidad afectada. \\
+\texttt{entidad\_\allowbreak{}id} & \texttt{varchar(\allowbreak{}64)} & sí &  &  & Identificador de la entidad afectada. \\
+\texttt{detalle} & \texttt{jsonb} & sí &  &  & Detalle de la acción (JSON). \\
+\texttt{created\_\allowbreak{}at} & \texttt{timestamptz} & no & \texttt{now(\allowbreak{})} &  & Fecha y hora de creación. \\
+\midrule
+\multicolumn{6}{@{}p{\textwidth}@{}}{\raggedright \textit{Migraciones:} V16.}\\
+\end{longtable}
+\endgroup
+
+\needspace{12\baselineskip}
+\begingroup\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{2.55cm}>{\raggedright\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{0.75cm}>{\raggedright\arraybackslash}p{1.85cm}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-9.25cm-10\tabcolsep\relax}@{}}
+\caption[Diccionario de datos: \texttt{admin.\allowbreak{}mapeo\_\allowbreak{}origen\_\allowbreak{}rol}]{\texttt{admin.\allowbreak{}mapeo\_\allowbreak{}origen\_\allowbreak{}rol}: rol que atiende cada origen de ticket de soporte}\label{tab:dd-admin-mapeo-origen-rol}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endfirsthead
+\multicolumn{6}{@{}l}{\scriptsize\itshape \texttt{admin.\allowbreak{}mapeo\_\allowbreak{}origen\_\allowbreak{}rol} (continuación)}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endhead
+\midrule\multicolumn{6}{r@{}}{\scriptsize\itshape continúa en la página siguiente}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\texttt{origen\_\allowbreak{}modulo} & \texttt{varchar(\allowbreak{}60)} & no &  & PK & Origen del pedido de soporte (por ejemplo, \texttt{M5.\allowbreak{}pago\_\allowbreak{}fallido}). \\
+\texttt{rol\_\allowbreak{}asignado} & \texttt{varchar(\allowbreak{}30)} & no &  & CK & Rol que lo atiende. \\
+\midrule
+\multicolumn{6}{@{}p{\textwidth}@{}}{\raggedright \textit{Migraciones:} V16. \newline \textit{Restricciones e índices:} \textsc{ck} \texttt{mapeo\_\allowbreak{}origen\_\allowbreak{}rol\_\allowbreak{}rol\_\allowbreak{}asignado\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}rol\_\allowbreak{}asignado IN (\allowbreak{}'MODERACION\_\allowbreak{}SEGURIDAD',\allowbreak{} 'SOPORTE\_\allowbreak{}FINANCIERO'))}.}\\
+\end{longtable}
+\endgroup
+
+\needspace{12\baselineskip}
+\begingroup\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{2.55cm}>{\raggedright\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{0.75cm}>{\raggedright\arraybackslash}p{1.85cm}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-9.25cm-10\tabcolsep\relax}@{}}
+\caption[Diccionario de datos: \texttt{admin.\allowbreak{}notificaciones}]{\texttt{admin.\allowbreak{}notificaciones}: bandeja de avisos y cola de envío por correo}\label{tab:dd-admin-notificaciones}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endfirsthead
+\multicolumn{6}{@{}l}{\scriptsize\itshape \texttt{admin.\allowbreak{}notificaciones} (continuación)}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endhead
+\midrule\multicolumn{6}{r@{}}{\scriptsize\itshape continúa en la página siguiente}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\texttt{id} & \texttt{uuid} & no &  & PK & Identificador de la fila (UUID). \\
+\texttt{destinatario\_\allowbreak{}id} & \texttt{uuid} & no &  & FK\,$\rightarrow$\,\texttt{identidad.\allowbreak{}usuarios} & Usuario destinatario. \\
+\texttt{tipo} & \texttt{varchar(\allowbreak{}40)} & no &  &  & Tipo de aviso. \\
+\texttt{datos} & \texttt{jsonb} & no & \texttt{'\{\}'} &  & Datos del aviso (JSON). \\
+\texttt{creada\_\allowbreak{}at} & \texttt{timestamptz} & no & \texttt{now(\allowbreak{})} &  & Fecha y hora de creación. \\
+\texttt{leida\_\allowbreak{}at} & \texttt{timestamptz} & sí &  &  & Lectura en la bandeja; nula si no se leyó. \\
+\texttt{enviada\_\allowbreak{}email\_\allowbreak{}at} & \texttt{timestamptz} & sí &  &  & Envío por correo. \\
+\texttt{intentos\_\allowbreak{}email} & \texttt{integer} & no & \texttt{0} &  & Intentos de envío por correo. \\
+\texttt{proximo\_\allowbreak{}intento\_\allowbreak{}email\_\allowbreak{}at} & \texttt{timestamptz} & sí &  &  & Próximo intento (espera de 5, 15 y 60 min). \\
+\texttt{email\_\allowbreak{}descartado\_\allowbreak{}at} & \texttt{timestamptz} & sí &  &  & Descarte del correo: intentos agotados o destinatario sin correo. \\
+\midrule
+\multicolumn{6}{@{}p{\textwidth}@{}}{\raggedright \textit{Migraciones:} V32. \newline \textit{Restricciones e índices:} \textsc{ix} \texttt{ix\_\allowbreak{}notificaciones\_\allowbreak{}destinatario}: \texttt{(\allowbreak{}destinatario\_\allowbreak{}id,\allowbreak{} creada\_\allowbreak{}at DESC)}; \textsc{ix} \texttt{ix\_\allowbreak{}notificaciones\_\allowbreak{}email\_\allowbreak{}pendiente}: \texttt{proximo\_\allowbreak{}intento\_\allowbreak{}email\_\allowbreak{}at WHERE (\allowbreak{}enviada\_\allowbreak{}email\_\allowbreak{}at IS NULL) AND (\allowbreak{}email\_\allowbreak{}descartado\_\allowbreak{}at IS NULL)}.}\\
+\end{longtable}
+\endgroup
+
+\needspace{12\baselineskip}
+\begingroup\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{2.55cm}>{\raggedright\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{0.75cm}>{\raggedright\arraybackslash}p{1.85cm}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-9.25cm-10\tabcolsep\relax}@{}}
+\caption[Diccionario de datos: \texttt{admin.\allowbreak{}nps\_\allowbreak{}respuestas}]{\texttt{admin.\allowbreak{}nps\_\allowbreak{}respuestas}: respuestas de NPS de intención (evaluación)}\label{tab:dd-admin-nps-respuestas}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endfirsthead
+\multicolumn{6}{@{}l}{\scriptsize\itshape \texttt{admin.\allowbreak{}nps\_\allowbreak{}respuestas} (continuación)}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endhead
+\midrule\multicolumn{6}{r@{}}{\scriptsize\itshape continúa en la página siguiente}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\texttt{usuario\_\allowbreak{}id} & \texttt{uuid} & no &  & FK\,$\rightarrow$\,\texttt{identidad.\allowbreak{}usuarios} \newline PK & Usuario que respondió (una respuesta por usuario). \\
+\texttt{puntaje} & \texttt{smallint} & no &  & CK & Puntaje de 0 a 10. \\
+\texttt{created\_\allowbreak{}at} & \texttt{timestamptz} & no & \texttt{now(\allowbreak{})} &  & Fecha y hora de creación. \\
+\midrule
+\multicolumn{6}{@{}p{\textwidth}@{}}{\raggedright \textit{Migraciones:} V58. \newline \textit{Restricciones e índices:} \textsc{ck} \texttt{nps\_\allowbreak{}respuestas\_\allowbreak{}puntaje\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}(\allowbreak{}puntaje >= 0) AND (\allowbreak{}puntaje <= 10))}; \textsc{ix} \texttt{idx\_\allowbreak{}nps\_\allowbreak{}respuestas\_\allowbreak{}created}: \texttt{created\_\allowbreak{}at}.}\\
+\end{longtable}
+\endgroup
+
+\needspace{12\baselineskip}
+\begingroup\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{2.55cm}>{\raggedright\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{0.75cm}>{\raggedright\arraybackslash}p{1.85cm}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-9.25cm-10\tabcolsep\relax}@{}}
+\caption[Diccionario de datos: \texttt{admin.\allowbreak{}tickets\_\allowbreak{}soporte}]{\texttt{admin.\allowbreak{}tickets\_\allowbreak{}soporte}: pedidos de contacto con soporte}\label{tab:dd-admin-tickets-soporte}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endfirsthead
+\multicolumn{6}{@{}l}{\scriptsize\itshape \texttt{admin.\allowbreak{}tickets\_\allowbreak{}soporte} (continuación)}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endhead
+\midrule\multicolumn{6}{r@{}}{\scriptsize\itshape continúa en la página siguiente}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\texttt{id} & \texttt{uuid} & no & \texttt{gen\_\allowbreak{}random\_\allowbreak{}uuid(\allowbreak{})} & PK & Identificador de la fila (UUID). \\
+\texttt{usuario\_\allowbreak{}id} & \texttt{uuid} & no &  & FK\,$\rightarrow$\,\texttt{identidad.\allowbreak{}usuarios} & Usuario que pide soporte. \\
+\texttt{origen\_\allowbreak{}modulo} & \texttt{varchar(\allowbreak{}60)} & no &  & FK\,$\rightarrow$\,\texttt{admin.\allowbreak{}mapeo\_\allowbreak{}origen\_\allowbreak{}rol} & Origen del pedido; determina el rol. \\
+\texttt{asunto} & \texttt{varchar(\allowbreak{}200)} & no &  &  & Asunto. \\
+\texttt{detalle} & \texttt{varchar(\allowbreak{}1000)} & no &  &  & Detalle del pedido. \\
+\texttt{estado} & \texttt{varchar(\allowbreak{}20)} & no & \texttt{'ABIERTO'} & CK & \texttt{ABIERTO}, \texttt{EN\_\allowbreak{}PROCESO}, \texttt{RESUELTO} o \texttt{CERRADO}. \\
+\texttt{rol\_\allowbreak{}asignado} & \texttt{varchar(\allowbreak{}30)} & no &  & CK & Rol al que se enrutó. \\
+\texttt{creado\_\allowbreak{}en} & \texttt{timestamptz} & no & \texttt{now(\allowbreak{})} &  & Fecha y hora de creación. \\
+\texttt{resuelto\_\allowbreak{}en} & \texttt{timestamptz} & sí &  &  & Fecha y hora de la resolución. \\
+\midrule
+\multicolumn{6}{@{}p{\textwidth}@{}}{\raggedright \textit{Migraciones:} V16. \newline \textit{Restricciones e índices:} \textsc{ck} \texttt{tickets\_\allowbreak{}soporte\_\allowbreak{}estado\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}estado IN (\allowbreak{}'ABIERTO',\allowbreak{} 'EN\_\allowbreak{}PROCESO',\allowbreak{} 'RESUELTO',\allowbreak{} 'CERRADO'))}; \textsc{ck} \texttt{tickets\_\allowbreak{}soporte\_\allowbreak{}rol\_\allowbreak{}asignado\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}rol\_\allowbreak{}asignado IN (\allowbreak{}'MODERACION\_\allowbreak{}SEGURIDAD',\allowbreak{} 'SOPORTE\_\allowbreak{}FINANCIERO'))}; \textsc{ix} \texttt{idx\_\allowbreak{}tickets\_\allowbreak{}rol\_\allowbreak{}estado}: \texttt{(\allowbreak{}rol\_\allowbreak{}asignado,\allowbreak{} estado)}.}\\
+\end{longtable}
+\endgroup
+
+\subsection{Esquema \texttt{seguridad}}\label{sec:dd-seguridad}
+
+Módulo M9, denuncias, seguridad y moderación: denuncias y sanciones.
+
+\needspace{12\baselineskip}
+\begingroup\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{2.55cm}>{\raggedright\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{0.75cm}>{\raggedright\arraybackslash}p{1.85cm}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-9.25cm-10\tabcolsep\relax}@{}}
+\caption[Diccionario de datos: \texttt{seguridad.\allowbreak{}denuncias}]{\texttt{seguridad.\allowbreak{}denuncias}: denuncias estándar entre usuarios}\label{tab:dd-seguridad-denuncias}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endfirsthead
+\multicolumn{6}{@{}l}{\scriptsize\itshape \texttt{seguridad.\allowbreak{}denuncias} (continuación)}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endhead
+\midrule\multicolumn{6}{r@{}}{\scriptsize\itshape continúa en la página siguiente}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\texttt{id} & \texttt{uuid} & no & \texttt{gen\_\allowbreak{}random\_\allowbreak{}uuid(\allowbreak{})} & PK & Identificador de la fila (UUID). \\
+\texttt{denunciante\_\allowbreak{}id} & \texttt{uuid} & no &  & FK\,$\rightarrow$\,\texttt{identidad.\allowbreak{}usuarios} & Usuario que denuncia. \\
+\texttt{denunciado\_\allowbreak{}id} & \texttt{uuid} & no &  & FK\,$\rightarrow$\,\texttt{identidad.\allowbreak{}usuarios} & Usuario denunciado. \\
+\texttt{sesion\_\allowbreak{}id} & \texttt{uuid} & sí &  & FK\,$\rightarrow$\,\texttt{aula.\allowbreak{}sesiones\_\allowbreak{}aprendizaje} & Sesión en la que ocurrió, si corresponde. \\
+\texttt{motivo} & \texttt{varchar(\allowbreak{}40)} & no &  & CK & \texttt{COMPORTAMIENTO\_\allowbreak{}INAPROPIADO}, \texttt{INCUMPLIMIENTO}, \texttt{FRAUDE}, \texttt{CONTENIDO\_\allowbreak{}ILEGAL} o \texttt{ACOSO}. \\
+\texttt{evidencia\_\allowbreak{}url} & \texttt{varchar(\allowbreak{}500)} & sí &  &  & Evidencia opcional. \\
+\texttt{estado} & \texttt{varchar(\allowbreak{}30)} & no & \texttt{'REGISTRADA'} & CK & \texttt{REGISTRADA}, \texttt{EN\_\allowbreak{}REVISION}, \texttt{RESUELTA\_\allowbreak{}INFUNDADA}, \texttt{RESUELTA\_\allowbreak{}FUNDADA} o \texttt{ESCALADA}. \\
+\texttt{descargo\_\allowbreak{}texto} & \texttt{varchar(\allowbreak{}300)} & sí &  &  & Último descargo del denunciado (hasta 300 caracteres). \\
+\texttt{descargo\_\allowbreak{}recibido\_\allowbreak{}at} & \texttt{timestamptz} & sí &  &  & Recepción del descargo. \\
+\texttt{descargo\_\allowbreak{}vence\_\allowbreak{}at} & \texttt{timestamptz} & sí &  &  & Vencimiento del plazo de descargo (inicio de la revisión + 48 h). \\
+\texttt{sla\_\allowbreak{}resolucion\_\allowbreak{}vence\_\allowbreak{}at} & \texttt{timestamptz} & sí &  &  & Vencimiento del plazo de resolución (vencimiento del descargo + 5 días hábiles). \\
+\texttt{prioridad\_\allowbreak{}alta} & \texttt{boolean} & no & \texttt{false} &  & Marcada por el trabajo de control del plazo; no se resuelve sola. \\
+\texttt{admin\_\allowbreak{}resolutor\_\allowbreak{}id} & \texttt{uuid} & sí &  & FK\,$\rightarrow$\,\texttt{identidad.\allowbreak{}usuarios} & Usuario administrador que la resolvió. \\
+\texttt{resuelta\_\allowbreak{}at} & \texttt{timestamptz} & sí &  &  & Fecha y hora de la resolución. \\
+\texttt{created\_\allowbreak{}at} & \texttt{timestamptz} & no & \texttt{now(\allowbreak{})} &  & Fecha y hora de creación. \\
+\texttt{descargo\_\allowbreak{}historial} & \texttt{text} & sí &  &  & Todos los descargos con su fecha, para el administrador. \\
+\midrule
+\multicolumn{6}{@{}p{\textwidth}@{}}{\raggedright \textit{Migraciones:} V13, V48. \newline \textit{Restricciones e índices:} \textsc{ck} \texttt{denuncias\_\allowbreak{}estado\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}estado IN (\allowbreak{}'REGISTRADA',\allowbreak{} 'EN\_\allowbreak{}REVISION',\allowbreak{} 'RESUELTA\_\allowbreak{}INFUNDADA',\allowbreak{} 'RESUELTA\_\allowbreak{}FUNDADA',\allowbreak{} 'ESCALADA'))}; \textsc{ck} \texttt{denuncias\_\allowbreak{}motivo\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}motivo IN (\allowbreak{}'COMPORTAMIENTO\_\allowbreak{}INAPROPIADO',\allowbreak{} 'INCUMPLIMIENTO',\allowbreak{} 'FRAUDE',\allowbreak{} 'CONTENIDO\_\allowbreak{}ILEGAL',\allowbreak{} 'ACOSO'))}; \textsc{ix} \texttt{idx\_\allowbreak{}denuncias\_\allowbreak{}denunciado}: \texttt{denunciado\_\allowbreak{}id}; \textsc{ix} \texttt{idx\_\allowbreak{}denuncias\_\allowbreak{}estado}: \texttt{estado}; \textsc{ix} \texttt{idx\_\allowbreak{}denuncias\_\allowbreak{}sesion}: \texttt{sesion\_\allowbreak{}id}.}\\
+\end{longtable}
+\endgroup
+
+\needspace{12\baselineskip}
+\begingroup\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{2.55cm}>{\raggedright\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{0.75cm}>{\raggedright\arraybackslash}p{1.85cm}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-9.25cm-10\tabcolsep\relax}@{}}
+\caption[Diccionario de datos: \texttt{seguridad.\allowbreak{}sanciones}]{\texttt{seguridad.\allowbreak{}sanciones}: sanciones aplicadas a usuarios}\label{tab:dd-seguridad-sanciones}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endfirsthead
+\multicolumn{6}{@{}l}{\scriptsize\itshape \texttt{seguridad.\allowbreak{}sanciones} (continuación)}\\
+\toprule
+\tb{Columna} & \tb{Tipo} & \tb{Nulo} & \tb{Default} & \tb{Clave} & \tb{Descripción} \\
+\midrule
+\endhead
+\midrule\multicolumn{6}{r@{}}{\scriptsize\itshape continúa en la página siguiente}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\texttt{id} & \texttt{uuid} & no & \texttt{gen\_\allowbreak{}random\_\allowbreak{}uuid(\allowbreak{})} & PK & Identificador de la fila (UUID). \\
+\texttt{usuario\_\allowbreak{}sancionado\_\allowbreak{}id} & \texttt{uuid} & no &  & FK\,$\rightarrow$\,\texttt{identidad.\allowbreak{}usuarios} & Usuario sancionado. \\
+\texttt{origen} & \texttt{varchar(\allowbreak{}30)} & no &  & CK & \texttt{DENUNCIA} o \texttt{ALERTA\_\allowbreak{}SEGURIDAD}; exactamente una de las dos referencias. \\
+\texttt{denuncia\_\allowbreak{}id} & \texttt{uuid} & sí &  & CK \newline FK\,$\rightarrow$\,\texttt{seguridad.\allowbreak{}denuncias} & Denuncia que la origina. \\
+\texttt{alerta\_\allowbreak{}id} & \texttt{uuid} & sí &  & CK \newline FK\,$\rightarrow$\,\texttt{aula.\allowbreak{}alertas\_\allowbreak{}seguridad} & Alerta de seguridad que la origina. \\
+\texttt{tipo} & \texttt{varchar(\allowbreak{}30)} & no &  & CK & \texttt{ADVERTENCIA}, \texttt{SUSPENSION\_\allowbreak{}TEMPORAL}, \texttt{SUSPENSION\_\allowbreak{}DEFINITIVA} o \texttt{BANEO\_\allowbreak{}AUTORIDADES}. \\
+\texttt{dias\_\allowbreak{}suspension} & \texttt{integer} & sí &  & CK & 7, 15 o 30; solo en la suspensión temporal. \\
+\texttt{vigente\_\allowbreak{}desde} & \texttt{timestamptz} & sí &  &  & Inicio de la vigencia. \\
+\texttt{vigente\_\allowbreak{}hasta} & \texttt{timestamptz} & sí &  & CK & Fin de la vigencia; nulo en la definitiva y el baneo. \\
+\texttt{admin\_\allowbreak{}id} & \texttt{uuid} & no &  & FK\,$\rightarrow$\,\texttt{identidad.\allowbreak{}usuarios} & Usuario administrador que la aplicó. \\
+\texttt{created\_\allowbreak{}at} & \texttt{timestamptz} & no & \texttt{now(\allowbreak{})} &  & Fecha y hora de creación. \\
+\midrule
+\multicolumn{6}{@{}p{\textwidth}@{}}{\raggedright \textit{Migraciones:} V13. \newline \textit{Restricciones e índices:} \textsc{ck} \texttt{sanciones\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}(\allowbreak{}(\allowbreak{}origen = 'DENUNCIA') AND (\allowbreak{}denuncia\_\allowbreak{}id IS NOT NULL) AND (\allowbreak{}alerta\_\allowbreak{}id IS NULL)) OR (\allowbreak{}(\allowbreak{}origen = 'ALERTA\_\allowbreak{}SEGURIDAD') AND (\allowbreak{}alerta\_\allowbreak{}id IS NOT NULL) AND (\allowbreak{}denuncia\_\allowbreak{}id IS NULL)))}; \textsc{ck} \texttt{sanciones\_\allowbreak{}check1}: \texttt{CHECK (\allowbreak{}(\allowbreak{}(\allowbreak{}tipo = 'SUSPENSION\_\allowbreak{}TEMPORAL') AND (\allowbreak{}dias\_\allowbreak{}suspension IS NOT NULL) AND (\allowbreak{}vigente\_\allowbreak{}hasta IS NOT NULL)) OR (\allowbreak{}(\allowbreak{}tipo <> 'SUSPENSION\_\allowbreak{}TEMPORAL') AND (\allowbreak{}dias\_\allowbreak{}suspension IS NULL)))}; \textsc{ck} \texttt{sanciones\_\allowbreak{}dias\_\allowbreak{}suspension\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}dias\_\allowbreak{}suspension IN (\allowbreak{}7,\allowbreak{} 15,\allowbreak{} 30))}; \textsc{ck} \texttt{sanciones\_\allowbreak{}origen\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}origen IN (\allowbreak{}'DENUNCIA',\allowbreak{} 'ALERTA\_\allowbreak{}SEGURIDAD'))}; \textsc{ck} \texttt{sanciones\_\allowbreak{}tipo\_\allowbreak{}check}: \texttt{CHECK (\allowbreak{}tipo IN (\allowbreak{}'ADVERTENCIA',\allowbreak{} 'SUSPENSION\_\allowbreak{}TEMPORAL',\allowbreak{} 'SUSPENSION\_\allowbreak{}DEFINITIVA',\allowbreak{} 'BANEO\_\allowbreak{}AUTORIDADES'))}; \textsc{ix} \texttt{idx\_\allowbreak{}sanciones\_\allowbreak{}origen}: \texttt{(\allowbreak{}origen,\allowbreak{} denuncia\_\allowbreak{}id,\allowbreak{} alerta\_\allowbreak{}id)}; \textsc{ix} \texttt{idx\_\allowbreak{}sanciones\_\allowbreak{}usuario}: \texttt{usuario\_\allowbreak{}sancionado\_\allowbreak{}id}.}\\
+\end{longtable}
+\endgroup
+
+\subsection{Tablas de infraestructura}\label{sec:dd-infra}
+
+{\raggedright No forman parte del modelo de dominio y se excluyen del diccionario y de los diagramas: las 11 tablas del almacén persistente de Quartz (\texttt{QRTZ\_*}, en el esquema \texttt{public}, creadas por la migración V3: \texttt{qrtz\_\allowbreak{}blob\_\allowbreak{}triggers}, \texttt{qrtz\_\allowbreak{}calendars}, \texttt{qrtz\_\allowbreak{}cron\_\allowbreak{}triggers}, \texttt{qrtz\_\allowbreak{}fired\_\allowbreak{}triggers}, \texttt{qrtz\_\allowbreak{}job\_\allowbreak{}details}, \texttt{qrtz\_\allowbreak{}locks}, \texttt{qrtz\_\allowbreak{}paused\_\allowbreak{}trigger\_\allowbreak{}grps}, \texttt{qrtz\_\allowbreak{}scheduler\_\allowbreak{}state}, \texttt{qrtz\_\allowbreak{}simple\_\allowbreak{}triggers}, \texttt{qrtz\_\allowbreak{}simprop\_\allowbreak{}triggers}, \texttt{qrtz\_\allowbreak{}triggers}), que guardan los trabajos programados y sus disparadores, y la tabla \texttt{flyway\_schema\_history}, que Flyway crea en el primer esquema configurado (\texttt{identidad}) para registrar las migraciones aplicadas. Las extensiones instaladas son \texttt{btree\_\allowbreak{}gist}, \texttt{pgcrypto}, \texttt{unaccent}, \texttt{vector} (en \texttt{public}).\par}
+

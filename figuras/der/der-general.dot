@@ -1,0 +1,143 @@
+digraph "tinku" {
+  graph [rankdir=TB, fontname="Helvetica", fontsize=13, nodesep=0.12, ranksep=0.18, splines=true, newrank=true, pad=0.1];
+  node [shape=box, style="rounded,filled", fontname="Helvetica", fontsize=11, margin="0.06,0.02", height=0.28];
+  edge [color="#555555", arrowsize=0.6, penwidth=0.7];
+  subgraph "cluster_identidad" {
+    label=<<b>identidad</b>>; style="rounded"; color="#888888"; margin=6;
+    "identidad.usuarios" [label="usuarios", fillcolor="#dbe9f6", penwidth=2.2];
+    "identidad.aceptaciones_clausula" [label=<aceptaciones_clausula<font point-size="10" color="#1f4e79"> ●1</font>>, fillcolor="#dbe9f6"];
+    "identidad.autorizaciones_tutor" [label=<autorizaciones_tutor<font point-size="10" color="#1f4e79"> ●3</font>>, fillcolor="#dbe9f6"];
+    "identidad.certificados_antecedentes_penales" [label=<certificados_antecedentes_penales<font point-size="10" color="#1f4e79"> ●1</font>>, fillcolor="#dbe9f6"];
+    "identidad.consentimientos_menor" [label=<consentimientos_menor<font point-size="10" color="#1f4e79"> ●2</font>>, fillcolor="#dbe9f6"];
+    "identidad.credencial_especialidades" [label="credencial_especialidades", fillcolor="#dbe9f6"];
+    "identidad.credenciales_academicas" [label=<credenciales_academicas<font point-size="10" color="#1f4e79"> ●1</font>>, fillcolor="#dbe9f6"];
+    "identidad.especialidades_tutor" [label=<especialidades_tutor<font point-size="10" color="#1f4e79"> ●1</font>>, fillcolor="#dbe9f6"];
+    "identidad.intentos_credencial" [label=<intentos_credencial<font point-size="10" color="#1f4e79"> ●1</font>>, fillcolor="#dbe9f6"];
+    "identidad.intentos_ocr" [label="intentos_ocr", fillcolor="#dbe9f6"];
+    "identidad.tokens_reset_password" [label=<tokens_reset_password<font point-size="10" color="#1f4e79"> ●1</font>>, fillcolor="#dbe9f6"];
+    "identidad.usuarios" -> "identidad.aceptaciones_clausula" [style=invis, weight=10];
+    "identidad.aceptaciones_clausula" -> "identidad.autorizaciones_tutor" [style=invis, weight=10];
+    "identidad.autorizaciones_tutor" -> "identidad.certificados_antecedentes_penales" [style=invis, weight=10];
+    "identidad.certificados_antecedentes_penales" -> "identidad.consentimientos_menor" [style=invis, weight=10];
+    "identidad.consentimientos_menor" -> "identidad.credencial_especialidades" [style=invis, weight=10];
+    "identidad.credenciales_academicas" -> "identidad.especialidades_tutor" [style=invis, weight=10];
+    "identidad.especialidades_tutor" -> "identidad.intentos_credencial" [style=invis, weight=10];
+    "identidad.intentos_credencial" -> "identidad.intentos_ocr" [style=invis, weight=10];
+    "identidad.intentos_ocr" -> "identidad.tokens_reset_password" [style=invis, weight=10];
+  }
+  subgraph "cluster_matching" {
+    label=<<b>matching</b>>; style="rounded"; color="#888888"; margin=6;
+    "matching.busquedas_guardadas" [label=<busquedas_guardadas<font point-size="10" color="#1f4e79"> ●1</font>>, fillcolor="#e2f0d9"];
+    "matching.evaluacion_aceptaciones" [label=<evaluacion_aceptaciones<font point-size="10" color="#1f4e79"> ●1</font>>, fillcolor="#e2f0d9"];
+    "matching.evaluacion_busquedas" [label=<evaluacion_busquedas<font point-size="10" color="#1f4e79"> ●1</font>>, fillcolor="#e2f0d9"];
+    "matching.materias_niveles" [label="materias_niveles", fillcolor="#e2f0d9"];
+    "matching.perfiles_tutor_matching" [label=<perfiles_tutor_matching<font point-size="10" color="#1f4e79"> ●1</font>>, fillcolor="#e2f0d9"];
+    "matching.temas" [label="temas", fillcolor="#e2f0d9"];
+    "matching.temas_sugeridos" [label="temas_sugeridos", fillcolor="#e2f0d9"];
+    "matching.trayectos" [label="trayectos", fillcolor="#e2f0d9"];
+    "matching.busquedas_guardadas" -> "matching.evaluacion_aceptaciones" [style=invis, weight=10];
+    "matching.evaluacion_aceptaciones" -> "matching.evaluacion_busquedas" [style=invis, weight=10];
+    "matching.evaluacion_busquedas" -> "matching.materias_niveles" [style=invis, weight=10];
+    "matching.perfiles_tutor_matching" -> "matching.temas" [style=invis, weight=10];
+    "matching.temas" -> "matching.temas_sugeridos" [style=invis, weight=10];
+    "matching.temas_sugeridos" -> "matching.trayectos" [style=invis, weight=10];
+  }
+  subgraph "cluster_aula" {
+    label=<<b>aula</b>>; style="rounded"; color="#888888"; margin=6;
+    "aula.alertas_seguridad" [label=<alertas_seguridad<font point-size="10" color="#1f4e79"> ●1</font>>, fillcolor="#fde9d9"];
+    "aula.confirmaciones_killswitch" [label=<confirmaciones_killswitch<font point-size="10" color="#1f4e79"> ●1</font>>, fillcolor="#fde9d9"];
+    "aula.sesiones_aprendizaje" [label="sesiones_aprendizaje", fillcolor="#fde9d9"];
+    "aula.alertas_seguridad" -> "aula.confirmaciones_killswitch" [style=invis, weight=10];
+    "aula.confirmaciones_killswitch" -> "aula.sesiones_aprendizaje" [style=invis, weight=10];
+  }
+  subgraph "cluster_reservas" {
+    label=<<b>reservas</b>>; style="rounded"; color="#888888"; margin=6;
+    "reservas.franjas_disponibilidad" [label=<franjas_disponibilidad<font point-size="10" color="#1f4e79"> ●1</font>>, fillcolor="#fff2cc"];
+    "reservas.notas_clase" [label="notas_clase", fillcolor="#fff2cc"];
+    "reservas.paquetes" [label=<paquetes<font point-size="10" color="#1f4e79"> ●3</font>>, fillcolor="#fff2cc"];
+    "reservas.pedidos_previos" [label="pedidos_previos", fillcolor="#fff2cc"];
+    "reservas.pedidos_reprogramacion" [label="pedidos_reprogramacion", fillcolor="#fff2cc"];
+    "reservas.reservas" [label=<reservas<font point-size="10" color="#1f4e79"> ●3</font>>, fillcolor="#fff2cc"];
+    "reservas.solicitudes_sesion" [label=<solicitudes_sesion<font point-size="10" color="#1f4e79"> ●2</font>>, fillcolor="#fff2cc"];
+    "reservas.franjas_disponibilidad" -> "reservas.notas_clase" [style=invis, weight=10];
+    "reservas.notas_clase" -> "reservas.paquetes" [style=invis, weight=10];
+    "reservas.paquetes" -> "reservas.pedidos_previos" [style=invis, weight=10];
+    "reservas.pedidos_reprogramacion" -> "reservas.reservas" [style=invis, weight=10];
+    "reservas.reservas" -> "reservas.solicitudes_sesion" [style=invis, weight=10];
+  }
+  subgraph "cluster_pagos" {
+    label=<<b>pagos</b>>; style="rounded"; color="#888888"; margin=6;
+    "pagos.cuentas_mp_tutor" [label=<cuentas_mp_tutor<font point-size="10" color="#1f4e79"> ●1</font>>, fillcolor="#ead1dc"];
+    "pagos.oauth_estados" [label=<oauth_estados<font point-size="10" color="#1f4e79"> ●1</font>>, fillcolor="#ead1dc"];
+    "pagos.pasarela_estado" [label=<pasarela_estado<font point-size="10" color="#1f4e79"> ●1</font>>, fillcolor="#ead1dc"];
+    "pagos.precios_referencia_regional" [label="precios_referencia_regional", fillcolor="#ead1dc"];
+    "pagos.preferencias_pago" [label="preferencias_pago", fillcolor="#ead1dc"];
+    "pagos.tarifas_tutor" [label=<tarifas_tutor<font point-size="10" color="#1f4e79"> ●1</font>>, fillcolor="#ead1dc"];
+    "pagos.transacciones" [label="transacciones", fillcolor="#ead1dc"];
+    "pagos.cuentas_mp_tutor" -> "pagos.oauth_estados" [style=invis, weight=10];
+    "pagos.oauth_estados" -> "pagos.pasarela_estado" [style=invis, weight=10];
+    "pagos.pasarela_estado" -> "pagos.precios_referencia_regional" [style=invis, weight=10];
+    "pagos.preferencias_pago" -> "pagos.tarifas_tutor" [style=invis, weight=10];
+    "pagos.tarifas_tutor" -> "pagos.transacciones" [style=invis, weight=10];
+  }
+  subgraph "cluster_resumen" {
+    label=<<b>resumen</b>>; style="rounded"; color="#888888"; margin=6;
+    "resumen.resumenes_sesion" [label="resumenes_sesion", fillcolor="#e4dfec"];
+  }
+  subgraph "cluster_reputacion" {
+    label=<<b>reputacion</b>>; style="rounded"; color="#888888"; margin=6;
+    "reputacion.calificaciones" [label=<calificaciones<font point-size="10" color="#1f4e79"> ●1</font>>, fillcolor="#ddebf7"];
+    "reputacion.senales_implicitas_tutor" [label=<senales_implicitas_tutor<font point-size="10" color="#1f4e79"> ●1</font>>, fillcolor="#ddebf7"];
+    "reputacion.calificaciones" -> "reputacion.senales_implicitas_tutor" [style=invis, weight=10];
+  }
+  subgraph "cluster_admin" {
+    label=<<b>admin</b>>; style="rounded"; color="#888888"; margin=6;
+    "admin.admins" [label=<admins<font point-size="10" color="#1f4e79"> ●1</font>>, fillcolor="#ededed"];
+    "admin.log_auditoria_admin" [label="log_auditoria_admin", fillcolor="#ededed"];
+    "admin.mapeo_origen_rol" [label="mapeo_origen_rol", fillcolor="#ededed"];
+    "admin.notificaciones" [label=<notificaciones<font point-size="10" color="#1f4e79"> ●1</font>>, fillcolor="#ededed"];
+    "admin.nps_respuestas" [label=<nps_respuestas<font point-size="10" color="#1f4e79"> ●1</font>>, fillcolor="#ededed"];
+    "admin.tickets_soporte" [label=<tickets_soporte<font point-size="10" color="#1f4e79"> ●1</font>>, fillcolor="#ededed"];
+    "admin.admins" -> "admin.log_auditoria_admin" [style=invis, weight=10];
+    "admin.log_auditoria_admin" -> "admin.mapeo_origen_rol" [style=invis, weight=10];
+    "admin.mapeo_origen_rol" -> "admin.notificaciones" [style=invis, weight=10];
+    "admin.nps_respuestas" -> "admin.tickets_soporte" [style=invis, weight=10];
+  }
+  subgraph "cluster_seguridad" {
+    label=<<b>seguridad</b>>; style="rounded"; color="#888888"; margin=6;
+    "seguridad.denuncias" [label=<denuncias<font point-size="10" color="#1f4e79"> ●3</font>>, fillcolor="#f8cbad"];
+    "seguridad.sanciones" [label=<sanciones<font point-size="10" color="#1f4e79"> ●2</font>>, fillcolor="#f8cbad"];
+    "seguridad.denuncias" -> "seguridad.sanciones" [style=invis, weight=10];
+  }
+  "identidad.credencial_especialidades" -> "reservas.franjas_disponibilidad" [style=invis];
+  "identidad.credencial_especialidades" -> "reservas.pedidos_reprogramacion" [style=invis];
+  "identidad.credencial_especialidades" -> "pagos.cuentas_mp_tutor" [style=invis];
+  "identidad.credencial_especialidades" -> "pagos.preferencias_pago" [style=invis];
+  "identidad.credencial_especialidades" -> "resumen.resumenes_sesion" [style=invis];
+  "identidad.credencial_especialidades" -> "reputacion.calificaciones" [style=invis];
+  "reservas.pedidos_previos" -> "admin.admins" [style=invis];
+  "reservas.pedidos_previos" -> "admin.nps_respuestas" [style=invis];
+  "reservas.pedidos_previos" -> "seguridad.denuncias" [style=invis];
+  "admin.log_auditoria_admin" -> "admin.admins" [constraint=false];
+  "admin.tickets_soporte" -> "admin.mapeo_origen_rol" [constraint=false];
+  "aula.alertas_seguridad" -> "aula.sesiones_aprendizaje" [constraint=false];
+  "aula.confirmaciones_killswitch" -> "aula.sesiones_aprendizaje" [constraint=false];
+  "aula.sesiones_aprendizaje" -> "reservas.reservas" [constraint=false];
+  "identidad.credencial_especialidades" -> "identidad.credenciales_academicas" [constraint=false];
+  "identidad.credencial_especialidades" -> "identidad.especialidades_tutor" [constraint=false];
+  "matching.evaluacion_aceptaciones" -> "matching.evaluacion_busquedas" [constraint=false];
+  "matching.temas" -> "matching.trayectos" [constraint=false];
+  "pagos.preferencias_pago" -> "reservas.reservas" [constraint=false];
+  "pagos.transacciones" -> "reservas.reservas" [constraint=false];
+  "reputacion.calificaciones" -> "aula.sesiones_aprendizaje" [constraint=false];
+  "reservas.notas_clase" -> "reservas.reservas" [constraint=false];
+  "reservas.paquetes" -> "reservas.reservas" [constraint=false];
+  "reservas.pedidos_previos" -> "reservas.reservas" [constraint=false];
+  "reservas.pedidos_reprogramacion" -> "reservas.reservas" [constraint=false];
+  "reservas.reservas" -> "reservas.paquetes" [constraint=false];
+  "reservas.reservas" -> "reservas.solicitudes_sesion" [constraint=false];
+  "resumen.resumenes_sesion" -> "aula.sesiones_aprendizaje" [constraint=false];
+  "seguridad.denuncias" -> "aula.sesiones_aprendizaje" [constraint=false];
+  "seguridad.sanciones" -> "aula.alertas_seguridad" [constraint=false];
+  "seguridad.sanciones" -> "seguridad.denuncias" [constraint=false];
+}

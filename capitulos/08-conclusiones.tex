@@ -25,13 +25,14 @@ indica en qué medida se alcanzó, con referencia a la sección que lo
 demuestra.
 \end{guia}
 
-Este capítulo cierra el trabajo con la evidencia disponible al 15 de
+Este capítulo cierra el trabajo con la evidencia disponible al 19 de
 octubre de 2026, la misma del capítulo~\ref{cap:resultados}. La
 validación con usuarios reales excede el alcance de este trabajo
 (capítulo~\ref{cap:introduccion}, sección~\ref{sec:limitaciones}); por
 eso la respuesta a la hipótesis es preliminar, y los indicadores con los
 que se validará quedan definidos para medirse a partir de la puesta en
-marcha.
+marcha. La evaluación técnica del sistema, en cambio, ya se realizó
+(sección~\ref{sec:evaluacion-tecnica}).
 
 \section{Conclusiones}\label{sec:conclusiones}
 
@@ -40,9 +41,9 @@ marcha.
 \begin{enumerate}
     \item \textbf{El sistema existe y está desplegado.} Se construyó un
           \gls{mvp} de nueve módulos, con 160 requerimientos funcionales,
-          37 registros de decisión de arquitectura y 739 pruebas
+          37 registros de decisión de arquitectura y 859 pruebas
           automatizadas en el backend, con una cobertura de líneas del
-          86,2\,\%, desplegado en \path{tinku.site}
+          89,6\,\% (18 de octubre de 2026), desplegado en \path{tinku.site}
           (capítulo~\ref{cap:resultados}). Lo construyó una sola persona,
           con un método dirigido por especificaciones y asistido por
           \gls{ia}.
@@ -88,12 +89,18 @@ marcha.
           alumnos similares.
     \item \textbf{La viabilidad económica es condicional.} Con la
           comisión del \comision{}, el escenario base resulta viable
-          (\gls{van} de \usd{18.869} y \gls{tir} del 41,57\,\%), igual que
-          el optimista (\gls{van} de \usd{51.990}), pero el pesimista no
-          lo es (\gls{van} de \usd{-4.410}). La viabilidad depende de
-          sostener unas 5.858 sesiones anuales en promedio, de no bajar la
-          comisión de aproximadamente 18,2\,\% y de operar sin un equipo
-          rentado (capítulo~\ref{cap:economica}).
+          (\gls{van} de \usd{34.320} y \gls{tir} del 117,80\,\%), igual que
+          el optimista (\gls{van} de \usd{67.441}); el pesimista también
+          lo es (\gls{van} de \usd{11.041}), pero solo con la inversión
+          valorizada a salario local: con tarifas de contratista
+          (\usd{25.730}) no lo sería. La viabilidad depende de
+          sostener unas 3.521 sesiones anuales en promedio, de no bajar la
+          comisión de aproximadamente 10,9\,\% y de operar sin un equipo
+          rentado (capítulo~\ref{cap:economica}). Si se valoriza a salario
+          de convenio el tiempo que el fundador dedica al soporte, la
+          moderación y la revisión del \gls{cap}, el \gls{van} base baja a
+          \usd{31.114} y sigue siendo positivo
+          (sección~\ref{sec:costo-fundador}).
     \item \textbf{Contrastar el diseño con el sistema cambió las
           decisiones.} La contrastación del modelo económico con el
           sistema implementado mostró que la comisión de MercadoPago la
@@ -120,7 +127,8 @@ encuestados y considerada pedagógicamente equivalente por la docente
 entrevistada, aunque la tutora, que la practica a diario, señala sus
 costos: la pérdida de la retroalimentación visual, la dificultad para
 seguir la atención del alumno y los cortes de conexión; y el modelo económico es viable en los escenarios base y
-optimista. En cambio, falta evidencia sobre el núcleo de la hipótesis: el
+optimista, y también en el pesimista si el desarrollo se valoriza a
+salario local. En cambio, falta evidencia sobre el núcleo de la hipótesis: el
 acceso efectivo de estudiantes del interior. El 90,9\,\% de las
 respuestas de la encuesta proviene de la provincia de Buenos Aires y de
 la Ciudad Autónoma de Buenos Aires, las dos entrevistadas trabajan en
@@ -132,16 +140,21 @@ en el siguiente estado:
 
 \begin{enumerate}
     \item \textbf{Relevancia de las recomendaciones del \gls{matching}.}
-          Pendiente. El motor está implementado, y la calibración con 40
-          consultas de elaboración propia muestra que separa las
-          relevantes de las irrelevantes: con el umbral elegido, el 95\,\%
-          de las relevantes conserva resultados y ninguna irrelevante los
-          obtiene. La aceptación por parte de los usuarios (indicador
-          I-01, umbral superior al 60\,\%) solo puede medirse con
-          usuarios reales.
+          Respaldada en su parte técnica; pendiente con usuarios reales.
+          La evaluación offline con 120 búsquedas etiquetadas muestra que
+          el motor ordena primero un tutor pertinente en el 88,2\,\% de
+          las búsquedas relevantes (MRR de 0,920, \emph{recall@5} de
+          0,949), por encima de las metas de I-01a; su debilidad es que,
+          con el umbral vigente, el 40\,\% de los pedidos que ningún tutor
+          cubre también devuelve resultados, algo que se corrige con un
+          parámetro de configuración (0,54 cumple todas las metas). La
+          aceptación por parte de los usuarios (I-01b, umbral superior al
+          60\,\%) solo puede medirse con usuarios reales, a partir de la
+          puesta en marcha.
     \item \textbf{Sesiones entre provincias con calidad aceptable.}
           Pendiente. El aula virtual funcionó con salas de video reales en
-          las pruebas en producción, pero la calidad percibida (I-02) y la
+          las pruebas en producción y en nueve de nueve pruebas de punta a
+          punta contra LiveKit, pero la calidad percibida (I-02) y la
           sesión entre provincias con una del interior (I-03) solo pueden
           medirse con usuarios reales.
 \end{enumerate}
@@ -165,14 +178,15 @@ capítulo~\ref{cap:introduccion} y el grado en que se alcanzó.
         \toprule
         \tb{Objetivo} & \tb{Evidencia} & \tb{Grado} & \tb{Observación} \\
         \midrule
-        OE1 Mercado y estado del arte & Capítulo~\ref{cap:marco-teorico}; apéndice~\ref{apx:encuesta} & Alcanzado & Encuesta concentrada en Buenos Aires; dos entrevistas, ambas en Pilar (apéndice~\ref{apx:entrevista}) \\
+        OE1 Mercado y estado del arte & Capítulo~\ref{cap:marco-teorico}; apéndice~\ref{apx:encuesta} & Alcanzado & Encuesta concentrada en Buenos Aires; dos entrevistas de las seis previstas, ambas en Pilar y ninguna al usuario objetivo; pendientes las de un tutor virtual y una familia del interior (apéndice~\ref{apx:entrevista}) \\
         OE2 Arquitectura & Capítulo~\ref{cap:marco-tecnologico}; apéndice~\ref{apx:uml} & Alcanzado & --- \\
-        OE3 Motor de \gls{matching} & Capítulo~\ref{cap:resultados}, pruebas en producción & Parcial & Implementado y calibrado con consultas propias; sin validar con usuarios (I-01) \\
-        OE4 Aula virtual & Capítulo~\ref{cap:resultados}, pruebas en producción & Parcial & Aula y kill-switch funcionaron de punta a punta en la prueba en vivo; faltan la exactitud del clasificador con contenido real y la latencia en dispositivos reales, por lo que las clases con menores siguen deshabilitadas (R-01) \\
-        OE5 Pagos & Capítulo~\ref{cap:resultados}; capítulo~\ref{cap:economica} & Parcial & Implementado con \gls{oauth} por tutor; pendiente de verificar en el entorno de pruebas de MercadoPago (R-11) \\
+        OE3 Motor de \gls{matching} & Capítulo~\ref{cap:resultados}, pruebas en producción & Parcial & Evaluación offline con 120 búsquedas: MRR 0,920 (cumple I-01a); filtra mal los pedidos sin oferta con el umbral vigente; sin validar con usuarios (I-01b) \\
+        OE4 Aula virtual & Capítulo~\ref{cap:resultados}, pruebas en producción & Parcial & Aula y kill-switch funcionaron de punta a punta en la prueba en vivo y en nueve pruebas contra LiveKit real; detección estimada de 1,8\,s; faltan la exactitud del clasificador con contenido real y la latencia en dispositivos reales, por lo que las clases con menores siguen deshabilitadas (R-01) \\
+        OE5 Pagos & Capítulo~\ref{cap:resultados}; capítulo~\ref{cap:economica} & Parcial & Implementado con \gls{oauth} por tutor; probado en Modo Bypass y con pruebas automáticas con el cliente de MercadoPago simulado; pendiente la prueba en el \emph{sandbox} de MercadoPago (R-11) \\
+% TODO-AUTOR: actualizar si se completa la prueba en sandbox
         OE6 \gls{ia} educativa & Capítulo~\ref{cap:resultados}, listado~\ref{lst:puerto-resumen} & Parcial & Implementado; apagado en producción hasta contar con la cláusula legal de grabación (R-16) \\
         OE7 Reputación & Capítulo~\ref{cap:resultados}, módulo de reputación & Alcanzado & Umbral mínimo de calificaciones antes de mostrar el promedio \\
-        OE8 Validación funcional & Capítulo~\ref{cap:resultados}, pruebas técnicas y auditoría & Alcanzado & 739 pruebas del backend, 222 de extremo a extremo, auditoría con los 36 hallazgos cerrados y pruebas sobre el despliegue; indicadores I-01 a I-04 definidos, sin medir con usuarios reales \\
+        OE8 Validación funcional & Capítulo~\ref{cap:resultados}, pruebas técnicas y auditoría & Alcanzado & 859 pruebas del backend, 252 de extremo a extremo y 44 del servicio de \gls{matching}, auditoría con los 36 hallazgos cerrados, pruebas sobre el despliegue y evaluación técnica (MRR de 0,920); indicadores con usuarios (I-01b a I-04) definidos, sin medir con usuarios reales \\
         \bottomrule
     \end{tabularx}
 \end{table}
@@ -191,7 +205,7 @@ capítulo~\ref{cap:marco-teorico} en cuatro puntos.
           meta-análisis de tutoría privada \citep{sciencedirect2022}. Este
           trabajo no aporta evidencia nueva sobre el efecto de la tutoría
           en el aprendizaje, ya que no midió rendimiento académico.
-    \item \textbf{\gls{matching} semántico.} Los antecedentes
+    \item \textbf{\Gls{matching} semántico.} Los antecedentes
           \citep{isotropy2026, paperrec2025} validaron la técnica con
           pruebas de relevancia percibida. La encuesta agrega un matiz que
           esos trabajos no abordan: el usuario valora la recomendación,
@@ -220,10 +234,11 @@ capítulo~\ref{cap:marco-teorico} en cuatro puntos.
 
 \begin{itemize}
     \item \textbf{De validación.} La hipótesis se responde sin datos de
-          usuarios reales: ninguno de los indicadores I-01 a I-04 pudo
-          medirse. Las clases con menores, además, están deshabilitadas,
-          aunque los menores son una parte central de la población
-          objetivo.
+          usuarios reales: ninguno de los indicadores con usuarios (I-01b
+          a I-04) pudo medirse, y la parte técnica de I-01 se midió con un
+          conjunto de búsquedas que armó el propio autor. Las clases con
+          menores, además, están deshabilitadas, aunque los menores son
+          una parte central de la población objetivo.
     \item \textbf{De datos.} La encuesta no es probabilística y el
           90,9\,\% de sus respuestas proviene de Buenos Aires. Las
           entrevistas son dos, ambas en Pilar: una a una docente sin
@@ -237,8 +252,11 @@ capítulo~\ref{cap:marco-teorico} en cuatro puntos.
           elaboración propia.
     \item \textbf{Técnicas.} El clasificador del kill-switch no se midió
           con contenido real ni en dispositivos reales; el resumen está
-          apagado en producción; el cobro con \gls{oauth} no se verificó
-          en el entorno de pruebas de MercadoPago; las pruebas por rol en
+          apagado en producción; el cobro con \gls{oauth} se probó en
+          Modo Bypass y con el cliente de MercadoPago simulado, y su
+          prueba en el \emph{sandbox} de MercadoPago está pendiente; la
+          auditoría técnica la hizo un agente de \gls{ia} y no un tercero
+          independiente; las pruebas por rol en
           producción deben repetirse tras la remediación (R-15) y el
           despliegue debe volver a su estado previo antes de la puesta en
           marcha (R-17). Todo el sistema corre en un único servidor propio
@@ -285,7 +303,7 @@ capítulo~\ref{cap:marco-teorico} en cuatro puntos.
 
 \begin{enumerate}
     \item Un \gls{mvp} funcional, desplegado y documentado, con
-          especificaciones, 37 registros de decisión de arquitectura y 739
+          especificaciones, 37 registros de decisión de arquitectura y 859
           pruebas en el backend, que otra persona puede retomar
           (anexo~\ref{anx:repositorios}).
     \item Un modelo de protección del menor para tutoría virtual 1 a 1:
@@ -326,9 +344,10 @@ capítulo~\ref{cap:marco-teorico} en cuatro puntos.
           estado del despliegue (R-15, R-17). Antes de habilitar las
           clases con menores, medir la exactitud del clasificador y su
           latencia en dispositivos reales (R-01). Antes de operar
-          comercialmente, verificar el cobro en el entorno de pruebas de
+          comercialmente, probar el cobro en el \emph{sandbox} de
           MercadoPago (R-11), revisar la comisión con los datos de la puesta
-          en marcha y mostrar el motivo de cada recomendación. Con los datos de la
+          en marcha, adoptar el umbral de relevancia de 0,54 si se confirma
+          con búsquedas reales y mostrar el motivo de cada recomendación. Con los datos de la
           puesta en marcha, reconsiderar las propuestas de la entrevista a la docente que no se
           incorporaron al \gls{mvp}: la presencia del adulto responsable en
           las clases con menores ---sobre la que las dos entrevistadas
@@ -340,9 +359,12 @@ capítulo~\ref{cap:marco-teorico} en cuatro puntos.
 
 \begin{itemize}
     \item \textbf{Validación con usuarios reales.} Medir los indicadores
-          I-01 a I-04 desde la puesta en marcha y replicar la encuesta en
-          localidades con escasa oferta de tutores, que es la población a
-          la que apunta la hipótesis (R-08).
+          I-01 a I-04 desde la puesta en marcha ---con una primera lectura
+          posible en sesiones moderadas de usabilidad con usuarios
+          adultos---, medir la recompra y el volumen anual de sesiones,
+          validar el cobro real, incluidos rechazos y contracargos, y
+          replicar la encuesta en localidades con escasa oferta de tutores,
+          que es la población a la que apunta la hipótesis (R-08).
     \item \textbf{Resumen automático con menores.} Evaluar la
           transcripción local o en infraestructura propia, previa a la
           anonimización, que permita ofrecer el resumen sin transferir la

@@ -117,10 +117,17 @@ docs/               Constitucion, Tabla de Tiempos, specs, ADR (docs/adr),
 
 \subsection{Esquema de base de datos}
 
-El esquema se construye con 47 migraciones de Flyway (\texttt{V1} a
-\texttt{V47} al 14/10/2026). Como ninguna migración aplicada se edita,
-las tablas iniciales se completan con migraciones posteriores. Los
-listados siguientes son extractos textuales de las migraciones.
+El esquema se construye con 54 migraciones de Flyway, de \texttt{V1} a
+\texttt{V58} (la numeración saltea V51, V53, V55 y V57); la última,
+\texttt{V58\_\_evaluacion\_busquedas\_nps.sql}, es del 18/10/2026. Como
+ninguna migración aplicada se edita, las tablas iniciales se completan con
+migraciones posteriores. El resultado son nueve esquemas, uno por módulo,
+con 47 tablas de dominio; las tablas de Quartz (\path{QRTZ_*}) viven en el
+esquema \texttt{public} (ADR-000-01). El diccionario de datos completo
+está en la sección~\ref{sec:apx-diccionario} y los diagramas
+entidad-relación, en la sección~\ref{sec:apx-der}. Los listados
+siguientes son extractos textuales de las migraciones que ilustran las
+restricciones más relevantes.
 
 \begin{lstlisting}[language=SQL, caption={Usuarios (extracto de \texttt{V2\_\_m1\_identidad.sql})}, label={lst:esquema}]
 CREATE TABLE identidad.usuarios (
@@ -202,56 +209,6 @@ El nombre \path{retenido_escrow} es anterior al modelo de cobro A
 estado indica que todavía no cerró la ventana lógica --hasta 24 horas
 después de la clase-- en la que \sistema{} puede ordenar el reembolso.
 
-\subsection{Diccionario de datos}
-
-La tabla~\ref{tab:diccionario} resume las tablas principales de cada
-esquema. El detalle de columnas, restricciones e índices está en la
-migración que se indica y en las que la completan.
-
-{\small
-\begin{xltabular}{\textwidth}{>{\raggedright\arraybackslash}p{4.6cm} L >{\raggedright\arraybackslash}p{1.8cm}}
-    \caption{Diccionario de datos: tablas principales}
-    \label{tab:diccionario} \\
-    \toprule
-    \tb{Tabla} & \tb{Contenido} & \tb{Migración} \\
-    \midrule
-    \endfirsthead
-    \toprule
-    \tb{Tabla} & \tb{Contenido} & \tb{Migración} \\
-    \midrule
-    \endhead
-    \bottomrule
-    \endfoot
-    \path{identidad.usuarios} & Cuenta de cada persona: \gls{dni} único, tipo (ADULTO, MENOR, TUTOR), capacidades del adulto, Adulto Responsable del menor, hash de la contraseña y estado de la cuenta & V2 \\
-    \path{identidad.credenciales_academicas} & Título, analítico o matrícula del tutor, con su estado de revisión e intentos & V2 \\
-    \path{identidad.autorizaciones_tutor} & Tutores que el Adulto Responsable autorizó para cada menor & V2 \\
-    \path{identidad.certificados_antecedentes_penales} & \gls{cap} del tutor: estado (pendiente, aprobado, rechazado, en revisión legal, vencido) y vencimiento & V6 \\
-    \path{identidad.aceptaciones_clausula} & Quién aceptó qué versión de los Términos y de la cláusula de grabación, y cuándo & V36 \\
-    \path{matching.temas} & Catálogo cerrado de temas por materia y nivel, con su \gls{embeddings} & V19, V42 \\
-    \path{matching.perfiles_tutor_matching} & \gls{embeddings} del perfil del tutor y si está activo para el \gls{matching} & V7 \\
-    \path{matching.temas_sugeridos} & Contador agregado de temas buscados sin tutor, sin datos de quién buscó & V43 \\
-    \path{reservas.franjas_disponibilidad} & Franjas semanales o puntuales que publica el tutor & V9 \\
-    \path{reservas.solicitudes_sesion} & Pedido de clase del menor, que no bloquea horario ni genera cobro & V9 \\
-    \path{reservas.reservas} & Clase reservada: pagador, beneficiario, tutor, horario, duración, precio congelado y estado & V9, V29, V46 \\
-    \path{reservas.paquetes} & Paquete mensual de cuatro clases con un solo pago & V46 \\
-    \path{aula.sesiones_aprendizaje} & Sesión de aula (1 a 1 con la reserva): asistencia y estado de la clase & V8 \\
-    \path{aula.alertas_seguridad} & Alertas del kill-switch y referencia al clip de evidencia & V8 \\
-    \path{aula.confirmaciones_killswitch} & Pregunta a la contraparte en la rama de adultos y su vencimiento & V12, V47 \\
-    \path{pagos.transacciones} & Cobro de cada reserva, comisión y estado del \gls{escrow} & V11 \\
-    \path{pagos.tarifas_tutor} & Precio por hora del tutor y configuración del paquete & V17, V31, V46 \\
-    \path{pagos.cuentas_mp_tutor} & Cuenta de MercadoPago conectada por \gls{oauth}, con los tokens cifrados & V39 \\
-    \path{resumen.resumenes_sesion} & Resumen generado y su estado & V15 \\
-    \path{reputacion.calificaciones} & Calificaciones bidireccionales por sesión & V14 \\
-    \path{seguridad.denuncias}, \path{seguridad.sanciones} & Denuncias con su estado y evidencia opcional; sanciones aplicadas & V13 \\
-    \path{admin.admins} & Administradores, vinculados a un usuario, con uno de dos roles & V16 \\
-    \path{admin.log_auditoria_admin} & Registro de cada acción de un administrador & V16 \\
-    \path{admin.notificaciones} & Avisos a usuarios y cola de salida del correo & V32 \\
-\end{xltabular}
-}
-
-Las tablas de Quartz (\path{QRTZ_*}) viven en el esquema
-\texttt{public} (ADR-000-01).
-
 \subsection{Variables de entorno}
 
 La tabla~\ref{tab:variables-entorno} lista las variables que cambian el
@@ -283,6 +240,52 @@ el repositorio: los valores secretos se cargan en Coolify.
     \end{tabularx}
 \end{table}
 
+\section{Diccionario de datos}\label{sec:apx-diccionario}
+
+El diccionario de datos se generó automáticamente a partir del esquema
+real de la base y no de una descripción escrita a mano: las 54 migraciones
+de Flyway del repositorio del sistema, hasta
+\texttt{V58\_\_evaluacion\_busquedas\_nps.sql} (18/10/2026), se
+aplicaron en orden sobre un PostgreSQL~16 con pgvector
+(\path{pgvector/pgvector:pg16}, la misma imagen que usan las pruebas de
+integración), y el catálogo resultante (\path{pg_catalog}) se leyó con el
+script \path{scripts/diccionario_datos.py} de este repositorio, que emite
+las tablas de esta sección y los diagramas de la
+sección~\ref{sec:apx-der}. Tipos, nulabilidad, valores por defecto,
+claves, restricciones e índices son, por lo tanto, los que crea la base;
+las descripciones de cada columna se redactaron a partir de los
+comentarios de las migraciones, de las especificaciones de cada módulo y
+de la documentación de las entidades del código, y se guardan junto al
+script (\path{scripts/descripciones_esquema.py}). Para regenerar ambos
+después de una migración nueva alcanza con
+\path{scripts/esquema_desde_migraciones.sh} seguido de
+\texttt{python3 scripts/diccionario\_datos.py todo}.
+
+\input{apendices/C-diccionario-datos}
+
+\section{Diagramas entidad-relación}\label{sec:apx-der}
+
+Los diagramas se generan con Graphviz desde el mismo esquema que el
+diccionario. La figura~\ref{fig:der-general} muestra las 47 tablas
+agrupadas por esquema y las claves foráneas entre ellas; como 30 de esas
+tablas tienen al menos una columna que apunta a
+\texttt{identidad.usuarios}, esas relaciones no se dibujan en el diagrama
+general y se indican con un punto y la cantidad de columnas que la
+referencian. Las figuras siguientes detallan cada esquema: cada tabla
+muestra su clave primaria (subrayada), sus claves foráneas y sus columnas
+únicas, con el tipo; las columnas que admiten nulos van en cursiva y el
+resto de los atributos, que se resume como \enquote{+ $n$ atributos}, está
+en el diccionario de datos. Las relaciones usan la notación de pata de
+gallo: del lado de la tabla que contiene la clave foránea, la pata indica
+\enquote{cero o muchos} y la barra con círculo, \enquote{cero o uno}
+(cuando la clave foránea además es única); del lado de la tabla
+referenciada, la doble barra indica \enquote{exactamente uno} y la barra
+con círculo, \enquote{cero o uno} (clave foránea que admite nulos). Las
+tablas de otros esquemas aparecen con borde discontinuo, una vez por cada
+tabla que las referencia.
+
+\input{apendices/C-der}
+
 \section{Ejecución de las pruebas}
 
 La suite del backend corre solo con JDK~21: el
@@ -302,7 +305,9 @@ bun run test:e2e      # Playwright + axe-core
 uv run pytest -q
 \end{lstlisting}
 
-Al 14/10/2026 la suite del backend registraba 661 pruebas, 0 fallas, 0
-errores y 5 omitidas --las pruebas del \gls{ocr} real, que se saltean si
-el equipo no tiene Tesseract instalado y que en el CI sí corren--, con
-una cobertura de líneas del 85,6\,\% medida con JaCoCo (ADR-000-05).
+Al 18/10/2026, en la integración continua, la suite del backend
+registraba 859 pruebas, 0 fallas y 1 omitida, con una cobertura de
+líneas del 89,6\,\% medida con JaCoCo (ADR-000-05); la de Playwright,
+252 pruebas exitosas, y la de pytest, 44 de 44. En un equipo sin
+Tesseract instalado se saltean además las pruebas del \gls{ocr} real, que
+en el CI sí corren.

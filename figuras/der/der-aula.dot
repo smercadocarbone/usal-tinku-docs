@@ -1,0 +1,16 @@
+digraph "aula" {
+  graph [rankdir=LR, fontname="Helvetica", fontsize=10, nodesep=0.2, ranksep=0.7, splines=spline, pad=0.1];
+  node [shape=plaintext, fontname="Helvetica", fontsize=10];
+  edge [color="#444444", arrowsize=0.8, penwidth=0.8];
+  "aula.alertas_seguridad" [label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="2"><tr><td bgcolor="#fde9d9" colspan="2" align="center"><b>alertas_seguridad</b></td></tr><tr><td align="left" port="id"><u>id</u></td><td align="left"><font color="#555555">uuid PK</font></td></tr><tr><td align="left" port="sesion_id">sesion_id</td><td align="left"><font color="#555555">uuid FK</font></td></tr><tr><td align="left" port="detectado_id">detectado_id</td><td align="left"><font color="#555555">uuid FK</font></td></tr><tr><td colspan="2" align="left"><font color="#555555" point-size="8"><i>+ 7 atributos</i></font></td></tr></table>>];
+  "aula.confirmaciones_killswitch" [label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="2"><tr><td bgcolor="#fde9d9" colspan="2" align="center"><b>confirmaciones_killswitch</b></td></tr><tr><td align="left" port="id"><u>id</u></td><td align="left"><font color="#555555">uuid PK</font></td></tr><tr><td align="left" port="sesion_id">sesion_id</td><td align="left"><font color="#555555">uuid FK UQ</font></td></tr><tr><td align="left" port="detectado_id">detectado_id</td><td align="left"><font color="#555555">uuid FK</font></td></tr><tr><td colspan="2" align="left"><font color="#555555" point-size="8"><i>+ 6 atributos</i></font></td></tr></table>>];
+  "aula.sesiones_aprendizaje" [label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="2"><tr><td bgcolor="#fde9d9" colspan="2" align="center"><b>sesiones_aprendizaje</b></td></tr><tr><td align="left" port="id"><u>id</u></td><td align="left"><font color="#555555">uuid PK</font></td></tr><tr><td align="left" port="reserva_id">reserva_id</td><td align="left"><font color="#555555">uuid FK UQ</font></td></tr><tr><td colspan="2" align="left"><font color="#555555" point-size="8"><i>+ 16 atributos</i></font></td></tr></table>>];
+  "identidad.usuarios#alertas_seguridad" [shape=box, style="rounded,filled,dashed", fillcolor="#dbe9f6", label="identidad.\nusuarios"];
+  "identidad.usuarios#confirmaciones_killswitch" [shape=box, style="rounded,filled,dashed", fillcolor="#dbe9f6", label="identidad.\nusuarios"];
+  "reservas.reservas#sesiones_aprendizaje" [shape=box, style="rounded,filled,dashed", fillcolor="#fff2cc", label="reservas.\nreservas"];
+  "aula.alertas_seguridad":"detectado_id" -> "identidad.usuarios#alertas_seguridad" [dir=both, arrowtail="crowodot", arrowhead="teetee"];
+  "aula.alertas_seguridad":"sesion_id" -> "aula.sesiones_aprendizaje" [dir=both, arrowtail="crowodot", arrowhead="teetee"];
+  "aula.confirmaciones_killswitch":"detectado_id" -> "identidad.usuarios#confirmaciones_killswitch" [dir=both, arrowtail="crowodot", arrowhead="teetee"];
+  "aula.confirmaciones_killswitch":"sesion_id" -> "aula.sesiones_aprendizaje" [dir=both, arrowtail="teeodot", arrowhead="teetee"];
+  "aula.sesiones_aprendizaje":"reserva_id" -> "reservas.reservas#sesiones_aprendizaje" [dir=both, arrowtail="teeodot", arrowhead="teetee"];
+}

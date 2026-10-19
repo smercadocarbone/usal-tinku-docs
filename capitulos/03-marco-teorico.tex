@@ -41,19 +41,25 @@ Di Tella, desarrolló un modelo predictivo de deserción escolar para
 Argentina utilizando datos socioeconómicos y habitacionales de la
 Encuesta Permanente de Hogares, alcanzando un desempeño del 87,4\,\%
 bajo la métrica AUC-ROC. Un hallazgo relevante para este proyecto es que
-la autora señala la ausencia, a nivel nacional, de un sistema de
+el autor señala la ausencia, a nivel nacional, de un sistema de
 seguimiento educativo que permita identificar tempranamente a los
 estudiantes en riesgo para brindarles un acompañamiento personalizado
 --la misma carencia estructural de personalización que \sistema{} busca
 atender desde el lado de la oferta de tutorías.
 
-Un estudio sobre ruralidad y educación en Argentina \citep{olea}
-cuantifica la brecha urbano-rural en la finalización del nivel
+Un estudio sobre ruralidad y educación en Argentina \citep{olea}, con
+datos del Censo 2001, cuantifica la brecha urbano-rural en la finalización del nivel
 secundario: mientras que en Tierra del Fuego la diferencia es inferior a
 10 puntos porcentuales, en provincias del norte del país --Chaco,
 Corrientes, Misiones, Santiago del Estero, Jujuy y Tucumán-- la brecha
 supera los 30 puntos porcentuales entre estudiantes urbanos y rurales de
-15 a 17 años. El mismo trabajo documenta que algunas jurisdicciones ya
+15 a 17 años. Los datos más recientes indican que el problema
+persiste: según el Censo 2022, el 9,8\,\% de los adolescentes de 15 a
+17 años no asiste a la escuela \citep{indec2023educacion}, y en 2022 el
+ámbito rural contaba con casi 78 ciclos orientados de secundaria por cada
+100 ciclos básicos, frente a casi 98 en el ámbito urbano, una brecha de
+oferta que dificulta completar el nivel sin dejar la localidad
+\citep{prudant2023}. El trabajo de Olea documenta que algunas jurisdicciones ya
 recurrieron históricamente a esquemas de ``escuelas mediadas por
 tecnología con docentes en las ciudades y estudiantes en sus localidades
 acompañados por tutores'' como estrategia para ampliar el acceso --un
@@ -85,7 +91,7 @@ En el plano tecnológico, un trabajo de la Universidad de Ottawa
 cursos universitarios basado en aprendizaje contrastivo sobre
 representaciones BERT, aplicado a un catálogo de más de 500 cursos de
 ingeniería. El antecedente es relevante porque identifica y corrige un
-problema técnico conocido de los \gls{embeddings} tradicionales --la
+problema técnico conocido de los \glspl{embeddings} tradicionales --la
 anisotropía, que hace que las representaciones de distintos cursos
 resulten artificialmente similares entre sí-- y constituye el precedente
 más cercano encontrado al motor de \gls{matching} que \sistema{} plantea
@@ -203,13 +209,10 @@ el modo de baja conectividad.
     bloqueado. Reportaron que la combinación del sistema automático con
     moderación humana redujo el contenido ofensivo del 33,08\,\% al
     3,49\,\%. Dado que una porción significativa de los usuarios de
-    \sistema{} serán menores de edad, se propone un mecanismo que analice
-    localmente (\emph{edge computing}) los fotogramas mediante un modelo
-    de clasificación y que ante una detección positiva actúe en una de dos
-    ramas: si en la clase hay un menor, corta automáticamente la
-    transmisión, sin preguntar, y suspende preventivamente al tutor
-    implicado; si ambos participantes son adultos, oculta el video del
-    detectado y le pide confirmación a la contraparte antes de cortar.
+    \sistema{} serán menores de edad, se propone un mecanismo análogo que
+    clasifique localmente (\emph{edge computing}) el video de la clase e
+    intervenga ante una detección positiva, con una respuesta más estricta
+    cuando participa un menor.
     El mecanismo técnico completo, incluida la verificación de edad del
     tutor mediante \gls{ocr} y \gls{dni}, se desarrolla en la
     sección~\ref{sec:seguridad}.
@@ -270,7 +273,7 @@ adulto responsable.
 
 El mismo criterio se refuerza con un antecedente impositivo: el modelo
 de retención que aplican plataformas comparables en Argentina, como
-Uber, Rappi, PedidosYa y Airbnb, donde \gls{afip} obliga al agente de pago a
+Uber, Rappi, PedidosYa y Airbnb, donde la \gls{arca} ---ex AFIP--- obliga al agente de pago a
 retener hasta un 28\,\% de lo abonado a quien no esté inscripto en el
 régimen de Monotributo, funciona como antecedente directo de la
 estrategia de formalización tributaria de los tutores de \sistema{},
@@ -288,9 +291,9 @@ aplicada a sistemas de recomendación}\label{sec:variable1}
 El motor de \gls{matching} de \sistema{} se apoya conceptualmente en dos
 cuerpos teóricos: los sistemas de recomendación (\emph{recommender
 systems}), que buscan predecir la afinidad entre dos entidades a partir
-de sus atributos; y el procesamiento de lenguaje natural (\gls{nlp})
+de sus atributos; y el \gls{nlp}
 aplicado a la representación semántica de texto mediante
-\gls{embeddings}. Un \gls{embeddings} es una representación vectorial de
+\glspl{embeddings}. Un \gls{embeddings} es una representación vectorial de
 un texto en un espacio de alta dimensionalidad. Modelos como los
 sentence-transformers generan vectores a partir de oraciones completas,
 superando las búsquedas por palabras clave. Sobre este espacio,
@@ -472,3 +475,10 @@ tutor objetivo a usar la plataforma, pero muestra cómo funciona hoy el
 mercado de clases particulares que \sistema{} pretende complementar y
 dónde están los límites del segmento. Esta lectura se desarrolla en el
 capítulo~\ref{cap:resultados}.
+
+Ninguna de las dos personas entrevistadas es usuaria objetivo de la
+plataforma, por lo que se prepararon dos entrevistas más, a un tutor que
+dé clases virtuales (Perfil~3) y a una familia de una provincia del
+interior (Perfil~4), cuyos guiones están en el
+apéndice~\ref{apx:entrevista}.
+% TODO-AUTOR: completar tras la entrevista (síntesis de los Perfiles 3 y 4: fecha, perfil y aportes principales).

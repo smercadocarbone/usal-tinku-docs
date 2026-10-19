@@ -71,7 +71,7 @@ ADR-000-02).
 
 La única pieza propia que corre como proceso aparte es el \textbf{motor
 de \gls{matching}}, un servicio en Python que calcula los
-\gls{embeddings} y consulta la similitud semántica. Es una excepción
+\glspl{embeddings} y consulta la similitud semántica. Es una excepción
 explícita y documentada: el ecosistema de modelos de lenguaje que el
 motor necesita (sentence-transformers) es nativo de Python, y aislarlo
 evita mezclar dos entornos de ejecución en el mismo proceso. El backend
@@ -84,7 +84,7 @@ al beneficio.
 El diseño inicial describía un estilo ``cliente-servidor en capas'' en
 el que toda la \gls{ia} --incluido el \gls{matching}-- se delegaba a
 proveedores externos. Se reemplazó por el monolito modular porque los
-\gls{embeddings} los calcula \sistema{} con un modelo abierto, sin costo
+\glspl{embeddings} los calcula \sistema{} con un modelo abierto, sin costo
 por llamada y sin que los perfiles salgan del servidor; los proveedores
 externos quedaron acotados al video (LiveKit Cloud), el cobro
 (MercadoPago), la transcripción y el resumen (OpenAI) y el correo
@@ -109,7 +109,7 @@ responsabilidades.
         \midrule
         Cliente web (\gls{pwa}) & Interfaz para alumno, tutor, adulto responsable y administración; consume la \gls{api} \gls{rest} del backend. En el aula corre el clasificador del kill-switch sobre el video remoto y, solo con el adicional de resumen, graba el audio en el navegador del tutor & Next.js 16 + React 19; NSFWJS sobre TensorFlow.js; cliente de LiveKit \\
         Backend (monolito modular) & Lógica de negocio de los nueve módulos, autenticación y autorización por tipo de usuario y por acción, plazos de negocio persistidos, orquestación de los servicios externos & Java 21 + Spring Boot 4.1.1, Spring Security + \gls{jwt}, Quartz, JPA + Flyway \\
-        Motor de \gls{matching} & Cálculo de \gls{embeddings} de perfiles y temas, y consulta de similitud semántica contra la base & Python, FastAPI, sentence-transformers (\texttt{paraphrase-}\allowbreak\texttt{multilingual-}\allowbreak\texttt{MiniLM-L12-v2}, 384 dimensiones) \\
+        Motor de \gls{matching} & Cálculo de \glspl{embeddings} de perfiles y temas, y consulta de similitud semántica contra la base & Python, FastAPI, sentence-transformers (\texttt{paraphrase-}\allowbreak\texttt{multilingual-}\allowbreak\texttt{MiniLM-L12-v2}, 384 dimensiones) \\
         Base de datos & Persistencia de los nueve módulos (un esquema por módulo), índice semántico y tablas de Quartz & PostgreSQL 16 con pgvector, en contenedor propio \\
         Aula virtual & Transmisión de audio, video, pizarra y mensajes de texto entre tutor y alumno & LiveKit Cloud (\gls{webrtc}); el backend emite los tokens de sala y cierra las salas por la \gls{api} de LiveKit, sin \gls{sdk} \\
         Pasarela de pagos & Cobro con Checkout Pro en la cuenta de MercadoPago de cada tutor, conectada por \gls{oauth}; reembolsos durante la ventana de \gls{escrow} & MercadoPago, cliente HTTP propio (sin \gls{sdk}) \\
@@ -170,7 +170,7 @@ que el backend le entrega un token de corta duración.
 
 \section{Prototipo / MVP construido}
 
-Al 15 de octubre de 2026, el \gls{mvp} está desplegado en
+Al 18 de octubre de 2026, el \gls{mvp} está desplegado en
 \path{tinku.site}, sobre el servidor propio del autor
 (sección~\ref{sec:infraestructura}), con sus nueve módulos implementados. El
 código se encuentra en el repositorio del anexo~\ref{anx:repositorios}.
@@ -179,27 +179,29 @@ de lo que está construido pero todavía apagado o pendiente.
 
 \begin{table}[H]
     \centering
-    \caption{Estado del \gls{mvp} al 15 de octubre de 2026}
+    \caption{Estado del \gls{mvp} al 18 de octubre de 2026}
     \label{tab:estado-mvp}
     \small
     \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.2cm} L}
         \toprule
         \tb{Estado} & \tb{Funcionalidades} \\
         \midrule
-        Operativo & Registro de adultos, tutores y menores con verificación de identidad por \gls{ocr} del DNI; \gls{cap} para tutores de menores; búsqueda con \gls{matching} semántico y recomendación por área; agenda del tutor; reserva, paquete mensual y cambio de horario; aula virtual con video y pantalla compartida; kill-switch en el navegador, probado en vivo en sus dos ramas; reputación; avisos por correo; panel de administración con moderación, denuncias, soporte financiero y salud de la infraestructura \\
-        Construido, sin verificar con el proveedor & Cobro en la cuenta de cada tutor mediante \gls{oauth} de MercadoPago: implementado a partir de la documentación, pendiente de verificar en el entorno de pruebas del proveedor (ADR-M5-02). En entornos de prueba existe un modo sin cobro real (ADR-M5-01) \\
+        Operativo & Registro de adultos, tutores y menores con verificación de identidad por \gls{ocr} del \gls{dni}; \gls{cap} para tutores de menores; búsqueda con \gls{matching} semántico y recomendación por área; agenda del tutor; reserva, paquete mensual y cambio de horario; aula virtual con video y pantalla compartida; kill-switch en el navegador, probado en vivo en sus dos ramas y en su prueba de punta a punta contra LiveKit real (9 de 9 casos); reputación; avisos por correo; panel de administración con moderación, denuncias, soporte financiero y salud de la infraestructura \\
+        Construido, sin verificar con el proveedor & Cobro en la cuenta de cada tutor mediante \gls{oauth} de MercadoPago: implementado a partir de la documentación y probado con pruebas automáticas que simulan al proveedor; su prueba en el \emph{sandbox} de MercadoPago está pendiente (ADR-M5-02). En el sistema desplegado se usa el Modo Bypass, sin cobro real (ADR-M5-01) \\
         Construido, apagado & Resumen automático como adicional pago: se habilita cuando esté el texto legal definitivo de la cláusula de grabación. Clases con menores: el sistema las rechaza hasta cerrar las tareas previas a su encendido \\
-        Pendiente & Prueba formal de punta a punta del kill-switch contra el servicio de video real y medición de su latencia en dispositivos reales (T-M3-06f y T-M3-06g); activación de la copia de seguridad fuera del servidor con las credenciales de R2 \\
+        Pendiente & Medición de la latencia del kill-switch en un teléfono físico (T-M3-06g); activación de la copia de seguridad fuera del servidor con las credenciales de R2 \\
         Fuera del \gls{mvp} & Video de presentación del tutor (ADR-M1-09), firma digital automática del \gls{cap} y especialidades verificadas contra registros oficiales (ADR-M1-06) \\
         \bottomrule
     \end{tabularx}
 \end{table}
 
-Lo construido se verificó con 739 pruebas automatizadas del backend, 222
-pruebas de extremo a extremo del frontend y 26 del servicio de
-\gls{matching}, todas en la integración continua, más una prueba
+Lo construido se verificó con 859 pruebas automatizadas del backend, 252
+pruebas de extremo a extremo del frontend y 44 del servicio de
+\gls{matching} (al 18 de octubre de 2026), todas en la integración
+continua, más una prueba
 nocturna del camino crítico contra el sistema real, una auditoría
-técnica y pruebas exploratorias sobre el despliegue; los resultados se
+técnica, pruebas exploratorias sobre el despliegue y una evaluación
+técnica reproducible (sección~\ref{sec:evaluacion-tecnica}); los resultados se
 presentan en el capítulo~\ref{cap:resultados}. La validación con
 usuarios reales corresponde a la puesta en marcha y excede el alcance de
 este trabajo.
@@ -242,7 +244,7 @@ apéndice~\ref{apx:tecnicos}.
         \midrule
         Tecnología & Java 21 + Spring Boot 4.1.1 (la rama 3.5 dejó de recibir parches gratuitos el 30/06/2026) \\
         Por qué se eligió & Framework ``batteries-included'' (seguridad, ORM, validación, manejo de excepciones ya resueltos) que reduce el riesgo de un desarrollador único investigando y ensamblando librerías sueltas bajo un cronograma fijo; Quartz con persistencia en la base, necesario para que ningún plazo de negocio viva en memoria; alta disponibilidad de documentación y comunidad en español (ADR-000-02) \\
-        Alternativas evaluadas & Go -- descartado pese a tener ventajas reales de footprint de memoria y simplicidad del lenguaje, porque su ecosistema requiere ensamblar manualmente router, ORM y librerías de autenticación, lo cual consume tiempo de decisión de arquitectura que un proyecto de 6 meses en solitario no puede permitirse. Node.js -- descartado como backend principal por preferirse la robustez de tipado y el ecosistema de seguridad de Spring frente a un desarrollador que tampoco tenía experiencia consolidada previa en ninguno de los dos \\
+        Alternativas evaluadas & Go -- descartado pese a tener ventajas reales de footprint de memoria y simplicidad del lenguaje, porque su ecosistema requiere ensamblar manualmente router, ORM y librerías de autenticación, lo cual consume tiempo de decisión de arquitectura que un proyecto de 6 meses en solitario no puede permitirse. Node.js -- descartado como backend principal por preferirse la robustez de tipado y el ecosistema de seguridad de Spring, con el que el desarrollador ya tenía experiencia previa en Java y Spring Boot (sección~\ref{sec:recursos}) \\
         Autenticación & Spring Security + \gls{jwt} emitido y validado por el propio backend, sin un proveedor externo de identidad: el modelo de permisos de \sistema{} --adulto responsable, menor con permisos por acción, tutor, dos roles de administración-- requiere reglas de autorización propias que conviene mantener dentro del mismo framework que gestiona el resto de las reglas de negocio \\
         Motor de \gls{matching} & Servicio aparte en Python 3.12 con FastAPI y sentence-transformers; modelo \texttt{paraphrase-}\allowbreak\texttt{multilingual-}\allowbreak\texttt{MiniLM-L12-v2} (384 dimensiones), elegido por ser multilingüe y correr en CPU dentro del mismo servidor, sin costo por consulta \\
         \bottomrule
@@ -262,7 +264,7 @@ apéndice~\ref{apx:tecnicos}.
         \midrule
         Motor relacional & PostgreSQL 16 con la extensión pgvector (imagen \path{pgvector/pgvector:pg16}), en un contenedor propio con volumen persistente. Un solo motor y un esquema por módulo (\texttt{identidad}, \texttt{matching}, \texttt{aula}, \texttt{reservas}, \texttt{pagos}, \texttt{resumen}, \texttt{reputacion}, \texttt{admin}, \texttt{seguridad}) \\
         Conexión & El backend y el motor de \gls{matching} se conectan por JDBC y \texttt{psycopg} dentro de la red interna de los contenedores; la base no publica ningún puerto hacia internet \\
-        Índice semántico & Columna \texttt{vector(384)} de pgvector en la misma base: los \gls{embeddings} de perfiles y temas se guardan junto al resto de los datos y no hay un índice en memoria que reconstruir al reiniciar (ADR-M2-01) \\
+        Índice semántico & Columna \texttt{vector(384)} de pgvector en la misma base: los \glspl{embeddings} de perfiles y temas se guardan junto al resto de los datos y no hay un índice en memoria que reconstruir al reiniciar (ADR-M2-01) \\
         Estado en tiempo real & Sin Redis. El estado de la sala vive en LiveKit Cloud y en la base; los límites de pedidos por IP y el bloqueo por intentos de login se cuentan en memoria del backend, válido mientras haya una sola instancia (ADR-000-04) \\
         Migraciones & Flyway, con el esquema validado al arrancar (\texttt{ddl-auto: validate}): si el código y la base divergen, el backend no inicia. Una migración ya aplicada nunca se edita; las correcciones se agregan como migraciones nuevas \\
         Respaldo & Copia diaria de la base con \path{pg_dump}, cifrada y subida a Cloudflare R2, fuera del servidor, con 14 días de retención (ADR-000-07). El contenedor está desplegado; la copia sale del servidor recién cuando se cargan las credenciales de R2, paso pendiente antes de la puesta en marcha \\
@@ -335,8 +337,11 @@ capítulo~\ref{cap:metodologia}.
 \section{Modelo de datos}\label{sec:modelo-datos}
 
 El modelo se organiza en nueve esquemas, uno por módulo, versionados con
-Flyway. Las tablas principales y sus atributos clave se describen en el
-diccionario de datos del apéndice~\ref{apx:tecnicos}; esta sección
+Flyway. El diccionario de datos completo --las 47 tablas de dominio con
+todas sus columnas, restricciones e índices-- y los diagramas
+entidad-relación, generados del esquema que producen las migraciones
+hasta V58, están en las secciones~\ref{sec:apx-diccionario}
+y~\ref{sec:apx-der} del apéndice~\ref{apx:tecnicos}; esta sección
 resume las entidades y sus relaciones.
 
 \tb{Usuario} (\path{identidad.usuarios}) es la entidad base. Su tipo es
@@ -503,7 +508,7 @@ diseño inicial.
     Kill-switch & Una sola rama (cortar y bloquear); desenfoque del video entre adultos & NSFWJS en el navegador sobre el video remoto (cámara y pantalla), buffer rotativo de 30 segundos que se descarta salvo disparo. Con un menor corta directo, sin preguntar; entre adultos oculta el video del detectado y pide confirmación a la contraparte (plazo de 5 minutos). Evidencia: clip de 30 segundos que se sube solo ante un disparo y se conserva 30 días desde la resolución de la Alerta & ADR-M3-01, ADR-M3-07; Tabla de Tiempos \\
     Denuncias & Suspensión preventiva al denunciar; evidencia de la sesión preservada & La denuncia entra en revisión con 48 horas de descargo del denunciado y pausa el \gls{escrow} de esa sesión; evidencia opcional que adjunta el denunciante; el denunciado no conoce su identidad. La suspensión automática existe solo en las Alertas del kill-switch & Spec M9; minimización (no hay grabación que preservar) \\
     Menores & El menor puede reservar con un tutor autorizado & El menor tiene cuenta propia pero no paga, no autoriza tutores ni denuncia: pide una Solicitud de Sesión que su Adulto Responsable aprueba y paga. Las clases con menores están \textbf{deshabilitadas}: la opción \path{tinku.menores.sesiones-habilitadas} queda apagada hasta cerrar el kill-switch en el cliente (T-M3-06) y el \gls{cap} (T02) & Constitución, art.~II; T-TES-10 \\
-    Cobro & \gls{escrow} que retiene los fondos en la cuenta de la plataforma; \gls{sdk} oficial de Java; reparto por \gls{oauth} ``abierto'' & Modelo A: cada tutor conecta su cuenta de MercadoPago por \gls{oauth} (con \gls{pkce}); la preferencia se crea con su token y el dinero entra a su cuenta; \sistema{} cobra su comisión con \path{marketplace_fee}. El \gls{escrow} es una ventana lógica de 24 horas en la que \sistema{} todavía puede reembolsar. Cliente HTTP propio, sin \gls{sdk} & ADR-M5-02: \sistema{} no recauda fondos de terceros \\
+    Cobro & \gls{escrow} que retiene los fondos en la cuenta de la plataforma; \gls{sdk} oficial de Java; reparto por \gls{oauth} ``abierto'' & Modelo A: cada tutor conecta su cuenta de MercadoPago por \gls{oauth} con \gls{pkce}; la preferencia se crea con su token y el dinero entra a su cuenta; \sistema{} cobra su comisión con \path{marketplace_fee}. El \gls{escrow} es una ventana lógica de 24 horas en la que \sistema{} todavía puede reembolsar. Cliente HTTP propio, sin \gls{sdk} & ADR-M5-02: \sistema{} no recauda fondos de terceros \\
     Comisión & \comision{} con la pasarela como costo de la plataforma & \comision{} sobre el bruto de cada sesión (BR-PAG-01), a cargo del tutor; MercadoPago descuenta su comisión (cerca del 6,04\,\%) de los fondos del tutor, que recibe el 66,96\,\% & ADR-M5-05, que declara la discrepancia con el modelo económico del capítulo~\ref{cap:economica} \\
     Reembolsos & Siempre totales, nunca parciales & Totales como regla general. Excepciones: el adicional de resumen (BR-PAG-11) y la clase de un paquete devuelta por falta del tutor (FR-PAG-022); parciales manuales por disputa (FR-PAG-010) & Spec M5, FR-PAG-009 (enmienda v2.5) \\
     Paquete mensual & --- & Cuatro clases semanales con un solo pago, vigencia de cuatro semanas y un descuento de 0 a 30\,\% que fija el tutor & ADR-M5-03 \\
@@ -582,8 +587,7 @@ decisión está tomada pero \textbf{pendiente de implementar}
 (sección~\ref{sec:decisiones-implementacion}). La verificación del
 \gls{cap} vigente es manual y solo se exige a quienes dan clases a menores.
 
-El kill-switch de seguridad, presentado como SafeVchat en la
-sección~\ref{sec:estado-del-arte}, se apoya en el clasificador NSFWJS,
+El kill-switch de seguridad se apoya en el clasificador NSFWJS,
 que corre sobre TensorFlow.js en el navegador de cada participante
 durante la videollamada (ADR-M3-01). Cada cliente clasifica el video que
 \emph{recibe} --cámara y pantalla compartida del otro--, de modo que el
@@ -642,11 +646,13 @@ La metodología (capítulo~\ref{cap:metodologia}) fijaba una cobertura
 mínima del 70\,\% por módulo. En la implementación la cobertura se mide
 con JaCoCo sobre todo el backend, sin un umbral que corte la
 construcción: primero se mide y después se decide (ADR-000-05). Al
-14/10/2026 la suite del backend sumaba 661 pruebas sin fallas y una
-cobertura de líneas del 85,6\,\%. La suite exige JDK~21 y se ejecuta con
+18/10/2026 la integración continua corrió 859 pruebas del backend sin fallas, con una
+cobertura de líneas del 89,6\,\%, además de 252 pruebas de Playwright y 44 de pytest. La suite exige JDK~21 y se ejecuta con
 \texttt{./mvnw -B test} (apéndice~\ref{apx:tecnicos}). Las \gls{uat} con
 usuarios reales se realizarán a partir de la puesta en marcha, según lo
-definido en el capítulo~\ref{cap:metodologia} y el OE8. Los resultados se reportan en el
+definido en el capítulo~\ref{cap:metodologia} y el OE8; la evaluación
+técnica sobre la plataforma desplegada se presenta en la
+sección~\ref{sec:evaluacion-tecnica}. Los resultados se reportan en el
 capítulo~\ref{cap:resultados}.
 
 \subsection{Despliegue}
