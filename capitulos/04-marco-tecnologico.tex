@@ -222,7 +222,7 @@ apéndice~\ref{apx:tecnicos}.
         \midrule
         Tecnología & Java 21 + Spring Boot 4.1.1 (la rama 3.5 dejó de recibir parches gratuitos el 30/06/2026) \\
         Por qué se eligió & Framework ``batteries-included'' (seguridad, ORM, validación, manejo de excepciones ya resueltos) que reduce el riesgo de un desarrollador único investigando y ensamblando librerías sueltas bajo un cronograma fijo; Quartz con persistencia en la base, necesario para que ningún plazo de negocio viva en memoria; alta disponibilidad de documentación y comunidad en español (ADR-000-02) \\
-        Alternativas evaluadas & Go -- descartado pese a tener ventajas reales de footprint de memoria y simplicidad del lenguaje, porque su ecosistema requiere ensamblar manualmente router, ORM y librerías de autenticación, lo cual consume tiempo de decisión de arquitectura que un proyecto de 6 meses en solitario no puede permitirse. Node.js -- descartado como backend principal por preferirse la robustez de tipado y el ecosistema de seguridad de Spring frente a un desarrollador que tampoco tenía experiencia consolidada previa en ninguno de los dos \\
+        Alternativas evaluadas & Go -- descartado pese a tener ventajas reales de footprint de memoria y simplicidad del lenguaje, porque su ecosistema requiere ensamblar manualmente router, ORM y librerías de autenticación, lo cual consume tiempo de decisión de arquitectura que un proyecto de 6 meses en solitario no puede permitirse. Node.js -- descartado como backend principal por preferirse la robustez de tipado y el ecosistema de seguridad de Spring, con el que el desarrollador ya tenía experiencia previa en Java y Spring Boot (sección~\ref{sec:recursos}) \\
         Autenticación & Spring Security + \gls{jwt} emitido y validado por el propio backend, sin un proveedor externo de identidad: el modelo de permisos de \sistema{} --adulto responsable, menor con permisos por acción, tutor, dos roles de administración-- requiere reglas de autorización propias que conviene mantener dentro del mismo framework que gestiona el resto de las reglas de negocio \\
         Motor de \gls{matching} & Servicio aparte en Python 3.12 con FastAPI y sentence-transformers; modelo \texttt{paraphrase-}\allowbreak\texttt{multilingual-}\allowbreak\texttt{MiniLM-L12-v2} (384 dimensiones), elegido por ser multilingüe y correr en CPU dentro del mismo servidor, sin costo por consulta \\
         \bottomrule
@@ -562,8 +562,7 @@ decisión está tomada pero \textbf{pendiente de implementar}
 (sección~\ref{sec:decisiones-implementacion}). La verificación del
 \gls{cap} vigente es manual y solo se exige a quienes dan clases a menores.
 
-El kill-switch de seguridad, presentado como SafeVchat en la
-sección~\ref{sec:estado-del-arte}, se apoya en el clasificador NSFWJS,
+El kill-switch de seguridad se apoya en el clasificador NSFWJS,
 que corre sobre TensorFlow.js en el navegador de cada participante
 durante la videollamada (ADR-M3-01). Cada cliente clasifica el video que
 \emph{recibe} --cámara y pantalla compartida del otro--, de modo que el

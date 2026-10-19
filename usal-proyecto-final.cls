@@ -252,9 +252,19 @@
 
 \let\savedenumerate=\enumerate
 \let\savedendenumerate=\endenumerate
+% enumitem guarda el contador para [resume] al cerrar el grupo de la
+% lista, que acá queda dentro de spacing y se perdería: se lo guarda de
+% forma global para que \begin{enumerate}[resume] siga la numeración.
+\makeatletter
 \renewenvironment{enumerate}
     {\begin{spacing}{0.5}\savedenumerate}
-    {\savedendenumerate\end{spacing}}
+    {\savedendenumerate
+     \enit@afterlist
+     \expandafter\global\expandafter\let
+       \csname enit@resume@\@currenvir\expandafter\endcsname
+       \csname enit@resume@\@currenvir\endcsname
+     \end{spacing}}
+\makeatother
 
 % citas textuales en cursiva
 \let\savedquote\quote

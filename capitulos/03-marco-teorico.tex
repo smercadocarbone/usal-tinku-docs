@@ -203,13 +203,10 @@ el modo de baja conectividad.
     bloqueado. Reportaron que la combinación del sistema automático con
     moderación humana redujo el contenido ofensivo del 33,08\,\% al
     3,49\,\%. Dado que una porción significativa de los usuarios de
-    \sistema{} serán menores de edad, se propone un mecanismo que analice
-    localmente (\emph{edge computing}) los fotogramas mediante un modelo
-    de clasificación y que ante una detección positiva actúe en una de dos
-    ramas: si en la clase hay un menor, corta automáticamente la
-    transmisión, sin preguntar, y suspende preventivamente al tutor
-    implicado; si ambos participantes son adultos, oculta el video del
-    detectado y le pide confirmación a la contraparte antes de cortar.
+    \sistema{} serán menores de edad, se propone un mecanismo análogo que
+    clasifique localmente (\emph{edge computing}) el video de la clase e
+    intervenga ante una detección positiva, con una respuesta más estricta
+    cuando participa un menor.
     El mecanismo técnico completo, incluida la verificación de edad del
     tutor mediante \gls{ocr} y \gls{dni}, se desarrolla en la
     sección~\ref{sec:seguridad}.

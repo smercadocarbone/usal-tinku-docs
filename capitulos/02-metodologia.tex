@@ -53,10 +53,11 @@ conocimiento con utilidad directa para resolverlo. En el caso de
 \sistema{}, el problema es la fragmentación e inaccesibilidad del
 mercado de tutorías académicas en Argentina, y el conocimiento generado
 se materializa en un artefacto funcional: una plataforma digital que
-conecta tutores y alumnos a escala nacional. El aporte original del
-proyecto reside en la aplicación de técnicas de \gls{matching} semántico
-basadas en \gls{ia} a un dominio educativo local, y en la integración de
-funcionalidades de tutoría virtual en un único ecosistema diseñado para
+conecta tutores y alumnos a escala nacional. El aporte del proyecto no
+reside en una técnica nueva sino en la integración: la aplicación de
+técnicas de \gls{matching} semántico basadas en \gls{ia} a un dominio
+educativo local, junto con las funcionalidades de tutoría virtual, en un
+único ecosistema diseñado para
 las condiciones geográficas y de conectividad del territorio argentino.
 El enfoque es de carácter mixto: predominantemente cualitativo en la
 fase de relevamiento del problema y cuantitativo en la fase de
@@ -376,7 +377,7 @@ verde. Para el despliegue, cada componente se empaqueta como imagen
 Docker, construida por GitHub Actions y publicada en el registro de
 contenedores de GitHub, y se ejecuta mediante Coolify, una plataforma de
 despliegue autoalojada que gestiona contenedores y variables de entorno
-de forma equivalente a un \gls{paas} gestionado. Coolify corre en un
+de forma equivalente a una \gls{paas} gestionada. Coolify corre en un
 servidor propio, publicado en internet mediante Cloudflare Tunnel, que
 además cifra el tráfico entre los usuarios y el servidor. La planificación original
 preveía migrar a un \gls{vps} alquilado antes del piloto; se mantuvo
