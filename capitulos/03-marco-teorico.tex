@@ -224,8 +224,8 @@ el modo de baja conectividad.
     (visión por computadora en tiempo real), debe evaluarse su viabilidad
     dentro de los plazos del \gls{mvp}. En la implementación, el
     clasificador se integró en el navegador con NSFWJS sobre TensorFlow.js;
-    mientras no se cierre su verificación completa, el piloto corre sin
-    clases con menores (capítulo~\ref{cap:marco-tecnologico},
+    mientras no se cierre su verificación completa, las clases con
+    menores están deshabilitadas (capítulo~\ref{cap:marco-tecnologico},
     sección~\ref{sec:decisiones-implementacion}).
 
     \item[Reputación con fricción reducida (señales implícitas).] La
@@ -299,7 +299,7 @@ bases de datos relacionales como pgvector permiten búsquedas de similitud
 eficientes. \sistema{} usa pgvector: guarda los vectores en una columna
 de la misma base PostgreSQL que el resto del sistema, de modo que no hay
 un índice en memoria que reconstruir ni copiar al reiniciar el servicio,
-y el volumen del piloto no requiere las optimizaciones de FAISS para
+y el volumen inicial de operación no requiere las optimizaciones de FAISS para
 colecciones muy grandes. Los vectores se calculan con el modelo
 multilingüe \texttt{paraphrase-}\allowbreak\texttt{multilingual-}\allowbreak\texttt{MiniLM-L12-v2}, de 384
 dimensiones (capítulo~\ref{cap:marco-tecnologico},
@@ -426,5 +426,49 @@ Estos aportes deben leerse con dos límites: se trata de una sola
 entrevista, y la entrevistada enseña Educación Física y no tiene
 experiencia en clases particulares. El contraste con la encuesta se
 presenta en el capítulo~\ref{cap:resultados} y la evidencia completa, en
-el apéndice~\ref{apx:entrevista}. La entrevista del Perfil~2, a una
-tutora particular, está \completar{pendiente, con fecha prevista}.
+el apéndice~\ref{apx:entrevista}.
+
+La entrevista del Perfil~2 se realizó el 29 de septiembre de 2026, en
+forma asincrónica por mensajes de audio, con una tutora particular,
+docente con 35 años
+de trayectoria, formada en Ciencias de la Educación en la Universidad de
+Buenos Aires, que da clases particulares en Pilar desde hace entre 15 y
+20 años y tiene habitualmente más de veinte alumnos. A pedido de la
+entrevistada, su identidad se mantiene anónima, y parte del
+guion no llegó a abordarse (apéndice~\ref{apx:entrevista}). Sus aportes
+principales fueron cinco:
+
+\begin{itemize}
+    \item \textbf{Sobre cómo se consiguen alumnos:} todos sus alumnos
+          llegaron por recomendación; nunca hizo publicidad ni usó una
+          plataforma. Su demanda se sostiene en una reputación construida
+          durante años con las familias y los colegios de la zona.
+    \item \textbf{Sobre las plataformas:} rechaza trabajar con
+          plataformas a comisión, por lo que no propone un porcentaje
+          aceptable, y le genera desconfianza dejar datos personales en
+          servicios virtuales. Prefiere la relación directa con la familia
+          y el cobro por transferencia.
+    \item \textbf{Sobre la clase virtual:} la pantalla le quita la
+          retroalimentación de tener al alumno al lado y le dificulta
+          seguir su atención; la conexión de los alumnos interrumpe las
+          clases con frecuencia; y durante una clase trabaja con varias
+          ventanas y dos computadoras para tener a la vista el material de
+          la escuela y la producción del alumno.
+    \item \textbf{Sobre la relación con el menor y su familia:} considera
+          que un adulto presente en la clase altera el lugar de autoridad
+          del docente, pero atribuye a los padres el control del
+          dispositivo y del espacio desde donde se conecta el alumno.
+    \item \textbf{Sobre el precio y el cobro:} no tiene una tarifa fija;
+          la ajusta a la frecuencia, la duración, la distancia y la
+          situación de cada familia. Cobra por adelantado y cobra las
+          cancelaciones con menos de 24 o 48 horas de anticipación, salvo
+          por enfermedad.
+\end{itemize}
+
+La entrevistada no corresponde al perfil de tutor que \sistema{} busca
+incorporar: tiene más demanda de la que necesita y la consigue sin
+intermediarios. Su entrevista no mide, por lo tanto, la disposición del
+tutor objetivo a usar la plataforma, pero muestra cómo funciona hoy el
+mercado de clases particulares que \sistema{} pretende complementar y
+dónde están los límites del segmento. Esta lectura se desarrolla en el
+capítulo~\ref{cap:resultados}.
