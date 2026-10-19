@@ -33,9 +33,10 @@ Este capítulo presenta los resultados del proyecto al 15 de octubre de
 técnicas ---automatizadas, de auditoría y en producción---, la validación
 con usuarios y la evaluación económica. Se informan tanto los resultados
 favorables como los desfavorables. Las pruebas de aceptación con usuarios
-reales corresponden al piloto del Sprint~11 (capítulo~\ref{cap:metodologia});
-sus resultados se incorporarán al finalizarlo, y las secciones afectadas
-lo indican.
+reales exceden el alcance de este trabajo
+(capítulo~\ref{cap:introduccion}, sección~\ref{sec:limitaciones}): los
+indicadores con los que se validará la hipótesis quedan definidos y se
+medirán a partir de la puesta en marcha.
 
 \section{Requerimientos}\label{sec:requerimientos}
 
@@ -97,10 +98,10 @@ la Constitución del proyecto define como no negociables.
         \toprule
         \tb{ID} & \tb{Atributo} & \tb{Umbral medible} & \tb{Estado} \\
         \midrule
-        RNF-01 & Disponibilidad   & 95\,\% mensual durante el piloto & A medir en el piloto; el servidor único es un riesgo aceptado (R-14, capítulo~\ref{cap:riesgos}) \\
+        RNF-01 & Disponibilidad   & 95\,\% mensual en operación & A medir desde la puesta en marcha; el servidor único es un riesgo aceptado (R-14, capítulo~\ref{cap:riesgos}) \\
         RNF-02 & Seguridad        & \gls{tls} 1.2 o superior; contraseñas con bcrypt o argon2; registro de auditoría de toda acción de administración & Implementado: \gls{tls} hasta Cloudflare y túnel cifrado, bcrypt, auditoría de las acciones de administración; los 36 hallazgos de la auditoría técnica, cerrados (sección~\ref{sec:auditoria}) \\
-        RNF-03 & Privacidad       & Cumplimiento de la Ley 25.326, con especial cuidado en los datos de menores & Medidas implementadas (la imagen del \gls{dni} no sale del servidor, las clases no se graban salvo el adicional entre adultos, piloto sin menores); riesgos abiertos R-16 y R-17 \\
-        RNF-04 & Rendimiento      & Latencia de videollamada menor a 200~ms; ajuste automático de calidad sin modo degradado visible & A medir en el piloto \\
+        RNF-03 & Privacidad       & Cumplimiento de la Ley 25.326, con especial cuidado en los datos de menores & Medidas implementadas (la imagen del \gls{dni} no sale del servidor, las clases no se graban salvo el adicional entre adultos, clases con menores deshabilitadas); riesgos abiertos R-16 y R-17 \\
+        RNF-04 & Rendimiento      & Latencia de videollamada menor a 200~ms; ajuste automático de calidad sin modo degradado visible & A medir desde la puesta en marcha \\
         RNF-05 & Mantenibilidad   & Sostenible por uno o dos desarrolladores, sin conocimiento tácito no documentado & Cumplido: Constitución, especificaciones, registros de decisión y manual de operación versionados \\
         \bottomrule
     \end{tabularx}
@@ -119,7 +120,8 @@ sección~\ref{sec:decisiones-implementacion}.
 
 Las figuras~\ref{fig:cap-busqueda} a~\ref{fig:cap-admin} muestran las
 pantallas principales del sistema en funcionamiento, capturadas del
-entorno de \emph{staging} (\texttt{tinku.site}) con datos de prueba.
+despliegue de producción (\path{tinku.site}) con datos de prueba
+(sección~\ref{sec:pruebas-produccion}).
 
 \begin{figure}[H]
     \centering
@@ -171,7 +173,7 @@ entorno de \emph{staging} (\texttt{tinku.site}) con datos de prueba.
 \section{Construcción e integración}
 
 El sistema se construyó con el método dirigido por especificaciones
-descrito en el capítulo~\ref{cap:metodologia}, con asistentes de
+descrito en el capítulo~\ref{cap:metodologia} (sección~\ref{sec:desarrollo-ia}), con asistentes de
 programación con \gls{ia} (declaración de uso de \gls{ia} y
 apéndice~\ref{apx:prompts}). La tabla~\ref{tab:construccion} resume el
 resultado medido sobre la rama principal del repositorio del sistema.
@@ -275,7 +277,6 @@ El 21 de septiembre de 2026 se realizó una auditoría técnica del
 repositorio completo ---backend, frontend, servicio de \gls{matching},
 migraciones, documentación, integración continua y configuración de
 despliegue---, que incluyó la ejecución de la suite de pruebas.
-\completar{Quién realizó la auditoría y con qué método o herramienta.}
 La auditoría registró 36 hallazgos, que se gestionan en un registro con
 su estado: un hallazgo solo se da por cerrado con un cambio en el código
 y una prueba de regresión. La tabla~\ref{tab:auditoria} resume su estado.
@@ -386,37 +387,38 @@ irrelevantes; con el elegido (0,46) el 95\,\% de las relevantes conserva
 resultados y ninguna irrelevante ni sin sentido los obtiene. La consulta
 relevante que se pierde cae a la recomendación por área (FR-MATCH-011).
 Las consultas son de elaboración propia, por lo que la medición calibra
-el umbral pero no reemplaza al indicador I-01 del piloto.
+el umbral pero no reemplaza la medición del indicador I-01 con usuarios reales.
 
 La lectura de estas dos actividades complementa la de la auditoría:
 cientos de pruebas exitosas no garantizan la ausencia de defectos
 graves, porque las pruebas verifican lo que se especificó y no lo que se
-omitió. La revisión independiente y la prueba sobre el despliegue real
+omitió. La auditoría y la prueba sobre el despliegue real
 detectaron fallas que ninguna prueba cubría, y en un caso, un hueco de
 la propia especificación. El desarrollo asistido por \gls{ia} acelera la
 construcción, pero no reemplaza la verificación.
 
 \subsection{Pruebas de aceptación}
 
-Las pruebas de aceptación con usuarios (\gls{uat}) se realizan en el
-piloto del Sprint~11, entre el 27 de octubre y el 27 de noviembre de
-2026, y miden los indicadores del capítulo~\ref{cap:metodologia}
-(tabla~\ref{tab:indicadores-piloto}). Por el riesgo R-01 del
-capítulo~\ref{cap:riesgos}, el piloto no incluye clases con menores.
+Las pruebas de aceptación con usuarios reales (\gls{uat}) exceden el
+alcance de este trabajo. Los indicadores del capítulo~\ref{cap:metodologia}
+con los que se validará la hipótesis quedan definidos
+(tabla~\ref{tab:indicadores-validacion}) y se medirán a partir de la
+puesta en marcha, sin clases con menores mientras siga abierto el riesgo
+R-01 del capítulo~\ref{cap:riesgos}.
 
 \begin{table}[H]
     \centering
-    \caption{Indicadores del piloto}
-    \label{tab:indicadores-piloto}
+    \caption{Indicadores de validación con usuarios reales}
+    \label{tab:indicadores-validacion}
     \small
     \begin{tabularx}{\textwidth}{l L l l}
         \toprule
         \tb{ID} & \tb{Indicador} & \tb{Umbral} & \tb{Resultado} \\
         \midrule
-        I-01 & Aceptación de las sugerencias del \gls{matching} & $> 60\,\%$ & \completar{pendiente del piloto} \\
-        I-02 & Calidad percibida de la sesión (escala 1 a 5)   & $\geq 4{,}0$ & \completar{pendiente del piloto} \\
-        I-03 & Sesiones entre provincias distintas, con una del interior & $\geq 1$ & \completar{pendiente del piloto} \\
-        I-04 & \gls{nps} del piloto                            & positivo & \completar{pendiente del piloto} \\
+        I-01 & Aceptación de las sugerencias del \gls{matching} & $> 60\,\%$ & Sin medir \\
+        I-02 & Calidad percibida de la sesión (escala 1 a 5)   & $\geq 4{,}0$ & Sin medir \\
+        I-03 & Sesiones entre provincias distintas, con una del interior & $\geq 1$ & Sin medir \\
+        I-04 & \gls{nps} de los usuarios                       & positivo & Sin medir \\
         \bottomrule
     \end{tabularx}
 \end{table}
@@ -461,7 +463,7 @@ resultados se contrastan con los supuestos del proyecto:
           capítulo~\ref{cap:economica} calcula el ticket. El modelo toma
           el precio de la oferta publicada y no la intención declarada; la
           diferencia se trata como riesgo (R-05) y se resolverá con los
-          precios efectivos del piloto.
+          precios efectivos de la puesta en marcha.
 \end{itemize}
 
 La encuesta tiene limitaciones que acotan estas conclusiones: la muestra
@@ -474,6 +476,11 @@ texto del aula viajan por el canal de datos del servicio de video
 
 \subsection{Entrevistas a especialistas}
 
+Se realizaron dos entrevistas semiestructuradas: una a una docente en
+ejercicio (Perfil~1) y otra a una tutora particular (Perfil~2).
+
+\subsubsection{Perfil 1: docente}
+
 Se entrevistó a Carolina Stocchetti, docente en ejercicio y Profesora de
 Educación Física (Perfil~1, apéndice~\ref{apx:entrevista}), con cinco años de experiencia en los
 niveles inicial, primario y secundario. La entrevista, semiestructurada, siguió un guion de
@@ -484,7 +491,7 @@ supuestos del proyecto.
 
 \begin{table}[H]
     \centering
-    \caption{Contraste entre la encuesta y la entrevista}
+    \caption{Contraste entre la encuesta y la entrevista a la docente}
     \label{tab:encuesta-entrevista}
     \small
     \begin{tabularx}{\textwidth}{l L L l}
@@ -506,7 +513,7 @@ supuestos del proyecto.
     \end{tabularx}
 \end{table}
 
-La entrevista aportó además tres propuestas que la encuesta no relevaba.
+La entrevista a la docente aportó además tres propuestas que la encuesta no relevaba.
 Ninguna se incorpora al \gls{mvp}, cuyo alcance está congelado (riesgo
 R-03), pero se registran porque señalan diferencias entre el diseño y la
 mirada docente:
@@ -546,6 +553,127 @@ resultado de la encuesta, lo que puede haber inducido el acuerdo. Sus
 aportes se toman, por lo tanto, como la opinión de una docente en
 ejercicio y no como una validación experta del modelo.
 
+\subsubsection{Perfil 2: tutora particular}
+
+Se entrevistó a una tutora particular, docente con 35 años de trayectoria, formada en
+Ciencias de la Educación en la Universidad de Buenos Aires, que da clases
+particulares en Pilar desde hace entre 15 y 20 años y tiene habitualmente
+más de veinte alumnos, de primer grado al final del secundario, entre
+ellos alumnos con dificultades específicas de aprendizaje
+(Perfil~2, apéndice~\ref{apx:entrevista}). La entrevista se hizo en forma
+asincrónica por mensajes de audio; a pedido de la entrevistada, su identidad
+se mantiene anónima, y 10 de las 25 preguntas del guion
+no llegaron a abordarse. Esas preguntas ---entre ellas, las referidas al
+\gls{cap}, al kill-switch, a las calificaciones y al resumen
+automático--- no se interpretan como respuestas. La
+tabla~\ref{tab:tutora-modelo} contrasta lo que sí se abordó con los
+supuestos del modelo.
+
+\begin{table}[H]
+    \centering
+    \caption{Contraste entre el modelo y la entrevista a la tutora}
+    \label{tab:tutora-modelo}
+    \small
+    \begin{tabularx}{\textwidth}{l L L l}
+        \toprule
+        \tb{Supuesto} & \tb{Modelo o encuesta} & \tb{Entrevista} & \tb{Lectura} \\
+        \midrule
+        Canal de búsqueda & 70\,\% encontró al profesor por recomendación & Todos sus alumnos llegaron por recomendación; nunca hizo publicidad & Coinciden \\
+        Pago dentro de la plataforma & Solo 35,2\,\% lo prefiere (R-02) & Prefiere la relación directa y el cobro por transferencia & Coinciden \\
+        Comisión del \comision{} & Neto del tutor del 66,96\,\% & Rechaza trabajar a comisión; no propone un porcentaje & Sin respaldo en este perfil \\
+        Registro con documentación & 81,8\,\% confía más con tutores verificados & Le da miedo dejar datos personales en plataformas & Tensión (R-07) \\
+        Duración de 30 y 60 minutos & Mínimo de 30 y estándar de 60 & Clases de una hora y clases cortas según la concentración del alumno & Coinciden \\
+        Clase individual & Solo clases 1 a 1 & Solo individuales; las grupales no le parecen efectivas & Coinciden \\
+        Cancelación con menos de 24 horas & La clase sigue en pie; puede cambiarse de horario hasta una hora antes & Cobra con menos de 24 o 48 horas, salvo por enfermedad & Coinciden \\
+        Precio & Precio único por tutor; descuento solo en el paquete mensual & Varía según la frecuencia, la distancia y la situación de cada familia & Difieren \\
+        Adulto durante la clase & No exigido & ``No es conveniente'': altera la autoridad del docente & Coinciden; difiere de la docente \\
+        Conectividad variable & Hipótesis técnica 2 & Cortes frecuentes; alumnos conectados desde el celular & Respalda la relevancia de I-02 \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\paragraph{Delimitación del segmento de tutores.} La lectura central de
+esta entrevista no está en ninguna fila de la tabla: la entrevistada no
+es el tutor que \sistema{} busca incorporar. Tiene más demanda de la que
+necesita, la consigue sin intermediarios y la sostiene con una
+reputación construida durante dos décadas con las familias y los
+colegios de su zona. Para ese perfil, una plataforma no resuelve ningún
+problema: la comisión es un costo sin contrapartida y el registro, una
+exposición de datos que no necesita. Su rechazo al modelo es coherente
+con esa posición y no invalida la propuesta, porque \sistema{} no se
+dirige a ella.
+
+\sistema{} se dirige a los tutores que todavía no tienen esa red:
+estudiantes avanzados, docentes y graduados recientes, o tutores que
+quieren enseñar fuera de su zona y no tienen cómo llegar a alumnos
+nuevos. Para ellos la plataforma cumple la función que para la
+entrevistada cumplieron durante años la recomendación y los colegios:
+hacerlos visibles y darles una reputación verificable. Del otro lado, se
+dirige a los alumnos que no tienen acceso a esa red de recomendaciones,
+en especial los de zonas con poca oferta presencial
+(capítulo~\ref{cap:introduccion}). Esta delimitación es una decisión del
+proyecto que la entrevista vuelve explícita, no un resultado validado:
+la encuesta relevó solo nueve tutores, de edades diversas (uno de 18 a 25
+años, cinco de 26 a 40 y tres de más de 40), y ninguna fuente mide
+todavía la disposición del tutor objetivo a usar la plataforma. La
+puesta en marcha y el reclutamiento del riesgo R-07 son los que deben
+aportar esa evidencia.
+
+\paragraph{Lo que la entrevista sí aporta.} Aunque no mide la adopción,
+la entrevista describe cómo funciona hoy el mercado que \sistema{}
+pretende complementar, y de ella surgen cuatro observaciones:
+
+\begin{itemize}
+    \item \textbf{La confianza se construye fuera de la plataforma.} El
+          mecanismo que hoy funciona es la recomendación personal, que
+          tarda años en consolidarse. Es la barrera que enfrenta un tutor
+          nuevo y la que la verificación y la reputación de \sistema{}
+          buscan acortar. Al mismo tiempo, es la razón por la que un
+          tutor que ya la tiene no necesita la plataforma, lo que
+          refuerza el riesgo de desintermediación (R-02): una vez
+          construida la relación con la familia, el incentivo a salir
+          existe.
+    \item \textbf{La relación con el menor.} A diferencia de la docente,
+          la tutora considera que la presencia de un adulto en la clase
+          perjudica la dinámica, porque desplaza la autoridad del docente;
+          en cambio, atribuye a los padres el control del dispositivo y del
+          espacio desde donde se conecta el alumno. Las dos entrevistadas
+          discrepan sobre la supervisión, pero coinciden en que el adulto
+          responsable tiene un papel. El diseño actual, que protege al menor
+          con el kill-switch, la verificación del tutor y la cuenta del
+          adulto responsable sin exigir su presencia en la sesión, queda
+          entre ambas posiciones.
+    \item \textbf{La clase virtual real.} La tutora describe una clase con
+          varias ventanas, dos computadoras, el material de la escuela en
+          otras plataformas y alumnos conectados desde el celular con mala
+          señal. Es el contexto de conectividad variable que plantea la
+          hipótesis técnica, y muestra que la pérdida de la
+          retroalimentación visual y del seguimiento de la atención son los
+          costos pedagógicos de la virtualidad que un tutor experimentado
+          percibe primero.
+    \item \textbf{El precio como acuerdo con cada familia.} La
+          entrevistada ajusta el precio a cada caso, incluso a la baja
+          para familias con dificultades económicas, y cobra más por los
+          alumnos con dificultades de aprendizaje, por el trabajo fuera de
+          la clase. El modelo, con un precio único por tutor, no reproduce
+          esa flexibilidad.
+\end{itemize}
+
+La tutora rechaza además las clases grupales porque ``los ritmos de
+comprensión son distintos''. La contingencia del riesgo R-04 prevé pasar
+a clases grupales si el volumen no alcanza el equilibrio; esta opinión no
+la invalida, pero anticipa que esa alternativa puede tener resistencia
+del lado de la oferta.
+
+La entrevista tiene limitaciones que acotan su peso como evidencia: es
+una sola; se hizo en forma asincrónica, sin repreguntas en el momento;
+dos de cada cinco preguntas del guion no se abordaron; la entrevistada trabaja en el AMBA,
+por lo que tampoco cubre la mitigación del riesgo R-08; y su perfil es,
+por definición, el opuesto al del tutor objetivo. Sus aportes se toman,
+por lo tanto, como la descripción de la práctica de una tutora
+consolidada y no como una evaluación del modelo por parte de su usuario
+previsto.
+
 \subsection{Decisiones derivadas}
 
 La tabla~\ref{tab:feedback-decisiones} traduce los hallazgos en
@@ -563,17 +691,20 @@ decisiones concretas.
         Encuesta & La \gls{ia} como etiqueta casi no se valora & Presentar las recomendaciones por su resultado, sin el rótulo ``\gls{ia}'' (T-TES-12) & Aplicado \\
         Encuesta & El resumen automático es la segunda función más valorada & Resumen como adicional opcional, a costo más un 50\,\% (ADR-M5-06) & Aplicado; apagado en producción (R-16) \\
         Encuesta & Solo el 35,2\,\% prefiere pagar en la plataforma & Mitigación del riesgo R-02: valor exclusivo dentro de la plataforma & Planificado \\
-        Encuesta & Mediana de disposición a pagar de \usd{4,56} por hora & Medir el precio efectivo en el piloto (riesgo R-05) & Planificado \\
+        Encuesta & Mediana de disposición a pagar de \usd{4,56} por hora & Medir el precio efectivo desde la puesta en marcha (riesgo R-05) & Planificado \\
         Encuesta & 90,9\,\% de las respuestas de Buenos Aires & Reencuesta dirigida al interior (riesgo R-08) & Planificado \\
         Auditoría & 36 hallazgos, 7 críticos & Corrección de cada uno con prueba de regresión & Aplicado \\
         Pruebas en producción & 3 hallazgos altos y uno transversal & Remediación con prueba previa al arreglo & Implementado, por integrar \\
         Pruebas en producción & Búsquedas sin relación devolvían tutores & Umbral de relevancia calibrado con el modelo real & Implementado, por integrar \\
-        Entrevista & \gls{cap} obligatorio para tutores de menores & Ratifica el \gls{cap} obligatorio para dar clases a menores (R-10) & Aplicado \\
-        Entrevista & Un adulto debería presenciar las clases de los menores & Se mantiene el diseño actual (kill-switch y verificación del tutor); no se incorpora al \gls{mvp} por el alcance congelado (R-03) & No adoptado \\
-        Entrevista & El adulto, y no el menor, debería calificar al tutor & Se mantiene el diseño actual de M7; no se incorpora al \gls{mvp} por el alcance congelado (R-03) & No adoptado \\
-        Entrevista & Mostrar experiencia docente y año de cursada del tutor & Se mantiene el perfil actual de M1; no se incorpora al \gls{mvp} por el alcance congelado (R-03) & No adoptado \\
-        Entrevista & Resumen con conceptos, puntos y preguntas clave & Coincide con la estructura ya especificada (FR-SUM-003); sin cambios & Respaldo \\
-        Entrevista & Tareas y entregas entre clases & Trabajo futuro, por el alcance congelado (R-03) & Trabajo futuro \\
+        Entrevista (docente) & \gls{cap} obligatorio para tutores de menores & Ratifica el \gls{cap} obligatorio para dar clases a menores (R-10) & Aplicado \\
+        Entrevista (docente) & Un adulto debería presenciar las clases de los menores & Se mantiene el diseño actual (kill-switch y verificación del tutor); la tutora opina lo contrario, por lo que la cuestión queda abierta & No adoptado \\
+        Entrevista (docente) & El adulto, y no el menor, debería calificar al tutor & Se mantiene el diseño actual de M7; no se incorpora al \gls{mvp} por el alcance congelado (R-03) & No adoptado \\
+        Entrevista (docente) & Mostrar experiencia docente y año de cursada del tutor & Se mantiene el perfil actual de M1; no se incorpora al \gls{mvp} por el alcance congelado (R-03) & No adoptado \\
+        Entrevista (docente) & Resumen con conceptos, puntos y preguntas clave & Coincide con la estructura ya especificada (FR-SUM-003); sin cambios & Respaldo \\
+        Entrevista (docente) & Tareas y entregas entre clases & Trabajo futuro, por el alcance congelado (R-03) & Trabajo futuro \\
+        Entrevista (tutora) & Una tutora con cartera propia rechaza la comisión y prefiere el cobro directo & Delimitar el segmento de tutores a quienes aún no tienen una red de alumnos; reclutamiento para la puesta en marcha en la comunidad universitaria (R-07) & Aplicado en el análisis \\
+        Entrevista (tutora) & Desconfianza a dejar datos personales en la plataforma & Trabajo futuro: explicar en el registro qué datos se piden, para qué y quién los ve (R-07) & Trabajo futuro \\
+        Entrevista (tutora) & Precio ajustado a cada familia & Trabajo futuro: precio diferenciado por alumno, por el alcance congelado (R-03) & Trabajo futuro \\
         Diseño & El audio de la sesión no puede anonimizarse antes del \gls{llm} & Transcripción previa y modelo de resumen solo con texto anonimizado; sin resumen con menores (ADR-M6-03) & Aplicado \\
         \bottomrule
     \end{tabularx}
@@ -591,7 +722,7 @@ propuesta con ellas en tres ejes:
           \gls{matching} semántico con \gls{embeddings}. La calibración
           con consultas propias muestra que separa consultas relevantes de
           irrelevantes; su valor para los usuarios queda sujeto al
-          indicador I-01 del piloto.
+          indicador I-01, a medir con usuarios reales.
     \item \textbf{Aula y pagos integrados.} \sistema{} integra en un
           mismo flujo la reserva, el aula virtual y el cobro con una
           ventana de 24 horas en la que la plataforma todavía puede
@@ -636,9 +767,9 @@ en el anexo~\ref{anx:modelo-financiero}.
         Nueve módulos implementados y desplegados, con 661 pruebas automatizadas en la rama principal y 85,6\,\% de cobertura &
         Las pruebas en producción encontraron tres hallazgos altos que la suite no detectaba; su remediación ya está en la rama principal y falta repetir las pruebas en producción \\
         Los 36 hallazgos de la auditoría, cerrados con prueba de regresión &
-        Producción quedó, tras las pruebas, en un estado que debe revertirse antes del piloto (R-17) \\
+        Producción quedó, tras las pruebas, en un estado que debe revertirse antes de la puesta en marcha (R-17) \\
         Kill-switch funcionando de punta a punta en la prueba en vivo &
-        Sin medición en dispositivos reales: el piloto no incluye menores \\
+        Sin medición en dispositivos reales: las clases con menores siguen deshabilitadas \\
         La encuesta respalda el problema, la modalidad virtual y la verificación &
         Solo el 35,2\,\% prefiere pagar dentro de la plataforma, y la disposición a pagar es la mitad del precio de mercado \\
         Escenarios base y optimista económicamente viables &

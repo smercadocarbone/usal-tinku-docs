@@ -26,12 +26,12 @@ demuestra.
 \end{guia}
 
 Este capítulo cierra el trabajo con la evidencia disponible al 15 de
-octubre de 2026, la misma del capítulo~\ref{cap:resultados}. El piloto
-con usuarios reales se desarrolla entre el 27 de octubre y el 27 de
-noviembre de 2026, después de la entrega de este capítulo. Por ese
-motivo, y tal como anticipó el riesgo R-03 del
-capítulo~\ref{cap:riesgos}, la respuesta a la hipótesis es preliminar y
-se completará con los indicadores del piloto en la entrega final.
+octubre de 2026, la misma del capítulo~\ref{cap:resultados}. La
+validación con usuarios reales excede el alcance de este trabajo
+(capítulo~\ref{cap:introduccion}, sección~\ref{sec:limitaciones}); por
+eso la respuesta a la hipótesis es preliminar, y los indicadores con los
+que se validará quedan definidos para medirse a partir de la puesta en
+marcha.
 
 \section{Conclusiones}\label{sec:conclusiones}
 
@@ -64,7 +64,20 @@ se completará con los indicadores del piloto en la entrega final.
           ticket (riesgos R-02 y R-05). La docente entrevistada coincide en
           el valor del apoyo particular y en la equivalencia de la clase
           virtual, pero difiere en el pago: lo preferiría dentro de la
-          plataforma ``por seguridad''.
+          plataforma ``por seguridad''. La tutora entrevistada, con
+          cartera propia, prefiere en cambio el cobro directo y rechaza
+          trabajar a comisión.
+    \item \textbf{El tutor de \sistema{} no es el tutor consolidado.} La
+          entrevista a una tutora con 35 años de trayectoria y más de
+          veinte alumnos muestra que quien ya tiene una red de
+          recomendaciones no necesita una plataforma: consigue alumnos sin
+          intermediarios y ve en la comisión y en el registro costos sin
+          contrapartida. El segmento de tutores de \sistema{} queda
+          delimitado, por contraste, a quienes todavía no tienen esa red:
+          estudiantes avanzados, docentes y graduados recientes, y tutores
+          que quieren enseñar fuera de su zona. Es una delimitación de
+          diseño; la disposición de ese segmento a usar la plataforma
+          todavía no se midió.
     \item \textbf{La \gls{ia} se valora por lo que resuelve, no por su
           nombre.} El 68,2\,\% quiere que la plataforma le recomiende un
           tutor, pero solo el 5,7\,\% eligió la ``\gls{ia} que recomiende
@@ -104,13 +117,15 @@ La evidencia respalda tres condiciones necesarias para que la hipótesis
 se cumpla: la plataforma es técnicamente construible y operable por un
 equipo mínimo; la modalidad virtual es aceptada por el 77,3\,\% de los
 encuestados y considerada pedagógicamente equivalente por la docente
-entrevistada; y el modelo económico es viable en los escenarios base y
+entrevistada, aunque la tutora, que la practica a diario, señala sus
+costos: la pérdida de la retroalimentación visual, la dificultad para
+seguir la atención del alumno y los cortes de conexión; y el modelo económico es viable en los escenarios base y
 optimista. En cambio, falta evidencia sobre el núcleo de la hipótesis: el
 acceso efectivo de estudiantes del interior. El 90,9\,\% de las
 respuestas de la encuesta proviene de la provincia de Buenos Aires y de
-la Ciudad Autónoma de Buenos Aires, la entrevistada trabaja en Pilar y
-no conoce casos concretos de la brecha rural, y el piloto todavía no
-comenzó.
+la Ciudad Autónoma de Buenos Aires, las dos entrevistadas trabajan en
+Pilar, la docente no conoce casos concretos de la brecha rural, y ningún
+indicador se midió todavía con usuarios reales.
 
 Las dos afirmaciones técnicas del capítulo~\ref{cap:introduccion} quedan
 en el siguiente estado:
@@ -122,14 +137,13 @@ en el siguiente estado:
           relevantes de las irrelevantes: con el umbral elegido, el 95\,\%
           de las relevantes conserva resultados y ninguna irrelevante los
           obtiene. La aceptación por parte de los usuarios (indicador
-          I-01, umbral superior al 60\,\%) solo puede medirse en el piloto.
-          \completar{Resultado de I-01 en el piloto.}
+          I-01, umbral superior al 60\,\%) solo puede medirse con
+          usuarios reales.
     \item \textbf{Sesiones entre provincias con calidad aceptable.}
           Pendiente. El aula virtual funcionó con salas de video reales en
           las pruebas en producción, pero la calidad percibida (I-02) y la
-          sesión entre provincias con una del interior (I-03) se miden en
-          el piloto.
-          \completar{Resultados de I-02 e I-03 en el piloto.}
+          sesión entre provincias con una del interior (I-03) solo pueden
+          medirse con usuarios reales.
 \end{enumerate}
 
 La respuesta, por lo tanto, es \textbf{preliminar}: la hipótesis se
@@ -151,14 +165,14 @@ capítulo~\ref{cap:introduccion} y el grado en que se alcanzó.
         \toprule
         \tb{Objetivo} & \tb{Evidencia} & \tb{Grado} & \tb{Observación} \\
         \midrule
-        OE1 Mercado y estado del arte & Capítulo~\ref{cap:marco-teorico}; apéndice~\ref{apx:encuesta} & Alcanzado & Encuesta concentrada en Buenos Aires; una sola entrevista realizada, la del Perfil~2 está pendiente (apéndice~\ref{apx:entrevista}) \\
+        OE1 Mercado y estado del arte & Capítulo~\ref{cap:marco-teorico}; apéndice~\ref{apx:encuesta} & Alcanzado & Encuesta concentrada en Buenos Aires; dos entrevistas, ambas en Pilar (apéndice~\ref{apx:entrevista}) \\
         OE2 Arquitectura & Capítulo~\ref{cap:marco-tecnologico}; apéndice~\ref{apx:uml} & Alcanzado & --- \\
         OE3 Motor de \gls{matching} & Capítulo~\ref{cap:resultados}, pruebas en producción & Parcial & Implementado y calibrado con consultas propias; sin validar con usuarios (I-01) \\
         OE4 Aula virtual & Capítulo~\ref{cap:resultados}, pruebas en producción & Parcial & Aula y kill-switch funcionaron de punta a punta en la prueba en vivo; faltan la exactitud del clasificador con contenido real y la latencia en dispositivos reales, por lo que las clases con menores siguen deshabilitadas (R-01) \\
         OE5 Pagos & Capítulo~\ref{cap:resultados}; capítulo~\ref{cap:economica} & Parcial & Implementado con \gls{oauth} por tutor; pendiente de verificar en el entorno de pruebas de MercadoPago (R-11) \\
         OE6 \gls{ia} educativa & Capítulo~\ref{cap:resultados}, listado~\ref{lst:puerto-resumen} & Parcial & Implementado; apagado en producción hasta contar con la cláusula legal de grabación (R-16) \\
         OE7 Reputación & Capítulo~\ref{cap:resultados}, módulo de reputación & Alcanzado & Umbral mínimo de calificaciones antes de mostrar el promedio \\
-        OE8 Validación funcional & Capítulo~\ref{cap:resultados}, pruebas de aceptación & Pendiente & Piloto del 27 de octubre al 27 de noviembre de 2026, sin clases con menores \\
+        OE8 Validación funcional & Capítulo~\ref{cap:resultados}, pruebas técnicas y auditoría & Alcanzado & 739 pruebas del backend, 222 de extremo a extremo, auditoría con los 36 hallazgos cerrados y pruebas sobre el despliegue; indicadores I-01 a I-04 definidos, sin medir con usuarios reales \\
         \bottomrule
     \end{tabularx}
 \end{table}
@@ -186,14 +200,17 @@ capítulo~\ref{cap:marco-teorico} en cuatro puntos.
           importa que pueda explicarse.
     \item \textbf{Reputación bidireccional.} El diseño adoptó la
           reputación bidireccional discutida por \citet{reputation}. La
-          entrevista introduce una variable que esa discusión no
+          entrevista a la docente introduce una variable que esa discusión no
           contempla: cuando una de las partes es menor de edad, quién
           califica deja de ser un detalle de interfaz y pasa a ser una
           decisión de protección.
     \item \textbf{Mercados bilaterales.} El problema de arranque en frío
           \citep{rochet2006} aparece en los datos: solo 9 de las 88
           respuestas corresponden a tutores, y la oferta es el recurso más
-          escaso para iniciar el piloto (R-07). La comisión agrava el
+          escaso para iniciar la operación (R-07). La entrevista a la tutora
+          precisa el problema: el arranque en frío no se resuelve con los
+          tutores ya consolidados, que no necesitan la plataforma, sino con
+          los que todavía no tienen demanda propia. La comisión agrava el
           problema: con el \comision{}, el tutor recibe el 66,96\,\% de su
           precio, seis puntos menos que cuando la plataforma absorbía la
           pasarela.
@@ -202,17 +219,20 @@ capítulo~\ref{cap:marco-teorico} en cuatro puntos.
 \subsection{Limitaciones}\label{sec:limitaciones-finales}
 
 \begin{itemize}
-    \item \textbf{De validación.} La hipótesis se responde sin los datos
-          del piloto, que se realiza después de esta entrega. El piloto,
-          además, no incluye clases con menores, aunque los menores son una
-          parte central de la población objetivo.
+    \item \textbf{De validación.} La hipótesis se responde sin datos de
+          usuarios reales: ninguno de los indicadores I-01 a I-04 pudo
+          medirse. Las clases con menores, además, están deshabilitadas,
+          aunque los menores son una parte central de la población
+          objetivo.
     \item \textbf{De datos.} La encuesta no es probabilística y el
-          90,9\,\% de sus respuestas proviene de Buenos Aires. La
-          entrevista es una sola, a una docente de Educación Física sin
-          experiencia en clases particulares, y en algunas preguntas el
-          resultado de la encuesta se presentó antes de la respuesta; la
-          entrevista a una tutora particular, que aporta el lado de la
-          oferta, está pendiente.
+          90,9\,\% de sus respuestas proviene de Buenos Aires. Las
+          entrevistas son dos, ambas en Pilar: una a una docente sin
+          experiencia en clases particulares, en la que algunas preguntas
+          presentaban el resultado de la encuesta antes de la respuesta, y
+          otra a una tutora consolidada, realizada por mensajes de audio,
+          en la que dos de cada cinco preguntas no se abordaron y cuyo
+          perfil es el opuesto al del tutor objetivo. Ninguna fuente
+          representa todavía al tutor que \sistema{} busca incorporar.
           La calibración del umbral de relevancia usa consultas de
           elaboración propia.
     \item \textbf{Técnicas.} El clasificador del kill-switch no se midió
@@ -220,8 +240,8 @@ capítulo~\ref{cap:marco-teorico} en cuatro puntos.
           apagado en producción; el cobro con \gls{oauth} no se verificó
           en el entorno de pruebas de MercadoPago; las pruebas por rol en
           producción deben repetirse tras la remediación (R-15) y el
-          despliegue debe volver a su estado previo antes del piloto
-          (R-17). Todo el sistema corre en un único servidor propio
+          despliegue debe volver a su estado previo antes de la puesta en
+          marcha (R-17). Todo el sistema corre en un único servidor propio
           (R-14).
     \item \textbf{De mercado.} La disposición a pagar se relevó sobre una
           muestra urbana y resultó la mitad del precio con el que se
@@ -245,14 +265,15 @@ capítulo~\ref{cap:marco-teorico} en cuatro puntos.
           sola persona construyera y desplegara un sistema de nueve
           módulos. La auditoría y las pruebas en producción mostraron el
           límite de ese método: la velocidad de construcción no reemplaza
-          la revisión independiente, porque las pruebas verifican lo que
+          la revisión del sistema construido, porque las pruebas verifican lo que
           se especificó y no lo que se omitió.
     \item \textbf{De innovación.} Ninguna de las plataformas relevadas
           integra \gls{matching} semántico, aula virtual, pago con
           \gls{escrow} y controles específicos para menores en un mismo
           flujo (tabla~\ref{tab:comparativa}). La integración es la
           innovación; ninguna pieza por separado es nueva.
-    \item \textbf{Social y económica.} Si el piloto confirma la hipótesis,
+    \item \textbf{Social y económica.} Si la validación con usuarios
+          confirma la hipótesis,
           la plataforma ampliaría el acceso al apoyo escolar en zonas sin
           oferta presencial y formalizaría ingresos de tutores hoy
           informales. La condición es económica: por debajo de unas 1.774 a
@@ -291,33 +312,37 @@ capítulo~\ref{cap:marco-teorico} en cuatro puntos.
     \item \textbf{Para los investigadores.} Medir la aceptación de un
           sistema de recomendación con y sin explicación, y separar en las
           encuestas la valoración de una función de la valoración de la
-          tecnología que la resuelve.
+          tecnología que la resuelve. Relevar por separado a los tutores
+          consolidados y a los que recién empiezan, porque sus incentivos
+          frente a una plataforma son opuestos.
     \item \textbf{Para instituciones y políticas públicas.} Ofrecer una
           vía de verificación de antecedentes consultable por las
           plataformas, con consentimiento del titular, que reemplace la
           revisión manual de un certificado presentado por el propio
           tutor (R-10). Las escuelas podrían, además, derivar alumnos y
           aportar el volumen que el modelo económico necesita (O-02).
-    \item \textbf{Para el desarrollo tecnológico de \sistema{}.} Antes del
-          piloto, repetir las pruebas por rol en producción y revertir el
+    \item \textbf{Para el desarrollo tecnológico de \sistema{}.} Antes de la
+          puesta en marcha, repetir las pruebas por rol en producción y revertir el
           estado del despliegue (R-15, R-17). Antes de habilitar las
           clases con menores, medir la exactitud del clasificador y su
           latencia en dispositivos reales (R-01). Antes de operar
           comercialmente, verificar el cobro en el entorno de pruebas de
-          MercadoPago (R-11), revisar la comisión con los datos del piloto
-          y mostrar el motivo de cada recomendación. Una vez realizado el
-          piloto, reconsiderar las propuestas de la entrevista que no se
+          MercadoPago (R-11), revisar la comisión con los datos de la puesta
+          en marcha y mostrar el motivo de cada recomendación. Con los datos de la
+          puesta en marcha, reconsiderar las propuestas de la entrevista a la docente que no se
           incorporaron al \gls{mvp}: la presencia del adulto responsable en
-          las clases con menores y la calificación del tutor por parte del
+          las clases con menores ---sobre la que las dos entrevistadas
+          discrepan--- y la calificación del tutor por parte del
           adulto.
 \end{itemize}
 
 \section{Futuras líneas de investigación}\label{sec:futuras-lineas}
 
 \begin{itemize}
-    \item \textbf{Validación en el interior.} Replicar la encuesta y el
-          piloto en localidades con escasa oferta de tutores, que es la
-          población a la que apunta la hipótesis (R-08).
+    \item \textbf{Validación con usuarios reales.} Medir los indicadores
+          I-01 a I-04 desde la puesta en marcha y replicar la encuesta en
+          localidades con escasa oferta de tutores, que es la población a
+          la que apunta la hipótesis (R-08).
     \item \textbf{Resumen automático con menores.} Evaluar la
           transcripción local o en infraestructura propia, previa a la
           anonimización, que permita ofrecer el resumen sin transferir la
@@ -326,7 +351,8 @@ capítulo~\ref{cap:marco-teorico} en cuatro puntos.
           de los alumnos antes y después de un ciclo de tutorías, para
           contrastar el resultado con la literatura sobre tutoría.
     \item \textbf{Continuidad entre clases.} Estudiar el valor de las
-          tareas y entregas asincrónicas propuestas en la entrevista.
+          tareas y entregas asincrónicas propuestas por la docente
+          entrevistada.
     \item \textbf{Funciones excluidas del alcance.} Aplicaciones móviles
           nativas, integración con sistemas estatales, accesibilidad
           completa, suscripción, clases grupales y el asistente

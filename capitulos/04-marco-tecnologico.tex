@@ -170,19 +170,39 @@ que el backend le entrega un token de corta duración.
 
 \section{Prototipo / MVP construido}
 
-El alcance implementado y operativo frente al que todavía está simulado o
-mockeado se documenta en cada entrega: qué funcionalidades están activas
-(por ejemplo, registro, login o búsqueda de tutores) frente a las
-pantallas de flujo de pago sin integración real. A eso se suman capturas
-de pantalla de las vistas principales, un enlace al repositorio de
-código en GitHub (anexo~\ref{anx:repositorios}) con la estructura de
-carpetas documentada, una descripción de cómo se probó lo construido
-hasta el momento --pruebas manuales, \gls{uat} con usuarios del piloto,
-pruebas automatizadas-- junto con los resultados obtenidos, y las
-limitaciones puntuales del estado actual con los próximos pasos según el
-Sprint Backlog vigente.
+Al 15 de octubre de 2026, el \gls{mvp} está desplegado en
+\path{tinku.site}, sobre el servidor propio del autor
+(sección~\ref{sec:infraestructura}), con sus nueve módulos implementados. El
+código se encuentra en el repositorio del anexo~\ref{anx:repositorios}.
+La tabla~\ref{tab:estado-mvp} distingue lo que funciona de punta a punta
+de lo que está construido pero todavía apagado o pendiente.
 
-\completar{Completar con el estado del MVP al momento de la entrega.}
+\begin{table}[H]
+    \centering
+    \caption{Estado del \gls{mvp} al 15 de octubre de 2026}
+    \label{tab:estado-mvp}
+    \small
+    \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.2cm} L}
+        \toprule
+        \tb{Estado} & \tb{Funcionalidades} \\
+        \midrule
+        Operativo & Registro de adultos, tutores y menores con verificación de identidad por \gls{ocr} del DNI; \gls{cap} para tutores de menores; búsqueda con \gls{matching} semántico y recomendación por área; agenda del tutor; reserva, paquete mensual y cambio de horario; aula virtual con video y pantalla compartida; kill-switch en el navegador, probado en vivo en sus dos ramas; reputación; avisos por correo; panel de administración con moderación, denuncias, soporte financiero y salud de la infraestructura \\
+        Construido, sin verificar con el proveedor & Cobro en la cuenta de cada tutor mediante \gls{oauth} de MercadoPago: implementado a partir de la documentación, pendiente de verificar en el entorno de pruebas del proveedor (ADR-M5-02). En entornos de prueba existe un modo sin cobro real (ADR-M5-01) \\
+        Construido, apagado & Resumen automático como adicional pago: se habilita cuando esté el texto legal definitivo de la cláusula de grabación. Clases con menores: el sistema las rechaza hasta cerrar las tareas previas a su encendido \\
+        Pendiente & Prueba formal de punta a punta del kill-switch contra el servicio de video real y medición de su latencia en dispositivos reales (T-M3-06f y T-M3-06g); activación de la copia de seguridad fuera del servidor con las credenciales de R2 \\
+        Fuera del \gls{mvp} & Video de presentación del tutor (ADR-M1-09), firma digital automática del \gls{cap} y especialidades verificadas contra registros oficiales (ADR-M1-06) \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+Lo construido se verificó con 739 pruebas automatizadas del backend, 222
+pruebas de extremo a extremo del frontend y 26 del servicio de
+\gls{matching}, todas en la integración continua, más una prueba
+nocturna del camino crítico contra el sistema real, una auditoría
+técnica y pruebas exploratorias sobre el despliegue; los resultados se
+presentan en el capítulo~\ref{cap:resultados}. La validación con
+usuarios reales corresponde a la puesta en marcha y excede el alcance de
+este trabajo.
 
 \section{Stack de software}
 
@@ -245,7 +265,7 @@ apéndice~\ref{apx:tecnicos}.
         Índice semántico & Columna \texttt{vector(384)} de pgvector en la misma base: los \gls{embeddings} de perfiles y temas se guardan junto al resto de los datos y no hay un índice en memoria que reconstruir al reiniciar (ADR-M2-01) \\
         Estado en tiempo real & Sin Redis. El estado de la sala vive en LiveKit Cloud y en la base; los límites de pedidos por IP y el bloqueo por intentos de login se cuentan en memoria del backend, válido mientras haya una sola instancia (ADR-000-04) \\
         Migraciones & Flyway, con el esquema validado al arrancar (\texttt{ddl-auto: validate}): si el código y la base divergen, el backend no inicia. Una migración ya aplicada nunca se edita; las correcciones se agregan como migraciones nuevas \\
-        Respaldo & Copia diaria de la base con \path{pg_dump}, cifrada y subida a Cloudflare R2, fuera del servidor, con 14 días de retención (ADR-000-07). El contenedor está desplegado; la copia sale del servidor recién cuando se cargan las credenciales de R2, paso pendiente antes del piloto \\
+        Respaldo & Copia diaria de la base con \path{pg_dump}, cifrada y subida a Cloudflare R2, fuera del servidor, con 14 días de retención (ADR-000-07). El contenedor está desplegado; la copia sale del servidor recién cuando se cargan las credenciales de R2, paso pendiente antes de la puesta en marcha \\
         \bottomrule
     \end{tabularx}
 \end{table}
@@ -278,7 +298,7 @@ La tabla~\ref{tab:infra} resume dónde se aloja cada componente.
         Frontend, backend, motor de \gls{matching} y base de datos & Un servidor propio de 8~GB de memoria, en el domicilio del desarrollador, sin IP fija, administrado con Coolify (\gls{paas} autoalojado). Cada componente es un contenedor del mismo \emph{Docker Compose}, con límites de memoria propios & Ningún contenedor publica puertos. Las imágenes se construyen en GitHub Actions y se publican en GitHub Container Registry; el servidor solo las descarga y las ejecuta (ADR-000-07) \\
         Entrada desde internet & Cloudflare Tunnel, desde un contenedor \texttt{cloudflared} en el mismo servidor & Cloudflare pone el HTTPS y enruta el dominio público al frontend y el subdominio de la \gls{api} al backend, sin abrir puertos en el router \\
         Respaldo de la base & Cloudflare R2 (capa gratuita) & Copia diaria cifrada, 14 días de retención; restauración documentada en el manual de operación del repositorio \\
-        Aula virtual & LiveKit Cloud & Plan gratuito (Build): 5.000 minutos de participante por mes sin necesidad de tarjeta de crédito, equivalente a más de 40 horas de clases de 1 a 1 mensuales -- cobertura suficiente para el piloto. Se descartó el auto-hospedaje de LiveKit porque requiere una IP pública alcanzable por UDP para el protocolo \gls{webrtc}, algo que el servidor propio no tiene \\
+        Aula virtual & LiveKit Cloud & Plan gratuito (Build): 5.000 minutos de participante por mes sin necesidad de tarjeta de crédito, equivalente a más de 40 horas de clases de 1 a 1 mensuales -- cobertura suficiente para el desarrollo y la puesta en marcha. Se descartó el auto-hospedaje de LiveKit porque requiere una IP pública alcanzable por UDP para el protocolo \gls{webrtc}, algo que el servidor propio no tiene \\
         Pagos, transcripción y resumen, correo & MercadoPago, OpenAI y Resend & Servicios externos invocados solo desde el backend; sin configuración, cada integración queda apagada y falla de forma segura (\emph{fail-closed}) \\
         \bottomrule
     \end{tabularx}
@@ -287,7 +307,7 @@ La tabla~\ref{tab:infra} resume dónde se aloja cada componente.
 El diseño inicial repartía la operación entre Vercel (frontend),
 Supabase (base de datos), Upstash (Redis) y un backend en la computadora
 del desarrollador que se migraría a un \gls{vps} alquilado (por ejemplo,
-Hetzner) antes del piloto. Se reemplazó por un único servidor con
+Hetzner) antes de la puesta en marcha. Se reemplazó por un único servidor con
 Coolify por tres motivos registrados en ADR-000-07: el plan gratuito de
 Vercel no admite uso comercial, concentrar todo en un proveedor reduce
 la operación de un único desarrollador, y el costo queda dentro del techo
@@ -295,20 +315,20 @@ de 0--100 USD mensuales. La decisión acepta riesgos explícitos: el
 servidor es un único punto de falla y, al estar en un domicilio, un corte
 de luz o de internet deja al sistema fuera de línea mientras dure. Se
 mitigan con la copia diaria fuera del servidor (pendiente de activar con
-las credenciales de R2), una restauración a ensayar antes del piloto
+las credenciales de R2), una restauración a ensayar antes de la puesta en marcha
 y, como recomendación del mismo ADR, una UPS y un aviso externo de caída;
 la decisión se revisa si la operación crece.
 
 En cuanto a la escalabilidad: para el rango de tráfico esperado durante
-el \gls{mvp} y el piloto (capítulo~\ref{cap:metodologia}), una única
+el \gls{mvp} y su puesta en marcha (capítulo~\ref{cap:metodologia}), una única
 instancia de cada componente es suficiente. Escalar el backend a más de
 una instancia exige antes revisar dos decisiones que hoy suponen una sola
 --Quartz sin \emph{clustering} y los contadores de pedidos en memoria
 (ADR-000-04)--, por lo que el escalado horizontal queda como trabajo
 futuro, condicionado a que el volumen de uso real lo justifique.
 
-Los costos por componente y por etapa (desarrollo, piloto, eventual
-escalado) se presentan en el capítulo~\ref{cap:economica}, consistente
+Los costos por componente y por etapa (desarrollo, puesta en marcha,
+eventual escalado) se presentan en el capítulo~\ref{cap:economica}, consistente
 con el techo de 0--100 USD mensuales declarado en el
 capítulo~\ref{cap:metodologia}.
 
@@ -409,8 +429,8 @@ buenas prácticas básicas: contraste adecuado, tamaños de fuente legibles
 y navegación con foco visible, verificadas de forma automática con
 axe-core en las pruebas del frontend. La validación del diseño con
 usuarios se apoya en las entrevistas y encuestas ya definidas en el
-capítulo~\ref{cap:metodologia}, y en \gls{uat} con el grupo piloto
-(OE8). La figura~\ref{fig:mockups} muestra la pantalla de inicio, que
+capítulo~\ref{cap:metodologia}; la validación con usuarios reales se
+realizará a partir de la puesta en marcha, con los indicadores del OE8. La figura~\ref{fig:mockups} muestra la pantalla de inicio, que
 pide una cuenta antes de mostrar tutores, y la agenda con la que el tutor
 publica su disponibilidad y sigue los pasos pendientes de su perfil.
 
@@ -429,8 +449,8 @@ publica su disponibilidad y sigue los pasos pendientes de su perfil.
         \caption{Panel principal del tutor (agenda)}
     \end{subfigure}
     \caption[Pantallas principales de \sistema{}]{Pantallas principales de
-    \sistema{}, capturadas del entorno de \emph{staging}
-    (\texttt{tinku.site}) con una cuenta de prueba.}
+    \sistema{}, capturadas del despliegue de producción
+    (\path{tinku.site}) con una cuenta de prueba.}
     \label{fig:mockups}
 \end{figure}
 
@@ -468,7 +488,7 @@ diseño inicial.
     \bottomrule
     \endfoot
     Estilo arquitectónico & Cliente-servidor en capas; la \gls{ia}, incluido el \gls{matching}, delegada a proveedores externos & Monolito modular de nueve módulos más un único servicio propio aparte, el motor de \gls{matching} en Python. Comunicación síncrona en proceso y eventos de dominio en memoria, sin \emph{broker}; plazos de negocio con Quartz persistido en la base & Constitución, art.~VIII a X; ADR-000-01, ADR-000-02 \\
-    Hosting & Supabase (base), Vercel (frontend), Upstash (Redis); backend en la computadora propia y migración a un \gls{vps} alquilado antes del piloto & Todo en un servidor propio con Coolify (contenedores de base con pgvector, \gls{matching}, backend y frontend), publicado por Cloudflare Tunnel; copia diaria cifrada en Cloudflare R2 (14 días); imágenes construidas por GitHub Actions & ADR-000-07: Vercel gratuito no admite uso comercial; un solo proveedor; costo dentro del techo. Se acepta el punto único de falla para el piloto \\
+    Hosting & Supabase (base), Vercel (frontend), Upstash (Redis); backend en la computadora propia y migración a un \gls{vps} alquilado antes de la puesta en marcha & Todo en un servidor propio con Coolify (contenedores de base con pgvector, \gls{matching}, backend y frontend), publicado por Cloudflare Tunnel; copia diaria cifrada en Cloudflare R2 (14 días); imágenes construidas por GitHub Actions & ADR-000-07: Vercel gratuito no admite uso comercial; un solo proveedor; costo dentro del techo. Se acepta el punto único de falla para la puesta en marcha \\
     Redis & Estado de chat y de salas, \emph{rate limiting} & Sin Redis: límites por IP y bloqueo de login en memoria del proceso; estado de la sala en LiveKit y en la base; sin módulo de chat & ADR-000-04 (D8): una dependencia menos con una sola instancia \\
     Índice semántico & FAISS en memoria & pgvector en la misma base; modelo \texttt{paraphrase-}\allowbreak\texttt{multilingual-}\allowbreak\texttt{MiniLM-L12-v2} (384 dimensiones); el puntaje de un tutor es su máxima similitud con cada uno de sus temas & ADR-M2-01 (sin índice que reconstruir), ADR-M2-03 \\
     Orden de los resultados & Similitud y reputación combinadas & La similitud se calcula contra cada tema del tutor, no contra todos juntos, para que quien enseña muchos temas no quede relegado. La reputación solo desempata entre tutores de relevancia parecida, y los resultados por debajo de un mínimo de relevancia no se muestran & ADR-M2-02, ADR-M2-03 \\
@@ -482,7 +502,7 @@ diseño inicial.
     Especialidades y triaje de credenciales & Presentados como implementados en versiones anteriores de este capítulo & Decidido y \textbf{pendiente de implementar}: especialidades verificadas o declaradas y triaje automático contra registros oficiales (tareas T-ESP-01 a T-ESP-04). Hoy el rol de Moderación aprueba la credencial manualmente & ADR-M1-06 \\
     Kill-switch & Una sola rama (cortar y bloquear); desenfoque del video entre adultos & NSFWJS en el navegador sobre el video remoto (cámara y pantalla), buffer rotativo de 30 segundos que se descarta salvo disparo. Con un menor corta directo, sin preguntar; entre adultos oculta el video del detectado y pide confirmación a la contraparte (plazo de 5 minutos). Evidencia: clip de 30 segundos que se sube solo ante un disparo y se conserva 30 días desde la resolución de la Alerta & ADR-M3-01, ADR-M3-07; Tabla de Tiempos \\
     Denuncias & Suspensión preventiva al denunciar; evidencia de la sesión preservada & La denuncia entra en revisión con 48 horas de descargo del denunciado y pausa el \gls{escrow} de esa sesión; evidencia opcional que adjunta el denunciante; el denunciado no conoce su identidad. La suspensión automática existe solo en las Alertas del kill-switch & Spec M9; minimización (no hay grabación que preservar) \\
-    Menores & El menor puede reservar con un tutor autorizado & El menor tiene cuenta propia pero no paga, no autoriza tutores ni denuncia: pide una Solicitud de Sesión que su Adulto Responsable aprueba y paga. El piloto corre \textbf{sin menores}: la opción \path{tinku.menores.sesiones-habilitadas} queda apagada hasta cerrar el kill-switch en el cliente (T-M3-06) y el \gls{cap} (T02) & Constitución, art.~II; T-TES-10 \\
+    Menores & El menor puede reservar con un tutor autorizado & El menor tiene cuenta propia pero no paga, no autoriza tutores ni denuncia: pide una Solicitud de Sesión que su Adulto Responsable aprueba y paga. Las clases con menores están \textbf{deshabilitadas}: la opción \path{tinku.menores.sesiones-habilitadas} queda apagada hasta cerrar el kill-switch en el cliente (T-M3-06) y el \gls{cap} (T02) & Constitución, art.~II; T-TES-10 \\
     Cobro & \gls{escrow} que retiene los fondos en la cuenta de la plataforma; \gls{sdk} oficial de Java; reparto por \gls{oauth} ``abierto'' & Modelo A: cada tutor conecta su cuenta de MercadoPago por \gls{oauth} (con \gls{pkce}); la preferencia se crea con su token y el dinero entra a su cuenta; \sistema{} cobra su comisión con \path{marketplace_fee}. El \gls{escrow} es una ventana lógica de 24 horas en la que \sistema{} todavía puede reembolsar. Cliente HTTP propio, sin \gls{sdk} & ADR-M5-02: \sistema{} no recauda fondos de terceros \\
     Comisión & \comision{} con la pasarela como costo de la plataforma & \comision{} sobre el bruto de cada sesión (BR-PAG-01), a cargo del tutor; MercadoPago descuenta su comisión (cerca del 6,04\,\%) de los fondos del tutor, que recibe el 66,96\,\% & ADR-M5-05, que declara la discrepancia con el modelo económico del capítulo~\ref{cap:economica} \\
     Reembolsos & Siempre totales, nunca parciales & Totales como regla general. Excepciones: el adicional de resumen (BR-PAG-11) y la clase de un paquete devuelta por falta del tutor (FR-PAG-022); parciales manuales por disputa (FR-PAG-010) & Spec M5, FR-PAG-009 (enmienda v2.5) \\
@@ -497,7 +517,7 @@ diseño inicial.
     Pruebas & Jest en el frontend; cobertura mínima del 70\,\% por módulo & Backend: JUnit 5 y Testcontainers con PostgreSQL real; frontend: Playwright (con la \gls{api} simulada) y axe-core, más oxlint; pruebas del motor de \gls{matching} y prueba nocturna contra el sistema completo. Cobertura medida con JaCoCo, sin umbral que corte la construcción & ADR-000-05 \\
     Roles & ADMIN como un rol más de Usuario, con un rol único de administración & Usuario de tipo ADULTO, MENOR o TUTOR; el administrador es una entidad aparte con uno de dos roles: Moderación y Seguridad, o Soporte Financiero & Spec M8 (FR-ADM-008) \\
     Monitoreo & Paneles de Supabase y Upstash & Panel propio ``Salud de Infraestructura'' en la administración, más los paneles de Coolify y LiveKit & ADR-M8-01 \\
-    Versiones & --- & Spring Boot 4.1.1 y Next.js 16.3.6, para mantener parches de seguridad durante el piloto & Apéndice~\ref{apx:tecnicos} \\
+    Versiones & --- & Spring Boot 4.1.1 y Next.js 16.3.6, para mantener parches de seguridad durante la puesta en marcha & Apéndice~\ref{apx:tecnicos} \\
 \end{xltabular}
 }
 
@@ -520,7 +540,7 @@ separados y un registro de auditoría de cada acción. Las restricciones del
 menor (sección~\ref{sec:modelo-datos}) se implementan como reglas de
 autorización explícitas en cada endpoint, no como una restricción de
 interfaz que pudiera sortearse llamando directamente a la \gls{api}.
-Además, mientras dure el piloto, las clases con menores están apagadas:
+Además, las clases con menores están apagadas:
 la creación de Reservas y de Solicitudes de Sesión con un menor se
 rechaza hasta que se habiliten de forma explícita, una vez cerrados el
 kill-switch en el cliente y el circuito del \gls{cap}.
@@ -624,9 +644,9 @@ con JaCoCo sobre todo el backend, sin un umbral que corte la
 construcción: primero se mide y después se decide (ADR-000-05). Al
 14/10/2026 la suite del backend sumaba 661 pruebas sin fallas y una
 cobertura de líneas del 85,6\,\%. La suite exige JDK~21 y se ejecuta con
-\texttt{./mvnw -B test} (apéndice~\ref{apx:tecnicos}). Las \gls{uat} se
-realizan con el grupo piloto, según lo definido en el
-capítulo~\ref{cap:metodologia} y el OE8. Los resultados se reportan en el
+\texttt{./mvnw -B test} (apéndice~\ref{apx:tecnicos}). Las \gls{uat} con
+usuarios reales se realizarán a partir de la puesta en marcha, según lo
+definido en el capítulo~\ref{cap:metodologia} y el OE8. Los resultados se reportan en el
 capítulo~\ref{cap:resultados}.
 
 \subsection{Despliegue}
