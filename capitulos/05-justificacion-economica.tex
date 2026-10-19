@@ -551,13 +551,125 @@ Tres decisiones de este cuadro merecen justificación explícita:
           cargo del equipo fundador. La incorporación de soporte pago se
           difiere hasta que el volumen efectivo de sesiones lo justifique,
           lo cual constituye una restricción operativa declarada del
-          modelo y no un supuesto de costo cero.
+          modelo y no un supuesto de costo cero. El tiempo que el
+          fundador dedica al soporte, la moderación y la revisión de
+          credenciales se valoriza por separado en la
+          sección~\ref{sec:costo-fundador}.
     \item \textbf{Presupuesto de adquisición de usuarios.} Se incorpora
           una partida de marketing, modesta pero creciente, dado que la
           proyección de demanda no se sostiene por sí sola: un modelo que
           proyecta captación de usuarios sin asignar presupuesto de
           adquisición incurre en una inconsistencia interna.
 \end{itemize}
+
+\subsection{Costo del tiempo del fundador}\label{sec:costo-fundador}
+
+Mientras no haya personal contratado, el fundador atiende en persona
+tres tareas operativas que el sistema deja a cargo de un humano: el
+soporte a los usuarios (incluidas las disputas y los reembolsos que
+resuelve a mano el rol de soporte financiero, regla FR-PAG-010), la
+moderación de las denuncias (rol de Moderación y Seguridad, con descargo
+del denunciado y resolución) y la revisión manual del \gls{cap} y de la
+credencial académica de los tutores (ADR-M1-04). Ese tiempo no es
+gratuito: tiene el costo de oportunidad de lo que costaría pagárselo a
+un tercero. Para que el flujo de fondos no lo omita, se estima en horas
+a partir del volumen de operaciones del propio modelo y se valoriza con
+un salario de convenio.
+
+\paragraph{Horas.} Las horas mensuales de cada año se derivan de las
+sesiones mensuales (alumnos activos $\times$ 3) y de los alumnos activos
+de la tabla~\ref{tab:demanda}, con los siguientes supuestos, que son
+estimaciones propias de tiempo por tarea y se declaran como tales: el
+5\,\% de las sesiones genera una consulta de soporte de 10 minutos
+(reprogramación, cobro, acceso al aula); el 1\,\% genera una disputa o un
+reembolso manual de 20 minutos; el 0,5\,\% genera una denuncia, que
+insume 45 minutos entre la lectura de la evidencia, el descargo y la
+resolución; hay un tutor activo cada cuatro alumnos activos, cada uno
+presenta dos documentos por año (el \gls{cap}, que vence a los doce
+meses, y la credencial académica) y cada revisión lleva 15 minutos; y se
+suma una hora semanal fija de revisión de los paneles de administración y
+de las colas pendientes. Con estos supuestos el escenario base requiere
+entre 15,7 horas mensuales (Año~1) y 20,8 horas mensuales (Año~4); el
+soporte a los usuarios es la tarea de mayor peso (tabla~\ref{tab:horas-fundador}).
+
+\begin{table}[H]
+    \centering
+    \caption{Horas mensuales del fundador en el escenario base}
+    \label{tab:horas-fundador}
+    \small
+    \begin{tabularx}{\textwidth}{L r r r r r}
+        \toprule
+        \tb{Tarea} & \tb{Año 1} & \tb{Año 2} & \tb{Año 3} & \tb{Año 4} & \tb{Año 5} \\
+        \midrule
+        Soporte a usuarios                    & 5,0 & 6,5 & 5,2 & 7,2 & 6,2 \\
+        Disputas y reembolsos manuales        & 2,0 & 2,6 & 2,1 & 2,9 & 2,5 \\
+        Moderación de denuncias               & 2,2 & 2,9 & 2,4 & 3,3 & 2,8 \\
+        Revisión del \gls{cap} y de credenciales & 2,1 & 2,7 & 2,2 & 3,0 & 2,6 \\
+        Revisión de paneles y colas (fija)    & 4,3 & 4,3 & 4,3 & 4,3 & 4,3 \\
+        \midrule
+        \tb{Total mensual}                    & \tb{15,7} & \tb{19,1} & \tb{16,2} & \tb{20,8} & \tb{18,5} \\
+        \tb{Costo mensual (USD)}              & \tb{70} & \tb{85} & \tb{73} & \tb{93} & \tb{83} \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\paragraph{Valor de la hora.} Se toma el salario de la categoría
+Administrativo~A del convenio colectivo de empleados de comercio
+(convenio colectivo de trabajo 130/75), que en octubre de 2026 es de \$1.316.632 mensuales
+para la jornada completa, básico más suma fija \citep{iprofesional2026comercio}.
+Dividido por las 208 horas mensuales de una jornada de 48 horas
+semanales (Ley 11.544, art.~1) y ajustado por el sueldo anual
+complementario (un sueldo más por año, Ley 20.744, art.~121), la hora
+vale unos \$6.857, es decir, \usd{4,47} al tipo de cambio de \$1.535 que
+usa el resto del modelo. El valor no incluye contribuciones patronales:
+representa el costo de oportunidad del tiempo del fundador, no el de una
+contratación en relación de dependencia, cuyo costo sería mayor. Para
+acotar ese efecto y el de los tiempos por tarea, se calcula también una
+variante con el doble de horas.
+
+\paragraph{Efecto sobre los indicadores.} La
+tabla~\ref{tab:van-fundador} muestra los indicadores con y sin el costo
+del fundador, calculados con las mismas ecuaciones y la misma tasa del
+15\,\% (sección~\ref{sec:indicadores-formulas}). En el escenario base el
+costo resta \usd{3.206} al \gls{van}, que sigue siendo positivo
+(\usd{15.663}); aun con el doble de horas se mantiene en \usd{12.458}.
+El escenario pesimista, que ya era negativo, empeora. Visto al revés, el
+excedente de unos \usd{469} mensuales del escenario base
+(sección~\ref{sec:sensibilidad}) equivale a unas 105 horas mensuales al
+valor de convenio, unas cinco veces las horas estimadas: el riesgo no
+está en la valorización del tiempo, sino en que el volumen real de
+consultas y denuncias resulte muy superior al supuesto, o en que la
+operación requiera contratar personal con cargas sociales completas. El
+cálculo es reproducible con el script del anexo~\ref{anx:modelo-financiero}.
+
+\begin{table}[H]
+    \centering
+    \caption{Indicadores con y sin el costo del tiempo del fundador}
+    \label{tab:van-fundador}
+    \small
+    \begin{tabularx}{\textwidth}{L L r r r r}
+        \toprule
+        \tb{Escenario} & \tb{Variante} & \tb{VAN (USD)} & \tb{TIR} & \tb{Repago simple} & \tb{Repago desc.} \\
+        \midrule
+        Pesimista & Sin costo del fundador & $-4.410$ & 8,09\,\% & 4,22 años & No recupera \\
+                  & Con costo del fundador & $-6.634$ & 4,40\,\% & 4,55 años & No recupera \\
+                  & Con el doble de horas  & $-8.859$ & 0,55\,\% & 4,94 años & No recupera \\
+        \addlinespace
+        Base      & Sin costo del fundador & 18.869 & 41,57\,\% & 1,99 años & 2,66 años \\
+                  & Con costo del fundador & 15.663 & 37,36\,\% & 2,16 años & 2,94 años \\
+                  & Con el doble de horas  & 12.458 & 33,05\,\% & 2,37 años & 3,20 años \\
+        \addlinespace
+        Optimista & Sin costo del fundador & 51.990 & 78,24\,\% & 1,34 años & 1,56 años \\
+                  & Con costo del fundador & 47.390 & 73,25\,\% & 1,41 años & 1,64 años \\
+                  & Con el doble de horas  & 42.789 & 68,20\,\% & 1,48 años & 1,74 años \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+Los indicadores principales del capítulo (tabla~\ref{tab:indicadores-financieros})
+se mantienen sin este costo para que sean comparables con las versiones
+anteriores del modelo; la lectura prudente del escenario base es la del
+\gls{van} con el costo del fundador, \usd{15.663}.
 
 \subsection{Costos variables por transacción y reparto del cobro}\label{sec:costos-variables}
 
@@ -1124,7 +1236,11 @@ de viabilidad:
           dedicación parcial que, sumada a los costos no modelados, no
           supere unos \usd{469} mensuales, durante el horizonte evaluado,
           difiriendo la incorporación de un equipo hasta que el volumen
-          efectivo la justifique.
+          efectivo la justifique. Valorizado a salario de convenio, el
+          tiempo que el fundador dedica hoy a esas tareas (entre 16 y 21
+          horas mensuales en el escenario base) reduce el \gls{van} base a
+          \usd{15.663} y la \gls{tir} a 37,36\,\%
+          (sección~\ref{sec:costo-fundador}).
 \end{enumerate}
 
 Que el escenario pesimista no resulte viable no invalida el proyecto,
