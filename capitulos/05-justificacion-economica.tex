@@ -448,24 +448,28 @@ no un registro de horas trabajadas.
         \toprule
         \tb{Categoría} & \tb{Concepto} & \tb{Cant.} & \tb{Valor unit.} & \tb{Total} \\
         \midrule
-        Personal       & Senior --- arquitectura, \gls{ia} y \gls{webrtc} & 192 hs & 50 & 9.600 \\
-        Personal       & Mid --- backend y pasarela de pagos              & 250 hs & 30 & 7.500 \\
-        Personal       & Junior --- frontend \gls{pwa} e interfaz         & 250 hs & 15 & 3.750 \\
-        Personal       & Junior --- \gls{uat} y pruebas                   & 120 hs & 15 & 1.800 \\
+        Personal       & Senior --- arquitectura, \gls{ia} y \gls{webrtc} & 192 hs & 17 & 3.264 \\
+        Personal       & Mid --- backend y pasarela de pagos              & 250 hs & 11 & 2.750 \\
+        Personal       & Junior --- frontend \gls{pwa} e interfaz         & 250 hs & 7 & 1.750 \\
+        Personal       & Junior --- \gls{uat} y pruebas                   & 120 hs & 7 & 840 \\
         Infraestructura & Servidor propio preexistente y capas gratuitas (LiveKit, GitHub) & 6 meses & 0 & 0 \\
         Administrativo & Registro de dominio                              & 1 año  & 15 & 15 \\
         Legal          & Asesoría en privacidad de datos y TyC            & único  & 800 & 800 \\
-        Riesgo         & Contingencia por imprevistos (10\,\% del desarrollo) & único & 2.265 & 2.265 \\
+        Riesgo         & Contingencia por imprevistos (10\,\% del desarrollo) & único & 860 & 860 \\
         \midrule
-        \multicolumn{4}{l}{\tb{Total inversión inicial}} & \tb{25.730} \\
+        \multicolumn{4}{l}{\tb{Total inversión inicial}} & \tb{10.279} \\
         \bottomrule
     \end{tabularx}
 \end{table}
 
-Las tarifas horarias por perfil (USD 50 para el rol senior, USD 30 para
-el semi-senior y USD 15 para los roles junior) se adoptan como estimación
-propia basada en valores de mercado para desarrollo remoto en la región,
-y se declaran como tal. Las horas asignadas a los perfiles mid y junior
+Las tarifas horarias por perfil (USD 17 para el rol senior, USD 11 para
+el semi-senior y USD 7 para los roles junior) surgen de las medianas del
+salario bruto mensual de desarrolladores con dedicación completa en la
+Encuesta de Sueldos 2026.1 de Sysarmy (\$4.100.000, \$2.800.000 y
+\$1.667.500, respectivamente; \citealp{sysarmy2026}), divididas por 160
+horas mensuales y convertidas al tipo de cambio de \$1.535 por USD
+\citep{bna2026}. Al no incluir las contribuciones patronales, representan
+un piso del costo laboral. Las horas asignadas a los perfiles mid y junior
 se dimensionaron considerando que el uso de un marco de desarrollo maduro
 para el backend (Java con Spring Boot, ADR-000-02), de una única base de
 datos PostgreSQL que también aloja el índice semántico (pgvector,
@@ -545,8 +549,8 @@ Tres decisiones de este cuadro merecen justificación explícita:
           sesiones proyectado, el escenario base admite como máximo unos
           \usd{469} mensuales constantes de costo adicional antes de que
           el \gls{van} se anule (sección~\ref{sec:sensibilidad}): a la
-          tarifa junior de la tabla~\ref{tab:inversion} (\usd{15} por
-          hora) equivale a unas 31 horas mensuales, una dedicación parcial
+          tarifa junior de la tabla~\ref{tab:inversion} (\usd{7} por
+          hora) equivale a unas 67 horas mensuales, una dedicación parcial
           y no un equipo. El mantenimiento correctivo y evolutivo queda a
           cargo del equipo fundador. La incorporación de soporte pago se
           difiere hasta que el volumen efectivo de sesiones lo justifique,
