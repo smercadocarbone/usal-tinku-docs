@@ -1,0 +1,200 @@
+%!TEX root = ../main.tex
+% APÉNDICE G — Protocolo de las sesiones moderadas con usuarios
+% Fuente: docs/superpowers/specs/tesis/T11b-evaluacion-sin-piloto.md (§2)
+% del repositorio del sistema. Resultados: capítulo 7 (sec:sesiones-moderadas).
+
+\chapter{Protocolo de las sesiones moderadas}\label{apx:sesiones}
+
+Este apéndice documenta el instrumento que reemplaza al piloto con
+usuarios reales (sección~\ref{sec:sin-piloto}). Reproduce el protocolo
+definido en la especificación de la evaluación del repositorio del
+sistema (\path{docs/superpowers/specs/tesis/T11b-evaluacion-sin-piloto.md},
+anexo~\ref{anx:repositorios}). Los resultados se informan en la
+sección~\ref{sec:sesiones-moderadas}.
+
+\section{Participantes y entorno}
+
+\begin{itemize}
+    \item Entre cinco y ocho personas \textbf{adultas}. Ningún menor de
+          edad participa, ni como participante ni como beneficiario de
+          una cuenta.
+    \item Mezcla buscada, no obligatoria: al menos dos que hagan de
+          tutor, al menos tres de alumno o adulto responsable y al menos
+          una que viva en una provincia del interior (indicador I-03).
+    \item Cuentas creadas durante la sesión con datos de prueba: el
+          moderador entrega un \gls{dni} y una foto de \gls{dni} de
+          prueba; no se suben documentos reales. Si el registro no acepta
+          el documento de prueba, se usa una cuenta de los datos de prueba
+          y la tarea de registro se anota como hecha por el moderador.
+    \item Demostración pública con datos de prueba, pasarela de pagos en
+          Modo Bypass (sin dinero real) y registro de evaluación encendido
+          solo durante el período de las sesiones.
+    \item Modalidad remota (videollamada con pantalla compartida) o
+          presencial; unos 45 minutos por persona.
+\end{itemize}
+
+\section{Consentimiento informado}
+
+Se lee y se firma antes de empezar. El texto es un borrador que el autor
+revisa antes de usarlo; no contiene cláusulas legales que no se hayan
+definido.
+% TODO-AUTOR: revisar el texto del consentimiento, decidir si se graba pantalla o audio (y, en ese caso, pedir permiso aparte) y completar el contacto, el responsable de los datos y el plazo de conservación.
+
+\begin{quote}
+Te invitamos a probar \sistema{}, una plataforma de clases particulares
+en línea que es parte de un trabajo final de carrera. Vas a usar una
+versión de demostración: los tutores, las clases y los pagos son de
+prueba, y no se cobra dinero real.
+
+Durante unos 45 minutos te vamos a pedir que hagas algunas tareas
+(registrarte, buscar un tutor, reservar, entrar a una clase de prueba,
+calificar) y que digas en voz alta lo que pensás. Al final vas a
+completar un cuestionario corto.
+
+Qué registramos: si completaste cada tarea, cuánto tardaste, tus
+respuestas al cuestionario y la provincia en la que vivís. La aplicación
+además guarda, sin tu nombre a la vista, qué tutores te sugirió la
+búsqueda y cuál abriste o reservaste, y tu respuesta a la pregunta de
+recomendación (0 a 10). No guardamos el texto que escribas en la
+búsqueda.
+
+Para qué: los resultados agregados, sin nombres, se usan en el trabajo
+final. Tu participación es voluntaria. Podés dejar de participar en
+cualquier momento sin dar explicaciones y pedir que borremos tus datos
+de la sesión.
+
+$\square$ Leí lo anterior y acepto participar. Nombre: \rule{4cm}{0.4pt}
+Fecha: \rule{2.5cm}{0.4pt}
+\end{quote}
+
+\section{Rol del moderador}
+
+\begin{itemize}
+    \item Lee cada tarea en voz alta tal como está escrita y no nombra
+          botones.
+    \item No ayuda, salvo que la persona esté trabada más de tres minutos
+          en una tarea o pida ayuda dos veces; en ese caso anota la tarea
+          como ``con ayuda'', que no cuenta como éxito.
+    \item Antes de cada sesión verifica que el registro de evaluación esté
+          encendido, que la pasarela esté en Modo Bypass y que los tutores
+          de prueba tengan horarios libres en las horas siguientes.
+\end{itemize}
+
+\section{Guion de tareas}
+
+\begin{table}[H]
+    \centering
+    \caption{Tareas del lado del alumno o adulto responsable}
+    \label{tab:tareas-alumno}
+    \small
+    \begin{tabularx}{\textwidth}{l L L}
+        \toprule
+        \tb{\#} & \tb{Tarea, como se lee} & \tb{Éxito} \\
+        \midrule
+        T1 & ``Creá una cuenta en \sistema{} con los datos que te damos.'' & Llega al panel con la sesión iniciada \\
+        T2 & ``Necesitás ayuda con [tema del sobre]. Buscá un tutor.'' & Ve una lista de tutores \\
+        T3 & ``Elegí el tutor que te parezca mejor y mirá su perfil.'' & Abre el perfil de un tutor de la lista \\
+        T4 & ``Reservá una clase de 30 minutos para hoy o mañana.'' & La reserva queda creada \\
+        T5 & ``Pagá la clase.'' (Modo Bypass) & La reserva queda confirmada \\
+        T6 & ``Entrá a la clase de prueba.'' (el moderador entra como tutor) & Ve el aula con su cámara \\
+        T7 & ``Terminá la clase y calificá al tutor.'' & La calificación queda guardada \\
+        T8 & Opcional, si presta un teléfono Android de gama media: ``Abrí esta dirección y tocá Empezar medición.'' & Copia el resultado de la página de diagnóstico del clasificador \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{Tareas del lado del tutor}
+    \label{tab:tareas-tutor}
+    \small
+    \begin{tabularx}{\textwidth}{l L L}
+        \toprule
+        \tb{\#} & \tb{Tarea, como se lee} & \tb{Éxito} \\
+        \midrule
+        U1 & ``Creá tu cuenta de tutor.'' & Llega al panel de tutor \\
+        U2 & ``Cargá las materias que podés enseñar.'' & Guarda al menos un tema \\
+        U3 & ``Publicá tus horarios para esta semana.'' & Guarda al menos una franja \\
+        U4 & ``Fijá tu tarifa por hora.'' & Tarifa guardada, respetando el piso \\
+        U5 & ``Entrá a la clase que te reservaron y terminala.'' & La sesión queda finalizada \\
+        U6 & ``Calificá al alumno.'' & Calificación guardada \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+Después de la primera clase finalizada o calificada, la aplicación
+ofrece la pregunta de recomendación. El moderador no la menciona; si la
+persona la cierra sin responder, se le pregunta en el cuestionario.
+
+\section{Métricas y metas}
+
+\begin{table}[H]
+    \centering
+    \caption{Métricas de las sesiones moderadas}
+    \label{tab:metricas-sesiones}
+    \small
+    \begin{tabularx}{\textwidth}{L L l}
+        \toprule
+        \tb{Métrica} & \tb{Cómo se obtiene} & \tb{Meta} \\
+        \midrule
+        Éxito por tarea & Éxitos sin ayuda sobre participantes que la intentaron & $\geq 80\,\%$ en T2--T7 y U2--U5 \\
+        Tiempo por tarea & Cronómetro del moderador, de la lectura al criterio de éxito & Mediana y máximo, sin meta \\
+        SUS & Cuestionario posterior, puntaje de 0 a 100 & Promedio $\geq 68$ \\
+        \gls{nps} de intención & En la aplicación o en el cuestionario & Positivo \\
+        I-01b & Panel de evaluación del administrador & $> 60\,\%$ \\
+        I-02 & Calificaciones del alumno al tutor de esas clases & $\geq 4{,}0$ \\
+        I-03 & Provincia declarada en el cuestionario & $\geq 1$ clase entre provincias, una del interior \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+I-01b se calcula como la proporción de búsquedas con al menos un
+resultado en las que la persona abrió el perfil o reservó a un tutor de
+los cinco primeros. El \gls{nps} es el porcentaje de promotores (9 y 10)
+menos el de detractores (0 a 6). La meta de SUS es el promedio de
+referencia de la escala \citep{sauro2011}.
+
+\section{Cuestionario posterior}
+
+\textbf{Datos:} provincia en la que vive (una de las 24 jurisdicciones),
+rol que probó y si alguna vez tomó o dio clases particulares en línea.
+
+\textbf{SUS} \citep{brooke1996}, en castellano, con una escala de 1 (muy
+en desacuerdo) a 5 (muy de acuerdo):
+
+\begin{enumerate}
+    \item Creo que me gustaría usar \sistema{} con frecuencia.
+    \item Encontré \sistema{} innecesariamente complejo.
+    \item Me pareció que \sistema{} era fácil de usar.
+    \item Creo que necesitaría ayuda de una persona con conocimientos
+          técnicos para poder usar \sistema{}.
+    \item Encontré que las distintas funciones de \sistema{} estaban bien
+          integradas.
+    \item Me pareció que había demasiadas inconsistencias en \sistema{}.
+    \item Imagino que la mayoría de las personas aprenderían a usar
+          \sistema{} muy rápido.
+    \item Encontré \sistema{} muy incómodo de usar.
+    \item Me sentí muy seguro o segura usando \sistema{}.
+    \item Necesité aprender muchas cosas antes de poder empezar a usar
+          \sistema{}.
+\end{enumerate}
+
+Cálculo: en los ítems impares se resta 1 a la respuesta; en los pares,
+la respuesta se resta de 5; la suma se multiplica por 2,5.
+
+\textbf{Recomendación} (solo si no la respondió en la aplicación): ``¿Qué
+tan probable es que recomiendes \sistema{} a un amigo o familiar? (0 =
+nada probable, 10 = muy probable)''.
+
+\textbf{Preguntas abiertas:} ``¿Qué fue lo más difícil?'' y ``¿Qué
+cambiarías primero?''.
+
+\section{Planilla de resultados}
+
+Una fila por participante, identificada como P01 a P08, sin nombres, con
+el rol, la provincia, si es del interior, el resultado (sí, con ayuda,
+no o no aplica) y el tiempo en segundos de cada tarea, las diez
+respuestas del SUS y su total, el \gls{nps} y su fuente, el participante
+con el que tuvo la clase (para I-03) y observaciones. La hoja de resumen
+calcula la tasa de éxito y el tiempo mediano y máximo por tarea, el SUS
+promedio y su desvío, el \gls{nps} e I-01b, I-02 e I-03 con su fecha.
