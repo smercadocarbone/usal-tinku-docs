@@ -305,7 +305,9 @@ bun run test:e2e      # Playwright + axe-core
 uv run pytest -q
 \end{lstlisting}
 
-Al 14/10/2026 la suite del backend registraba 661 pruebas, 0 fallas, 0
-errores y 5 omitidas --las pruebas del \gls{ocr} real, que se saltean si
-el equipo no tiene Tesseract instalado y que en el CI sí corren--, con
-una cobertura de líneas del 85,6\,\% medida con JaCoCo (ADR-000-05).
+Al 18/10/2026, en la integración continua, la suite del backend
+registraba 859 pruebas, 0 fallas y 1 omitida, con una cobertura de
+líneas del 89,6\,\% medida con JaCoCo (ADR-000-05); la de Playwright,
+252 pruebas exitosas, y la de pytest, 44 de 44. En un equipo sin
+Tesseract instalado se saltean además las pruebas del \gls{ocr} real, que
+en el CI sí corren.

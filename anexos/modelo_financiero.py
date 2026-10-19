@@ -229,5 +229,28 @@ def sensibilidades(inversion=None):
               f"{fmt(COSTOS_FIJOS[-1] / m)} | {fmt(van(f))} | {fmt(tir(f) * 100, 2)} %")
 
 
+# Riesgo R-09 (capítulo 6): costo de un desarrollador rentado a jornada
+# completa, con las tarifas por hora de la tabla de inversión del capítulo 5
+# (medianas de Sysarmy 2026.1 divididas por 160 horas mensuales).
+HORAS_MES_RENTADO = 160
+TARIFAS_RENTADO = {"junior": 7, "semi-senior": 11}   # USD por hora
+
+
+def equipo_rentado(inversion=None):
+    """VAN de cada escenario restando un desarrollador rentado (R-09)."""
+    print()
+    print("R-09: VAN con un desarrollador rentado a jornada completa (sin costo del fundador):")
+    for perfil, tarifa in TARIFAS_RENTADO.items():
+        anual = tarifa * HORAS_MES_RENTADO * 12
+        print(f"  {perfil}: USD {fmt(tarifa)}/h x {HORAS_MES_RENTADO} h = USD "
+              f"{fmt(tarifa * HORAS_MES_RENTADO)}/mes (USD {fmt(anual)}/año)")
+        for esc, alumnos in ALUMNOS.items():
+            f = flujos(alumnos, inversion=inversion)
+            f = [f[0]] + [x - anual for x in f[1:]]
+            print(f"    {esc}: flujos {[round(x) for x in f]} | VAN {fmt(van(f))} | "
+                  f"TIR {fmt(tir(f) * 100, 2) + ' %' if van(f, -0.98) > 0 else 'no existe'}")
+
+
 if __name__ == "__main__":
     main()
+    equipo_rentado()
