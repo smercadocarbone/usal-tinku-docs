@@ -379,7 +379,7 @@ La remediación de los hallazgos de código se implementó el 15 de octubre de
 arreglo, y se integró ese mismo día a la rama principal con la
 integración continua en verde; queda repetir las pruebas por rol en
 producción (riesgo R-15 del capítulo~\ref{cap:riesgos}). Como parte de ella se calibró el
-umbral de relevancia de la búsqueda con el modelo de \gls{embeddings}
+umbral de relevancia de la búsqueda con el modelo de \glspl{embeddings}
 real sobre 40 consultas (20 relevantes, 10 irrelevantes y 10 sin
 sentido): con el umbral anterior (0,30) pasaban 5 de 10 consultas
 irrelevantes; con el elegido (0,46) el 95\,\% de las relevantes conserva
@@ -398,7 +398,7 @@ construcción, pero no reemplaza la verificación.
 
 \subsection{Pruebas de aceptación}
 
-Las pruebas de aceptación con usuarios (\gls{uat}) se realizan en el
+Las \gls{uat} se realizan en el
 piloto del Sprint~11, entre el 27 de octubre y el 27 de noviembre de
 2026, y miden los indicadores del capítulo~\ref{cap:metodologia}
 (tabla~\ref{tab:indicadores-piloto}). Por el riesgo R-01 del
@@ -586,9 +586,9 @@ El capítulo~\ref{cap:marco-teorico} comparó las plataformas existentes
 propuesta con ellas en tres ejes:
 
 \begin{itemize}
-    \item \textbf{\gls{matching}.} Las plataformas relevadas ofrecen
+    \item \textbf{\Gls{matching}.} Las plataformas relevadas ofrecen
           filtros manuales; \sistema{} implementa un motor de
-          \gls{matching} semántico con \gls{embeddings}. La calibración
+          \gls{matching} semántico con \glspl{embeddings}. La calibración
           con consultas propias muestra que separa consultas relevantes de
           irrelevantes; su valor para los usuarios queda sujeto al
           indicador I-01 del piloto.

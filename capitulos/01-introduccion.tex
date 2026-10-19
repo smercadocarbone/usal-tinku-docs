@@ -142,7 +142,7 @@ entorno geográfico inmediato.
 
 \textbf{Hipótesis central.} La implementación de una plataforma digital
 de \gls{marketplace} educativo con capacidades de \gls{matching}
-inteligente basado en búsqueda semántica (\gls{nlp}) permitirá que
+inteligente basado en búsqueda semántica y \gls{nlp} permitirá que
 estudiantes ubicados en zonas geográficas con escasez de tutores locales
 --incluyendo pueblos pequeños, comunidades de montaña y regiones
 rurales-- accedan a servicios de apoyo académico personalizado de
@@ -195,7 +195,7 @@ oferta presencial de tutores es escasa o inexistente.
           principales.
     \item \textbf{OE3 --- Implementación del motor de \gls{matching}
           \gls{ia}:} desarrollar e integrar el servicio de recomendación
-          basado en \gls{embeddings} semánticos (sentence-transformers,
+          basado en \glspl{embeddings} semánticos (sentence-transformers,
           con el índice vectorial en pgvector dentro de la misma base
           PostgreSQL) que compara la búsqueda del alumno con cada uno de
           los temas del catálogo elegidos por el tutor, y que a un menor
@@ -222,8 +222,7 @@ oferta presencial de tutores es escasa o inexistente.
           desarrollar el sistema de calificaciones bidireccional
           implementando un umbral mínimo de calificaciones para su
           exposición pública como medida anti-manipulación.
-    \item \textbf{OE8 --- Validación funcional:} realizar pruebas de
-          aceptación de usuario (\gls{uat}) con un grupo piloto de tutores
+    \item \textbf{OE8 --- Validación funcional:} realizar \gls{uat} con un grupo piloto de tutores
           y alumnos reales --adultos mientras las clases con menores
           permanezcan deshabilitadas (sección~\ref{sec:limitaciones})--,
           midiendo usabilidad, confianza percibida y satisfacción con el
@@ -283,7 +282,7 @@ mercado argentino con el nivel de integración que \sistema{} propone:
     \item \textbf{Barreras de verificación y onboarding:} aunque el
           objetivo ideal incluye la validación automatizada de
           antecedentes penales e identidad, los organismos competentes
-          (\gls{renaper}, Registro Nacional de Reincidencia) no ofrecen
+          ---el \gls{renaper} y el Registro Nacional de Reincidencia--- no ofrecen
           \gls{api} públicas. Esta restricción impide automatizar dicho
           proceso en el \gls{mvp}. En consecuencia, la plataforma
           centra sus esfuerzos de seguridad y confianza en la
@@ -369,14 +368,13 @@ mercado, habilitando el cobro digital, generando historial de actividad
 y contribuyendo a la bancarización de los tutores.
 
 \textbf{Relevancia tecnológica.} El proyecto aplica a un problema local
-concreto tecnologías de \gls{ia} de vanguardia: \gls{embeddings}
-semánticos para el \gls{matching}, modelos de lenguaje de gran escala
-(\gls{llm}) para el resumen de las sesiones y un clasificador de
+concreto tecnologías de \gls{ia} de vanguardia: \glspl{embeddings}
+semánticos para el \gls{matching}, un \gls{llm} para el resumen de las sesiones y un clasificador de
 contenido que corre en el navegador para proteger a los participantes.
-Esta aplicación constituye un aporte original al estado del arte en plataformas
-educativas adaptativas en el contexto latinoamericano, diferenciándose
-de soluciones globales por su foco en las particularidades del sistema
-educativo y la geografía argentina.
+Ninguna de estas tecnologías es nueva por separado: el aporte del proyecto
+es su integración en una plataforma educativa para el contexto
+latinoamericano, que se diferencia de las soluciones globales por su foco
+en las particularidades del sistema educativo y la geografía argentina.
 
 \section{Enfoque metodológico}\label{sec:enfoque}
 
@@ -396,8 +394,7 @@ principales son:
           módulos funcionales con una revisión del incremento al cierre de
           cada sprint.
     \item \textbf{Integración y pruebas:} pruebas unitarias, de
-          integración, \gls{e2e} y de aceptación de
-          usuario (\gls{uat}).
+          integración, \gls{e2e} y \gls{uat}.
     \item \textbf{Piloto y validación:} lanzamiento controlado con grupo
           reducido de tutores y alumnos reales --adultos, mientras las
           clases con menores sigan deshabilitadas-- para validar la
@@ -517,8 +514,7 @@ documentadas como propuestas para el trabajo a futuro.
           consecuencia, la validación del piloto no cubre el flujo con
           menores.
     \item \textbf{Límite de verificación de tutores:} en el \gls{mvp}, la
-          identidad se verifica con reconocimiento óptico de caracteres
-          (\gls{ocr}) sobre el \gls{dni}, ejecutado con Tesseract en el
+          identidad se verifica con \gls{ocr} sobre el \gls{dni}, ejecutado con Tesseract en el
           propio servidor: controla la mayoría de edad, el nombre y que
           el documento no esté ya registrado. La imagen no sale del
           servidor ni se conserva, y no hay revisión manual del
@@ -588,7 +584,7 @@ las tasas de repitencia y abandono escolar.
 
 La solución incorpora tecnologías emergentes de manera que genera valor
 diferencial concreto: no se intenta construir un modelo de \gls{ia}
-general, sino aplicar \gls{embeddings} semánticos y modelos de lenguaje a
+general, sino aplicar \glspl{embeddings} semánticos y modelos de lenguaje a
 un problema de \gls{matching} y apoyo educativo específico. La \gls{ia}
 es un medio, no un fin en sí mismo.
 

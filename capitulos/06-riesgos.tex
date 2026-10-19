@@ -198,7 +198,7 @@ tratamiento se detalla a continuación; el resto se monitorea.
           observado en la plataforma; el piloto es la primera fuente de
           precios reales y el indicador que dispara la revisión.
     \item \textbf{R-07, oferta de tutores (12).} Es la manifestación del
-          problema de arranque en frío (\gls{coldstart}) descrito en el
+          problema de \gls{coldstart} descrito en el
           capítulo~\ref{cap:marco-teorico}, agravada por las condiciones
           que el sistema exige al tutor para aparecer en las búsquedas:
           identidad verificada, foto, cuenta de MercadoPago conectada y,
@@ -254,10 +254,12 @@ las credenciales del almacenamiento externo, no hay copia de seguridad
 fuera del servidor, y prevé ensayar la restauración antes del piloto. El
 \textbf{R-16} (privacidad del audio) reemplaza a un riesgo que figuraba
 en una versión anterior de este capítulo ---el envío del audio de las
-clases directamente al \gls{llm}---, eliminado por diseño: el audio va
-solo al servicio de transcripción, el texto se anonimiza antes de llegar
-al modelo de resumen (ADR-M6-03) y las clases con un menor nunca se
-graban.
+clases directamente al \gls{llm}---. El esquema actual transcribe antes
+de anonimizar y el modelo de resumen recibe solo el texto anonimizado
+(ADR-M6-03), pero eso no elimina el riesgo: el audio igual sale del
+servidor hacia OpenAI para transcribirse con
+\texttt{gpt-4o-mini-transcribe} (ADR-M3-04), y es esa transferencia la
+que cubre el R-16. Las clases con un menor nunca se graban.
 
 \section{Riesgos que cancelan proyectos}
 
