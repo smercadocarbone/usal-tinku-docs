@@ -33,7 +33,7 @@ estadounidenses.
         Comisión de la plataforma & \comision{} & Regla BR-PAG-01 (ADR-M5-05) \\
         Comisión de MercadoPago & 6,04\,\% & A cargo del tutor en el modelo de cobro A (ADR-M5-02); no es costo de la plataforma \\
         Margen de la plataforma por sesión & \usd{2,0034} & Ticket $\times$ comisión \\
-        Inversión inicial (Año 0) & \usd{25.730} & Tabla~\ref{tab:inversion} \\
+        Inversión inicial (Año 0) & \usd{10.279} & Tabla~\ref{tab:inversion}; personal a medianas salariales de Sysarmy 2026.1 \\
         Costos fijos anuales (Años 1 a 5) & \usd{3.555} a \usd{4.395} & Tabla~\ref{tab:costos-fijos} \\
         Sesiones anuales por escenario & tabla~\ref{tab:demanda} & Alumnos activos $\times$ 3 clases por mes $\times$ 12 \\
         Tasa de descuento & 15\,\% anual en USD & Sección de tasa de descuento del capítulo~\ref{cap:economica} \\
@@ -64,8 +64,10 @@ Para cada escenario y cada año $t$ de 1 a 5:
 Los análisis de sensibilidad del capítulo~\ref{cap:economica} se
 obtienen variando un parámetro por vez sobre esta misma cadena y
 buscando, cuando corresponde, el valor que anula el \gls{van} del
-escenario base (por ejemplo, la comisión de aproximadamente 18,2\,\% o el
-ticket de \usd{4,99} por sesión).
+escenario base (por ejemplo, la comisión de aproximadamente 10,9\,\% o el
+ticket de \usd{3,00} por sesión). El mismo script calcula, como cota, los
+indicadores con la inversión de \usd{25.730} que resultaba de valorizar
+el desarrollo a tarifas de contratista.
 
 \section{Flujos por escenario}
 
@@ -82,9 +84,9 @@ tabla~\ref{tab:flujo-caja}.
         \toprule
         \tb{Escenario} & \tb{Año 0} & \tb{Año 1} & \tb{Año 2} & \tb{Año 3} & \tb{Año 4} & \tb{Año 5} \\
         \midrule
-        Pesimista & $-25.730$ & 5.821  & 4.258  & 7.625  & 5.942  & 9.308 \\
-        Base      & $-25.730$ & 10.869 & 15.077 & 11.231 & 16.760 & 13.636 \\
-        Optimista & $-25.730$ & 16.639 & 26.616 & 20.607 & 30.464 & 24.454 \\
+        Pesimista & $-10.279$ & 5.821  & 4.258  & 7.625  & 5.942  & 9.308 \\
+        Base      & $-10.279$ & 10.869 & 15.077 & 11.231 & 16.760 & 13.636 \\
+        Optimista & $-10.279$ & 16.639 & 26.616 & 20.607 & 30.464 & 24.454 \\
         \bottomrule
     \end{tabularx}
 \end{table}
@@ -98,9 +100,9 @@ tabla~\ref{tab:flujo-caja}.
         \toprule
         \tb{Escenario} & \tb{\gls{van} (USD)} & \tb{\gls{tir}} & \tb{Repago simple} & \tb{Repago descontado} \\
         \midrule
-        Pesimista & $-4.410$ & 8,09\,\%  & 4,22 años & no se alcanza \\
-        Base      & 18.869   & 41,57\,\% & 1,99 años & 2,66 años \\
-        Optimista & 51.990   & 78,24\,\% & 1,34 años & 1,56 años \\
+        Pesimista & 11.041   & 50,92\,\%  & 2,03 años & 2,40 años \\
+        Base      & 34.320   & 117,80\,\% & 0,95 años & 1,07 años \\
+        Optimista & 67.441   & 190,32\,\% & 0,62 años & 0,71 años \\
         \bottomrule
     \end{tabular}
 \end{table}
@@ -135,9 +137,9 @@ adicional entre los pasos 1 y 2:
         \toprule
         \tb{Escenario} & \tb{Año 0} & \tb{Año 1} & \tb{Año 2} & \tb{Año 3} & \tb{Año 4} & \tb{Año 5} \\
         \midrule
-        Pesimista & $-25.730$ & 5.194  & 3.692  & 6.906  & 5.285  & 8.499 \\
-        Base      & $-25.730$ & 10.030 & 14.055 & 10.360 & 15.647 & 12.644 \\
-        Optimista & $-25.730$ & 15.556 & 25.108 & 19.341 & 28.773 & 23.007 \\
+        Pesimista & $-10.279$ & 5.194  & 3.692  & 6.906  & 5.285  & 8.499 \\
+        Base      & $-10.279$ & 10.030 & 14.055 & 10.360 & 15.647 & 12.644 \\
+        Optimista & $-10.279$ & 15.556 & 25.108 & 19.341 & 28.773 & 23.007 \\
         \bottomrule
     \end{tabularx}
 \end{table}
@@ -152,8 +154,10 @@ El script \path{anexos/modelo_financiero.py} del repositorio de la tesis
 (anexo~\ref{anx:repositorios}) implementa esta cadena con la biblioteca
 estándar de Python y reproduce las tablas~\ref{tab:flujos-escenarios},
 \ref{tab:indicadores-anexo} y~\ref{tab:flujos-fundador}, la
-tabla~\ref{tab:van-fundador} y el excedente mensual de \usd{469} que
-anula el \gls{van} del escenario base. Se ejecuta con
+tabla~\ref{tab:van-fundador}, el excedente mensual de \usd{853} que
+anula el \gls{van} del escenario base, los análisis de sensibilidad de la
+sección~\ref{sec:sensibilidad} y del apéndice~\ref{apx:precio}, y la cota
+con la inversión de \usd{25.730}. Se ejecuta con
 \texttt{python3 anexos/modelo\_financiero.py}.
 
 \section{Versiones anteriores del modelo}
