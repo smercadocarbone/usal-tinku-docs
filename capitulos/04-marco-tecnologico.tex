@@ -315,8 +315,11 @@ capítulo~\ref{cap:metodologia}.
 \section{Modelo de datos}\label{sec:modelo-datos}
 
 El modelo se organiza en nueve esquemas, uno por módulo, versionados con
-Flyway. Las tablas principales y sus atributos clave se describen en el
-diccionario de datos del apéndice~\ref{apx:tecnicos}; esta sección
+Flyway. El diccionario de datos completo --las 47 tablas de dominio con
+todas sus columnas, restricciones e índices-- y los diagramas
+entidad-relación, generados del esquema que producen las migraciones
+hasta V58, están en las secciones~\ref{sec:apx-diccionario}
+y~\ref{sec:apx-der} del apéndice~\ref{apx:tecnicos}; esta sección
 resume las entidades y sus relaciones.
 
 \tb{Usuario} (\path{identidad.usuarios}) es la entidad base. Su tipo es
