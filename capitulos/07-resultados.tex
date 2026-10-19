@@ -117,8 +117,56 @@ los pagos, el correo y el resumen delegados en proveedores externos
 original durante la implementación se registran en la
 sección~\ref{sec:decisiones-implementacion}.
 
-\completar{Insertar capturas reales de las pantallas principales:
-búsqueda de tutores, reserva, aula virtual y panel de administración.}
+Las figuras~\ref{fig:cap-busqueda} a~\ref{fig:cap-admin} muestran las
+pantallas principales del sistema en funcionamiento, capturadas del
+entorno de \emph{staging} (\texttt{tinku.site}) con datos de prueba.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{pantallas/03-busqueda-tutores}
+    \caption[Búsqueda de tutores]{Búsqueda de tutores: filtros por nivel,
+    precio y materia, con los resultados ordenados por el \gls{matching}
+    (\enquote{tutores recomendados}).}
+    \label{fig:cap-busqueda}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{pantallas/04-perfil-tutor}
+    \caption[Perfil de un tutor]{Perfil de un tutor: identidad verificada,
+    materias, disponibilidad semanal y reserva con pago retenido hasta
+    después de la clase.}
+    \label{fig:cap-perfil}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{pantallas/05-mis-clases}
+    \caption[Clases del estudiante]{Panel de clases del estudiante: una
+    reserva confirmada con acceso al aula virtual.}
+    \label{fig:cap-clases}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{pantallas/06-detalle-reserva}
+    \caption[Detalle de una reserva]{Detalle de una reserva confirmada: el
+    seguimiento muestra que el pago queda retenido y se libera al tutor
+    24~horas después de la clase.}
+    \label{fig:cap-reserva}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{pantallas/07-panel-admin}
+    \caption[Panel de administración]{Panel de administración del rol de
+    Moderación y Seguridad: alertas, denuncias con plazo, credenciales,
+    antecedentes (\gls{cap}), soporte y salud de la infraestructura.}
+    \label{fig:cap-admin}
+\end{figure}
+
+\completar{Insertar la captura del aula virtual durante una clase
+(\texttt{figuras/pantallas/08-aula.png}).}
 
 \section{Construcción e integración}
 
@@ -426,9 +474,77 @@ texto del aula viajan por el canal de datos del servicio de video
 
 \subsection{Entrevistas a especialistas}
 
-\completar{Síntesis de las entrevistas (apéndice~\ref{apx:entrevista}):
-fecha, entrevistado, aportes principales y contraste con los resultados
-de la encuesta.}
+Se entrevistó a Carolina Stocchetti, docente en ejercicio y Profesora de
+Educación Física (Perfil~1, apéndice~\ref{apx:entrevista}), con cinco años de experiencia en los
+niveles inicial, primario y secundario. La entrevista, semiestructurada, siguió un guion de
+25 preguntas en seis ejes, varias de las cuales presentaban un resultado
+de la encuesta para que la entrevistada lo interpretara. La
+tabla~\ref{tab:encuesta-entrevista} contrasta ambas fuentes sobre los
+supuestos del proyecto.
+
+\begin{table}[H]
+    \centering
+    \caption{Contraste entre la encuesta y la entrevista}
+    \label{tab:encuesta-entrevista}
+    \small
+    \begin{tabularx}{\textwidth}{l L L l}
+        \toprule
+        \tb{Supuesto} & \tb{Encuesta} & \tb{Entrevista} & \tb{Lectura} \\
+        \midrule
+        Valor del apoyo particular & 70\,\% encontró al profesor por recomendación & ``Fundamental'': la escuela no puede seguir a cada alumno & Coinciden \\
+        Brecha geográfica & 90,9\,\% de las respuestas de Buenos Aires & Supone menor oferta rural, sin casos concretos & Sin evidencia \\
+        Modalidad virtual & 77,3\,\% tomaría clases virtuales & Calidad equivalente con conexión, cámara y pantalla compartida & Coinciden \\
+        Duración de 30 y 60 minutos & No relevada & Adecuada & Respaldo parcial \\
+        Verificación de tutores & 81,8\,\% confía más con profesores verificados & Título o año de cursada, y experiencia visible en el perfil & Coinciden \\
+        \gls{cap} para tutores de menores & No relevado & Obligatorio; su costo se recupera con una clase & Respaldo parcial \\
+        Recomendación de tutores & 68,2\,\% la quiere; 5,7\,\% valora la ``\gls{ia}'' & Explicada por reputación y por resultados de alumnos similares & Coinciden \\
+        Resumen automático & Segunda función más valorada (56,8\,\%) & ``Una herramienta más''; conceptos, puntos y preguntas clave & Coinciden \\
+        Pago dentro de la plataforma & Solo 35,2\,\% lo prefiere & Lo preferiría ``por seguridad'' & Difieren \\
+        Precio por hora & Mediana de \usd{4,56} & Bajo: \$15.000 o más por una clase presencial & Difieren \\
+        Comisión del \comision{} & No relevada & ``Me parece que está bien'' & Respaldo parcial \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+La entrevista aportó además tres propuestas que la encuesta no relevaba.
+Ninguna se incorpora al \gls{mvp}, cuyo alcance está congelado (riesgo
+R-03), pero se registran porque señalan diferencias entre el diseño y la
+mirada docente:
+
+\begin{itemize}
+    \item \textbf{Presencia del adulto.} La entrevistada ubica en los 18
+          años la edad a partir de la cual un alumno puede tomar una clase
+          virtual sin un adulto al lado, y propone que un adulto presencie
+          siempre las clases de los menores. El diseño actual protege al
+          menor con el kill-switch y la verificación del tutor, pero no
+          exige la presencia del adulto responsable durante la sesión.
+    \item \textbf{Calificaciones de menores.} Propone que el adulto
+          responsable, y no el menor, califique al tutor. Hoy el
+          módulo de reputación (M7) deja calificar al tutor tanto al
+          alumno, aunque sea menor, como al adulto que paga la clase.
+    \item \textbf{Tareas entre clases.} Propone un canal para que el tutor
+          deje una tarea y el alumno la entregue fuera del horario de la
+          sesión, una función que no forma parte del alcance del
+          \gls{mvp}.
+\end{itemize}
+
+Las diferencias también son informativas. En el precio, la entrevistada
+compara con una clase presencial, que incluye el traslado del tutor, y
+no con una virtual, por lo que su valor no reemplaza a la mediana de la
+encuesta; indica, a lo sumo, que el precio del modelo no sobrestima la
+disposición a pagar. En el pago, su preferencia por la plataforma ``por
+seguridad'' no compensa el resultado de la encuesta, pero coincide con
+la mitigación del riesgo R-02: la protección del pago es un valor que
+solo existe dentro de la plataforma.
+
+La entrevista tiene limitaciones que acotan su peso como evidencia: es
+una sola; la entrevistada enseña Educación Física, no tiene experiencia
+en clases particulares y trabaja en el AMBA, por lo que no cubre la
+mitigación del riesgo R-08, que requiere docentes del interior; y en algunas
+preguntas el entrevistador anticipó la respuesta al presentar el
+resultado de la encuesta, lo que puede haber inducido el acuerdo. Sus
+aportes se toman, por lo tanto, como la opinión de una docente en
+ejercicio y no como una validación experta del modelo.
 
 \subsection{Decisiones derivadas}
 
@@ -452,6 +568,12 @@ decisiones concretas.
         Auditoría & 36 hallazgos, 7 críticos & Corrección de cada uno con prueba de regresión & Aplicado \\
         Pruebas en producción & 3 hallazgos altos y uno transversal & Remediación con prueba previa al arreglo & Implementado, por integrar \\
         Pruebas en producción & Búsquedas sin relación devolvían tutores & Umbral de relevancia calibrado con el modelo real & Implementado, por integrar \\
+        Entrevista & \gls{cap} obligatorio para tutores de menores & Ratifica el \gls{cap} obligatorio para dar clases a menores (R-10) & Aplicado \\
+        Entrevista & Un adulto debería presenciar las clases de los menores & Se mantiene el diseño actual (kill-switch y verificación del tutor); no se incorpora al \gls{mvp} por el alcance congelado (R-03) & No adoptado \\
+        Entrevista & El adulto, y no el menor, debería calificar al tutor & Se mantiene el diseño actual de M7; no se incorpora al \gls{mvp} por el alcance congelado (R-03) & No adoptado \\
+        Entrevista & Mostrar experiencia docente y año de cursada del tutor & Se mantiene el perfil actual de M1; no se incorpora al \gls{mvp} por el alcance congelado (R-03) & No adoptado \\
+        Entrevista & Resumen con conceptos, puntos y preguntas clave & Coincide con la estructura ya especificada (FR-SUM-003); sin cambios & Respaldo \\
+        Entrevista & Tareas y entregas entre clases & Trabajo futuro, por el alcance congelado (R-03) & Trabajo futuro \\
         Diseño & El audio de la sesión no puede anonimizarse antes del \gls{llm} & Transcripción previa y modelo de resumen solo con texto anonimizado; sin resumen con menores (ADR-M6-03) & Aplicado \\
         \bottomrule
     \end{tabularx}

@@ -25,30 +25,310 @@ indica en qué medida se alcanzó, con referencia a la sección que lo
 demuestra.
 \end{guia}
 
-\completar{Desarrollo del capítulo.}
+Este capítulo cierra el trabajo con la evidencia disponible al 15 de
+octubre de 2026, la misma del capítulo~\ref{cap:resultados}. El piloto
+con usuarios reales se desarrolla entre el 27 de octubre y el 27 de
+noviembre de 2026, después de la entrega de este capítulo. Por ese
+motivo, y tal como anticipó el riesgo R-03 del
+capítulo~\ref{cap:riesgos}, la respuesta a la hipótesis es preliminar y
+se completará con los indicadores del piloto en la entrega final.
 
-\section{\completar{Nombre de la sección}}
+\section{Conclusiones}\label{sec:conclusiones}
 
-\begin{ejemplo}[Ejemplo: forma de la respuesta a la hipótesis]
-La hipótesis planteada en el capítulo~\ref{cap:introduccion} se responde
-de manera \completar{afirmativa, con matices}: el sistema alcanzó
-\completar{métrica} sobre el umbral definido en el
-capítulo~\ref{cap:metodologia}, aunque \completar{limitación concreta}.
-\end{ejemplo}
+\subsection{Hallazgos principales}
 
-\completar{Texto.}
+\begin{enumerate}
+    \item \textbf{El sistema existe y está desplegado.} Se construyó un
+          \gls{mvp} de nueve módulos, con 160 requerimientos funcionales,
+          37 registros de decisión de arquitectura y 739 pruebas
+          automatizadas en el backend, con una cobertura de líneas del
+          86,2\,\%, desplegado en \path{tinku.site}
+          (capítulo~\ref{cap:resultados}). Lo construyó una sola persona,
+          con un método dirigido por especificaciones y asistido por
+          \gls{ia}.
+    \item \textbf{Las pruebas automatizadas no bastaron para garantizar la
+          seguridad.} La auditoría técnica encontró 36 hallazgos, siete
+          de ellos críticos y vinculados a la protección del menor, en un
+          sistema cuyas 383 pruebas de ese momento resultaban exitosas.
+          Los 36 se cerraron con una prueba de regresión. Las pruebas
+          sobre el despliegue real encontraron después tres hallazgos de
+          severidad alta que la suite tampoco detectaba, uno de ellos un
+          hueco de la propia especificación.
+    \item \textbf{El problema y la modalidad tienen respaldo; el modelo de
+          cobro, no del todo.} La encuesta ($n = 88$) respalda el
+          diagnóstico de informalidad, la aceptación de la tutoría virtual
+          (77,3\,\%) y el valor de la verificación de los tutores
+          (81,8\,\%). En cambio, solo el 35,2\,\% prefiere pagar dentro de
+          una plataforma, y la mediana de la disposición a pagar es la
+          mitad del precio publicado en Superprof con el que se calcula el
+          ticket (riesgos R-02 y R-05). La docente entrevistada coincide en
+          el valor del apoyo particular y en la equivalencia de la clase
+          virtual, pero difiere en el pago: lo preferiría dentro de la
+          plataforma ``por seguridad''.
+    \item \textbf{La \gls{ia} se valora por lo que resuelve, no por su
+          nombre.} El 68,2\,\% quiere que la plataforma le recomiende un
+          tutor, pero solo el 5,7\,\% eligió la ``\gls{ia} que recomiende
+          profesores'' como función importante. El resumen automático,
+          descrito por su utilidad, fue la segunda función más valorada
+          (56,8\,\%). La entrevistada pidió que la recomendación se
+          explique por la reputación del tutor y por los resultados de
+          alumnos similares.
+    \item \textbf{La viabilidad económica es condicional.} Con la
+          comisión del \comision{}, el escenario base resulta viable
+          (\gls{van} de \usd{18.869} y \gls{tir} del 41,57\,\%), igual que
+          el optimista (\gls{van} de \usd{51.990}), pero el pesimista no
+          lo es (\gls{van} de \usd{-4.410}). La viabilidad depende de
+          sostener unas 5.858 sesiones anuales en promedio, de no bajar la
+          comisión de aproximadamente 18,2\,\% y de operar sin un equipo
+          rentado (capítulo~\ref{cap:economica}).
+    \item \textbf{Contrastar el diseño con el sistema cambió las
+          decisiones.} La contrastación del modelo económico con el
+          sistema implementado mostró que la comisión de MercadoPago la
+          paga el tutor y no la plataforma, y cambió la conclusión del
+          capítulo~\ref{cap:economica}. La imposibilidad de anonimizar el
+          audio antes de enviarlo a un proveedor externo llevó a
+          transcribir primero, enviar al \gls{llm} solo el texto y excluir
+          el resumen de las clases con menores (ADR-M6-03).
+\end{enumerate}
+
+\subsection{Respuesta a la hipótesis}\label{sec:respuesta-hipotesis}
+
+La hipótesis central sostiene que una plataforma con \gls{matching}
+semántico permitirá a estudiantes de zonas con escasez de tutores
+acceder a apoyo académico de calidad equivalente a la de los centros
+urbanos. \textbf{Con la evidencia disponible, la hipótesis no puede
+confirmarse ni refutarse: la evidencia es consistente con sus
+condiciones de posibilidad, pero todavía no verifica su núcleo.}
+
+La evidencia respalda tres condiciones necesarias para que la hipótesis
+se cumpla: la plataforma es técnicamente construible y operable por un
+equipo mínimo; la modalidad virtual es aceptada por el 77,3\,\% de los
+encuestados y considerada pedagógicamente equivalente por la docente
+entrevistada; y el modelo económico es viable en los escenarios base y
+optimista. En cambio, falta evidencia sobre el núcleo de la hipótesis: el
+acceso efectivo de estudiantes del interior. El 90,9\,\% de las
+respuestas de la encuesta proviene de la provincia de Buenos Aires y de
+la Ciudad Autónoma de Buenos Aires, la entrevistada trabaja en Pilar y
+no conoce casos concretos de la brecha rural, y el piloto todavía no
+comenzó.
+
+Las dos afirmaciones técnicas del capítulo~\ref{cap:introduccion} quedan
+en el siguiente estado:
+
+\begin{enumerate}
+    \item \textbf{Relevancia de las recomendaciones del \gls{matching}.}
+          Pendiente. El motor está implementado, y la calibración con 40
+          consultas de elaboración propia muestra que separa las
+          relevantes de las irrelevantes: con el umbral elegido, el 95\,\%
+          de las relevantes conserva resultados y ninguna irrelevante los
+          obtiene. La aceptación por parte de los usuarios (indicador
+          I-01, umbral superior al 60\,\%) solo puede medirse en el piloto.
+          \completar{Resultado de I-01 en el piloto.}
+    \item \textbf{Sesiones entre provincias con calidad aceptable.}
+          Pendiente. El aula virtual funcionó con salas de video reales en
+          las pruebas en producción, pero la calidad percibida (I-02) y la
+          sesión entre provincias con una del interior (I-03) se miden en
+          el piloto.
+          \completar{Resultados de I-02 e I-03 en el piloto.}
+\end{enumerate}
+
+La respuesta, por lo tanto, es \textbf{preliminar}: la hipótesis se
+sostiene como plausible, pero su componente geográfico, que es el que
+distingue a \sistema{} de las plataformas existentes, carece hoy de
+evidencia directa.
+
+\subsection{Cumplimiento de los objetivos específicos}
+
+La tabla~\ref{tab:cumplimiento} retoma cada objetivo específico del
+capítulo~\ref{cap:introduccion} y el grado en que se alcanzó.
 
 \begin{table}[H]
     \centering
-    \caption{Grado de cumplimiento de los objetivos específicos (ejemplo de estructura)}
+    \caption{Grado de cumplimiento de los objetivos específicos}
     \label{tab:cumplimiento}
     \small
-    \begin{tabularx}{\textwidth}{l L l L}
+    \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{2.6cm} L l L}
         \toprule
         \tb{Objetivo} & \tb{Evidencia} & \tb{Grado} & \tb{Observación} \\
         \midrule
-        OE-1 & Capítulo~\ref{cap:resultados} & Alcanzado & \completar{...} \\
-        OE-2 & \completar{...} & Parcial & \completar{...} \\
+        OE1 Mercado y estado del arte & Capítulo~\ref{cap:marco-teorico}; apéndice~\ref{apx:encuesta} & Alcanzado & Encuesta concentrada en Buenos Aires; una sola entrevista realizada, la del Perfil~2 está pendiente (apéndice~\ref{apx:entrevista}) \\
+        OE2 Arquitectura & Capítulo~\ref{cap:marco-tecnologico}; apéndice~\ref{apx:uml} & Alcanzado & --- \\
+        OE3 Motor de \gls{matching} & Capítulo~\ref{cap:resultados}, pruebas en producción & Parcial & Implementado y calibrado con consultas propias; sin validar con usuarios (I-01) \\
+        OE4 Aula virtual & Capítulo~\ref{cap:resultados}, pruebas en producción & Parcial & Aula y kill-switch funcionaron de punta a punta en la prueba en vivo; faltan la exactitud del clasificador con contenido real y la latencia en dispositivos reales, por lo que las clases con menores siguen deshabilitadas (R-01) \\
+        OE5 Pagos & Capítulo~\ref{cap:resultados}; capítulo~\ref{cap:economica} & Parcial & Implementado con \gls{oauth} por tutor; pendiente de verificar en el entorno de pruebas de MercadoPago (R-11) \\
+        OE6 \gls{ia} educativa & Capítulo~\ref{cap:resultados}, listado~\ref{lst:puerto-resumen} & Parcial & Implementado; apagado en producción hasta contar con la cláusula legal de grabación (R-16) \\
+        OE7 Reputación & Capítulo~\ref{cap:resultados}, módulo de reputación & Alcanzado & Umbral mínimo de calificaciones antes de mostrar el promedio \\
+        OE8 Validación funcional & Capítulo~\ref{cap:resultados}, pruebas de aceptación & Pendiente & Piloto del 27 de octubre al 27 de noviembre de 2026, sin clases con menores \\
         \bottomrule
     \end{tabularx}
 \end{table}
+
+\subsection{Interpretación frente a los estudios previos}
+
+Los resultados dialogan con la literatura del
+capítulo~\ref{cap:marco-teorico} en cuatro puntos.
+
+\begin{itemize}
+    \item \textbf{Efectividad de la tutoría.} La encuesta confirma que el
+          apoyo particular se busca y se valora, y la entrevistada lo
+          considera ``fundamental'' porque la escuela no puede seguir a
+          cada alumno. Ambos resultados son coherentes con
+          el problema de los 2 sigma \citep{bloom1984} y con el
+          meta-análisis de tutoría privada \citep{sciencedirect2022}. Este
+          trabajo no aporta evidencia nueva sobre el efecto de la tutoría
+          en el aprendizaje, ya que no midió rendimiento académico.
+    \item \textbf{\gls{matching} semántico.} Los antecedentes
+          \citep{isotropy2026, paperrec2025} validaron la técnica con
+          pruebas de relevancia percibida. La encuesta agrega un matiz que
+          esos trabajos no abordan: el usuario valora la recomendación,
+          pero no la etiqueta ``\gls{ia}''. La relevancia técnica de la
+          recomendación sería, así, necesaria pero no suficiente; también
+          importa que pueda explicarse.
+    \item \textbf{Reputación bidireccional.} El diseño adoptó la
+          reputación bidireccional discutida por \citet{reputation}. La
+          entrevista introduce una variable que esa discusión no
+          contempla: cuando una de las partes es menor de edad, quién
+          califica deja de ser un detalle de interfaz y pasa a ser una
+          decisión de protección.
+    \item \textbf{Mercados bilaterales.} El problema de arranque en frío
+          \citep{rochet2006} aparece en los datos: solo 9 de las 88
+          respuestas corresponden a tutores, y la oferta es el recurso más
+          escaso para iniciar el piloto (R-07). La comisión agrava el
+          problema: con el \comision{}, el tutor recibe el 66,96\,\% de su
+          precio, seis puntos menos que cuando la plataforma absorbía la
+          pasarela.
+\end{itemize}
+
+\subsection{Limitaciones}\label{sec:limitaciones-finales}
+
+\begin{itemize}
+    \item \textbf{De validación.} La hipótesis se responde sin los datos
+          del piloto, que se realiza después de esta entrega. El piloto,
+          además, no incluye clases con menores, aunque los menores son una
+          parte central de la población objetivo.
+    \item \textbf{De datos.} La encuesta no es probabilística y el
+          90,9\,\% de sus respuestas proviene de Buenos Aires. La
+          entrevista es una sola, a una docente de Educación Física sin
+          experiencia en clases particulares, y en algunas preguntas el
+          resultado de la encuesta se presentó antes de la respuesta; la
+          entrevista a una tutora particular, que aporta el lado de la
+          oferta, está pendiente.
+          La calibración del umbral de relevancia usa consultas de
+          elaboración propia.
+    \item \textbf{Técnicas.} El clasificador del kill-switch no se midió
+          con contenido real ni en dispositivos reales; el resumen está
+          apagado en producción; el cobro con \gls{oauth} no se verificó
+          en el entorno de pruebas de MercadoPago; las pruebas por rol en
+          producción deben repetirse tras la remediación (R-15) y el
+          despliegue debe volver a su estado previo antes del piloto
+          (R-17). Todo el sistema corre en un único servidor propio
+          (R-14).
+    \item \textbf{De mercado.} La disposición a pagar se relevó sobre una
+          muestra urbana y resultó la mitad del precio con el que se
+          calcula el ticket; el precio y la demanda del interior pueden
+          diferir. La preferencia por pagar dentro de la plataforma es
+          minoritaria.
+\end{itemize}
+
+\section{Implicancias}\label{sec:implicancias}
+
+\begin{itemize}
+    \item \textbf{Teórica.} El trabajo sugiere que, en un
+          \gls{marketplace} educativo, la aceptación del \gls{matching} no
+          depende solo de la relevancia técnica de la recomendación, sino
+          de que el usuario la perciba por su resultado. También muestra
+          que la presencia de menores modifica decisiones que la
+          literatura trata como neutras, como qué datos pueden enviarse a
+          un proveedor de \gls{ia} o quién paga la clase.
+    \item \textbf{Práctica.} La combinación de especificaciones previas,
+          registros de decisión y asistencia de \gls{ia} permitió que una
+          sola persona construyera y desplegara un sistema de nueve
+          módulos. La auditoría y las pruebas en producción mostraron el
+          límite de ese método: la velocidad de construcción no reemplaza
+          la revisión independiente, porque las pruebas verifican lo que
+          se especificó y no lo que se omitió.
+    \item \textbf{De innovación.} Ninguna de las plataformas relevadas
+          integra \gls{matching} semántico, aula virtual, pago con
+          \gls{escrow} y controles específicos para menores en un mismo
+          flujo (tabla~\ref{tab:comparativa}). La integración es la
+          innovación; ninguna pieza por separado es nueva.
+    \item \textbf{Social y económica.} Si el piloto confirma la hipótesis,
+          la plataforma ampliaría el acceso al apoyo escolar en zonas sin
+          oferta presencial y formalizaría ingresos de tutores hoy
+          informales. La condición es económica: por debajo de unas 1.774 a
+          2.194 sesiones anuales la operación no cubre sus costos fijos, y
+          un servicio que cierra no reduce ninguna brecha.
+\end{itemize}
+
+\section{Aportes}\label{sec:aportes}
+
+\begin{enumerate}
+    \item Un \gls{mvp} funcional, desplegado y documentado, con
+          especificaciones, 37 registros de decisión de arquitectura y 739
+          pruebas en el backend, que otra persona puede retomar
+          (anexo~\ref{anx:repositorios}).
+    \item Un modelo de protección del menor para tutoría virtual 1 a 1:
+          cuenta pagadora del adulto responsable, \gls{cap} obligatorio
+          para los tutores de menores, kill-switch que corre en el
+          navegador de cada participante y exclusión del resumen
+          automático en las clases con menores.
+    \item Un modelo económico reproducible, contrastado con el sistema
+          implementado, que muestra cómo esa contrastación cambió la
+          conclusión (anexo~\ref{anx:modelo-financiero}).
+    \item Evidencia empírica de que, en este mercado, la \gls{ia} se valora
+          por su resultado y no como atributo del producto.
+\end{enumerate}
+
+\section{Recomendaciones}\label{sec:recomendaciones}
+
+\begin{itemize}
+    \item \textbf{Para la práctica profesional.} Complementar las pruebas
+          automatizadas con una revisión independiente y con pruebas sobre
+          el despliegue real antes de cada pasaje a producción, en
+          especial en los controles de seguridad. En el desarrollo
+          asistido por \gls{ia}, verificar lo que el sistema hace y no solo
+          lo que la documentación declara.
+    \item \textbf{Para los investigadores.} Medir la aceptación de un
+          sistema de recomendación con y sin explicación, y separar en las
+          encuestas la valoración de una función de la valoración de la
+          tecnología que la resuelve.
+    \item \textbf{Para instituciones y políticas públicas.} Ofrecer una
+          vía de verificación de antecedentes consultable por las
+          plataformas, con consentimiento del titular, que reemplace la
+          revisión manual de un certificado presentado por el propio
+          tutor (R-10). Las escuelas podrían, además, derivar alumnos y
+          aportar el volumen que el modelo económico necesita (O-02).
+    \item \textbf{Para el desarrollo tecnológico de \sistema{}.} Antes del
+          piloto, repetir las pruebas por rol en producción y revertir el
+          estado del despliegue (R-15, R-17). Antes de habilitar las
+          clases con menores, medir la exactitud del clasificador y su
+          latencia en dispositivos reales (R-01). Antes de operar
+          comercialmente, verificar el cobro en el entorno de pruebas de
+          MercadoPago (R-11), revisar la comisión con los datos del piloto
+          y mostrar el motivo de cada recomendación. Una vez realizado el
+          piloto, reconsiderar las propuestas de la entrevista que no se
+          incorporaron al \gls{mvp}: la presencia del adulto responsable en
+          las clases con menores y la calificación del tutor por parte del
+          adulto.
+\end{itemize}
+
+\section{Futuras líneas de investigación}\label{sec:futuras-lineas}
+
+\begin{itemize}
+    \item \textbf{Validación en el interior.} Replicar la encuesta y el
+          piloto en localidades con escasa oferta de tutores, que es la
+          población a la que apunta la hipótesis (R-08).
+    \item \textbf{Resumen automático con menores.} Evaluar la
+          transcripción local o en infraestructura propia, previa a la
+          anonimización, que permita ofrecer el resumen sin transferir la
+          voz del menor a un proveedor externo.
+    \item \textbf{Efecto en el aprendizaje.} Medir el rendimiento académico
+          de los alumnos antes y después de un ciclo de tutorías, para
+          contrastar el resultado con la literatura sobre tutoría.
+    \item \textbf{Continuidad entre clases.} Estudiar el valor de las
+          tareas y entregas asincrónicas propuestas en la entrevista.
+    \item \textbf{Funciones excluidas del alcance.} Aplicaciones móviles
+          nativas, integración con sistemas estatales, accesibilidad
+          completa, suscripción, clases grupales y el asistente
+          conversacional de repaso (sección~\ref{sec:alcance}).
+\end{itemize}
