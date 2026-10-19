@@ -292,7 +292,8 @@ def tabla_tex(t: dict, migs: list[int]) -> str:
         r"\needspace{12\baselineskip}",
         r"\begingroup\scriptsize\setlength{\tabcolsep}{3pt}",
         ancho,
-        r"\caption{" + tt(clave) + ": " + prosa(desc_tabla) + r"}\label{tab:dd-"
+        r"\caption[Diccionario de datos: " + tt(clave) + "]{" + tt(clave) + ": "
+        + prosa(desc_tabla) + r"}\label{tab:dd-"
         + clave.replace(".", "-").replace("_", "-") + r"}\\",
         r"\toprule", cab, r"\midrule", r"\endfirsthead",
         r"\multicolumn{6}{@{}l}{\scriptsize\itshape " + tt(clave) + r" (continuación)}\\",
@@ -502,7 +503,7 @@ def dot_esquema(datos: dict, esquema: str) -> str:
             vistos[destino] = n + 1
             if origen == destino:
                 ref = k["ref_columnas"][0]
-                aristas.append(f'  "{origen}":"{col}":e -> "{destino}":"{ref}":e '
+                aristas.append(f'  "{origen}":"{col}":w -> "{destino}":"{ref}":w '
                                f'[dir=both, arrowtail="{hijo}", arrowhead="{padre}"];')
             elif entrantes.get(destino, 0) >= 5 and n % 2 == 1:
                 aristas.append(f'  "{destino}" -> "{origen}":"{col}" '

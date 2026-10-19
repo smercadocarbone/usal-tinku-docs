@@ -26,5 +26,5 @@ digraph "identidad" {
   "identidad.especialidades_tutor":"tutor_id" -> "identidad.usuarios" [dir=both, arrowtail="crowodot", arrowhead="teetee"];
   "identidad.usuarios" -> "identidad.intentos_credencial":"tutor_id" [dir=both, arrowtail="teetee", arrowhead="teeodot"];
   "identidad.tokens_reset_password":"usuario_id" -> "identidad.usuarios" [dir=both, arrowtail="crowodot", arrowhead="teetee"];
-  "identidad.usuarios":"adulto_responsable_id":e -> "identidad.usuarios":"id":e [dir=both, arrowtail="crowodot", arrowhead="teeodot"];
+  "identidad.usuarios":"adulto_responsable_id":w -> "identidad.usuarios":"id":w [dir=both, arrowtail="crowodot", arrowhead="teeodot"];
 }
