@@ -410,13 +410,27 @@ y navegación con foco visible, verificadas de forma automática con
 axe-core en las pruebas del frontend. La validación del diseño con
 usuarios se apoya en las entrevistas y encuestas ya definidas en el
 capítulo~\ref{cap:metodologia}, y en \gls{uat} con el grupo piloto
-(OE8).
+(OE8). La figura~\ref{fig:mockups} muestra la pantalla de inicio, que
+pide una cuenta antes de mostrar tutores, y la agenda con la que el tutor
+publica su disponibilidad y sigue los pasos pendientes de su perfil.
 
 \begin{figure}[H]
     \centering
-    \completar{Insertar los mockups de pantallas principales en \texttt{figuras/} (pantalla de inicio y panel principal).}
-    \includegraphics[width=0.85\textwidth]{example-image-b}
-    \caption{Mockups de pantallas principales}
+    \begin{subfigure}{\textwidth}
+        \centering
+        \includegraphics[width=0.85\textwidth]{pantallas/01-inicio}
+        \caption{Pantalla de inicio}
+    \end{subfigure}
+
+    \vspace{1em}
+    \begin{subfigure}{\textwidth}
+        \centering
+        \includegraphics[width=0.85\textwidth]{pantallas/02-panel-tutor-agenda}
+        \caption{Panel principal del tutor (agenda)}
+    \end{subfigure}
+    \caption[Pantallas principales de \sistema{}]{Pantallas principales de
+    \sistema{}, capturadas del entorno de \emph{staging}
+    (\texttt{tinku.site}) con una cuenta de prueba.}
     \label{fig:mockups}
 \end{figure}
 
