@@ -90,9 +90,9 @@ Quedan fuera del alcance investigativo los mercados regionales, la
 integración con organismos estatales, los módulos de accesibilidad y
 suscripción premium y el asistente conversacional de repaso conceptual
 (sección~\ref{sec:alcance}), los cuales se documentan como trabajo
-futuro. La validación con usuarios se realiza sin menores de edad
-(sección~\ref{sec:limitaciones}), por lo que no cubre el flujo de las
-clases con menores.
+futuro. Las clases con menores están deshabilitadas
+(sección~\ref{sec:limitaciones}), por lo que ese flujo solo se verifica
+con pruebas técnicas.
 
 \subsection{Marco teórico}
 
@@ -118,14 +118,13 @@ capítulo~\ref{cap:marco-tecnologico}.
 \subsection{Indicadores}
 
 Los indicadores principales para verificar la hipótesis central se
-resumen en la tabla~\ref{tab:indicadores}. La planificación original
-los medía en un piloto con tutores y alumnos reales durante el
-Sprint~11; el piloto no se realizó (las razones se exponen en la
-sección~\ref{sec:sin-piloto}) y la validación se reformuló como una
-evaluación técnica reproducible y sesiones moderadas con usuarios
-adultos. Los cuatro indicadores conservan su sentido; cambian la fuente
-del dato y el umbral, que tiene que ser alcanzable con una muestra chica
-y declarada como tal.
+resumen en la tabla~\ref{tab:indicadores}. Se miden con usuarios reales
+a partir de la puesta en marcha del sistema, que excede el alcance de
+este trabajo (capítulo~\ref{cap:introduccion},
+sección~\ref{sec:limitaciones}). La parte técnica del indicador I-01
+---la calidad del ordenamiento que produce el motor de
+\gls{matching}--- no depende de usuarios reales y se mide ya en este
+trabajo con una evaluación offline (sección~\ref{sec:evaluacion-tecnica}).
 
 \begin{table}[H]
     \centering
@@ -136,85 +135,94 @@ y declarada como tal.
         \toprule
         \tb{ID} & \tb{Variable} & \tb{Indicador} & \tb{Umbral} \\
         \midrule
-        I-01 & Aceptación del \gls{matching} & (a) Evaluación offline con 120 búsquedas etiquetadas: rango recíproco medio (MRR) y \emph{recall@5}. (b) Sesiones moderadas: búsquedas con resultados en las que el usuario abrió el perfil o reservó a un tutor de los cinco primeros, sobre el total de búsquedas con resultados & (a) MRR $\geq 0{,}80$ y \emph{recall@5} $\geq 0{,}60$; (b) $> 60\,\%$ \\
-        I-02 & Calidad percibida de la sesión & Calificación promedio, de 1 a 5, del alumno al tutor en las clases de las sesiones moderadas & $\geq 4{,}0$ \\
-        I-03 & Cobertura geográfica & Clases de las sesiones moderadas entre participantes de provincias distintas, según la provincia declarada en el cuestionario & Al menos 1 clase entre dos provincias, incluyendo una del interior \\
-        I-04 & Satisfacción y recomendación & \gls{nps} de intención: pregunta de 0 a 10, una vez por persona, después de su primera clase & Positivo (promotores $>$ detractores) \\
+        I-01 & Aceptación del \gls{matching} & (a) Evaluación offline con 120 búsquedas etiquetadas: rango recíproco medio (MRR) y \emph{recall@5}. (b) Con usuarios: tasa de aceptación de las sugerencias del motor por parte del alumno & (a) MRR $\geq 0{,}80$ y \emph{recall@5} $\geq 0{,}60$; (b) $> 60\,\%$ de recomendaciones aceptadas \\
+        I-02 & Calidad percibida de la sesión & Puntuación promedio otorgada por los alumnos en el cuestionario post-sesión (escala 1 a 5) & $\geq 4{,}0$ \\
+        I-03 & Cobertura geográfica & Sesiones completadas entre usuarios de provincias distintas & Al menos 1 sesión exitosa entre dos provincias, incluyendo una del interior \\
+        I-04 & Satisfacción y recomendación & \gls{nps} de los usuarios & Porcentaje positivo (promotores $>$ detractores) \\
         \bottomrule
     \end{tabularx}
 \end{table}
 
-Los indicadores de operación que un piloto habría permitido medir ---la
-recompra de clases dentro de la plataforma y el volumen anualizado de
-sesiones--- requieren usuarios que vuelvan a usar el sistema durante
-semanas y no pueden inferirse de sesiones moderadas: quedan como trabajo
-futuro (capítulo~\ref{cap:conclusiones}).
+La puesta en marcha permitirá medir, además, indicadores de operación
+---la recompra de clases dentro de la plataforma y el volumen anualizado
+de sesiones---, que requieren usuarios que vuelvan a usar el sistema
+durante semanas (capítulo~\ref{cap:conclusiones}).
 
 \subsection{Técnicas de recolección de datos}
 
-Se implementarán técnicas cualitativas y cuantitativas para la
-recolección de datos primarios. La técnica cualitativa consistirá en
-entrevistas para validar el problema planteado, identificar puntos de
-dolor en el proceso de búsqueda y contratación, y relevar expectativas.
-La técnica cuantitativa se basará en encuestas de validación de demanda
-para cuantificar la frecuencia de uso de tutorías, los canales actuales
-de búsqueda y la disposición a utilizar y pagar por una plataforma
-centralizada.
+Se combinaron técnicas cualitativas y cuantitativas para la recolección
+de datos primarios. La técnica cualitativa consistió en entrevistas
+semiestructuradas para validar el problema planteado, contrastar los
+supuestos del proyecto y relevar cómo funciona hoy el mercado de clases
+particulares desde el lado de quien enseña. La técnica cuantitativa
+consistió en una encuesta de validación de demanda para cuantificar el
+uso de tutorías, los canales actuales de búsqueda y la disposición a
+utilizar y pagar por una plataforma centralizada.
 
 \subsection{Instrumentos de recolección de datos}
 
-El plan original preveía entrevistas semiestructuradas a una muestra de
-al menos dos tutores particulares activos y cuatro alumnos o familias
-que hubieran contratado tutorías, complementadas con un formulario breve
-en Google Forms orientado a estudiantes universitarios y familias con
-hijos en edad escolar, buscando un mínimo de 30 respuestas válidas. La
-encuesta superó ese mínimo (88 respuestas, apéndice~\ref{apx:encuesta}),
-pero de las seis entrevistas previstas se realizaron dos, y ninguna al
-usuario objetivo: una a una docente de Educación Física en ejercicio, que
-no da clases particulares (25 de septiembre de 2026, presencial), y otra
-a una tutora particular del AMBA, que respondió por mensajes de audio un
-cuestionario de cinco preguntas y dejó dos sin abordar. Para acercar la
-muestra al plan se prepararon dos guiones más, para un tutor que dé
-clases virtuales y para una familia de una provincia del interior. Los
-guiones, la consigna de consentimiento y registro y las transcripciones
-están en el apéndice~\ref{apx:entrevista}.
+\begin{itemize}
+    \item \textbf{Encuesta.} Formulario breve en Tally, orientado a
+          alumnos, familias con hijos en edad escolar y tutores, con un
+          mínimo fijado de 30 respuestas válidas. Se aplicó del 28 de
+          agosto al 9 de septiembre de 2026 y obtuvo 88 respuestas
+          válidas (apéndice~\ref{apx:encuesta}).
+    \item \textbf{Entrevistas.} Se realizaron dos entrevistas
+          semiestructuradas, cada una con un guion propio organizado por
+          ejes temáticos (apéndice~\ref{apx:entrevista}): una a una
+          docente en ejercicio (Perfil~1), el 25 de septiembre de 2026, de
+          forma presencial; y otra a una tutora particular con cartera
+          propia (Perfil~2), el 29 de septiembre de 2026, de forma
+          asincrónica por mensajes de audio.
+\end{itemize}
+
+El plan original preveía entrevistar a al menos dos tutores
+particulares activos y a cuatro alumnos o familias que hubieran
+contratado tutorías. Se realizaron dos entrevistas, y solo una a una
+tutora particular; la mirada de alumnos y familias se relevó únicamente
+a través de la encuesta, en la que representan el 89,8\,\% de las
+respuestas. Las entrevistas, además, no se realizaron en el Sprint~3,
+como preveía el cronograma, sino al final de septiembre. Las
+consecuencias del desvío se declaran como limitación en el
+capítulo~\ref{cap:conclusiones}.
+
+Para acercar la muestra al plan se prepararon dos guiones más, para un
+tutor que dé clases virtuales y para una familia de una provincia del
+interior (apéndice~\ref{apx:entrevista}).
 % TODO-AUTOR: completar tras la entrevista (actualizar cuántas entrevistas se hicieron y a quiénes, si se realizan las del tutor virtual y la familia del interior).
 
-El instrumento con usuarios que reemplaza al piloto son las
-\textbf{sesiones moderadas}: cada participante adulto completa un guion
-de tareas sobre la plataforma mientras piensa en voz alta, y al final
-responde el cuestionario de usabilidad SUS (\emph{System Usability
-Scale}) \citep{brooke1996} y la pregunta de recomendación del \gls{nps}
-\citep{reichheld2003}. El protocolo completo ---participantes,
-consentimiento, guion de tareas, cuestionario y planilla de
-resultados--- está en el apéndice~\ref{apx:sesiones}. La evaluación
-técnica usa, además, un conjunto de 120 búsquedas etiquetadas con un
-criterio documentado y un script de medición de latencias, ambos en el
-repositorio del sistema (anexo~\ref{anx:repositorios}).
+La evaluación técnica usa, además, un conjunto de 120 búsquedas
+etiquetadas con un criterio documentado y un script de medición de
+latencias, ambos en el repositorio del sistema
+(anexo~\ref{anx:repositorios}).
 
 \subsection{Datos}
 
-Los datos a obtener consistirán en registros de audio provenientes de
-las entrevistas semiestructuradas y datos tabulares generados a partir
-de las respuestas numéricas y de selección múltiple del formulario
-digital, a los que se suman la planilla de resultados de las sesiones
-moderadas (una fila por participante, sin nombres) y los resultados de
-la evaluación técnica.
+Los datos obtenidos consisten en el registro de audio de la entrevista
+presencial, los mensajes de audio de la entrevista asincrónica y los
+datos tabulares de las respuestas de selección única, escala y selección
+múltiple del formulario, a los que se suman los resultados de la
+evaluación técnica.
 
 \subsection{Procesamiento de los datos}
 
-Las entrevistas serán grabadas con el consentimiento del entrevistado
-para luego ser transcritas en su totalidad y analizadas mediante
-codificación temática, mientras que los datos cuantitativos obtenidos de
-los formularios serán agrupados y tabulados para permitir un conteo y
-evaluación estadística de las métricas.
+Las entrevistas se registraron con el consentimiento de las
+entrevistadas, se transcribieron en su totalidad y se organizaron por
+los ejes temáticos de cada guion. La entrevista presencial se transcribió
+por reconocimiento automático del audio y se editó solo para eliminar
+muletillas y errores evidentes de reconocimiento. La entrevista
+asincrónica se reconstruyó a partir de los mensajes de audio, y la
+entrevistada pidió mantener el anonimato. Ambas entrevistadas revisaron
+y validaron sus transcripciones. En esta entrevista, las preguntas que no llegaron a abordarse
+se registran como tales y no se interpretan como respuestas. Los datos
+de la encuesta se agruparon y tabularon para su conteo y análisis
+estadístico descriptivo.
 
 \subsection{Análisis de los datos}
 
-Los datos recolectados en la evaluación técnica, las sesiones moderadas y
-la validación de demanda se analizarán en relación con los indicadores definidos,
-presentando los resultados estructurados en el
-capítulo~\ref{cap:resultados}.
+Los datos de la validación de demanda y de las pruebas técnicas se
+analizan en relación con los indicadores definidos, y los resultados se
+presentan estructurados en el capítulo~\ref{cap:resultados}.
 
 \subsection{Síntesis y conclusiones}
 
@@ -285,7 +293,7 @@ dimensiones principales de gestión:
           capítulo~\ref{cap:riesgos}, contemplando factores como demoras
           en la integración de \gls{api} externas, costos de modelos de
           lenguaje superiores a los estimados y la dificultad para
-          reclutar usuarios para la validación.
+          reclutar tutores para la puesta en marcha.
     \item \textbf{Calidad:} cada historia de usuario de las
           especificaciones de los módulos se ejercita con al menos una
           prueba de integración de punta a punta, y los casos borde que
@@ -302,8 +310,9 @@ dimensiones principales de gestión:
           líneas con JaCoCo, sin un umbral que corte la compilación, y
           decidir el umbral con el valor medido (ADR-000-05). Al
           18 de octubre de 2026 el backend contaba con 859 pruebas y una
-          cobertura de líneas del 89,6\,\%. La calidad percibida se mide
-          mediante los indicadores específicos de la investigación.
+          cobertura de líneas del 89,6\,\%. La calidad percibida se medirá
+          con los indicadores específicos de la investigación a partir de
+          la puesta en marcha.
     \item \textbf{Recursos:} un desarrollador full-stack con
           conocimientos en React, Java con Spring Boot, Python y bases de
           datos relacionales, junto al uso de herramientas tecnológicas de
@@ -311,7 +320,7 @@ dimensiones principales de gestión:
     \item \textbf{Satisfacción de los interesados:} se medirá a través de
           un sistema de calificaciones post-clase bidireccional para
           mantener altos estándares de calidad, complementándose con el
-          análisis del \gls{nps} de las sesiones moderadas para comprobar el grado
+          análisis del \gls{nps} de los primeros usuarios para comprobar el grado
           de utilidad percibida y la aplicabilidad de los resultados en
           escenarios reales.
 \end{itemize}
@@ -340,7 +349,7 @@ desarrollo de manera que cada capítulo se apoye en trabajo ya realizado
         22 sep 2026 & Cap.~6 Análisis de riesgos & Sprint 7: aula virtual (LiveKit) \\
         13 oct 2026 & Cap.~7 Resultados & Sprints 8--9: resumen automático + sistema de reputación \\
         27 oct 2026 & Cap.~8 Conclusiones & Sprint 10: integración end-to-end, pruebas de sistema y correcciones \\
-        28 nov 2026 & Presentación final + producto funcional & Sprint 11: evaluación técnica y sesiones moderadas con usuarios adultos, en lugar del piloto con usuarios reales previsto originalmente (sección~\ref{sec:sin-piloto}); análisis de resultados y documentación final \\
+        28 nov 2026 & Presentación final + producto funcional & Sprint 11: documentación final y preparación de la defensa \\
         \bottomrule
     \end{tabularx}
 \end{table}
@@ -375,7 +384,7 @@ planificación, con la línea de tiempo completa.
         \ganttbar{Sprint 7 --- Aula virtual}{2026-09-08}{2026-09-22} \\
         \ganttbar{Sprints 8--9 --- Resumen y reputación}{2026-09-22}{2026-10-13} \\
         \ganttbar{Sprint 10 --- Integración}{2026-10-13}{2026-10-27} \\
-        \ganttbar{Sprint 11 --- Evaluación}{2026-10-27}{2026-11-27} \\
+        \ganttbar{Sprint 11 --- Documentación final}{2026-10-27}{2026-11-27} \\
         \ganttmilestone{Entrega final}{2026-11-28}
     \end{ganttchart}
     \caption{Cronograma de sprints del proyecto (ciclo lectivo 2026)}
@@ -416,7 +425,69 @@ despliegue autoalojada que gestiona contenedores y variables de entorno
 de forma equivalente a una \gls{paas} gestionada. Coolify corre en un
 servidor propio, publicado en internet mediante Cloudflare Tunnel, que
 además cifra el tráfico entre los usuarios y el servidor. La planificación original
-preveía migrar a un \gls{vps} alquilado antes del piloto; se mantuvo
-el servidor propio por simplicidad operativa y costo, aceptando un
-punto único de falla para la demostración y la evaluación (ADR-000-07,
+preveía migrar a un \gls{vps} alquilado antes de la puesta en marcha; se
+mantuvo el servidor propio por simplicidad operativa y costo, aceptando
+un punto único de falla (ADR-000-07,
 sección~\ref{sec:limitaciones}).
+
+\section{Desarrollo asistido por inteligencia artificial}\label{sec:desarrollo-ia}
+
+La construcción del \gls{mvp} siguió un método dirigido por
+especificaciones, en el que la documentación precede al código y guía a
+un agente de programación basado en \gls{ia}. El método se organiza en
+cuatro niveles de documentos, todos versionados en el repositorio del
+sistema (anexo~\ref{anx:repositorios}):
+
+\begin{enumerate}
+    \item \textbf{Constitución.} Principios que gobiernan toda decisión
+          técnica: arquitectura de monolito modular, minimización de
+          datos, seguridad del menor como restricción principal y
+          preferencia por la solución más simple compatible con un único
+          desarrollador y un presupuesto acotado.
+    \item \textbf{Especificaciones por módulo.} Nueve documentos, uno por
+          módulo de dominio, con historias de usuario, requerimientos
+          funcionales y reglas de negocio.
+    \item \textbf{Planes técnicos.} Diez documentos que traducen cada
+          especificación en un modelo de datos, contratos de \gls{api} y
+          decisiones de implementación.
+    \item \textbf{Lista de tareas.} Una lista de verificación atómica,
+          que funciona como memoria persistente entre sesiones de trabajo:
+          cada tarea se marca como completada solo después de verificarse.
+\end{enumerate}
+
+Sobre esa base, en las primeras etapas del desarrollo la implementación
+se realizó con agentes de OpenCode. Un archivo de instrucciones
+persistentes (\texttt{AGENTS.md}), que el agente lee al iniciar cada
+sesión, fija las reglas de arquitectura, las condiciones de seguridad
+del menor y los casos en que una decisión exige un registro de decisión
+de arquitectura (\gls{adr}). Ante un conflicto o una decisión no
+prevista, el agente debe detenerse y consultar, en lugar de decidir por
+su cuenta. Las decisiones resultantes se documentaron en registros
+validados por el autor: catorce en esa etapa y 37 al 14 de octubre de
+2026. Además, se consultaron Gemini y ChatGPT de forma esporádica, como
+segunda y tercera opinión sobre decisiones puntuales.
+
+Desde el 24 de septiembre de 2026, el análisis y el desarrollo
+continuaron con Claude Code, bajo el mismo método: las mismas
+especificaciones, la misma lista de tareas y las mismas reglas de
+\texttt{AGENTS.md}. En esa etapa se implementaron, entre otros, el
+rediseño de la interfaz, el \gls{cap} para tutores de menores, el
+resumen como adicional pago, el cobro con \gls{oauth} por tutor, la
+revisión del \gls{matching} y la actualización a Spring Boot~4. El
+análisis incluyó estudios previos (\emph{spikes}) que plantearon
+alternativas; la decisión entre ellas fue del autor y quedó registrada
+como \gls{adr}. Claude Code asistió también la documentación, el modelo
+financiero y la redacción de este trabajo.
+
+El control de calidad del código generado se apoyó en cuatro
+mecanismos: las pruebas automatizadas (859 pruebas del backend al 18 de
+octubre de 2026, incluidas pruebas de extremo a extremo del flujo
+principal y de la rama de seguridad, 252 pruebas de extremo a extremo
+del frontend con Playwright y 44 del motor de \gls{matching} con
+pytest), la integración continua en GitHub Actions, la revisión de
+cada cambio antes de integrarlo a la rama principal y la verificación
+del sistema construido: una auditoría técnica del repositorio y
+pruebas exploratorias sobre el despliegue real
+(capítulo~\ref{cap:resultados}). La declaración de uso de \gls{ia}
+detalla las herramientas y tareas, y el apéndice~\ref{apx:prompts}
+registra los prompts más relevantes.

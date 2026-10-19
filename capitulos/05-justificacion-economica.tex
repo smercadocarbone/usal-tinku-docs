@@ -245,7 +245,7 @@ tanto, económicamente relevante: el ticket por sesión crece con ella, y
 también el costo de \gls{ia} del resumen opcional, que escala con los
 minutos de audio procesados y no con la cantidad de sesiones.
 
-El sistema no fija una duración típica y, sin operación con usuarios reales, no hay datos
+El sistema no fija una duración típica y, antes de la puesta en marcha, no hay datos
 de la distribución real. El modelo trabaja con una \textbf{duración media
 supuesta}, que se declara como estimación propia: se asume que un
 30\,\% de las sesiones usa el bloque mínimo de 30 minutos y el resto dura
@@ -508,7 +508,7 @@ desarrollador, dentro del presupuesto de infraestructura de USD 0 a 100
 mensuales que el proyecto se fijó para el desarrollo. El costo aceptado es
 un único punto de falla —un corte de luz o de conectividad del servidor
 deja la plataforma fuera de línea—, mitigado con respaldos diarios
-cifrados fuera del servidor (a activar antes de abrir la plataforma a usuarios reales), y la decisión se revisa si la operación
+cifrados fuera del servidor (a activar antes de la puesta en marcha), y la decisión se revisa si la operación
 crece. Como referencia del costo alternativo de alquilar un \gls{vps}, uno
 de recursos medios de un proveedor local (8 vCore/16~GB) cuesta
 \usd{158,7} mensuales y los planes de entrada arrancan en \usd{7,71}
@@ -1205,7 +1205,7 @@ de decisiones del sistema señala que, con ese neto, vuelven a pesar dos
 riesgos: la \textbf{desintermediación} —que tutor y alumno acuerden las
 clases siguientes por fuera de la plataforma— y la mayor dificultad para
 \textbf{sumar tutores} (ADR-M5-05). Por eso la comisión no se considera
-definitiva: la métrica con la que se revisará con datos de operación real quedó
+definitiva: la métrica con la que se revisará con los datos de la puesta en marcha quedó
 diferida deliberadamente hasta ese momento (regla BR-PAG-03), y la
 tabla~\ref{tab:sens-comision} muestra el margen disponible para hacerlo
 —una reducción a 23 o 25\,\% mantiene positivos el \gls{van} base y el
@@ -1280,7 +1280,7 @@ ello se desprenden tres condiciones de viabilidad:
           anula. El \comision{} vigente deja un margen de unos dieciséis
           puntos porcentuales, que se mantiene deliberadamente como
           colchón frente al escenario pesimista y a los costos que el
-          modelo no cuantifica, y que se revisará con datos de operación real
+          modelo no cuantifica, y que se revisará con los datos de la puesta en marcha
           considerando su efecto sobre el neto del tutor y el riesgo de
           desintermediación.
     \item \textbf{Operar sin equipo de soporte rentado}, o con una
