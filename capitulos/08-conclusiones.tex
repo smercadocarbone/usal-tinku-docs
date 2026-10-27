@@ -66,7 +66,12 @@ marcha.
           virtual, pero difiere en el pago: lo preferiría dentro de la
           plataforma ``por seguridad''. La tutora entrevistada, con
           cartera propia, prefiere en cambio el cobro directo y rechaza
-          trabajar a comisión.
+          trabajar a comisión. Cuatro de los cinco tutores del Perfil~3,
+          en cambio, aceptan el \comision{} a cambio de alumnos y cobro
+          garantizado, aunque la pregunta presentaba la comisión junto con
+          sus beneficios; la quinta, que nunca tuvo problemas para cobrar,
+          la rechaza; y de las tres familias del interior, dos pagarían
+          en la plataforma y una le transferiría al tutor.
     \item \textbf{El tutor de \sistema{} no es el tutor consolidado.} La
           entrevista a una tutora con 35 años de trayectoria y más de
           veinte alumnos muestra que quien ya tiene una red de
@@ -77,7 +82,9 @@ marcha.
           estudiantes avanzados, docentes y graduados recientes, y tutores
           que quieren enseñar fuera de su zona. Es una delimitación de
           diseño; la disposición de ese segmento a usar la plataforma
-          todavía no se midió.
+          todavía no se midió. Las entrevistas a cinco tutores en
+          actividad, con horarios libres y menos demanda propia, aportan un
+          primer indicio cualitativo, mayormente a favor.
     \item \textbf{La \gls{ia} se valora por lo que resuelve, no por su
           nombre.} El 68,2\,\% quiere que la plataforma le recomiende un
           tutor, pero solo el 5,7\,\% eligió la ``\gls{ia} que recomiende
@@ -85,7 +92,8 @@ marcha.
           descrito por su utilidad, fue la segunda función más valorada
           (56,8\,\%). La entrevistada pidió que la recomendación se
           explique por la reputación del tutor y por los resultados de
-          alumnos similares.
+          alumnos similares, y las tres familias del interior pidieron lo
+          mismo: un motivo concreto, no ``estrellitas''.
     \item \textbf{La viabilidad económica es condicional.} Con la
           comisión del \comision{}, el escenario base resulta viable
           (\gls{van} de \usd{18.869} y \gls{tir} del 41,57\,\%), igual que
@@ -123,9 +131,12 @@ seguir la atención del alumno y los cortes de conexión; y el modelo económico
 optimista. En cambio, falta evidencia sobre el núcleo de la hipótesis: el
 acceso efectivo de estudiantes del interior. El 90,9\,\% de las
 respuestas de la encuesta proviene de la provincia de Buenos Aires y de
-la Ciudad Autónoma de Buenos Aires, las dos entrevistadas trabajan en
+la Ciudad Autónoma de Buenos Aires, las dos primeras entrevistadas trabajan en
 Pilar, la docente no conoce casos concretos de la brecha rural, y ningún
-indicador se midió todavía con usuarios reales.
+indicador se midió todavía con usuarios reales. Las entrevistas a tres
+familias de Entre Ríos, Río Negro y Santa Fe aportan los primeros casos
+concretos ---en dos localidades pequeñas no hubo profesor disponible---,
+pero son tres y no miden la magnitud de la brecha.
 
 Las dos afirmaciones técnicas del capítulo~\ref{cap:introduccion} quedan
 en el siguiente estado:
@@ -165,7 +176,7 @@ capítulo~\ref{cap:introduccion} y el grado en que se alcanzó.
         \toprule
         \tb{Objetivo} & \tb{Evidencia} & \tb{Grado} & \tb{Observación} \\
         \midrule
-        OE1 Mercado y estado del arte & Capítulo~\ref{cap:marco-teorico}; apéndice~\ref{apx:encuesta} & Alcanzado & Encuesta concentrada en Buenos Aires; dos entrevistas, ambas en Pilar (apéndice~\ref{apx:entrevista}) \\
+        OE1 Mercado y estado del arte & Capítulo~\ref{cap:marco-teorico}; apéndice~\ref{apx:encuesta} & Alcanzado & Encuesta concentrada en Buenos Aires; diez entrevistas: siete a docentes y tutores, casi todos de Buenos Aires, y tres a familias del interior (apéndice~\ref{apx:entrevista}) \\
         OE2 Arquitectura & Capítulo~\ref{cap:marco-tecnologico}; apéndice~\ref{apx:uml} & Alcanzado & --- \\
         OE3 Motor de \gls{matching} & Capítulo~\ref{cap:resultados}, pruebas en producción & Parcial & Implementado y calibrado con consultas propias; sin validar con usuarios (I-01) \\
         OE4 Aula virtual & Capítulo~\ref{cap:resultados}, pruebas en producción & Parcial & Aula y kill-switch funcionaron de punta a punta en la prueba en vivo; faltan la exactitud del clasificador con contenido real y la latencia en dispositivos reales, por lo que las clases con menores siguen deshabilitadas (R-01) \\
@@ -203,7 +214,9 @@ capítulo~\ref{cap:marco-teorico} en cuatro puntos.
           entrevista a la docente introduce una variable que esa discusión no
           contempla: cuando una de las partes es menor de edad, quién
           califica deja de ser un detalle de interfaz y pasa a ser una
-          decisión de protección.
+          decisión de protección. Los cinco tutores del Perfil~3
+          coinciden, por un motivo adicional: un menor puede castigar con
+          una mala calificación una clase difícil.
     \item \textbf{Mercados bilaterales.} El problema de arranque en frío
           \citep{rochet2006} aparece en los datos: solo 9 de las 88
           respuestas corresponden a tutores, y la oferta es el recurso más
@@ -231,8 +244,13 @@ capítulo~\ref{cap:marco-teorico} en cuatro puntos.
           presentaban el resultado de la encuesta antes de la respuesta, y
           otra a una tutora consolidada, realizada por mensajes de audio,
           en la que dos de cada cinco preguntas no se abordaron y cuyo
-          perfil es el opuesto al del tutor objetivo. Ninguna fuente
-          representa todavía al tutor que \sistema{} busca incorporar.
+          perfil es el opuesto al del tutor objetivo. Las ocho entrevistas
+          posteriores ---cinco a tutores en actividad y tres a familias
+          del interior--- son breves, por WhatsApp y sin repreguntas;
+          en las de tutores, la pregunta sobre la comisión presentaba el
+          dato y sus beneficios. Tres de los cinco tutores trabajan en el
+          AMBA, y ninguna fuente mide todavía la adopción del
+          tutor que \sistema{} busca incorporar.
           La calibración del umbral de relevancia usa consultas de
           elaboración propia.
     \item \textbf{Técnicas.} El clasificador del kill-switch no se midió
@@ -331,9 +349,11 @@ capítulo~\ref{cap:marco-teorico} en cuatro puntos.
           en marcha y mostrar el motivo de cada recomendación. Con los datos de la
           puesta en marcha, reconsiderar las propuestas de la entrevista a la docente que no se
           incorporaron al \gls{mvp}: la presencia del adulto responsable en
-          las clases con menores ---sobre la que las dos entrevistadas
+          las clases con menores ---sobre la que las entrevistadas
           discrepan--- y la calificación del tutor por parte del
-          adulto.
+          adulto, que pidieron también los cinco tutores del Perfil~3.
+          Antes de abrir las reservas, explicar al reservar qué pasa con el
+          cobro si la clase se corta.
 \end{itemize}
 
 \section{Futuras líneas de investigación}\label{sec:futuras-lineas}
@@ -346,7 +366,9 @@ capítulo~\ref{cap:marco-teorico} en cuatro puntos.
     \item \textbf{Resumen automático con menores.} Evaluar la
           transcripción local o en infraestructura propia, previa a la
           anonimización, que permita ofrecer el resumen sin transferir la
-          voz del menor a un proveedor externo.
+          voz del menor a un proveedor externo. Los tutores de menores
+          entrevistados son los que más valoran el resumen, como informe
+          para la familia.
     \item \textbf{Efecto en el aprendizaje.} Medir el rendimiento académico
           de los alumnos antes y después de un ciclo de tutorías, para
           contrastar el resultado con la literatura sobre tutoría.

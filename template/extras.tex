@@ -149,6 +149,19 @@
 % -- DIAGRAMA DE GANTT (cronograma) ----------------------------
 % Ver el ejemplo en capitulos/02-metodologia.tex
 \RequirePackage{pgfgantt}
+% pgfgantt v5.0a: si la grilla vertical llega al borde en mitad del patrón,
+% \gtt@vgrid@do deja sin consumir el resto de la lista y su coma se imprime en
+% nullfont. Esta versión descarta lo que queda hasta el \relax, final.
+\def\gtt@vgrid@do#1,{%
+  \ifx\relax#1\expandafter\@gobble\else\expandafter\@firstofone\fi
+  {\ifnum\gtt@currgrid>\gtt@chartwidth
+     \expandafter\gtt@vgrid@gobble
+   \else
+     \gtt@vgrid@analyze#1\relax
+     \expandafter\gtt@vgrid@do
+   \fi}%
+}
+\def\gtt@vgrid@gobble#1\relax,{}
 % nombres de mes en español para el calendario del Gantt
 \ifx\usal@language\usal@spanishname
   \def\pgfcalendarmonthshortname#1{\ifcase#1\or ene\or feb\or mar\or abr\or may\or jun\or jul\or ago\or sep\or oct\or nov\or dic\fi}

@@ -191,6 +191,10 @@
 \RequirePackage{enumitem}
 \setlist{noitemsep}
 
+% margen de estiramiento para que los párrafos con palabras largas o sin
+% guionado (rutas, nombres propios) no se salgan del margen derecho
+\setlength{\emergencystretch}{3em}
+
 
 % =============================================================
 % 4. DATOS DE LA TESIS
@@ -250,11 +254,9 @@
     {\begin{spacing}{1.0}\saveditemize\itemsep0em }
     {\savedenditemize\end{spacing}}
 
-\let\savedenumerate=\enumerate
-\let\savedendenumerate=\endenumerate
-\renewenvironment{enumerate}
-    {\begin{spacing}{0.5}\savedenumerate}
-    {\savedendenumerate\end{spacing}}
+% el interlineado va por hook y no envolviendo el entorno: un grupo extra
+% alrededor de enumerate hace que enumitem pierda la cuenta de [resume]
+\AtBeginEnvironment{enumerate}{\setstretch{0.5}}
 
 % citas textuales en cursiva
 \let\savedquote\quote

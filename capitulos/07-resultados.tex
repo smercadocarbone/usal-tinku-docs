@@ -476,8 +476,10 @@ texto del aula viajan por el canal de datos del servicio de video
 
 \subsection{Entrevistas a especialistas}
 
-Se realizaron dos entrevistas semiestructuradas: una a una docente en
-ejercicio (Perfil~1) y otra a una tutora particular (Perfil~2).
+Se realizaron diez entrevistas semiestructuradas en cuatro perfiles:
+una a una docente en ejercicio (Perfil~1), una a una tutora particular
+consolidada (Perfil~2), cinco a tutores particulares en actividad
+(Perfil~3) y tres a familias de localidades del interior (Perfil~4).
 
 \subsubsection{Perfil 1: docente}
 
@@ -494,7 +496,7 @@ supuestos del proyecto.
     \caption{Contraste entre la encuesta y la entrevista a la docente}
     \label{tab:encuesta-entrevista}
     \small
-    \begin{tabularx}{\textwidth}{l L L l}
+    \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash\hsize=.8\hsize}X >{\raggedright\arraybackslash\hsize=.9\hsize}X >{\raggedright\arraybackslash\hsize=1.5\hsize}X >{\raggedright\arraybackslash\hsize=.8\hsize}X}
         \toprule
         \tb{Supuesto} & \tb{Encuesta} & \tb{Entrevista} & \tb{Lectura} \\
         \midrule
@@ -574,7 +576,7 @@ supuestos del modelo.
     \caption{Contraste entre el modelo y la entrevista a la tutora}
     \label{tab:tutora-modelo}
     \small
-    \begin{tabularx}{\textwidth}{l L L l}
+    \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash\hsize=.8\hsize}X >{\raggedright\arraybackslash\hsize=.9\hsize}X >{\raggedright\arraybackslash\hsize=1.5\hsize}X >{\raggedright\arraybackslash\hsize=.8\hsize}X}
         \toprule
         \tb{Supuesto} & \tb{Modelo o encuesta} & \tb{Entrevista} & \tb{Lectura} \\
         \midrule
@@ -614,8 +616,10 @@ en especial los de zonas con poca oferta presencial
 (capítulo~\ref{cap:introduccion}). Esta delimitación es una decisión del
 proyecto que la entrevista vuelve explícita, no un resultado validado:
 la encuesta relevó solo nueve tutores, de edades diversas (uno de 18 a 25
-años, cinco de 26 a 40 y tres de más de 40), y ninguna fuente mide
-todavía la disposición del tutor objetivo a usar la plataforma. La
+años, cinco de 26 a 40 y tres de más de 40), y las entrevistas del
+Perfil~3 aportan solo un indicio cualitativo
+(sección~\ref{sec:resultados-perfil3}): ninguna fuente mide todavía la
+disposición del tutor objetivo a usar la plataforma. La
 puesta en marcha y el reclutamiento del riesgo R-07 son los que deben
 aportar esa evidencia.
 
@@ -674,20 +678,237 @@ por lo tanto, como la descripción de la práctica de una tutora
 consolidada y no como una evaluación del modelo por parte de su usuario
 previsto.
 
+\subsubsection{Perfil 3: tutores particulares}\label{sec:resultados-perfil3}
+
+Se entrevistó, por WhatsApp, a cinco tutores en actividad
+(Perfil~3, apéndice~\ref{apx:entrevista}): una docente de primaria de
+Pilar con 14 años de experiencia, un profesor de matemática de
+secundaria del AMBA, un estudiante universitario de Córdoba que prepara
+alumnos para el ingreso, una profesora independiente de inglés de
+negocios para ejecutivos y una profesora particular de inglés con
+alumnos de Buenos Aires y de otras provincias. Cuatro respondieron por
+audio y la última, por escrito. A diferencia de la tutora del Perfil~2,
+ninguno tiene más demanda de la que puede atender: los cinco tienen
+horarios libres. La tabla~\ref{tab:tutores-modelo} contrasta sus respuestas con los
+supuestos del modelo.
+
+\begin{table}[H]
+    \centering
+    \caption{Contraste entre el modelo y las entrevistas a tutores}
+    \label{tab:tutores-modelo}
+    \small
+    \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash\hsize=.8\hsize}X >{\raggedright\arraybackslash\hsize=.9\hsize}X >{\raggedright\arraybackslash\hsize=1.5\hsize}X >{\raggedright\arraybackslash\hsize=.8\hsize}X}
+        \toprule
+        \tb{Supuesto} & \tb{Modelo o encuesta} & \tb{Entrevistas} & \tb{Lectura} \\
+        \midrule
+        Capacidad ociosa del tutor & No relevada & 5 de 5 tienen horarios libres; 3 los atribuyen a los traslados y 1 los usa para recuperar clases & Respaldo \\
+        Canal de búsqueda & 70\,\% encontró al profesor por recomendación & Recomendación, redes sociales, grupos de WhatsApp y Facebook, Discord y LinkedIn & Coinciden \\
+        Alcance geográfico & Tutores de cualquier provincia & 2 de 5 tienen alumnos de otra provincia & Indicio débil \\
+        Comisión del \comision{} & Neto del tutor del 66,96\,\% & 4 de 5 la aceptan a cambio de alumnos y cobro garantizado; 1 la rechaza; el dato se presentó en la pregunta & Respaldo condicionado \\
+        Cobro garantizado (\gls{escrow} de 24~horas) & Valor exclusivo de la plataforma (R-02) & 4 de 5 describen demoras para cobrar; la que no las tiene rechaza la comisión & Respaldo \\
+        Kill-switch & Corte y bloqueo ante contenido inapropiado & 5 de 5 lo aprueban; 2 lo valoran como protección del tutor & Coinciden \\
+        Quién califica al tutor & Alumno y adulto que paga (M7) & Con menores, el adulto: 5 de 5 & Difieren; coincide con la docente \\
+        Resumen automático & Adicional; nunca con menores (ADR-M6-03) & 5 de 5 lo usarían; de los 3 que enseñan a menores, 2 lo quieren para la familia & Coinciden; difiere en menores \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+De estas entrevistas surgen tres observaciones:
+
+\begin{itemize}
+    \item \textbf{El cobro garantizado compensa la comisión, cuando
+          hay problemas para cobrar.} Cuatro de los cinco
+          aceptan el \comision{} con reservas (``me duele un poquito'',
+          ``es bastante'', ``es saladito''), y los cuatro la justifican con
+          lo mismo: no tener que reclamar pagos y cobrar al día siguiente.
+          Es el mecanismo con el que el riesgo R-02 se mitiga ---un valor
+          que solo existe dentro de la plataforma--- y el primer respaldo
+          del lado de la oferta a la comisión del modelo. La excepción lo
+          confirma: Luli, que factura como monotributista y nunca tuvo
+          problemas para cobrar, no pagaría la comisión, aunque la
+          pregunta también le presentaba sus beneficios. Para un tutor que
+          ya cobra sin demoras, el cobro garantizado no compensa el
+          \comision{}. Dos matices acotan el respaldo: la pregunta
+          presentaba la comisión junto con sus beneficios, lo que puede
+          haber inducido el acuerdo, y no mencionaba la comisión de
+          MercadoPago, que reduce el neto del tutor al 66,96\,\%
+          (ADR-M5-05).
+    \item \textbf{La capacidad ociosa está en los traslados.} Tres de los
+          cuatro pierden horas en viajes o entre colegios y ven en la clase
+          virtual una forma de ocupar esos huecos. La oferta que \sistema{}
+          necesita para el arranque (R-07) puede venir, entonces, no solo de
+          tutores nuevos, sino también de las horas libres de tutores ya
+          activos. Pero esa oferta, por ahora, se concentra en Buenos
+          Aires: solo el tutor de Córdoba y una de las profesoras de
+          inglés tienen alumnos de otra provincia, y ninguno enseña en una
+          localidad con poca oferta. No toda hora libre es capacidad
+          ociosa: Luli reserva las suyas para recuperar clases.
+    \item \textbf{Las dos funciones con menores chocan con el diseño.} Los
+          cinco tutores coinciden con la docente del Perfil~1 en que, con menores,
+          el adulto debería poder calificar al tutor, y la docente de
+          primaria lo ilustra con el riesgo de que un chico castigue con
+          una estrella una clase difícil. Y los tres tutores que enseñan a
+          menores valoran el resumen ---dos, para mandárselo a la familia,
+          y la tercera, para seguir el progreso de cada alumno---, pero el
+          diseño lo excluye en las clases con un menor, porque el audio del menor
+          no se graba (ADR-M6-03). La protección del menor se mantiene;
+          lo que las entrevistas agregan es que el resumen, tal como está
+          diseñado, no llega al segmento que más lo pide.
+\end{itemize}
+
+En la clase virtual, cada tutor resuelve con recursos propios una
+pérdida distinta: el cuaderno acercado a la cámara, las preguntas
+sorpresa a alumnos que apagan la cámara, una tableta digitalizadora en
+lugar del pizarrón y el aula invertida; la quinta tutora, en cambio,
+destaca como ventaja de la clase virtual la cantidad de material y
+recursos disponibles. El aula de \sistema{} ofrece
+la pantalla compartida que cuatro de ellos mencionan y una pizarra compartida
+que cubre la necesidad del tutor de exactas, que hoy la suple con una
+tableta propia; pero la pizarra solo se habilita en clases entre adultos
+(ADR-M3-06), de modo que la docente de primaria, que extraña señalar en
+la hoja del alumno, no contaría con ella.
+
+Estas entrevistas tienen limitaciones que acotan su peso como evidencia:
+son breves ---nueve preguntas en tres mensajes, o en seis puntos en el
+caso de la respuesta escrita---, sin repreguntas; la pregunta sobre la
+comisión presentaba el dato y sus beneficios, dos de las preguntas sobre
+las calificaciones sugerían la respuesta y otra las agrupaba con el
+kill-switch; tres de los cinco tutores trabajan en el AMBA, y una de ellos
+enseña a adultos en el ámbito corporativo, fuera del segmento escolar. Sus aportes se toman
+como la opinión de tutores en actividad sobre el modelo y no como una
+medición de su adopción.
+
+\subsubsection{Perfil 4: familias del interior}\label{sec:resultados-perfil4}
+
+Se entrevistó, por mensajes de audio, a tres familias de localidades del
+interior (Perfil~4, apéndice~\ref{apx:entrevista}): de Maciá (Entre
+Ríos), de Ingeniero Jacobacci (Río Negro) y de Rafaela (Santa Fe). Son la
+primera evidencia de la tesis que proviene de la población a la que
+apunta la hipótesis central, que la encuesta casi no alcanzó (R-08). La
+tabla~\ref{tab:familias-modelo} contrasta sus respuestas con los
+supuestos del modelo.
+
+\begin{table}[H]
+    \centering
+    \caption{Contraste entre el modelo y las entrevistas a familias}
+    \label{tab:familias-modelo}
+    \small
+    \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash\hsize=.8\hsize}X >{\raggedright\arraybackslash\hsize=.9\hsize}X >{\raggedright\arraybackslash\hsize=1.5\hsize}X >{\raggedright\arraybackslash\hsize=.8\hsize}X}
+        \toprule
+        \tb{Supuesto} & \tb{Modelo o encuesta} & \tb{Entrevistas} & \tb{Lectura} \\
+        \midrule
+        Brecha geográfica & 90,9\,\% de las respuestas de Buenos Aires & En Maciá y Jacobacci no consiguieron profesor; en Rafaela, sin lugar por semanas & Respaldo cualitativo \\
+        Tutor de otra provincia & 77,3\,\% tomaría clases virtuales & 3 de 3 lo aceptarían, con condiciones & Coinciden \\
+        Conectividad variable & Hipótesis técnica 2 & De fibra óptica a cortes por tormenta y latencia alta & Respalda la relevancia de I-02 \\
+        Cámara & Opcional; degradación de video a audio y texto (FR-AULA-002) & Una familia pide no exigirla por la latencia & Coinciden \\
+        Corte de conexión & Reembolso si la clase se corta antes del 50\,\% (FR-PAG-004) & Una familia no sabe si se cobra la clase cortada & La regla existe; falta comunicarla \\
+        Adulto durante la clase & No exigido & Solo la primera clase (1 de 3); nunca (2 de 3) & Coinciden; difiere de la docente \\
+        Pago dentro de la plataforma & Solo 35,2\,\% lo prefiere (R-02) & 2 de 3 lo prefieren; 1 transferiría al tutor & Difieren en parte \\
+        Precio por hora & Mediana de \usd{4,56}; piso de \usd{4} (\$6.140) & De \$8.000 a \$20.000 (\usd{5,21} a \usd{13,03}) & Superan la mediana \\
+        Recomendación de tutores & 68,2\,\% la quiere; 5,7\,\% valora la ``\gls{ia}'' & 3 de 3 piden el motivo concreto, no solo estrellas & Coinciden \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+De estas entrevistas surgen cuatro observaciones:
+
+\begin{itemize}
+    \item \textbf{La brecha tiene casos concretos.} En las dos
+          localidades pequeñas, la última vez que un hijo necesitó apoyo
+          no hubo profesor disponible y la familia recurrió a un sobrino
+          que estudia en otra ciudad, por teléfono, o a un amigo ingeniero,
+          ``de onda, después de cenar''. En Jacobacci, además, el padre
+          explica la causa: los universitarios se van a estudiar a
+          Bariloche o a General Roca. En Rafaela, una ciudad intermedia, el
+          problema no es la ausencia de profesores, sino que los mejores
+          no tienen lugar. Es la situación que describe el
+          capítulo~\ref{cap:introduccion}, y es la primera vez que la tesis
+          la documenta con casos y no solo con la literatura.
+    \item \textbf{La recomendación tiene que decir por qué.} Las tres
+          familias rechazan una recomendación que solo diga que el tutor es
+          ``el ideal'' o que muestre ``estrellitas como en Mercado Libre''.
+          Cada una pide un dato distinto: experiencia con chicos de esa
+          edad, la materia aprobada en una universidad concreta o los
+          resultados con otras familias de la misma ciudad. Es la misma
+          lectura de la encuesta ---la \gls{ia} como etiqueta casi no se
+          valora--- y da contenido a una tarea que ya figuraba entre las
+          pendientes antes de operar comercialmente: mostrar el motivo de
+          cada recomendación.
+    \item \textbf{La conectividad del interior no es homogénea.} Las tres
+          conexiones cubren el rango que plantea la hipótesis técnica:
+          fibra óptica estable, internet de cooperativa que se corta con
+          las tormentas y una conexión con latencia alta, desde el celular.
+          El diseño ya contempla los dos casos difíciles: la cámara es
+          opcional, el aula degrada de video a audio y a texto
+          (FR-AULA-002), y una clase que se corta antes de la mitad se
+          reembolsa (FR-PAG-004). Pero la familia de Maciá no sabía qué
+          pasaría con el cobro, lo que indica que la regla debe explicarse
+          al reservar. En las clases con menores, además, el kill-switch
+          analiza el video que recibe cada participante, de modo que una
+          clase sin cámara queda cubierta solo por lo que se comparta en
+          pantalla.
+    \item \textbf{El adulto confía cuando verifica al tutor.} Ninguna de
+          las familias pide presenciar todas las clases: una se quedaría
+          cerca en la primera, y las otras dos no estarían presentes. Lo que
+          piden es saber quién está del otro lado ---ver el \gls{dni},
+          conocer qué estudia, que prepare el programa local---. La
+          posición de las familias está más cerca de la de la tutora del
+          Perfil~2 que de la de la docente del Perfil~1, y respalda un
+          diseño que protege al menor con la verificación del tutor y el
+          kill-switch sin exigir la presencia del adulto.
+\end{itemize}
+
+Dos hallazgos señalan tensiones con el modelo. En el pago, una de las
+tres familias prefiere transferirle directamente al tutor, por
+desconfianza hacia las aplicaciones, y otra cuenta que los tutores
+piden cobrar por fuera para evitar la comisión: es la desintermediación
+del riesgo R-02, descrita ahora desde la demanda. En el precio, los
+valores informados ---de \$9.000 a \$9.500 en Maciá, de \$8.000 a
+\$9.000 en Jacobacci y de \$19.000 a \$20.000 en Rafaela--- superan la
+mediana de la encuesta (\usd{4,56}) y el piso de tarifa de \usd{4}
+(\$6.140). Los rangos de Maciá y de Rafaela alcanzan o superan el ticket
+que anula el \gls{van} del escenario base (\usd{5,87} por hora,
+capítulo~\ref{cap:economica}), y el de Jacobacci queda apenas por
+debajo. El de Rafaela (\usd{12,38} a \usd{13,03}) supera incluso la
+mediana (\$12.000) y el promedio (\$13.392,43) del relevamiento de
+Superprof, y duplica el de las dos localidades pequeñas: el precio del
+interior no es uno solo, y un único valor no lo representa. Si estos precios fueran representativos, la encuesta, concentrada
+en Buenos Aires, subestimaría la disposición a pagar del interior, y las
+localidades con poca oferta no implicarían un ingreso por clase menor.
+Son tres casos, por lo que el resultado no reemplaza la medición del
+precio efectivo prevista en el riesgo R-05. Dos familias agregaron
+condiciones que el modelo no contempla: una, que el tutor prepare el
+programa de la institución local; la otra, que use un vocabulario que
+los chicos entiendan.
+
+Estas entrevistas tienen limitaciones que acotan su peso como evidencia:
+son tres, breves y sin repreguntas; las familias fueron contactadas por
+el autor y no se seleccionaron al azar; y los precios mezclan el que se
+paga en la localidad con el que la familia pagaría. Aportan casos
+concretos de la brecha que la hipótesis plantea, pero no la miden: el
+sesgo geográfico de la encuesta (R-08) sigue abierto en su dimensión
+cuantitativa.
+
 \subsection{Decisiones derivadas}
 
 La tabla~\ref{tab:feedback-decisiones} traduce los hallazgos en
 decisiones concretas.
 
-\begin{table}[H]
-    \centering
+% xltabular y no table[H]: la tabla es más alta que una página y tiene que poder seguir en la próxima
+{\small
+\begin{xltabular}{\textwidth}{>{\raggedright\arraybackslash}p{2.1cm} L L >{\raggedright\arraybackslash}p{2.6cm}}
     \caption{Traducción de los hallazgos en decisiones de diseño}
-    \label{tab:feedback-decisiones}
-    \small
-    \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{2.1cm} L L >{\raggedright\arraybackslash}p{2.6cm}}
+    \label{tab:feedback-decisiones} \\
         \toprule
         \tb{Fuente} & \tb{Hallazgo} & \tb{Decisión} & \tb{Estado} \\
         \midrule
+        \endfirsthead
+        \toprule
+        \tb{Fuente} & \tb{Hallazgo} & \tb{Decisión} & \tb{Estado} \\
+        \midrule
+        \endhead
+        \bottomrule
+        \endfoot
         Encuesta & La \gls{ia} como etiqueta casi no se valora & Presentar las recomendaciones por su resultado, sin el rótulo ``\gls{ia}'' (T-TES-12) & Aplicado \\
         Encuesta & El resumen automático es la segunda función más valorada & Resumen como adicional opcional, a costo más un 50\,\% (ADR-M5-06) & Aplicado; apagado en producción (R-16) \\
         Encuesta & Solo el 35,2\,\% prefiere pagar en la plataforma & Mitigación del riesgo R-02: valor exclusivo dentro de la plataforma & Planificado \\
@@ -705,10 +926,18 @@ decisiones concretas.
         Entrevista (tutora) & Una tutora con cartera propia rechaza la comisión y prefiere el cobro directo & Delimitar el segmento de tutores a quienes aún no tienen una red de alumnos; reclutamiento para la puesta en marcha en la comunidad universitaria (R-07) & Aplicado en el análisis \\
         Entrevista (tutora) & Desconfianza a dejar datos personales en la plataforma & Trabajo futuro: explicar en el registro qué datos se piden, para qué y quién los ve (R-07) & Trabajo futuro \\
         Entrevista (tutora) & Precio ajustado a cada familia & Trabajo futuro: precio diferenciado por alumno, por el alcance congelado (R-03) & Trabajo futuro \\
+        Entrevista (tutores) & Cuatro de cinco aceptan el \comision{} a cambio de alumnos y cobro garantizado; la que cobra sin demoras la rechaza & Se mantiene la comisión; revisarla con los datos de la puesta en marcha (ADR-M5-05, R-07) & Respaldo condicionado \\
+        Entrevista (tutores) & Con menores, el adulto debería calificar al tutor (cinco tutores y la docente) & Reconsiderar con prioridad tras la puesta en marcha; no se incorpora al \gls{mvp} por el alcance congelado (R-03) & No adoptado \\
+        Entrevista (tutores) & Los tutores de menores quieren el resumen para la familia & Se mantiene sin resumen en clases con menores (ADR-M6-03); trabajo futuro: transcripción en infraestructura propia & No adoptado \\
+        Entrevista (tutores) & Un tutor de exactas suple la pizarra con una tableta propia & Coincide con la pizarra compartida entre adultos (ADR-M3-06); sin cambios & Respaldo \\
+        Entrevista (familias) & Las tres piden el motivo concreto de la recomendación & Mostrar el motivo de cada recomendación antes de operar comercialmente & Planificado \\
+        Entrevista (familias) & No saben qué pasa con el cobro si se corta la conexión & La regla ya existe (FR-PAG-004); explicarla al reservar & Trabajo futuro \\
+        Entrevista (familias) & No exigir la cámara por la latencia & Coincide con la cámara opcional y la degradación del aula (FR-AULA-002); sin cambios & Respaldo \\
+        Entrevista (familias) & Pago por fuera, pedido por la familia o por el tutor & Refuerza la mitigación del riesgo R-02 & Planificado \\
+        Entrevista (familias) & El tutor debe preparar el programa local & Trabajo futuro: declarar en el perfil la institución o el examen que prepara (R-03) & Trabajo futuro \\
         Diseño & El audio de la sesión no puede anonimizarse antes del \gls{llm} & Transcripción previa y modelo de resumen solo con texto anonimizado; sin resumen con menores (ADR-M6-03) & Aplicado \\
-        \bottomrule
-    \end{tabularx}
-\end{table}
+\end{xltabular}
+}
 
 \section{Contraste con el estado del arte}
 

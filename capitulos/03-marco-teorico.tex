@@ -191,7 +191,8 @@ de detección de contenido inapropiado en tiempo real, la reputación con
 señales implícitas, el precio dinámico por poder adquisitivo regional y
 el modo de baja conectividad.
 
-\begin{description}
+% unboxed: las etiquetas largas pueden partirse en varias líneas
+\begin{description}[style=unboxed]
     \item[Sistema de detección de contenido inapropiado en tiempo real
     (``kill-switch'' de seguridad).] Ninguna de las plataformas relevadas
     implementa moderación automática del contenido de la videollamada en
@@ -386,7 +387,7 @@ Finalmente, el proyecto se desarrolla bajo un esquema de Scrum adaptado
 
 \section{Entrevistas a especialistas}\label{sec:entrevistas}
 
-Se proponen dos perfiles complementarios cuyos guiones
+Se proponen cuatro perfiles complementarios cuyos guiones
 completos se transcriben en el apéndice~\ref{apx:entrevista}:
 \textbf{Perfil 1}, docente o gestor/a institucional, para indagar sobre
 el rol del apoyo escolar en la prevención de la repitencia, las
@@ -395,7 +396,13 @@ pedagógicos y de seguridad de una tutoría virtual; y \textbf{Perfil 2},
 tutora particular, para indagar sobre el lado de la oferta del
 \gls{marketplace}: cómo consigue alumnos, cuánto cobra, qué comisión
 aceptaría, qué la haría quedarse dentro de la plataforma y qué fricción
-le genera la verificación.
+le genera la verificación. Como la tutora del Perfil~2 resultó ser una
+tutora consolidada, ajena al segmento que \sistema{} busca incorporar, se
+sumaron dos perfiles con entrevistas breves: \textbf{Perfil 3}, cinco
+tutores particulares en actividad con menos demanda propia, para
+contrastar los mismos supuestos del lado de la oferta; y \textbf{Perfil
+4}, tres familias de localidades del interior, para relevar el lado de
+la demanda allí donde la encuesta casi no llegó.
 
 La entrevista del Perfil~1 se realizó el 25 de septiembre de 2026, de
 forma presencial y con una duración de 30 minutos, con Carolina
@@ -471,4 +478,78 @@ intermediarios. Su entrevista no mide, por lo tanto, la disposición del
 tutor objetivo a usar la plataforma, pero muestra cómo funciona hoy el
 mercado de clases particulares que \sistema{} pretende complementar y
 dónde están los límites del segmento. Esta lectura se desarrolla en el
+capítulo~\ref{cap:resultados}.
+
+Las entrevistas del Perfil~3 se hicieron entre el 20 y el 27 de octubre de 2026 por WhatsApp
+con cinco tutores: Valeria, docente de primaria en Pilar con 14
+años de experiencia; Martín, profesor de matemática de secundaria en la
+Ciudad de Buenos Aires y el Gran Buenos Aires; Tomás, estudiante
+universitario en Córdoba que prepara alumnos para el ingreso; Sofía,
+profesora independiente de inglés de negocios y oratoria para ejecutivos;
+y Luli, profesora particular de inglés con alumnos de Buenos Aires y de
+otras provincias. Cuatro respondieron por audio y Luli, por escrito.
+Sus aportes principales fueron cuatro:
+
+\begin{itemize}
+    \item \textbf{Sobre la oferta disponible:} los cinco tienen horarios
+          libres y tres los asocian al tiempo que pierden en traslados; la
+          clase virtual les permitiría ocupar esos huecos. Luli, en
+          cambio, los reserva para recuperar clases. Consiguen
+          alumnos por recomendación, redes sociales, grupos de WhatsApp o
+          Facebook, Discord y LinkedIn, y dos ---Tomás y Luli--- tienen
+          alumnos de otra provincia.
+    \item \textbf{Sobre la comisión y el cobro:} cuatro de los cinco
+          aceptan el \comision{} condicionado a que la plataforma les
+          consiga alumnos y les garantice el cobro, y esos cuatro describen
+          demoras para cobrar ---familias que se olvidan, alumnos que piden
+          esperar a fin de mes, empresas que pagan a 30, 60 o 90 días---.
+          El cobro garantizado aparece como el valor que más compensa la
+          comisión. La quinta, Luli, factura como monotributista, nunca
+          tuvo problemas para cobrar y no pagaría la comisión.
+    \item \textbf{Sobre la clase virtual:} cada uno resuelve una pérdida
+          distinta con recursos propios: el cuaderno acercado a la cámara,
+          las preguntas sorpresa para sostener la atención, una tableta
+          digitalizadora en lugar del pizarrón y el aula invertida. Luli
+          destaca, como ventaja, la cantidad de material y recursos
+          disponibles.
+    \item \textbf{Sobre la seguridad, la reputación y el resumen:} los
+          cinco aprueban el kill-switch, y dos lo valoran también como
+          protección del tutor; los cinco consideran que, con menores, el
+          adulto debería poder calificar; y los cinco usarían el resumen
+          automático, para la familia, para el alumno, para el cliente o
+          para su propio seguimiento.
+\end{itemize}
+
+Las entrevistas del Perfil~4 se hicieron el 24 y el 25 de octubre de 2026 por mensajes de
+audio con tres familias: Silvana, de Maciá (Entre Ríos); Raúl, de
+Ingeniero Jacobacci (Río Negro); y Georgina, de Rafaela (Santa Fe). En
+los tres casos, el hijo que necesitó apoyo era menor. Sus aportes
+principales fueron cinco:
+
+\begin{itemize}
+    \item \textbf{Sobre el problema:} en las dos localidades pequeñas no
+          consiguieron profesor ---el único bueno en exactas estaba lleno;
+          los universitarios se van a estudiar a otra ciudad--- y
+          terminaron recurriendo a un familiar o a un amigo. En Rafaela hay
+          profesores, pero los mejores no tenían lugar en semanas.
+    \item \textbf{Sobre el tutor de otra provincia:} los tres lo
+          aceptarían, condicionado a verificar la identidad del tutor, a
+          que prepare el programa local y a que se haga entender.
+    \item \textbf{Sobre la conectividad:} la conexión va de la fibra
+          óptica de Rafaela a la internet de cooperativa que se corta con
+          las tormentas en Maciá y a la latencia de Jacobacci, donde el
+          padre pide no exigir la cámara.
+    \item \textbf{Sobre el pago:} dos prefieren pagar en la plataforma y
+          una, transferirle directamente al tutor por desconfianza hacia
+          las aplicaciones; los precios que informan van de \$8.000 a
+          \$20.000 por hora.
+    \item \textbf{Sobre la recomendación:} los tres piden que la
+          recomendación diga por qué, con un dato concreto ---experiencia
+          con chicos de esa edad, la materia aprobada, resultados con otras
+          familias--- y no solo un promedio de estrellas.
+\end{itemize}
+
+Las entrevistas de ambos perfiles son breves y asincrónicas, y en las de
+los tutores el dato de la comisión se presentó dentro de la pregunta. El
+contraste con el modelo y con la encuesta se presenta en el
 capítulo~\ref{cap:resultados}.

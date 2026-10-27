@@ -6,7 +6,11 @@
 
 ## Agradecimientos
 
-*Texto de los agradecimientos.*
+A los profesores de la cátedra, por guiarme a lo largo de todo el proyecto. Sus correcciones y preguntas me obligaron a justificar cada decisión con evidencia, y este trabajo es mejor por eso.
+
+A las personas que aceptaron ser entrevistadas, por su tiempo y por la generosidad de proponer mejoras desde su experiencia en el aula. Y a quienes respondieron la encuesta, que le dieron al proyecto datos reales donde antes había supuestos.
+
+A mi familia y a mis amigos más cercanos, que escucharon este proyecto más veces de las que hubieran querido. Muchas de sus preguntas, hechas con curiosidad y sin conocer los detalles técnicos, me mostraron cosas que yo solo no veía: un supuesto que no se sostenía, un riesgo que no había considerado o una forma más simple de explicar lo que estaba construyendo. Gran parte de lo que Tinku es hoy se lo debo a esas conversaciones.
 
 ## Declaración sobre el uso de IA
 
@@ -78,7 +82,7 @@ El mercado de clases particulares en Argentina presenta tres problemas estructur
 - **Brecha geográfica en el acceso al apoyo escolar:** el acceso a tutores especializados está fuertemente concentrado en los grandes centros urbanos. Los estudiantes de localidades del interior del país –pueblos pequeños, comunidades de montaña, zonas rurales– no cuentan con alternativas accesibles de apoyo académico extracurricular. En muchos casos, encontrar un tutor implicaría recorrer decenas o cientos de kilómetros, una opción económica y logísticamente inviable para la mayoría de las familias. Si bien las zonas urbanas también pueden beneficiarse de la plataforma, es en estas regiones donde el impacto potencial es mayor y la ausencia de alternativas es más crítica.
 - **Desajuste entre el ritmo de enseñanza colectiva y el aprendizaje individual:** el sistema educativo formal, por su naturaleza grupal, no puede adaptarse al ritmo particular de cada alumno. Estudiantes que no comprenden un tema en el momento en que se enseña quedan progresivamente rezagados, sin un mecanismo institucional de recuperación personalizada. La tutoría particular es la herramienta más efectiva para cerrar esta brecha, pero su acceso no es universal.
 
-Estos tres factores generan un mercado subdesarrollado que no aprovecha el potencial existente: miles de docentes y graduados universitarios con capacidad y disposición para ofrecer tutorías, que no encuentran una plataforma que profesionalice y amplíe su alcance más allá de su entorno geográfico inmediato.
+Estos tres factores generan un mercado subdesarrollado que no aprovecha el potencial existente: miles de docentes y graduados universitarios con capacidad y disposición para ofrecer tutorías, que no encuentran una plataforma que profesionalice y amplíe su alcance más allá de su entorno geográfico inmediato. Del lado de la oferta, el proyecto se dirige a ellos —estudiantes avanzados, docentes y graduados recientes, y tutores sin una red de alumnos fuera de su zona— y no a los tutores ya consolidados, que consiguen sus alumnos por recomendación y no necesitan un intermediario (capítulo~[§cap:resultados]).
 
 ## Hipótesis de investigación
 
@@ -115,7 +119,7 @@ Argentina, con especial impacto en comunidades y regiones donde la oferta presen
           LLM recibe solo el texto.
 - **OE7 — Implementación del sistema de reputación:**
           desarrollar el sistema de calificaciones bidireccional implementando un umbral mínimo de calificaciones para su exposición pública como medida anti-manipulación.
-- **OE8 — Validación funcional:** realizar pruebas de aceptación de usuario (UAT) con un grupo piloto de tutores y alumnos reales –adultos mientras las clases con menores permanezcan deshabilitadas (sección~[§sec:limitaciones])–, midiendo usabilidad, confianza percibida y satisfacción con el matching propuesto.
+- **OE8 — Validación funcional:** verificar el funcionamiento del sistema mediante pruebas automatizadas unitarias, de integración y de extremo a extremo, una auditoría técnica y pruebas sobre el sistema desplegado, y definir los indicadores con los que se medirán la aceptación del matching, la calidad percibida y la satisfacción de los usuarios una vez que el sistema opere.
 
 **Objetivos reformulados durante la implementación..**  Cuatro objetivos específicos se redactaron antes de que se tomaran las decisiones que los afectan, y se reformularon para describir el sistema construido. Cada cambio queda registrado como ADR en el repositorio del sistema
 (anexo~[§anx:repositorios]) y se resume en la sección~[§sec:decisiones-implementacion]:
@@ -168,8 +172,8 @@ El proyecto se abordará desde una metodología de desarrollo ágil (Scrum adapt
           Superprof, Tusclases).
 - **Diseño de arquitectura y UX:** definición del modelo de datos, diseño de wireframes y prototipos de alta fidelidad, validación con usuarios.
 - **Desarrollo iterativo del MVP:** implementación por módulos funcionales con una revisión del incremento al cierre de cada sprint.
-- **Integración y pruebas:** pruebas unitarias, de integración, E2E y de aceptación de usuario (UAT).
-- **Piloto y validación:** lanzamiento controlado con grupo reducido de tutores y alumnos reales –adultos, mientras las clases con menores sigan deshabilitadas– para validar la hipótesis central.
+- **Integración y pruebas:** pruebas unitarias, de integración y E2E, auditoría técnica y pruebas sobre el sistema desplegado.
+- **Validación:** encuesta de demanda, entrevistas y definición de los indicadores con los que se validará la hipótesis central con usuarios reales.
 - **Documentación y presentación:** elaboración del informe final y presentación del producto funcional.
 
 ## Alcance del proyecto
@@ -183,7 +187,7 @@ Python, que es la excepción explícita a la regla del monolito. El modelo de da
 Redis (ADR-000-04).
 
 Todo el ecosistema se despliega en un servidor propio administrado con
-Coolify: cuatro contenedores (base de datos, motor de matching, backend y frontend) cuyas imágenes construye GitHub Actions, publicados en internet a través de Cloudflare Tunnel y con una copia de seguridad diaria y cifrada de la base en Cloudflare R2 (implementada; se activa al cargar las credenciales de R2, paso pendiente antes del piloto). En el diseño inicial se preveía repartir el sistema entre Supabase (base de datos), Vercel
+Coolify: cuatro contenedores (base de datos, motor de matching, backend y frontend) cuyas imágenes construye GitHub Actions, publicados en internet a través de Cloudflare Tunnel y con una copia de seguridad diaria y cifrada de la base en Cloudflare R2 (implementada; se activa al cargar las credenciales de R2, paso pendiente antes de la puesta en marcha). En el diseño inicial se preveía repartir el sistema entre Supabase (base de datos), Vercel
 (frontend) y Upstash (Redis); se abandonó porque el plan gratuito de
 Vercel no admite uso comercial y porque concentrar todo en un solo servidor mantiene el costo dentro del presupuesto de cero a cien dólares mensuales con una sola operación que atender (ADR-000-07). El proyecto incluye la documentación correspondiente a su arquitectura.
 
@@ -199,11 +203,11 @@ Art.~VI). Todas estas iniciativas y funcionalidades no incluidas quedan document
 
 ## Limitaciones
 
-- **Límite de validación:** la validación de la hipótesis se realizará con un grupo piloto acotado. Los resultados son indicativos de la validez funcional del sistema, no estadísticamente representativos del mercado total.
-- **Límite de piloto sin menores:** aunque el sistema está diseñado para alumnos desde el nivel primario, el piloto corre sin clases con menores. Una opción de configuración
+- **Límite de validación:** la validación de la hipótesis con usuarios reales excede el alcance de este trabajo, que entrega el sistema construido y los indicadores para medirla. La hipótesis se responde con la evidencia disponible —encuesta, entrevistas y pruebas técnicas—, que no es estadísticamente representativa del mercado total.
+- **Límite de clases con menores:** aunque el sistema está diseñado para alumnos desde el nivel primario, las clases con menores están deshabilitadas. Una opción de configuración
           (‘tinku.menores.sesiones-habilitadas‘) vale
           ‘false‘ por defecto y, mientras tanto, el sistema rechaza toda reserva o solicitud de sesión cuyo beneficiario sea un menor. Solo se habilita cuando estén cerrados el
-          *kill-switch* en el cliente y el CAP de los tutores de menores: al momento de esta redacción el CAP está implementado y al *kill-switch* en el cliente le resta su prueba de punta a punta contra el servicio de video real, entre otras tareas previas al encendido. Se prefirió demorar las clases con menores antes que habilitarlas sin todas sus protecciones (Constitución del proyecto, Art.~II). En consecuencia, la validación del piloto no cubre el flujo con menores.
+          *kill-switch* en el cliente y el CAP de los tutores de menores: al momento de esta redacción el CAP está implementado y al *kill-switch* en el cliente le resta su prueba de punta a punta contra el servicio de video real, entre otras tareas previas al encendido. Se prefirió demorar las clases con menores antes que habilitarlas sin todas sus protecciones (Constitución del proyecto, Art.~II). En consecuencia, el flujo con menores solo se verificó en las pruebas técnicas.
 - **Límite de verificación de tutores:** en el MVP, la identidad se verifica con reconocimiento óptico de caracteres
           (OCR) sobre el DNI, ejecutado con Tesseract en el propio servidor: controla la mayoría de edad, el nombre y que el documento no esté ya registrado. La imagen no sale del servidor ni se conserva, y no hay revisión manual del
           DNI, por lo que se acepta el riesgo de una lectura errónea en fotos de baja calidad (ADR-M1-01, ADR-M1-08). La revisión manual existe para la credencial académica y para el
@@ -212,11 +216,11 @@ Art.~VI). Todas estas iniciativas y funcionalidades no incluidas quedan document
           Argentina, obligatorio y vigente (doce meses desde su emisión) solo para dar clases a menores. Se acepta el riesgo residual de un certificado adulterado o mal evaluado, ya que la verificación de su firma digital queda diferida.
 - **Límite de conectividad:** el servicio requiere conexión a internet estable para el aula virtual. Si bien Starlink y otras soluciones satelitales amplían el universo de usuarios potenciales, persiste una porción de la población objetivo sin acceso adecuado a dispositivos o conectividad.
 - **Límite del resumen automático:** el resumen existe solo para las clases entre adultos que contratan el adicional y en las que ambas partes aceptaron la grabación de audio; las clases con un menor nunca se graban ni se resumen. El resumen opera sobre la transcripción anonimizada de la sesión y el conocimiento del modelo subyacente, sin acceso a libros de texto o currículos oficiales del sistema educativo argentino, y depende de un proveedor externo: sin la configuración del proveedor, el sistema no lo genera.
-- **Límite geográfico del piloto:** la validación funcional queda circunscripta al territorio argentino. La plataforma está diseñada para escalar regionalmente, pero dicha expansión excede el alcance de este trabajo.
+- **Límite geográfico:** la validación funcional queda circunscripta al territorio argentino. La plataforma está diseñada para escalar regionalmente, pero dicha expansión excede el alcance de este trabajo.
 - **Límite de alineación curricular:** dado que el sistema educativo argentino no tiene un diseño curricular único a nivel nacional, un tutor de una jurisdicción puede no estar alineado con los contenidos específicos que se enseñan en la escuela del alumno en otra provincia. Esta limitación no invalida la propuesta de valor de la plataforma, pero marca un límite real de la personalización ofrecida.
 - **Límite de disponibilidad:** todo el sistema –base de datos, motor de matching, backend y frontend– corre en un único servidor propio, ubicado en un domicilio y sin dirección
           IP fija, y no en un proveedor con garantías de disponibilidad.
-          Es un punto único de falla aceptado para el piloto: un corte de luz o de internet deja la plataforma fuera de línea mientras dure. Se mitiga con la copia de seguridad diaria y cifrada fuera del servidor y con un procedimiento de restauración documentado en el manual de operación, y la decisión se revisa si crece la operación (ADR-000-07). El plan original preveía migrar a un VPS alquilado antes del piloto; se optó por concentrar todo en el servidor existente por simplicidad operativa y costo.
+          Es un punto único de falla aceptado para la puesta en marcha: un corte de luz o de internet deja la plataforma fuera de línea mientras dure. Se mitiga con la copia de seguridad diaria y cifrada fuera del servidor y con un procedimiento de restauración documentado en el manual de operación, y la decisión se revisa si crece la operación (ADR-000-07). El plan original preveía migrar a un VPS alquilado antes de la puesta en marcha; se optó por concentrar todo en el servidor existente por simplicidad operativa y costo.
 
 ## Justificación
 
@@ -238,8 +242,8 @@ Argentino esté en el centro de un proyecto de ingeniería de sistemas es, en s�
 
 | **Categoría** | **Detalle** |
 | --- | --- |
-| Recursos humanos | 1 desarrollador full-stack (autor del proyecto). Tutores y alumnos para el grupo piloto de validación. |
-| Infraestructura | Servidor propio ya existente, administrado con Coolify, con cuatro contenedores (PostgreSQL con pgvector, motor de matching, backend y frontend) publicados mediante Cloudflare Tunnel; imágenes construidas por GitHub Actions y publicadas en el registro de contenedores de GitHub; copia de seguridad diaria y cifrada de la base en Cloudflare R2 (capa gratuita, 14 días de retención). Sin costo de alquiler de hosting; el presupuesto de infraestructura se mantiene entre USD 0 y 100 mensuales. El plan original (Vercel, Supabase, Upstash y migración a un VPS de 10 a 25 USD mensuales antes del piloto) se reemplazó por esta topología (ADR-000-07, sección~[§sec:alcance]). |
+| Recursos humanos | 1 desarrollador full-stack (autor del proyecto). Participantes de la encuesta y de las entrevistas de validación. |
+| Infraestructura | Servidor propio ya existente, administrado con Coolify, con cuatro contenedores (PostgreSQL con pgvector, motor de matching, backend y frontend) publicados mediante Cloudflare Tunnel; imágenes construidas por GitHub Actions y publicadas en el registro de contenedores de GitHub; copia de seguridad diaria y cifrada de la base en Cloudflare R2 (capa gratuita, 14 días de retención). Sin costo de alquiler de hosting; el presupuesto de infraestructura se mantiene entre USD 0 y 100 mensuales. El plan original (Vercel, Supabase, Upstash y migración a un VPS de 10 a 25 USD mensuales antes de la puesta en marcha) se reemplazó por esta topología (ADR-000-07, sección~[§sec:alcance]). |
 | Servicios externos | Motor de matching semántico: sentence-transformers (modelo ‘paraphrase-multilingual-MiniLM-L12-v2‘, vectores de 384 dimensiones) con el índice en pgvector, con procesamiento local y sin costo de API por consulta. Resumen de sesión: transcripción con ‘gpt-4o-mini-transcribe‘ (ADR-M3-04) y resumen con GPT-4o sobre el texto anonimizado (ADR-M6-03), con un costo que cubre el precio del adicional (capítulos [§cap:marco-tecnologico] y [§cap:economica]). MercadoPago: sin costo fijo, comisión por transacción, integrado con un cliente HTTP propio y conexión OAuth de cada tutor. LiveKit Cloud: plan gratuito Build de 5.000 minutos de participante por mes. Resend (plan gratuito) para el correo transaccional (ADR-000-06). OCR con Tesseract local, sin servicio externo. |
 | Herramientas de desarrollo | OpenCode + Neovim (editor principal), GitHub y GitHub Actions (control de versiones e integración continua), Figma (diseño UX), JUnit 5 con Testcontainers (pruebas del backend contra PostgreSQL real), Playwright con axe-core (pruebas E2E y de accesibilidad del frontend), pytest (motor de matching) y JaCoCo (medición de cobertura). La mención original de Jest se reemplazó porque las pruebas del frontend se resolvieron con Playwright. Todas en planes gratuitos o estudiantiles. |
 | Tiempo estimado | 6 meses de desarrollo. Dedicación aproximada: 15–20 horas semanales. |
@@ -277,8 +281,8 @@ Argentina.
 La investigación se delimita a los objetivos específicos OE1 a OE8
 definidos en el capítulo~[§cap:introduccion], con foco en el diseño e implementación del MVP de Tinku para el mercado argentino.
 Quedan fuera del alcance investigativo los mercados regionales, la integración con organismos estatales, los módulos de accesibilidad y suscripción premium y el asistente conversacional de repaso conceptual
-(sección~[§sec:alcance]), los cuales se documentan como trabajo futuro. El piloto se realiza sin clases con menores
-(sección~[§sec:limitaciones]), por lo que la validación no cubre ese flujo.
+(sección~[§sec:alcance]), los cuales se documentan como trabajo futuro. Las clases con menores están deshabilitadas
+(sección~[§sec:limitaciones]), por lo que ese flujo solo se verifica con pruebas técnicas.
 
 ### Marco teórico
 
@@ -291,38 +295,44 @@ A partir de la información relevada, se definirá el diseño técnico del siste
 
 ### Indicadores
 
-Los indicadores principales para verificar la hipótesis central se resumen en la tabla~[§tab:indicadores].
+Los indicadores principales para verificar la hipótesis central se resumen en la tabla~[§tab:indicadores]. Se miden con usuarios reales a partir de la puesta en marcha del sistema, que excede el alcance de este trabajo (capítulo~[§cap:introduccion], sección~[§sec:limitaciones]).
 
 **Tabla:** Indicadores del proyecto
 
 | **ID** | **Variable** | **Indicador** | **Umbral** |
 | --- | --- | --- | --- |
-| I-01 | Aceptación del matching | Tasa de aceptación de las sugerencias del motor por parte del alumno | $> 60 %$ de recomendaciones aceptadas en el piloto |
+| I-01 | Aceptación del matching | Tasa de aceptación de las sugerencias del motor por parte del alumno | $> 60 %$ de recomendaciones aceptadas |
 | I-02 | Calidad percibida de la sesión | Puntuación promedio otorgada por los alumnos en el cuestionario post-sesión (escala 1 a 5) | $4{,}0$ |
-| I-03 | Cobertura geográfica del piloto | Sesiones completadas entre usuarios de provincias distintas | Al menos 1 sesión exitosa entre dos provincias, incluyendo una del interior |
-| I-04 | Satisfacción y recomendación | NPS del piloto | Porcentaje positivo (promotores $>$ detractores) |
+| I-03 | Cobertura geográfica | Sesiones completadas entre usuarios de provincias distintas | Al menos 1 sesión exitosa entre dos provincias, incluyendo una del interior |
+| I-04 | Satisfacción y recomendación | NPS de los usuarios | Porcentaje positivo (promotores $>$ detractores) |
 
 ### Técnicas de recolección de datos
 
-Se implementarán técnicas cualitativas y cuantitativas para la recolección de datos primarios. La técnica cualitativa consistirá en entrevistas para validar el problema planteado, identificar puntos de dolor en el proceso de búsqueda y contratación, y relevar expectativas.
-La técnica cuantitativa se basará en encuestas de validación de demanda para cuantificar la frecuencia de uso de tutorías, los canales actuales de búsqueda y la disposición a utilizar y pagar por una plataforma centralizada.
+Se combinaron técnicas cualitativas y cuantitativas para la recolección de datos primarios. La técnica cualitativa consistió en entrevistas semiestructuradas para validar el problema planteado, contrastar los supuestos del proyecto y relevar cómo funciona hoy el mercado de clases particulares desde el lado de quien enseña. La técnica cuantitativa consistió en una encuesta de validación de demanda para cuantificar el uso de tutorías, los canales actuales de búsqueda y la disposición a utilizar y pagar por una plataforma centralizada.
 
 ### Instrumentos de recolección de datos
 
-Se utilizarán entrevistas semiestructuradas aplicadas a una muestra de al menos dos tutores particulares activos y cuatro alumnos o familias que hayan contratado tutorías, complementadas con un formulario breve en
-Google Forms orientado a estudiantes universitarios y familias con hijos en edad escolar, buscando un mínimo de 30 respuestas válidas. El guion de las entrevistas se transcribe en el apéndice~[§apx:entrevista] y la encuesta completa en el apéndice~[§apx:encuesta].
+- **Encuesta.** Formulario breve en Tally, orientado a alumnos, familias con hijos en edad escolar y tutores, con un mínimo fijado de 30 respuestas válidas. Se aplicó del 28 de agosto al 9 de septiembre de 2026 y obtuvo 88 respuestas válidas (apéndice~[§apx:encuesta]).
+- **Entrevistas.** Se realizaron diez entrevistas semiestructuradas en cuatro perfiles, cada uno con un guion propio organizado por ejes temáticos
+          (apéndice~[§apx:entrevista]): una a una docente en ejercicio
+          (Perfil~1), el 25 de septiembre de 2026, de forma presencial; una a una tutora particular con cartera propia (Perfil~2), el 29
+          de septiembre de 2026; cinco a tutores particulares en actividad
+          (Perfil~3) y tres a familias de localidades del interior
+          (Perfil~4), entre el 20 y el 27 de octubre de 2026. Las de los perfiles~2 a~4 se hicieron de forma asincrónica por WhatsApp, con respuestas en mensajes de audio salvo una, respondida por escrito.
+
+El plan original preveía entrevistar a al menos dos tutores particulares activos y a cuatro alumnos o familias que hubieran contratado tutorías. Se entrevistó a cinco tutores y a tres familias, una menos que lo previsto; ningún alumno fue entrevistado directamente. Las entrevistas de los perfiles~3 y~4 son breves —nueve y siete preguntas enviadas en tres mensajes— y, en las de tutores, la pregunta sobre la comisión presentaba el dato del modelo antes de la respuesta. Las entrevistas, además, no se realizaron en el Sprint~3, como preveía el cronograma, sino entre fines de septiembre y fines de octubre. Las consecuencias del desvío se declaran como limitación en el capítulo~[§cap:conclusiones].
 
 ### Datos
 
-Los datos a obtener consistirán en registros de audio provenientes de las entrevistas semiestructuradas y datos tabulares generados a partir de las respuestas numéricas y de selección múltiple del formulario digital.
+Los datos obtenidos consisten en el registro de audio de la entrevista presencial, los mensajes de audio de las entrevistas asincrónicas y los datos tabulares de las respuestas de selección única, escala y selección múltiple del formulario.
 
 ### Procesamiento de los datos
 
-Las entrevistas serán grabadas con el consentimiento del entrevistado para luego ser transcritas en su totalidad y analizadas mediante codificación temática, mientras que los datos cuantitativos obtenidos de los formularios serán agrupados y tabulados para permitir un conteo y evaluación estadística de las métricas.
+Las entrevistas se registraron con el consentimiento de las entrevistadas, se transcribieron en su totalidad y se organizaron por los ejes temáticos de cada guion. La entrevista presencial se transcribió por reconocimiento automático del audio y se editó solo para eliminar muletillas y errores evidentes de reconocimiento. La entrevista asincrónica se reconstruyó a partir de los mensajes de audio, y la entrevistada pidió mantener el anonimato. Ambas entrevistadas revisaron y validaron sus transcripciones. En esta entrevista, las preguntas que no llegaron a abordarse se registran como tales y no se interpretan como respuestas. Las entrevistas de los perfiles~3 y~4 se transcribieron a partir de los mensajes de audio y se organizaron por pregunta, con las respuestas de cada persona juntas para facilitar la comparación; las de las familias se identifican por el nombre de pila y la localidad, y las de los tutores, por el nombre de pila. Los datos de la encuesta se agruparon y tabularon para su conteo y análisis estadístico descriptivo.
 
 ### Análisis de los datos
 
-Los datos recolectados durante el piloto funcional y la validación de demanda se analizarán en relación con los indicadores definidos, presentando los resultados estructurados en el capítulo~[§cap:resultados].
+Los datos de la validación de demanda y de las pruebas técnicas se analizan en relación con los indicadores definidos, y los resultados se presentan estructurados en el capítulo~[§cap:resultados].
 
 ### Síntesis y conclusiones
 
@@ -352,13 +362,13 @@ En línea con los criterios de evaluación del proyecto y el perfil directivo en
           (anexo~[§anx:repositorios]). El control del alcance se apoya, además, en el Product Backlog, el Sprint Backlog y los incrementos funcionales.
 - **Tiempos:** el proyecto se estructura en sprints de duración variable a lo largo de seis meses entre junio y noviembre de 2026, con una dedicación estimada de 15 a 20 horas semanales e hitos académicos inamovibles, integrando las ceremonias del marco ágil adoptado.
 - **Costos:** los costos operativos del MVP se estiman entre cero y cien dólares mensuales durante el desarrollo, cubiertos mediante un servidor propio y planes gratuitos de los servicios externos, detallándose plenamente en el capítulo~[§cap:economica].
-- **Riesgos:** el análisis detallado se presenta en el capítulo~[§cap:riesgos], contemplando factores como demoras en la integración de API externas, costos de modelos de lenguaje superiores a los estimados y la dificultad para reclutar usuarios para el piloto.
+- **Riesgos:** el análisis detallado se presenta en el capítulo~[§cap:riesgos], contemplando factores como demoras en la integración de API externas, costos de modelos de lenguaje superiores a los estimados y la dificultad para reclutar tutores para la puesta en marcha.
 - **Calidad:** cada historia de usuario de las especificaciones de los módulos se ejercita con al menos una prueba de integración de punta a punta, y los casos borde que cada especificación resuelve son casos de prueba obligatorios.
           El backend se prueba con JUnit 5 y Testcontainers contra una base PostgreSQL real; el frontend, con pruebas E2E en
           Playwright y controles de accesibilidad con axe-core; el motor de matching, con pytest. Las suites corren en integración continua en cada cambio, y una prueba E2E nocturna recorre el camino crítico contra la base, el motor de matching y el backend reales. La planificación original fijaba una cobertura mínima del 70 % por módulo; durante la implementación se optó por medir primero la cobertura de líneas con JaCoCo, sin un umbral que corte la compilación, y decidir el umbral con el valor medido (ADR-000-05). Al
-          14 de octubre de 2026 el backend contaba con 661 pruebas y una cobertura de líneas del 85,6 %. La calidad percibida se mide mediante los indicadores específicos de la investigación.
+          14 de octubre de 2026 el backend contaba con 661 pruebas y una cobertura de líneas del 85,6 %. La calidad percibida se medirá con los indicadores específicos de la investigación a partir de la puesta en marcha.
 - **Recursos:** un desarrollador full-stack con conocimientos en React, Java con Spring Boot, Python y bases de datos relacionales, junto al uso de herramientas tecnológicas de soporte y la estructura de roles unipersonales descrita.
-- **Satisfacción de los interesados:** se medirá a través de un sistema de calificaciones post-clase bidireccional para mantener altos estándares de calidad, complementándose con el análisis del NPS del grupo piloto para comprobar el grado de utilidad percibida y la aplicabilidad de los resultados en escenarios reales.
+- **Satisfacción de los interesados:** se medirá a través de un sistema de calificaciones post-clase bidireccional para mantener altos estándares de calidad, complementándose con el análisis del NPS de los primeros usuarios para comprobar el grado de utilidad percibida y la aplicabilidad de los resultados en escenarios reales.
 
 ## Cronograma de entregables
 
@@ -376,7 +386,7 @@ El cronograma fue construido de atrás hacia adelante tomando como fecha límite
 | 22 sep 2026 | Cap.~6 Análisis de riesgos | Sprint 7: aula virtual (LiveKit) |
 | 13 oct 2026 | Cap.~7 Resultados | Sprints 8–9: resumen automático + sistema de reputación |
 | 27 oct 2026 | Cap.~8 Conclusiones | Sprint 10: integración end-to-end, pruebas de sistema y correcciones |
-| 28 nov 2026 | Presentación final + producto funcional | Sprint 11: piloto con usuarios reales (adultos, sección~[§sec:limitaciones]), análisis de resultados, documentación final |
+| 28 nov 2026 | Presentación final + producto funcional | Sprint 11: documentación final y preparación de la defensa |
 
 La planificación original incluía Redis en el Sprint 7 para el estado propio de la aplicación –chat en tiempo real y límite de tasa de peticiones–. Durante la implementación se descartó para operar una dependencia menos (ADR-000-04): el límite de tasa se lleva en la memoria del único proceso del backend, el estado de la sala vive en LiveKit y en
 PostgreSQL, y no hay un módulo de chat propio, ya que los mensajes de texto del aula viajan por el canal de datos de LiveKit. La tabla~[§tab:hitos] y la figura~[§fig:gantt] presentan la planificación, con la línea de tiempo completa.
@@ -392,7 +402,26 @@ PostgreSQL real; la cobertura se mide con JaCoCo. En el frontend, las pruebas E2
 simulada y controles de accesibilidad con axe-core– y el código se revisa con el analizador estático oxlint; la planificación original preveía Jest para las pruebas unitarias del frontend, pero se optó por
 Playwright, que prueba los flujos tal como los recorre el usuario. El motor de matching se prueba con pytest. Todas las suites están integradas en el pipeline de integración continua mediante GitHub
 Actions, y la rama principal solo admite cambios con las suites en verde. Para el despliegue, cada componente se empaqueta como imagen
-Docker, construida por GitHub Actions y publicada en el registro de contenedores de GitHub, y se ejecuta mediante Coolify, una plataforma de despliegue autoalojada que gestiona contenedores y variables de entorno de forma equivalente a un PaaS gestionado. Coolify corre en un servidor propio, publicado en internet mediante Cloudflare Tunnel, que además cifra el tráfico entre los usuarios y el servidor. La planificación original preveía migrar a un VPS alquilado antes del piloto; se mantuvo el servidor propio por simplicidad operativa y costo, aceptando un punto único de falla para el piloto (ADR-000-07, sección~[§sec:limitaciones]).
+Docker, construida por GitHub Actions y publicada en el registro de contenedores de GitHub, y se ejecuta mediante Coolify, una plataforma de despliegue autoalojada que gestiona contenedores y variables de entorno de forma equivalente a un PaaS gestionado. Coolify corre en un servidor propio, publicado en internet mediante Cloudflare Tunnel, que además cifra el tráfico entre los usuarios y el servidor. La planificación original preveía migrar a un VPS alquilado antes de la puesta en marcha; se mantuvo el servidor propio por simplicidad operativa y costo, aceptando un punto único de falla (ADR-000-07, sección~[§sec:limitaciones]).
+
+## Desarrollo asistido por inteligencia artificial
+
+La construcción del MVP siguió un método dirigido por especificaciones, en el que la documentación precede al código y guía a un agente de programación basado en IA. El método se organiza en cuatro niveles de documentos, todos versionados en el repositorio del sistema (anexo~[§anx:repositorios]):
+
+- **Constitución.** Principios que gobiernan toda decisión técnica: arquitectura de monolito modular, minimización de datos, seguridad del menor como restricción principal y preferencia por la solución más simple compatible con un único desarrollador y un presupuesto acotado.
+- **Especificaciones por módulo.** Nueve documentos, uno por módulo de dominio, con historias de usuario, requerimientos funcionales y reglas de negocio.
+- **Planes técnicos.** Diez documentos que traducen cada especificación en un modelo de datos, contratos de API y decisiones de implementación.
+- **Lista de tareas.** Una lista de verificación atómica, que funciona como memoria persistente entre sesiones de trabajo: cada tarea se marca como completada solo después de verificarse.
+
+Sobre esa base, en las primeras etapas del desarrollo la implementación se realizó con agentes de OpenCode. Un archivo de instrucciones persistentes (‘AGENTS.md‘), que el agente lee al iniciar cada sesión, fija las reglas de arquitectura, las condiciones de seguridad del menor y los casos en que una decisión exige un registro de decisión de arquitectura (ADR). Ante un conflicto o una decisión no prevista, el agente debe detenerse y consultar, en lugar de decidir por su cuenta. Las decisiones resultantes se documentaron en registros validados por el autor: catorce en esa etapa y 37 al 14 de octubre de
+2026. Además, se consultaron Gemini y ChatGPT de forma esporádica, como segunda y tercera opinión sobre decisiones puntuales.
+
+Desde el 24 de septiembre de 2026, el análisis y el desarrollo continuaron con Claude Code, bajo el mismo método: las mismas especificaciones, la misma lista de tareas y las mismas reglas de
+‘AGENTS.md‘. En esa etapa se implementaron, entre otros, el rediseño de la interfaz, el CAP para tutores de menores, el resumen como adicional pago, el cobro con OAuth por tutor, la revisión del matching y la actualización a Spring Boot~4. El análisis incluyó estudios previos (*spikes*) que plantearon alternativas; la decisión entre ellas fue del autor y quedó registrada como ADR. Claude Code asistió también la documentación, el modelo financiero y la redacción de este trabajo.
+
+El control de calidad del código generado se apoyó en cuatro mecanismos: las pruebas automatizadas (739 casos de prueba en el backend, incluidas pruebas de extremo a extremo del flujo principal y de la rama de seguridad, y 222 pruebas de extremo a extremo en el frontend), la integración continua en GitHub Actions, la revisión de cada cambio antes de integrarlo a la rama principal y la verificación externa del sistema construido: una auditoría técnica del repositorio y pruebas exploratorias sobre el despliegue real
+(capítulo~[§cap:resultados]). La declaración de uso de IA
+detalla las herramientas y tareas, y el apéndice~[§apx:prompts] registra los prompts más relevantes.
 
 # Capítulo 3: Síntesis de la literatura consultada
 
@@ -464,7 +493,7 @@ A partir del relevamiento de la sección anterior, se identificaron cuatro funci
 
     **Salvedades a considerar:** ningún clasificador automático tiene 0 % de falsos positivos/negativos; es una capa adicional, no una garantía absoluta. El procesamiento en el dispositivo (por ejemplo, TensorFlow.js) evita enviar video a un servidor, facilitando el cumplimiento de la Ley de Protección de Datos Personales
     (Ley~25.326). El proceso de reactivación manual debe contemplar la notificación a un adulto responsable. Al ser un desarrollo complejo
-    (visión por computadora en tiempo real), debe evaluarse su viabilidad dentro de los plazos del MVP. En la implementación, el clasificador se integró en el navegador con NSFWJS sobre TensorFlow.js; mientras no se cierre su verificación completa, el piloto corre sin clases con menores (capítulo~[§cap:marco-tecnologico], sección~[§sec:decisiones-implementacion]).
+    (visión por computadora en tiempo real), debe evaluarse su viabilidad dentro de los plazos del MVP. En la implementación, el clasificador se integró en el navegador con NSFWJS sobre TensorFlow.js; mientras no se cierre su verificación completa, las clases con menores están deshabilitadas (capítulo~[§cap:marco-tecnologico], sección~[§sec:decisiones-implementacion]).
 
 - **Reputación con fricción reducida (señales implícitas).** — La literatura [reputation] señala que las calificaciones explícitas (estrellas) son propensas a sesgos. Se propone combinar una acción mínima (reacción rápida) con señales de comportamiento capturadas automáticamente: tasa de sesiones completadas, puntualidad, y la tasa de recontratación del mismo tutor por parte del mismo alumno (preferencia revelada).
 
@@ -485,7 +514,7 @@ Uber, Rappi, PedidosYa y Airbnb, donde AFIP obliga al agente de pago a retener h
 
 ### Variable 1: matching semántico e inteligencia artificial aplicada a sistemas de recomendación
 
-El motor de matching de Tinku se apoya conceptualmente en dos cuerpos teóricos: los sistemas de recomendación (*recommender systems*), que buscan predecir la afinidad entre dos entidades a partir de sus atributos; y el procesamiento de lenguaje natural (NLP) aplicado a la representación semántica de texto mediante embeddings semánticos. Un embeddings semánticos es una representación vectorial de un texto en un espacio de alta dimensionalidad. Modelos como los sentence-transformers generan vectores a partir de oraciones completas, superando las búsquedas por palabras clave. Sobre este espacio, estructuras como FAISS o extensiones de bases de datos relacionales como pgvector permiten búsquedas de similitud eficientes. Tinku usa pgvector: guarda los vectores en una columna de la misma base PostgreSQL que el resto del sistema, de modo que no hay un índice en memoria que reconstruir ni copiar al reiniciar el servicio, y el volumen del piloto no requiere las optimizaciones de FAISS para colecciones muy grandes. Los vectores se calculan con el modelo multilingüe ‘paraphrase-‘‘multilingual-‘‘MiniLM-L12-v2‘, de 384
+El motor de matching de Tinku se apoya conceptualmente en dos cuerpos teóricos: los sistemas de recomendación (*recommender systems*), que buscan predecir la afinidad entre dos entidades a partir de sus atributos; y el procesamiento de lenguaje natural (NLP) aplicado a la representación semántica de texto mediante embeddings semánticos. Un embeddings semánticos es una representación vectorial de un texto en un espacio de alta dimensionalidad. Modelos como los sentence-transformers generan vectores a partir de oraciones completas, superando las búsquedas por palabras clave. Sobre este espacio, estructuras como FAISS o extensiones de bases de datos relacionales como pgvector permiten búsquedas de similitud eficientes. Tinku usa pgvector: guarda los vectores en una columna de la misma base PostgreSQL que el resto del sistema, de modo que no hay un índice en memoria que reconstruir ni copiar al reiniciar el servicio, y el volumen inicial de operación no requiere las optimizaciones de FAISS para colecciones muy grandes. Los vectores se calculan con el modelo multilingüe ‘paraphrase-‘‘multilingual-‘‘MiniLM-L12-v2‘, de 384
 dimensiones (capítulo~[§cap:marco-tecnologico], sección~[§sec:decisiones-implementacion]).
 
 Como se detalló en la sección~[§sec:estado-del-arte], el trabajo de la Universidad de Ottawa [isotropy2026] validó esta técnica en la recomendación de cursos, corrigiendo el problema de anisotropía. Este antecedente es directamente aplicable a Tinku, donde los perfiles comparten un vocabulario acotado (materias, niveles). La literatura
@@ -521,10 +550,58 @@ Finalmente, el proyecto se desarrolla bajo un esquema de Scrum adaptado
 
 ## Entrevistas a especialistas
 
-Se proponen dos perfiles de especialista complementarios cuyos guiones completos se transcriben en el apéndice~[§apx:entrevista]:
-**Perfil 1**, docente o gestor/a institucional, para indagar sobre el rol del apoyo escolar en la prevención de la repitencia, las diferencias urbanas-rurales en el acceso a tutorías y los recaudos pedagógicos y de seguridad de una tutoría virtual; y **Perfil 2**, psicopedagogía / vínculo y seguridad con menores, para abordar el impacto vincular del acompañamiento personalizado, las señales de alerta en entornos remotos y los errores a evitar en el diseño del sistema de reputación.
+Se proponen cuatro perfiles complementarios cuyos guiones completos se transcriben en el apéndice~[§apx:entrevista]:
+**Perfil 1**, docente o gestor/a institucional, para indagar sobre el rol del apoyo escolar en la prevención de la repitencia, las diferencias urbanas-rurales en el acceso a tutorías y los recaudos pedagógicos y de seguridad de una tutoría virtual; y **Perfil 2**, tutora particular, para indagar sobre el lado de la oferta del marketplace: cómo consigue alumnos, cuánto cobra, qué comisión aceptaría, qué la haría quedarse dentro de la plataforma y qué fricción le genera la verificación. Como la tutora del Perfil~2 resultó ser una tutora consolidada, ajena al segmento que Tinku busca incorporar, se sumaron dos perfiles con entrevistas breves: **Perfil 3**, cinco tutores particulares en actividad con menos demanda propia, para contrastar los mismos supuestos del lado de la oferta; y **Perfil
+4**, tres familias de localidades del interior, para relevar el lado de la demanda allí donde la encuesta casi no llegó.
 
-**[PENDIENTE:** una vez realizada la entrevista, se agregará acá la síntesis de los resultados con fecha, nombre, cargo y aporte de cada persona entrevistada. La evidencia detallada se conserva en el apéndice~[§apx:entrevista]**]**
+La entrevista del Perfil~1 se realizó el 25 de septiembre de 2026, de forma presencial y con una duración de 30 minutos, con Carolina
+Stocchetti, Profesora de Educación Física con cinco años de experiencia en los niveles inicial, primario y secundario, y profesora titular en tres escuelas de Pilar, provincia de Buenos Aires. Sus aportes principales fueron cuatro:
+
+- **Sobre el problema:** considera el apoyo particular
+          “fundamental”, porque muchas escuelas no tienen un mecanismo para seguir individualmente a cada alumno, lo que coincide con el diagnóstico del capítulo~[§cap:introduccion].
+- **Sobre la tutoría virtual:** considera que puede tener una calidad equivalente a la presencial si el alumno dispone de conexión, cámara y pantalla compartida, y valida la duración mínima de 30 minutos y estándar de 60.
+- **Sobre la seguridad de los menores:** exigiría el
+          CAP de forma obligatoria a quien enseñe a menores, y propone que un adulto presencie las clases hasta los 18 años y que sea el adulto, y no el menor, quien califique al tutor.
+- **Sobre el precio:** considera baja la mediana de la encuesta y ubica una clase presencial en su entorno en
+          $15.000 por hora o más.
+
+Estos aportes deben leerse con dos límites: se trata de una sola entrevista, y la entrevistada enseña Educación Física y no tiene experiencia en clases particulares. El contraste con la encuesta se presenta en el capítulo~[§cap:resultados] y la evidencia completa, en el apéndice~[§apx:entrevista].
+
+La entrevista del Perfil~2 se realizó el 29 de septiembre de 2026, en forma asincrónica por mensajes de audio, con una tutora particular, docente con 35 años de trayectoria, formada en Ciencias de la Educación en la Universidad de
+Buenos Aires, que da clases particulares en Pilar desde hace entre 15 y
+20 años y tiene habitualmente más de veinte alumnos. A pedido de la entrevistada, su identidad se mantiene anónima, y parte del guion no llegó a abordarse (apéndice~[§apx:entrevista]). Sus aportes principales fueron cinco:
+
+- **Sobre cómo se consiguen alumnos:** todos sus alumnos llegaron por recomendación; nunca hizo publicidad ni usó una plataforma. Su demanda se sostiene en una reputación construida durante años con las familias y los colegios de la zona.
+- **Sobre las plataformas:** rechaza trabajar con plataformas a comisión, por lo que no propone un porcentaje aceptable, y le genera desconfianza dejar datos personales en servicios virtuales. Prefiere la relación directa con la familia y el cobro por transferencia.
+- **Sobre la clase virtual:** la pantalla le quita la retroalimentación de tener al alumno al lado y le dificulta seguir su atención; la conexión de los alumnos interrumpe las clases con frecuencia; y durante una clase trabaja con varias ventanas y dos computadoras para tener a la vista el material de la escuela y la producción del alumno.
+- **Sobre la relación con el menor y su familia:** considera que un adulto presente en la clase altera el lugar de autoridad del docente, pero atribuye a los padres el control del dispositivo y del espacio desde donde se conecta el alumno.
+- **Sobre el precio y el cobro:** no tiene una tarifa fija; la ajusta a la frecuencia, la duración, la distancia y la situación de cada familia. Cobra por adelantado y cobra las cancelaciones con menos de 24 o 48 horas de anticipación, salvo por enfermedad.
+
+La entrevistada no corresponde al perfil de tutor que Tinku busca incorporar: tiene más demanda de la que necesita y la consigue sin intermediarios. Su entrevista no mide, por lo tanto, la disposición del tutor objetivo a usar la plataforma, pero muestra cómo funciona hoy el mercado de clases particulares que Tinku pretende complementar y dónde están los límites del segmento. Esta lectura se desarrolla en el capítulo~[§cap:resultados].
+
+Las entrevistas del Perfil~3 se hicieron entre el 20 y el 27 de octubre de 2026 por WhatsApp con cinco tutores: Valeria, docente de primaria en Pilar con 14
+años de experiencia; Martín, profesor de matemática de secundaria en la
+Ciudad de Buenos Aires y el Gran Buenos Aires; Tomás, estudiante universitario en Córdoba que prepara alumnos para el ingreso; Sofía, profesora independiente de inglés de negocios y oratoria para ejecutivos; y Luli, profesora particular de inglés con alumnos de Buenos Aires y de otras provincias. Cuatro respondieron por audio y Luli, por escrito.
+Sus aportes principales fueron cuatro:
+
+- **Sobre la oferta disponible:** los cinco tienen horarios libres y tres los asocian al tiempo que pierden en traslados; la clase virtual les permitiría ocupar esos huecos. Luli, en cambio, los reserva para recuperar clases. Consiguen alumnos por recomendación, redes sociales, grupos de WhatsApp o
+          Facebook, Discord y LinkedIn, y dos —Tomás y Luli— tienen alumnos de otra provincia.
+- **Sobre la comisión y el cobro:** cuatro de los cinco aceptan el 27 % condicionado a que la plataforma les consiga alumnos y les garantice el cobro, y esos cuatro describen demoras para cobrar —familias que se olvidan, alumnos que piden esperar a fin de mes, empresas que pagan a 30, 60 o 90 días—.
+          El cobro garantizado aparece como el valor que más compensa la comisión. La quinta, Luli, factura como monotributista, nunca tuvo problemas para cobrar y no pagaría la comisión.
+- **Sobre la clase virtual:** cada uno resuelve una pérdida distinta con recursos propios: el cuaderno acercado a la cámara, las preguntas sorpresa para sostener la atención, una tableta digitalizadora en lugar del pizarrón y el aula invertida. Luli destaca, como ventaja, la cantidad de material y recursos disponibles.
+- **Sobre la seguridad, la reputación y el resumen:** los cinco aprueban el kill-switch, y dos lo valoran también como protección del tutor; los cinco consideran que, con menores, el adulto debería poder calificar; y los cinco usarían el resumen automático, para la familia, para el alumno, para el cliente o para su propio seguimiento.
+
+Las entrevistas del Perfil~4 se hicieron el 24 y el 25 de octubre de 2026 por mensajes de audio con tres familias: Silvana, de Maciá (Entre Ríos); Raúl, de
+Ingeniero Jacobacci (Río Negro); y Georgina, de Rafaela (Santa Fe). En los tres casos, el hijo que necesitó apoyo era menor. Sus aportes principales fueron cinco:
+
+- **Sobre el problema:** en las dos localidades pequeñas no consiguieron profesor —el único bueno en exactas estaba lleno; los universitarios se van a estudiar a otra ciudad— y terminaron recurriendo a un familiar o a un amigo. En Rafaela hay profesores, pero los mejores no tenían lugar en semanas.
+- **Sobre el tutor de otra provincia:** los tres lo aceptarían, condicionado a verificar la identidad del tutor, a que prepare el programa local y a que se haga entender.
+- **Sobre la conectividad:** la conexión va de la fibra óptica de Rafaela a la internet de cooperativa que se corta con las tormentas en Maciá y a la latencia de Jacobacci, donde el padre pide no exigir la cámara.
+- **Sobre el pago:** dos prefieren pagar en la plataforma y una, transferirle directamente al tutor por desconfianza hacia las aplicaciones; los precios que informan van de $8.000 a
+          $20.000 por hora.
+- **Sobre la recomendación:** los tres piden que la recomendación diga por qué, con un dato concreto —experiencia con chicos de esa edad, la materia aprobada, resultados con otras familias— y no solo un promedio de estrellas.
+
+Las entrevistas de ambos perfiles son breves y asincrónicas, y en las de los tutores el dato de la comisión se presentó dentro de la pregunta. El contraste con el modelo y con la encuesta se presenta en el capítulo~[§cap:resultados].
 
 # Capítulo 4: Marco tecnológico
 
@@ -588,11 +665,24 @@ Coolify ejecuta los contenedores del frontend, el backend, el motor de matching 
 
 ## Prototipo / MVP construido
 
-El alcance implementado y operativo frente al que todavía está simulado o mockeado se documenta en cada entrega: qué funcionalidades están activas
-(por ejemplo, registro, login o búsqueda de tutores) frente a las pantallas de flujo de pago sin integración real. A eso se suman capturas de pantalla de las vistas principales, un enlace al repositorio de código en GitHub (anexo~[§anx:repositorios]) con la estructura de carpetas documentada, una descripción de cómo se probó lo construido hasta el momento –pruebas manuales, UAT con usuarios del piloto, pruebas automatizadas– junto con los resultados obtenidos, y las limitaciones puntuales del estado actual con los próximos pasos según el
-Sprint Backlog vigente.
+Al 15 de octubre de 2026, el MVP está desplegado en tinku.site, sobre el servidor propio del autor
+(sección~[§sec:infraestructura]), con sus nueve módulos implementados. El código se encuentra en el repositorio del anexo~[§anx:repositorios].
+La tabla~[§tab:estado-mvp] distingue lo que funciona de punta a punta de lo que está construido pero todavía apagado o pendiente.
 
-*Completar con el estado del MVP al momento de la entrega.*
+**Tabla:** Estado del mvp
+
+     al 15 de octubre de 2026
+
+| **Estado** | **Funcionalidades** |
+| --- | --- |
+| Operativo | Registro de adultos, tutores y menores con verificación de identidad por OCR del DNI; CAP para tutores de menores; búsqueda con matching semántico y recomendación por área; agenda del tutor; reserva, paquete mensual y cambio de horario; aula virtual con video y pantalla compartida; kill-switch en el navegador, probado en vivo en sus dos ramas; reputación; avisos por correo; panel de administración con moderación, denuncias, soporte financiero y salud de la infraestructura |
+| Construido, sin verificar con el proveedor | Cobro en la cuenta de cada tutor mediante OAuth de MercadoPago: implementado a partir de la documentación, pendiente de verificar en el entorno de pruebas del proveedor (ADR-M5-02). En entornos de prueba existe un modo sin cobro real (ADR-M5-01) |
+| Construido, apagado | Resumen automático como adicional pago: se habilita cuando esté el texto legal definitivo de la cláusula de grabación. Clases con menores: el sistema las rechaza hasta cerrar las tareas previas a su encendido |
+| Pendiente | Prueba formal de punta a punta del kill-switch contra el servicio de video real y medición de su latencia en dispositivos reales (T-M3-06f y T-M3-06g); activación de la copia de seguridad fuera del servidor con las credenciales de R2 |
+| Fuera del MVP | Video de presentación del tutor (ADR-M1-09), firma digital automática del CAP y especialidades verificadas contra registros oficiales (ADR-M1-06) |
+
+Lo construido se verificó con 739 pruebas automatizadas del backend, 222
+pruebas de extremo a extremo del frontend y 26 del servicio de matching, todas en la integración continua, más una prueba nocturna del camino crítico contra el sistema real, una auditoría técnica y pruebas exploratorias sobre el despliegue; los resultados se presentan en el capítulo~[§cap:resultados]. La validación con usuarios reales corresponde a la puesta en marcha y excede el alcance de este trabajo.
 
 ## Stack de software
 
@@ -633,7 +723,7 @@ Las versiones exactas de cada dependencia se listan en el apéndice~[§apx:tecni
 | Índice semántico | Columna ‘vector(384)‘ de pgvector en la misma base: los embeddings semánticos de perfiles y temas se guardan junto al resto de los datos y no hay un índice en memoria que reconstruir al reiniciar (ADR-M2-01) |
 | Estado en tiempo real | Sin Redis. El estado de la sala vive en LiveKit Cloud y en la base; los límites de pedidos por IP y el bloqueo por intentos de login se cuentan en memoria del backend, válido mientras haya una sola instancia (ADR-000-04) |
 | Migraciones | Flyway, con el esquema validado al arrancar (‘ddl-auto: validate‘): si el código y la base divergen, el backend no inicia. Una migración ya aplicada nunca se edita; las correcciones se agregan como migraciones nuevas |
-| Respaldo | Copia diaria de la base con pg_dump, cifrada y subida a Cloudflare R2, fuera del servidor, con 14 días de retención (ADR-000-07). El contenedor está desplegado; la copia sale del servidor recién cuando se cargan las credenciales de R2, paso pendiente antes del piloto |
+| Respaldo | Copia diaria de la base con pg_dump, cifrada y subida a Cloudflare R2, fuera del servidor, con 14 días de retención (ADR-000-07). El contenedor está desplegado; la copia sale del servidor recién cuando se cargan las credenciales de R2, paso pendiente antes de la puesta en marcha |
 
 El diseño inicial ubicaba la base en Supabase (conectada por su
 *pooler*), un índice FAISS en memoria del proceso de matching y Redis en Upstash para el estado del chat y el control de pedidos. Las tres piezas se descartaron: Supabase y Upstash porque todo el sistema se concentró en un único servidor propio (sección~[§sec:infraestructura]);
@@ -650,20 +740,20 @@ La tabla~[§tab:infra] resume dónde se aloja cada componente.
 | Frontend, backend, motor de matching y base de datos | Un servidor propio de 8~GB de memoria, en el domicilio del desarrollador, sin IP fija, administrado con Coolify (PaaS autoalojado). Cada componente es un contenedor del mismo *Docker Compose*, con límites de memoria propios | Ningún contenedor publica puertos. Las imágenes se construyen en GitHub Actions y se publican en GitHub Container Registry; el servidor solo las descarga y las ejecuta (ADR-000-07) |
 | Entrada desde internet | Cloudflare Tunnel, desde un contenedor ‘cloudflared‘ en el mismo servidor | Cloudflare pone el HTTPS y enruta el dominio público al frontend y el subdominio de la API al backend, sin abrir puertos en el router |
 | Respaldo de la base | Cloudflare R2 (capa gratuita) | Copia diaria cifrada, 14 días de retención; restauración documentada en el manual de operación del repositorio |
-| Aula virtual | LiveKit Cloud | Plan gratuito (Build): 5.000 minutos de participante por mes sin necesidad de tarjeta de crédito, equivalente a más de 40 horas de clases de 1 a 1 mensuales – cobertura suficiente para el piloto. Se descartó el auto-hospedaje de LiveKit porque requiere una IP pública alcanzable por UDP para el protocolo WebRTC, algo que el servidor propio no tiene |
+| Aula virtual | LiveKit Cloud | Plan gratuito (Build): 5.000 minutos de participante por mes sin necesidad de tarjeta de crédito, equivalente a más de 40 horas de clases de 1 a 1 mensuales – cobertura suficiente para el desarrollo y la puesta en marcha. Se descartó el auto-hospedaje de LiveKit porque requiere una IP pública alcanzable por UDP para el protocolo WebRTC, algo que el servidor propio no tiene |
 | Pagos, transcripción y resumen, correo | MercadoPago, OpenAI y Resend | Servicios externos invocados solo desde el backend; sin configuración, cada integración queda apagada y falla de forma segura (*fail-closed*) |
 
 El diseño inicial repartía la operación entre Vercel (frontend),
 Supabase (base de datos), Upstash (Redis) y un backend en la computadora del desarrollador que se migraría a un VPS alquilado (por ejemplo,
-Hetzner) antes del piloto. Se reemplazó por un único servidor con
+Hetzner) antes de la puesta en marcha. Se reemplazó por un único servidor con
 Coolify por tres motivos registrados en ADR-000-07: el plan gratuito de
-Vercel no admite uso comercial, concentrar todo en un proveedor reduce la operación de un único desarrollador, y el costo queda dentro del techo de 0–100 USD mensuales. La decisión acepta riesgos explícitos: el servidor es un único punto de falla y, al estar en un domicilio, un corte de luz o de internet deja al sistema fuera de línea mientras dure. Se mitigan con la copia diaria fuera del servidor (pendiente de activar con las credenciales de R2), una restauración a ensayar antes del piloto y, como recomendación del mismo ADR, una UPS y un aviso externo de caída; la decisión se revisa si la operación crece.
+Vercel no admite uso comercial, concentrar todo en un proveedor reduce la operación de un único desarrollador, y el costo queda dentro del techo de 0–100 USD mensuales. La decisión acepta riesgos explícitos: el servidor es un único punto de falla y, al estar en un domicilio, un corte de luz o de internet deja al sistema fuera de línea mientras dure. Se mitigan con la copia diaria fuera del servidor (pendiente de activar con las credenciales de R2), una restauración a ensayar antes de la puesta en marcha y, como recomendación del mismo ADR, una UPS y un aviso externo de caída; la decisión se revisa si la operación crece.
 
-En cuanto a la escalabilidad: para el rango de tráfico esperado durante el MVP y el piloto (capítulo~[§cap:metodologia]), una única instancia de cada componente es suficiente. Escalar el backend a más de una instancia exige antes revisar dos decisiones que hoy suponen una sola
+En cuanto a la escalabilidad: para el rango de tráfico esperado durante el MVP y su puesta en marcha (capítulo~[§cap:metodologia]), una única instancia de cada componente es suficiente. Escalar el backend a más de una instancia exige antes revisar dos decisiones que hoy suponen una sola
 –Quartz sin *clustering* y los contadores de pedidos en memoria
 (ADR-000-04)–, por lo que el escalado horizontal queda como trabajo futuro, condicionado a que el volumen de uso real lo justifique.
 
-Los costos por componente y por etapa (desarrollo, piloto, eventual escalado) se presentan en el capítulo~[§cap:economica], consistente con el techo de 0–100 USD mensuales declarado en el capítulo~[§cap:metodologia].
+Los costos por componente y por etapa (desarrollo, puesta en marcha, eventual escalado) se presentan en el capítulo~[§cap:economica], consistente con el techo de 0–100 USD mensuales declarado en el capítulo~[§cap:metodologia].
 
 ## Modelo de datos
 
@@ -700,10 +790,9 @@ El onboarding de Términos y Condiciones reemplaza el documento de scroll contin
 LiveKit.
 
 En accesibilidad, el MVP no incluye un módulo completo
-(capítulo~[§cap:introduccion], sección~[§sec:alcance]), pero aplica buenas prácticas básicas: contraste adecuado, tamaños de fuente legibles y navegación con foco visible, verificadas de forma automática con axe-core en las pruebas del frontend. La validación del diseño con usuarios se apoya en las entrevistas y encuestas ya definidas en el capítulo~[§cap:metodologia], y en UAT con el grupo piloto
-(OE8).
+(capítulo~[§cap:introduccion], sección~[§sec:alcance]), pero aplica buenas prácticas básicas: contraste adecuado, tamaños de fuente legibles y navegación con foco visible, verificadas de forma automática con axe-core en las pruebas del frontend. La validación del diseño con usuarios se apoya en las entrevistas y encuestas ya definidas en el capítulo~[§cap:metodologia]; la validación con usuarios reales se realizará a partir de la puesta en marcha, con los indicadores del OE8. La figura~[§fig:mockups] muestra la pantalla de inicio, que pide una cuenta antes de mostrar tutores, y la agenda con la que el tutor publica su disponibilidad y sigue los pasos pendientes de su perfil.
 
-<!-- Figura: Mockups de pantallas principales -->
+<!-- Figura: Pantalla de inicio -->
 
 ## Decisiones incorporadas durante la implementación
 
@@ -714,7 +803,7 @@ El diseño inicial de Tinku –el que describen los capítulos~[§cap:introducci
 | **Tema** | **Diseño original** | **Lo implementado** | **Fundamento** |
 | --- | --- | --- | --- |
 | Estilo arquitectónico | Cliente-servidor en capas; la IA, incluido el matching, delegada a proveedores externos | Monolito modular de nueve módulos más un único servicio propio aparte, el motor de matching en Python. Comunicación síncrona en proceso y eventos de dominio en memoria, sin *broker*; plazos de negocio con Quartz persistido en la base | Constitución, art.~VIII a X; ADR-000-01, ADR-000-02 |
-| Hosting | Supabase (base), Vercel (frontend), Upstash (Redis); backend en la computadora propia y migración a un VPS alquilado antes del piloto | Todo en un servidor propio con Coolify (contenedores de base con pgvector, matching, backend y frontend), publicado por Cloudflare Tunnel; copia diaria cifrada en Cloudflare R2 (14 días); imágenes construidas por GitHub Actions | ADR-000-07: Vercel gratuito no admite uso comercial; un solo proveedor; costo dentro del techo. Se acepta el punto único de falla para el piloto |
+| Hosting | Supabase (base), Vercel (frontend), Upstash (Redis); backend en la computadora propia y migración a un VPS alquilado antes de la puesta en marcha | Todo en un servidor propio con Coolify (contenedores de base con pgvector, matching, backend y frontend), publicado por Cloudflare Tunnel; copia diaria cifrada en Cloudflare R2 (14 días); imágenes construidas por GitHub Actions | ADR-000-07: Vercel gratuito no admite uso comercial; un solo proveedor; costo dentro del techo. Se acepta el punto único de falla para la puesta en marcha |
 | Redis | Estado de chat y de salas, *rate limiting* | Sin Redis: límites por IP y bloqueo de login en memoria del proceso; estado de la sala en LiveKit y en la base; sin módulo de chat | ADR-000-04 (D8): una dependencia menos con una sola instancia |
 | Índice semántico | FAISS en memoria | pgvector en la misma base; modelo ‘paraphrase-‘‘multilingual-‘‘MiniLM-L12-v2‘ (384 dimensiones); el puntaje de un tutor es su máxima similitud con cada uno de sus temas | ADR-M2-01 (sin índice que reconstruir), ADR-M2-03 |
 | Orden de los resultados | Similitud y reputación combinadas | La similitud se calcula contra cada tema del tutor, no contra todos juntos, para que quien enseña muchos temas no quede relegado. La reputación solo desempata entre tutores de relevancia parecida, y los resultados por debajo de un mínimo de relevancia no se muestran | ADR-M2-02, ADR-M2-03 |
@@ -728,7 +817,7 @@ El diseño inicial de Tinku –el que describen los capítulos~[§cap:introducci
 | Especialidades y triaje de credenciales | Presentados como implementados en versiones anteriores de este capítulo | Decidido y **pendiente de implementar**: especialidades verificadas o declaradas y triaje automático contra registros oficiales (tareas T-ESP-01 a T-ESP-04). Hoy el rol de Moderación aprueba la credencial manualmente | ADR-M1-06 |
 | Kill-switch | Una sola rama (cortar y bloquear); desenfoque del video entre adultos | NSFWJS en el navegador sobre el video remoto (cámara y pantalla), buffer rotativo de 30 segundos que se descarta salvo disparo. Con un menor corta directo, sin preguntar; entre adultos oculta el video del detectado y pide confirmación a la contraparte (plazo de 5 minutos). Evidencia: clip de 30 segundos que se sube solo ante un disparo y se conserva 30 días desde la resolución de la Alerta | ADR-M3-01, ADR-M3-07; Tabla de Tiempos |
 | Denuncias | Suspensión preventiva al denunciar; evidencia de la sesión preservada | La denuncia entra en revisión con 48 horas de descargo del denunciado y pausa el escrow de esa sesión; evidencia opcional que adjunta el denunciante; el denunciado no conoce su identidad. La suspensión automática existe solo en las Alertas del kill-switch | Spec M9; minimización (no hay grabación que preservar) |
-| Menores | El menor puede reservar con un tutor autorizado | El menor tiene cuenta propia pero no paga, no autoriza tutores ni denuncia: pide una Solicitud de Sesión que su Adulto Responsable aprueba y paga. El piloto corre **sin menores**: la opción tinku.menores.sesiones-habilitadas queda apagada hasta cerrar el kill-switch en el cliente (T-M3-06) y el CAP (T02) | Constitución, art.~II; T-TES-10 |
+| Menores | El menor puede reservar con un tutor autorizado | El menor tiene cuenta propia pero no paga, no autoriza tutores ni denuncia: pide una Solicitud de Sesión que su Adulto Responsable aprueba y paga. Las clases con menores están **deshabilitadas**: la opción tinku.menores.sesiones-habilitadas queda apagada hasta cerrar el kill-switch en el cliente (T-M3-06) y el CAP (T02) | Constitución, art.~II; T-TES-10 |
 | Cobro | escrow que retiene los fondos en la cuenta de la plataforma; SDK oficial de Java; reparto por OAuth “abierto” | Modelo A: cada tutor conecta su cuenta de MercadoPago por OAuth (con PKCE); la preferencia se crea con su token y el dinero entra a su cuenta; Tinku cobra su comisión con marketplace_fee. El escrow es una ventana lógica de 24 horas en la que Tinku todavía puede reembolsar. Cliente HTTP propio, sin SDK | ADR-M5-02: Tinku no recauda fondos de terceros |
 | Comisión | 27 % con la pasarela como costo de la plataforma | 27 % sobre el bruto de cada sesión (BR-PAG-01), a cargo del tutor; MercadoPago descuenta su comisión (cerca del 6,04 %) de los fondos del tutor, que recibe el 66,96 % | ADR-M5-05, que declara la discrepancia con el modelo económico del capítulo~[§cap:economica] |
 | Reembolsos | Siempre totales, nunca parciales | Totales como regla general. Excepciones: el adicional de resumen (BR-PAG-11) y la clase de un paquete devuelta por falta del tutor (FR-PAG-022); parciales manuales por disputa (FR-PAG-010) | Spec M5, FR-PAG-009 (enmienda v2.5) |
@@ -743,7 +832,7 @@ El diseño inicial de Tinku –el que describen los capítulos~[§cap:introducci
 | Pruebas | Jest en el frontend; cobertura mínima del 70 % por módulo | Backend: JUnit 5 y Testcontainers con PostgreSQL real; frontend: Playwright (con la API simulada) y axe-core, más oxlint; pruebas del motor de matching y prueba nocturna contra el sistema completo. Cobertura medida con JaCoCo, sin umbral que corte la construcción | ADR-000-05 |
 | Roles | ADMIN como un rol más de Usuario, con un rol único de administración | Usuario de tipo ADULTO, MENOR o TUTOR; el administrador es una entidad aparte con uno de dos roles: Moderación y Seguridad, o Soporte Financiero | Spec M8 (FR-ADM-008) |
 | Monitoreo | Paneles de Supabase y Upstash | Panel propio “Salud de Infraestructura” en la administración, más los paneles de Coolify y LiveKit | ADR-M8-01 |
-| Versiones | — | Spring Boot 4.1.1 y Next.js 16.3.6, para mantener parches de seguridad durante el piloto | Apéndice~[§apx:tecnicos] |
+| Versiones | — | Spring Boot 4.1.1 y Next.js 16.3.6, para mantener parches de seguridad durante la puesta en marcha | Apéndice~[§apx:tecnicos] |
 
 }
 
@@ -755,7 +844,7 @@ La autenticación se resuelve con JWT emitido por el propio backend a través de
 (registro, login, recuperación de contraseña, verificación del DNI y webhooks) tienen un límite por IP y el login se bloquea tras varios intentos fallidos. El control de accesos distingue el tipo de usuario
 (ADULTO, MENOR, TUTOR) y, para la administración, los dos roles de Admin
 –*Moderación y Seguridad* (credenciales, CAP, alertas del kill-switch, denuncias y sanciones) y *Soporte Financiero* (pagos fallidos y tabla de precios)–, con colas y permisos separados y un registro de auditoría de cada acción. Las restricciones del menor (sección~[§sec:modelo-datos]) se implementan como reglas de autorización explícitas en cada endpoint, no como una restricción de interfaz que pudiera sortearse llamando directamente a la API.
-Además, mientras dure el piloto, las clases con menores están apagadas: la creación de Reservas y de Solicitudes de Sesión con un menor se rechaza hasta que se habiliten de forma explícita, una vez cerrados el kill-switch en el cliente y el circuito del CAP.
+Además, las clases con menores están apagadas: la creación de Reservas y de Solicitudes de Sesión con un menor se rechaza hasta que se habiliten de forma explícita, una vez cerrados el kill-switch en el cliente y el circuito del CAP.
 
 Toda la comunicación desde internet viaja cifrada con TLS hasta Cloudflare y por el túnel cifrado hasta el servidor, y el backend usa HTTPS con los servicios externos. Los tokens de MercadoPago de los tutores se guardan cifrados con AES-256-GCM con una clave que no vive en la base
 (ADR-M5-02), y las copias de la base se cifran antes de salir del servidor (ADR-000-07).
@@ -792,7 +881,7 @@ El diseño inicial preveía Jest para el frontend, que no se usa: las pruebas de
 
 La metodología (capítulo~[§cap:metodologia]) fijaba una cobertura mínima del 70 % por módulo. En la implementación la cobertura se mide con JaCoCo sobre todo el backend, sin un umbral que corte la construcción: primero se mide y después se decide (ADR-000-05). Al
 14/10/2026 la suite del backend sumaba 661 pruebas sin fallas y una cobertura de líneas del 85,6 %. La suite exige JDK~21 y se ejecuta con
-‘./mvnw -B test‘ (apéndice~[§apx:tecnicos]). Las UAT se realizan con el grupo piloto, según lo definido en el capítulo~[§cap:metodologia] y el OE8. Los resultados se reportan en el capítulo~[§cap:resultados].
+‘./mvnw -B test‘ (apéndice~[§apx:tecnicos]). Las UAT con usuarios reales se realizarán a partir de la puesta en marcha, según lo definido en el capítulo~[§cap:metodologia] y el OE8. Los resultados se reportan en el capítulo~[§cap:resultados].
 
 ### Despliegue
 
@@ -893,7 +982,7 @@ Ambas cifras quedaron superadas. El sistema implementado cobra con el modelo A (
 
 El tutor fija un precio por hora y quien reserva elige la duración de la clase entre 30 y 180 minutos, en bloques de 30 (regla FR-RES-023 del sistema); el precio de la sesión es el precio por hora multiplicado por la duración elegida y queda congelado en la reserva. La duración es, por lo tanto, económicamente relevante: el ticket por sesión crece con ella, y también el costo de IA del resumen opcional, que escala con los minutos de audio procesados y no con la cantidad de sesiones.
 
-El sistema no fija una duración típica y, antes del piloto, no hay datos de la distribución real. El modelo trabaja con una **duración media supuesta**, que se declara como estimación propia: se asume que un
+El sistema no fija una duración típica y, antes de la puesta en marcha, no hay datos de la distribución real. El modelo trabaja con una **duración media supuesta**, que se declara como estimación propia: se asume que un
 30 % de las sesiones usa el bloque mínimo de 30 minutos y el resto dura
 60 minutos, de modo que la duración promedio ponderada resulta:
 
@@ -1000,7 +1089,7 @@ La infraestructura durante el desarrollo no genera erogación en el
 Año 0: todos los servicios propios corren en un servidor preexistente del desarrollador, administrado con Coolify y publicado mediante un túnel de Cloudflare, y los servicios de terceros se usan en sus capas gratuitas
 (ADR-000-07). Esta decisión reemplazó al diseño inicial, que repartía la infraestructura entre Supabase (base de datos), Vercel (frontend) y un
 VPS alquilado: el plan gratuito de Vercel no admite uso comercial y concentrar todo en un solo servidor simplifica la operación para un único desarrollador, dentro del presupuesto de infraestructura de USD 0 a 100
-mensuales que el proyecto se fijó para el desarrollo. El costo aceptado es un único punto de falla —un corte de luz o de conectividad del servidor deja la plataforma fuera de línea—, mitigado con respaldos diarios cifrados fuera del servidor (a activar antes del piloto), y la decisión se revisa si la operación crece. Como referencia del costo alternativo de alquilar un VPS, uno de recursos medios de un proveedor local (8 vCore/16~GB) cuesta
+mensuales que el proyecto se fijó para el desarrollo. El costo aceptado es un único punto de falla —un corte de luz o de conectividad del servidor deja la plataforma fuera de línea—, mitigado con respaldos diarios cifrados fuera del servidor (a activar antes de la puesta en marcha), y la decisión se revisa si la operación crece. Como referencia del costo alternativo de alquilar un VPS, uno de recursos medios de un proveedor local (8 vCore/16~GB) cuesta
 USD~158,7 mensuales y los planes de entrada arrancan en USD~7,71
 mensuales [lightnode2026].
 
@@ -1244,7 +1333,7 @@ Con el modelo corregido, el escenario base tolera una comisión de hasta aproxim
           33 %) [preply] y por debajo de su extremo superior, que se descartó por el riesgo de desintermediación.
 
 El costo de esta decisión recae sobre el tutor y se reconoce explícitamente. Al sumarse la comisión de MercadoPago, el descuento total sobre su precio es del 33,04 %: seis puntos más de lo que se había calibrado cuando la plataforma absorbía la pasarela. El propio registro de decisiones del sistema señala que, con ese neto, vuelven a pesar dos riesgos: la **desintermediación** —que tutor y alumno acuerden las clases siguientes por fuera de la plataforma— y la mayor dificultad para
-**sumar tutores** (ADR-M5-05). Por eso la comisión no se considera definitiva: la métrica con la que se revisará después del piloto quedó diferida deliberadamente hasta ese momento (regla BR-PAG-03), y la tabla~[§tab:sens-comision] muestra el margen disponible para hacerlo
+**sumar tutores** (ADR-M5-05). Por eso la comisión no se considera definitiva: la métrica con la que se revisará con los datos de la puesta en marcha quedó diferida deliberadamente hasta ese momento (regla BR-PAG-03), y la tabla~[§tab:sens-comision] muestra el margen disponible para hacerlo
 —una reducción a 23 o 25 % mantiene el escenario base con VAN
 positivo— a costa de agravar el pesimista.
 
@@ -1277,7 +1366,7 @@ Estos resultados reemplazan a los de la versión anterior del capítulo, que res
           2.194 (Año 5) sesiones anuales**, umbral por debajo del cual la operación no cubre siquiera sus costos fijos, y de unas 5.858
           sesiones anuales en promedio para que el VAN no sea negativo.
 - **No bajar la comisión por debajo de aproximadamente
-          18,2 %**, valor con el que el VAN del escenario base se anula. El 27 % vigente deja un margen de unos nueve puntos porcentuales, que se mantiene deliberadamente como colchón frente al escenario pesimista y a los costos que el modelo no cuantifica, y que se revisará después del piloto considerando su efecto sobre el neto del tutor y el riesgo de desintermediación.
+          18,2 %**, valor con el que el VAN del escenario base se anula. El 27 % vigente deja un margen de unos nueve puntos porcentuales, que se mantiene deliberadamente como colchón frente al escenario pesimista y a los costos que el modelo no cuantifica, y que se revisará con los datos de la puesta en marcha considerando su efecto sobre el neto del tutor y el riesgo de desintermediación.
 - **Operar sin equipo de soporte rentado**, o con una dedicación parcial que, sumada a los costos no modelados, no supere unos USD~469 mensuales, durante el horizonte evaluado, difiriendo la incorporación de un equipo hasta que el volumen efectivo la justifique.
 
 Que el escenario pesimista no resulte viable no invalida el proyecto, sino que delimita con precisión el terreno en que debe moverse. Ante una tracción inferior a la proyectada, las alternativas disponibles no pasan por reducir costos —el margen de recorte es escaso— sino por revisar el modelo de negocio: segmentar la oferta por niveles de precio, incorporar modalidades de clase grupal que eleven el ingreso por hora de tutor, o explorar acuerdos institucionales que aporten volumen agregado. El análisis de riesgos del capítulo siguiente retoma estas contingencias.
@@ -1323,19 +1412,19 @@ La tabla~[§tab:matriz-riesgos] presenta los diecisiete riesgos identificados, o
 
 | **ID** | **Descripción (causa, evento, efecto)** | **Naturaleza (origen)** | **Etapa** | **P** | **I** | **E** | **Respuesta** | **Resp.** | **Contingencia** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| R-02 | Debido a que solo el 35,2 % de los encuestados prefiere pagar dentro de una plataforma antes que por transferencia, y a que el tutor recibe el 66,96 % de su precio una vez descontadas la comisión de la plataforma y la de MercadoPago (ADR-M5-05), podría ocurrir que alumnos y tutores acuerden las clases siguientes por fuera después del primer contacto, lo que provocaría la pérdida de la comisión, única fuente de ingreso. | Terceros: usuarios (externo) | Operación | 4 | 4 | 16 | Mitigar: la verificación, la reputación, el cobro con ventana de reembolso y el resumen solo existen dentro de la plataforma | Autor | Revisar la comisión después del piloto con la métrica diferida en BR-PAG-03; una comisión de 23 a 25 % mantiene positivo el VAN base (tabla~[§tab:sens-comision]) |
-| R-03 | Debido a que el piloto se extiende del 27 de octubre al 27 de noviembre de 2026, el capítulo~[§cap:conclusiones] vence el 27 de octubre y un único desarrollador debe cerrar además las tareas previas al encendido de las clases con menores y las acciones operativas previas al piloto, podría ocurrir que la hipótesis deba responderse sin datos del piloto, lo que provocaría conclusiones sin evidencia suficiente. | Alcance (interno) | Durante | 4 | 4 | 16 | Mitigar: alcance del MVP congelado; lo no esencial se difiere de forma explícita (video de presentación del tutor, firma digital del CAP, especialidades verificadas) | Autor | Presentar la respuesta a la hipótesis como preliminar y completarla con el piloto para la entrega final |
+| R-02 | Debido a que solo el 35,2 % de los encuestados prefiere pagar dentro de una plataforma antes que por transferencia, y a que el tutor recibe el 66,96 % de su precio una vez descontadas la comisión de la plataforma y la de MercadoPago (ADR-M5-05), podría ocurrir que alumnos y tutores acuerden las clases siguientes por fuera después del primer contacto, lo que provocaría la pérdida de la comisión, única fuente de ingreso. | Terceros: usuarios (externo) | Operación | 4 | 4 | 16 | Mitigar: la verificación, la reputación, el cobro con ventana de reembolso y el resumen solo existen dentro de la plataforma | Autor | Revisar la comisión con los datos de la puesta en marcha y la métrica diferida en BR-PAG-03; una comisión de 23 a 25 % mantiene positivo el VAN base (tabla~[§tab:sens-comision]) |
+| R-03 | Debido a que el capítulo~[§cap:conclusiones] vence el 27 de octubre de 2026 y un único desarrollador debe cerrar además las tareas previas al encendido de las clases con menores y las acciones operativas previas a la puesta en marcha, podría ocurrir que el alcance no se cierre a tiempo, lo que provocaría un sistema incompleto en la entrega o conclusiones sin la evidencia técnica necesaria. | Alcance (interno) | Durante | 4 | 4 | 16 | Mitigar: alcance del MVP congelado; lo no esencial se difiere de forma explícita (video de presentación del tutor, firma digital del CAP, especialidades verificadas) | Autor | Diferir lo no esencial al trabajo futuro y responder la hipótesis como preliminar con la evidencia disponible |
 | R-04 | Debido a que el escenario pesimista tiene un VAN de USD~-4.410, podría ocurrir que la demanda no alcance unas 5.858 sesiones anuales en promedio, lo que provocaría que la inversión no se recupere a la tasa exigida; por debajo de 1.774 a 2.194 sesiones anuales la operación ni siquiera cubre sus costos fijos (capítulo~[§cap:economica]). | Recursos: mercado (externo) | Operación | 3 | 5 | 15 | Mitigar: presupuesto de adquisición de usuarios y acuerdos institucionales (O-02) | Autor | Si a los 12 meses el volumen anualizado queda por debajo del umbral: revisar el modelo de negocio (segmentación de precios, clases grupales, acuerdos institucionales); si persiste, cierre ordenado |
-| R-17 | Debido a que, después de las pruebas en producción del 14 de octubre de 2026, el plan de remediación registra que el despliegue quedó con configuraciones propias de un entorno de pruebas (datos y cuentas de prueba, pagos simulados y la opción de clases con menores encendida; acciones O-1 a O-6), podría ocurrir que el piloto se abra a usuarios reales en ese estado, lo que provocaría reservas confirmadas sin cobro o la reserva de un menor real sin todas sus protecciones. | Cumplimiento y datos (interno) | Pasaje a producción | 3 | 5 | 15 | Evitar: las acciones O-1 a O-6 del plan de remediación son criterio de entrada al piloto | Autor | Desactivar el modo simulado desde el panel de administración (efecto inmediato, ADR-M5-01), volver a apagar la opción de menores y dar de baja o renovar las cuentas de prueba |
-| R-05 | Debido a que el ticket del modelo (USD~7,42 por sesión de 51 minutos) surge del precio promedio publicado en Superprof ($13.392 por hora), mientras que la mediana de la disposición a pagar relevada en la encuesta es de USD~4,56 por hora, podría ocurrir que el precio efectivo de las clases quede por debajo del ticket de equilibrio (USD~5,87 por hora), lo que provocaría un VAN base negativo. | Recursos: mercado (externo) | Operación | 3 | 4 | 12 | Mitigar: piso de tarifa de USD~4 por hora (BR-PAG-04), que protege los costos fijos pero no la inversión; medir el precio efectivo en el piloto | Autor | Si el ticket observado queda por debajo del de equilibrio: revisar comisión y piso con los datos del piloto (sección~[§sec:sensibilidad]) |
-| R-07 | Debido a que solo 9 tutores respondieron la encuesta, a que el marketplace es bilateral y a que el tutor recibe seis puntos menos de neto que con la comisión anterior (ADR-M5-05) y debe conectar su cuenta de MercadoPago para aparecer en las búsquedas (ADR-M5-02), podría ocurrir que no haya suficientes tutores verificados al iniciar el piloto, lo que provocaría búsquedas sin candidatos e impediría medir la aceptación del matching (I-01). | Recursos: oferta (externo) | Antes de arrancar | 3 | 4 | 12 | Mitigar: reclutar tutores antes del piloto en la comunidad universitaria; recomendación por área cuando no hay coincidencia directa (FR-MATCH-011) | Autor | Acotar el piloto a una o dos materias con oferta suficiente |
+| R-17 | Debido a que, después de las pruebas en producción del 14 de octubre de 2026, el plan de remediación registra que el despliegue quedó con configuraciones propias de un entorno de pruebas (datos y cuentas de prueba, pagos simulados y la opción de clases con menores encendida; acciones O-1 a O-6), podría ocurrir que el sistema se abra a usuarios reales en ese estado, lo que provocaría reservas confirmadas sin cobro o la reserva de un menor real sin todas sus protecciones. | Cumplimiento y datos (interno) | Pasaje a producción | 3 | 5 | 15 | Evitar: las acciones O-1 a O-6 del plan de remediación son criterio de entrada a la puesta en marcha | Autor | Desactivar el modo simulado desde el panel de administración (efecto inmediato, ADR-M5-01), volver a apagar la opción de menores y dar de baja o renovar las cuentas de prueba |
+| R-05 | Debido a que el ticket del modelo (USD~7,42 por sesión de 51 minutos) surge del precio promedio publicado en Superprof ($13.392 por hora), mientras que la mediana de la disposición a pagar relevada en la encuesta es de USD~4,56 por hora, podría ocurrir que el precio efectivo de las clases quede por debajo del ticket de equilibrio (USD~5,87 por hora), lo que provocaría un VAN base negativo. | Recursos: mercado (externo) | Operación | 3 | 4 | 12 | Mitigar: piso de tarifa de USD~4 por hora (BR-PAG-04), que protege los costos fijos pero no la inversión; medir el precio efectivo desde la puesta en marcha | Autor | Si el ticket observado queda por debajo del de equilibrio: revisar comisión y piso con los datos de la puesta en marcha (sección~[§sec:sensibilidad]) |
+| R-07 | Debido a que solo 9 tutores respondieron la encuesta, a que el marketplace es bilateral y a que el tutor recibe seis puntos menos de neto que con la comisión anterior (ADR-M5-05) y debe conectar su cuenta de MercadoPago para aparecer en las búsquedas (ADR-M5-02), podría ocurrir que no haya suficientes tutores verificados al iniciar la operación, lo que provocaría búsquedas sin candidatos e impediría medir la aceptación del matching (I-01). | Recursos: oferta (externo) | Antes de arrancar | 3 | 4 | 12 | Mitigar: reclutar tutores antes de la puesta en marcha en la comunidad universitaria; recomendación por área cuando no hay coincidencia directa (FR-MATCH-011) | Autor | Acotar la puesta en marcha a una o dos materias con oferta suficiente |
 | R-08 | Debido a que el 90,9 % de las respuestas de la encuesta proviene de la provincia de Buenos Aires y de la Ciudad Autónoma de Buenos Aires, podría ocurrir que la demanda y el precio del interior difieran de los relevados, lo que provocaría que la hipótesis de reducción de la brecha geográfica quede sin evidencia. | Datos (interno) | Antes de arrancar | 4 | 3 | 12 | Mitigar: reencuesta dirigida al interior y entrevistas a docentes de zonas rurales | Autor | Declarar la limitación y acotar el alcance de la conclusión |
-| R-01 | Debido a que el kill-switch en el cliente todavía no tiene su prueba de punta a punta formal contra el servicio de video real ni la medición de latencia en dispositivos reales (T-M3-06f y T-M3-06g), y a que la exactitud del clasificador con contenido real no se probó, podría ocurrir que, al habilitar las clases con menores, una detección falle o llegue tarde, lo que provocaría la exposición de un menor a contenido inapropiado. | Técnico (interno) | Pasaje a producción | 2 | 5 | 10 | Evitar: piloto sin menores (opción de configuración de clases con menores apagada); el encendido exige cerrar T-M3-06f a T-M3-06i; sin clasificador listo el menor no entra al aula | Autor | Volver a apagar la opción de menores; ante una detección, corte, suspensión preventiva y revisión de la Alerta en 12 horas |
+| R-01 | Debido a que el kill-switch en el cliente todavía no tiene su prueba de punta a punta formal contra el servicio de video real ni la medición de latencia en dispositivos reales (T-M3-06f y T-M3-06g), y a que la exactitud del clasificador con contenido real no se probó, podría ocurrir que, al habilitar las clases con menores, una detección falle o llegue tarde, lo que provocaría la exposición de un menor a contenido inapropiado. | Técnico (interno) | Pasaje a producción | 2 | 5 | 10 | Evitar: clases con menores deshabilitadas (opción de configuración de clases con menores apagada); el encendido exige cerrar T-M3-06f a T-M3-06i; sin clasificador listo el menor no entra al aula | Autor | Volver a apagar la opción de menores; ante una detección, corte, suspensión preventiva y revisión de la Alerta en 12 horas |
 | R-09 | Debido a que el desarrollo y la operación dependen de una sola persona, podría ocurrir una enfermedad, una sobrecarga o un abandono, lo que provocaría la detención del desarrollo o de la operación. | Recursos (interno) | Operación | 2 | 5 | 10 | Aceptar: el modelo económico no admite un equipo rentado (capítulo~[§cap:economica]); documentación y pruebas reducen la dependencia | Autor | Prórroga ante la cátedra; en operación, pausa sin pérdida de datos y traspaso a partir del repositorio documentado |
 | R-10 | Debido a que la verificación de antecedentes depende de la revisión manual del CAP, un documento que presenta el propio tutor y cuya firma digital no se verifica en el MVP, podría ocurrir que un certificado adulterado o evaluado con un criterio incorrecto habilite a un tutor con antecedentes para dar clases a menores, lo que provocaría un daño grave al menor y responsabilidad legal para la plataforma. | Cumplimiento (interno) | Operación | 2 | 5 | 10 | Mitigar: CAP vigente (12 meses) obligatorio solo para dar clases a menores, revisado por el rol de Moderación y Seguridad, con criterio de rechazo definido con la asesoría legal presupuestada (ADR-M1-04) | Autor y asesoría legal | Suspensión inmediata, conservación del certificado y del registro de auditoría, y denuncia ante la autoridad |
 | R-11 | Debido a que el modelo de cobro con conexión de la cuenta de MercadoPago de cada tutor se implementó según la documentación del proveedor y quedó pendiente de verificar en su entorno de pruebas (ADR-M5-02), podría ocurrir que en producción el reembolso total no devuelva el ‘marketplace_fee‘, que no pueda reembolsarse a un tutor que revocó el acceso o que el contrato de OAuth difiera del documentado, lo que provocaría reembolsos a cargo de la plataforma o reservas que no pueden cobrarse. | Técnico: terceros (externo) | Pasaje a producción | 3 | 3 | 9 | Mitigar: verificación en el entorno de pruebas con dos usuarios antes del cobro real; notificaciones idempotentes y conciliación periódica contra la API (FR-PAG-017) | Autor | Modo de pago simulado (ADR-M5-01) y cola manual del rol de Soporte Financiero |
-| R-14 | Debido a que todo el sistema corre en un único servidor propio, ubicado en un domicilio y sin IP fija (ADR-000-07), podría ocurrir un corte de luz, de internet o una falla del equipo, lo que provocaría que la plataforma quede fuera de línea mientras dure, incumpliendo la disponibilidad del 95 % mensual. | Técnico (interno) | Operación | 3 | 3 | 9 | Aceptar: alternativa compatible con el presupuesto de USD 0 a 100 mensuales y un único desarrollador; mitigación con copia diaria cifrada fuera del servidor (implementada, se activa al cargar las credenciales de R2 antes del piloto) y restauración documentada | Autor | Restaurar el último respaldo y desplegar las imágenes publicadas en otro servidor con la misma configuración |
-| R-15 | Debido a que las pruebas exploratorias en producción encontraron tres hallazgos de severidad alta que la suite automatizada no detectaba, y a que su remediación, integrada a la rama principal el 15 de octubre de 2026, todavía no se repitió por rol en producción, podría ocurrir que el piloto arranque con defectos de seguridad o de uso no detectados, lo que provocaría pérdida de confianza de los primeros usuarios. | Técnico (interno) | Pasaje a producción | 3 | 3 | 9 | Mitigar: cada hallazgo con una prueba que falla antes del arreglo; repetir las pruebas por rol en producción antes del piloto | Autor | Corregir con prueba de regresión y desplegar la imagen corregida; volver a la imagen anterior si el arreglo falla |
+| R-14 | Debido a que todo el sistema corre en un único servidor propio, ubicado en un domicilio y sin IP fija (ADR-000-07), podría ocurrir un corte de luz, de internet o una falla del equipo, lo que provocaría que la plataforma quede fuera de línea mientras dure, incumpliendo la disponibilidad del 95 % mensual. | Técnico (interno) | Operación | 3 | 3 | 9 | Aceptar: alternativa compatible con el presupuesto de USD 0 a 100 mensuales y un único desarrollador; mitigación con copia diaria cifrada fuera del servidor (implementada, se activa al cargar las credenciales de R2 antes de la puesta en marcha) y restauración documentada | Autor | Restaurar el último respaldo y desplegar las imágenes publicadas en otro servidor con la misma configuración |
+| R-15 | Debido a que las pruebas exploratorias en producción encontraron tres hallazgos de severidad alta que la suite automatizada no detectaba, y a que su remediación, integrada a la rama principal el 15 de octubre de 2026, todavía no se repitió por rol en producción, podría ocurrir que la operación arranque con defectos de seguridad o de uso no detectados, lo que provocaría pérdida de confianza de los primeros usuarios. | Técnico (interno) | Pasaje a producción | 3 | 3 | 9 | Mitigar: cada hallazgo con una prueba que falla antes del arreglo; repetir las pruebas por rol en producción antes de la puesta en marcha | Autor | Corregir con prueba de regresión y desplegar la imagen corregida; volver a la imagen anterior si el arreglo falla |
 | R-12 | Debido a la jurisprudencia laboral sobre repartidores de plataformas de delivery, podría ocurrir que un tutor reclame una relación de dependencia con la plataforma, lo que provocaría costos laborales no previstos. | Cumplimiento (externo) | Operación | 2 | 4 | 8 | Transferir: términos y condiciones redactados por asesoría legal; el tutor fija precio y horarios y cobra en su propia cuenta | Asesoría legal | Defensa legal con los registros de autonomía del tutor |
 | R-16 | Debido a que el adicional de resumen graba el audio de la clase en el navegador del tutor y lo envía a un proveedor extranjero para transcribirlo (ADR-M3-04), podría ocurrir que la voz y los datos personales de los participantes se transfieran sin un consentimiento con validez legal suficiente, lo que provocaría un incumplimiento de la Ley 25.326. | Cumplimiento (interno) | Operación | 2 | 4 | 8 | Evitar: el adicional está apagado en producción hasta contar con el texto legal de la cláusula; nunca con menores; solo texto anonimizado llega al LLM; el audio se borra al transcribir (máximo 24 horas) | Autor y asesoría legal | Desactivar el adicional, solicitar la eliminación al proveedor y notificar a los titulares |
 | R-06 | Debido a que los proveedores de LLM discontinúan modelos y modifican precios, podría ocurrir que el modelo de transcripción o el de resumen deje de estar disponible o se encarezca, lo que provocaría la interrupción del resumen o la pérdida de su margen. | Terceros (externo) | Operación | 3 | 2 | 6 | Mitigar: el backend accede al proveedor por un puerto intercambiable (‘ResumenProveedor‘) que, sin configuración, no envía nada; el precio del adicional se calcula sobre el costo (ADR-M5-06) | Autor | Cambiar de proveedor y ajustar el precio del adicional; si no es viable, suspenderlo sin afectar el núcleo |
@@ -1346,18 +1435,20 @@ La tabla~[§tab:matriz-riesgos] presenta los diecisiete riesgos identificados, o
 Los diez primeros riesgos concentran la exposición del proyecto. Su tratamiento se detalla a continuación; el resto se monitorea.
 
 - **R-02, desintermediación (16).** Es el riesgo con mejor respaldo empírico: el 34,1 % de los encuestados se mostró en desacuerdo con pagar dentro de una plataforma
-          (apéndice~[§apx:encuesta]). La decisión de mantener la comisión del 27 % lo agrava, y el propio registro de decisiones del sistema lo reconoce (ADR-M5-05): con la comisión de MercadoPago a cargo del tutor, el descuento total sobre su precio es del 33,04 %. La respuesta apunta a que el valor diferencial solo exista dentro de Tinku: las funciones más valoradas en la encuesta —profesores verificados (58 %), resumen automático (56,8 %) y pago seguro (48,9 %)— dependen de que la transacción ocurra en la plataforma. La contingencia no es improvisada: el capítulo~[§cap:economica] muestra cuánto puede bajar la comisión sin volver negativo el escenario base.
+          (apéndice~[§apx:encuesta]). La decisión de mantener la comisión del 27 % lo agrava, y el propio registro de decisiones del sistema lo reconoce (ADR-M5-05): con la comisión de MercadoPago a cargo del tutor, el descuento total sobre su precio es del 33,04 %. La respuesta apunta a que el valor diferencial solo exista dentro de Tinku: las funciones más valoradas en la encuesta —profesores verificados (58 %), resumen automático (56,8 %) y pago seguro (48,9 %)— dependen de que la transacción ocurra en la plataforma. La entrevista a una tutora particular con cartera propia agrega evidencia cualitativa en el mismo sentido: prefiere la relación directa con la familia y el cobro por transferencia, y rechaza trabajar a comisión (capítulo~[§cap:resultados]). Las entrevistas a familias del interior lo muestran desde la demanda: una de tres prefiere transferirle directamente al tutor, y otra cuenta que los tutores piden cobrar por fuera para evitar la comisión. Del lado de la oferta, en cambio, cuatro de los cinco tutores del
+          Perfil~3 aceptan la comisión a cambio del cobro garantizado, que es justamente el valor que solo existe dentro de la plataforma; la quinta, que factura y nunca tuvo problemas para cobrar, la rechaza. El riesgo es mayor cuanto más consolidada está la relación entre el tutor y la familia, porque la recomendación y la confianza que la plataforma aporta al principio dejan de ser necesarias. La contingencia no es improvisada: el capítulo~[§cap:economica] muestra cuánto puede bajar la comisión sin volver negativo el escenario base.
 - **R-03, alcance y cronograma (16).** Corresponde al
           “alcance que nunca cierra” señalado por la cátedra. Al 14 de octubre de 2026, la lista de tareas del sistema registraba 221
           tareas completadas y 9 pendientes. De las pendientes, seis corresponden al kill-switch en el cliente y a su encendido, y tres se difirieron de forma explícita: la verificación automática de la firma digital del CAP (opcional), el video de presentación del tutor (fuera del MVP) y las especialidades verificadas contra registros oficiales
           (ADR-M1-06). Cualquier funcionalidad nueva pasa al trabajo futuro.
 - **R-04, inviabilidad económica (15).** Surge del escenario pesimista del capítulo~[§cap:economica]. La contingencia define un disparador medible y una decisión: si a los doce meses el volumen anualizado no alcanza el umbral, se revisa el modelo de negocio y, si no hay alternativa viable, se cierra la operación de forma ordenada. Cancelar a tiempo un proyecto inviable es una decisión de gestión, no un fracaso.
-- **R-17, estado operativo de producción (15).** Es un riesgo que no existía en el diseño y surgió de una actividad de verificación: para probar el aula en vivo y los pagos sin dinero real, el despliegue de producción se usó como entorno de pruebas, con datos sembrados y con la opción de menores encendida. El plan de remediación lo registró y definió las acciones para revertirlo, todas operativas y a cargo del autor. Se responde evitándolo: ninguna de esas condiciones puede seguir vigente al abrir el piloto. La lección es que un entorno de pruebas separado
+- **R-17, estado operativo de producción (15).** Es un riesgo que no existía en el diseño y surgió de una actividad de verificación: para probar el aula en vivo y los pagos sin dinero real, el despliegue de producción se usó como entorno de pruebas, con datos sembrados y con la opción de menores encendida. El plan de remediación lo registró y definió las acciones para revertirlo, todas operativas y a cargo del autor. Se responde evitándolo: ninguna de esas condiciones puede seguir vigente al abrir el sistema a usuarios reales. La lección es que un entorno de pruebas separado
           (T-M3-06h), descartado al principio por costo de memoria
           (ADR-000-07), deja de ser opcional cuando hay usuarios reales.
-- **R-05, precio efectivo (12).** El capítulo~[§cap:economica] fija el ticket con precios de oferta publicados, no con la disposición a pagar declarada en la encuesta, que es aproximadamente la mitad. Ninguno de los dos es un precio observado en la plataforma; el piloto es la primera fuente de precios reales y el indicador que dispara la revisión.
-- **R-07, oferta de tutores (12).** Es la manifestación del problema de arranque en frío (arranque en frío) descrito en el capítulo~[§cap:marco-teorico], agravada por las condiciones que el sistema exige al tutor para aparecer en las búsquedas: identidad verificada, foto, cuenta de MercadoPago conectada y, para dar clases a menores, el CAP vigente. Cada una se justifica por sí misma (confianza, cobro directo al tutor, seguridad del menor), pero en conjunto elevan la fricción del lado más escaso del marketplace.
-- **R-08, sesgo geográfico de la encuesta (12).** Afecta directamente a la hipótesis central, que pone el foco en las zonas con escasa oferta de tutores.
+- **R-05, precio efectivo (12).** El capítulo~[§cap:economica] fija el ticket con precios de oferta publicados, no con la disposición a pagar declarada en la encuesta, que es aproximadamente la mitad. Ninguno de los dos es un precio observado en la plataforma; la puesta en marcha es la primera fuente de precios reales y el indicador que dispara la revisión.
+- **R-07, oferta de tutores (12).** Es la manifestación del problema de arranque en frío (arranque en frío) descrito en el capítulo~[§cap:marco-teorico], agravada por las condiciones que el sistema exige al tutor para aparecer en las búsquedas: identidad verificada, foto, cuenta de MercadoPago conectada y, para dar clases a menores, el CAP vigente. Cada una se justifica por sí misma (confianza, cobro directo al tutor, seguridad del menor), pero en conjunto elevan la fricción del lado más escaso del marketplace. La entrevista a una tutora particular acota de dónde puede venir la oferta: una tutora consolidada consigue sus alumnos por recomendación, tiene más demanda de la que necesita y desconfía de dejar sus datos en una plataforma. El reclutamiento se orienta, por lo tanto, a tutores que todavía no tienen esa red —estudiantes avanzados, docentes y graduados recientes—. La fricción del registro es una barrera a seguir en ese reclutamiento: la desconfianza a dejar datos personales puede aparecer también en tutores jóvenes, aunque la entrevista no permite medirlo. Las entrevistas a cinco tutores en actividad (Perfil~3) sugieren una segunda fuente de oferta: las horas libres de tutores ya activos, que hoy pierden tiempo en traslados y, en cuatro de los cinco casos, aceptarían la comisión a cambio de alumnos y cobro garantizado.
+- **R-08, sesgo geográfico de la encuesta (12).** Afecta directamente a la hipótesis central, que pone el foco en las zonas con escasa oferta de tutores. Las entrevistas a tres familias de Maciá, Ingeniero Jacobacci y Rafaela (Perfil~4) aportan los primeros casos concretos de esa escasez y precios de
+          $8.000 a $20.000 por hora, pero son tres y no reemplazan la reencuesta dirigida al interior, que sigue siendo la mitigación prevista.
 - **R-01, kill-switch y clases con menores (10).** El backend del kill-switch y el clasificador en el navegador están implementados y se probaron en vivo, con salas de video reales, en las dos ramas y ante la falla del clasificador
           (capítulo~[§cap:resultados]). Faltan la prueba formal de punta a punta, la medición en celulares reales y la decisión de encendido. La respuesta es evitar: sin esas condiciones no se habilitan clases con menores, y el sistema lo impone con una opción de configuración que rechaza toda reserva o solicitud para un menor.
 - **R-09, dependencia de una persona (10).** Se acepta porque no existe una respuesta alternativa compatible con el proyecto: el análisis económico mostró que un equipo rentado torna negativo el VAN en los tres escenarios. Aceptarlo no equivale a ignorarlo: la Constitución del proyecto, las nueve especificaciones, los 37 registros de decisión, el manual de operación y una suite de 661 pruebas automatizadas
@@ -1367,7 +1458,7 @@ Los diez primeros riesgos concentran la exposición del proyecto. Su tratamiento
           (R-07), y la necesidad de decidir la descalificación de un tutor por sus antecedentes sin asesoría legal. La verificación se reincorporó acotada (ADR-M1-04, implementada el 25 de septiembre de 2026): el CAP vigente es obligatorio solo para dar clases a menores, y al vencer se cancelan las clases futuras con menores con reembolso total. Así, los tutores que enseñan a adultos se registran sin fricción adicional. El riesgo residual es la validez del documento y su evaluación manual, porque la verificación automática de la firma digital quedó diferida.
 
 Dos riesgos de exposición media merecen una mención por su respuesta. El
-**R-14** (punto único de falla) es el riesgo aceptado de forma explícita en el diseño de la infraestructura: se eligió concentrar todo en un servidor propio porque el plan gratuito de Vercel no admite uso comercial y un solo proveedor simplifica la operación para un único desarrollador (ADR-000-07). Aceptarlo exige que la mitigación exista de verdad: el manual de operación advierte que, mientras no estén cargadas las credenciales del almacenamiento externo, no hay copia de seguridad fuera del servidor, y prevé ensayar la restauración antes del piloto. El
+**R-14** (punto único de falla) es el riesgo aceptado de forma explícita en el diseño de la infraestructura: se eligió concentrar todo en un servidor propio porque el plan gratuito de Vercel no admite uso comercial y un solo proveedor simplifica la operación para un único desarrollador (ADR-000-07). Aceptarlo exige que la mitigación exista de verdad: el manual de operación advierte que, mientras no estén cargadas las credenciales del almacenamiento externo, no hay copia de seguridad fuera del servidor, y prevé ensayar la restauración antes de la puesta en marcha. El
 **R-16** (privacidad del audio) reemplaza a un riesgo que figuraba en una versión anterior de este capítulo —el envío del audio de las clases directamente al LLM—, eliminado por diseño: el audio va solo al servicio de transcripción, el texto se anonimiza antes de llegar al modelo de resumen (ADR-M6-03) y las clases con un menor nunca se graban.
 
 ## Riesgos que cancelan proyectos
@@ -1395,7 +1486,7 @@ El análisis también identificó dos riesgos positivos, que se gestionan buscan
 - **O-01.** Debido a que el 56,8 % de los encuestados valoró el resumen automático, podría ocurrir que una parte relevante de las clases entre adultos lo contrate, lo que provocaría un motivo adicional para pagar dentro de la plataforma y reduciría la exposición a R-02. Su aporte económico directo es pequeño, porque se cobra a costo más un 50 %
           (sección~[§sec:adicional-resumen]). Respuesta: explotar, habilitando el adicional en cuanto se resuelva R-16 y destacándolo en el flujo de reserva.
 - **O-02.** Debido a que algunas jurisdicciones ya recurren a escuelas mediadas por tecnología con docentes en las ciudades
-          [olea], podría ocurrir que una institución educativa o un municipio contrate paquetes de sesiones, lo que provocaría un volumen agregado superior al del escenario optimista. Respuesta: mejorar la probabilidad, presentando el piloto a instituciones del interior.
+          [olea], podría ocurrir que una institución educativa o un municipio contrate paquetes de sesiones, lo que provocaría un volumen agregado superior al del escenario optimista. Respuesta: mejorar la probabilidad, presentando el sistema a instituciones del interior.
 
 ## Supuestos y restricciones
 
@@ -1420,10 +1511,10 @@ Los supuestos son condiciones que se dan por ciertas para que el proyecto sea v�
 | --- | --- |
 | Tiempo | Presentación final el 28 de noviembre de 2026, con entregas parciales por capítulo |
 | Recursos | Un único desarrollador, con una dedicación de 15 a 20 horas semanales |
-| Costo | Entre 0 y 100 USD mensuales durante el desarrollo y el piloto |
+| Costo | Entre 0 y 100 USD mensuales durante el desarrollo y la puesta en marcha |
 | Infraestructura | Un único servidor propio, sin entorno de pruebas separado mientras no haya usuarios reales (ADR-000-07) |
 | Técnica | Los organismos estatales (RENAPER, Registro Nacional de Reincidencia, registros de títulos) no ofrecen API públicas |
-| Legal | Ley 25.326 de protección de datos personales; tutores exclusivamente mayores de edad; piloto sin clases con menores |
+| Legal | Ley 25.326 de protección de datos personales; tutores exclusivamente mayores de edad; clases con menores deshabilitadas |
 | Alcance | PWA sin aplicaciones móviles nativas |
 
 ## Seguimiento y continuidad
@@ -1436,7 +1527,8 @@ MercadoPago, y exportación o eliminación de los datos personales conforme a la
 # Capítulo 7: Presentación de resultados
 
 Este capítulo presenta los resultados del proyecto al 15 de octubre de
-2026: los requerimientos del sistema, su construcción, las pruebas técnicas —automatizadas, de auditoría y en producción—, la validación con usuarios y la evaluación económica. Se informan tanto los resultados favorables como los desfavorables. Las pruebas de aceptación con usuarios reales corresponden al piloto del Sprint~11 (capítulo~[§cap:metodologia]); sus resultados se incorporarán al finalizarlo, y las secciones afectadas lo indican.
+2026: los requerimientos del sistema, su construcción, las pruebas técnicas —automatizadas, de auditoría y en producción—, la validación con usuarios y la evaluación económica. Se informan tanto los resultados favorables como los desfavorables. Las pruebas de aceptación con usuarios reales exceden el alcance de este trabajo
+(capítulo~[§cap:introduccion], sección~[§sec:limitaciones]): los indicadores con los que se validará la hipótesis quedan definidos y se medirán a partir de la puesta en marcha.
 
 ## Requerimientos
 
@@ -1471,10 +1563,10 @@ La tabla~[§tab:rnf] presenta los requerimientos no funcionales, que la Constitu
 
 | **ID** | **Atributo** | **Umbral medible** | **Estado** |
 | --- | --- | --- | --- |
-| RNF-01 | Disponibilidad | 95 % mensual durante el piloto | A medir en el piloto; el servidor único es un riesgo aceptado (R-14, capítulo~[§cap:riesgos]) |
+| RNF-01 | Disponibilidad | 95 % mensual en operación | A medir desde la puesta en marcha; el servidor único es un riesgo aceptado (R-14, capítulo~[§cap:riesgos]) |
 | RNF-02 | Seguridad | TLS 1.2 o superior; contraseñas con bcrypt o argon2; registro de auditoría de toda acción de administración | Implementado: TLS hasta Cloudflare y túnel cifrado, bcrypt, auditoría de las acciones de administración; los 36 hallazgos de la auditoría técnica, cerrados (sección~[§sec:auditoria]) |
-| RNF-03 | Privacidad | Cumplimiento de la Ley 25.326, con especial cuidado en los datos de menores | Medidas implementadas (la imagen del DNI no sale del servidor, las clases no se graban salvo el adicional entre adultos, piloto sin menores); riesgos abiertos R-16 y R-17 |
-| RNF-04 | Rendimiento | Latencia de videollamada menor a 200~ms; ajuste automático de calidad sin modo degradado visible | A medir en el piloto |
+| RNF-03 | Privacidad | Cumplimiento de la Ley 25.326, con especial cuidado en los datos de menores | Medidas implementadas (la imagen del DNI no sale del servidor, las clases no se graban salvo el adicional entre adultos, clases con menores deshabilitadas); riesgos abiertos R-16 y R-17 |
+| RNF-04 | Rendimiento | Latencia de videollamada menor a 200~ms; ajuste automático de calidad sin modo degradado visible | A medir desde la puesta en marcha |
 | RNF-05 | Mantenibilidad | Sostenible por uno o dos desarrolladores, sin conocimiento tácito no documentado | Cumplido: Constitución, especificaciones, registros de decisión y manual de operación versionados |
 
 ## Diseño
@@ -1482,11 +1574,29 @@ La tabla~[§tab:rnf] presenta los requerimientos no funcionales, que la Constitu
 La arquitectura, el modelo de datos y las decisiones de diseño se documentan en el capítulo~[§cap:marco-tecnologico]. El resultado de esa etapa fue un monolito modular de nueve módulos de dominio, con un único servicio propio separado para el matching y con el video, los pagos, el correo y el resumen delegados en proveedores externos
 (figura~[§fig:arquitectura]). Las decisiones que cambiaron el diseño original durante la implementación se registran en la sección~[§sec:decisiones-implementacion].
 
-*Insertar capturas reales de las pantallas principales: búsqueda de tutores, reserva, aula virtual y panel de administración.*
+Las figuras~[§fig:cap-busqueda] a~[§fig:cap-admin] muestran las pantallas principales del sistema en funcionamiento, capturadas del despliegue de producción (tinku.site) con datos de prueba
+(sección~[§sec:pruebas-produccion]).
 
-## Construcción e integración
+<!-- Figura: Búsqueda de tutores: filtros por nivel, precio y materia, con los resultados ordenados por el matching -->
 
-El sistema se construyó con el método dirigido por especificaciones descrito en el capítulo~[§cap:metodologia], con asistentes de programación con IA (declaración de uso de IA y apéndice~[§apx:prompts]). La tabla~[§tab:construccion] resume el resultado medido sobre la rama principal del repositorio del sistema.
+<!-- Figura: Perfil de un tutor: identidad verificada, materias, disponibilidad semanal y reserva con pago retenido hasta después de la clase. -->
+
+<!-- Figura: Panel de clases del estudiante: una reserva confirmada con acceso al aula virtual. -->
+
+<!-- Figura: Detalle de una reserva confirmada: el seguimiento muestra que el pago queda retenido y se libera al tutor
+    24~horas después de la clase. -->
+
+<!-- Figura: Panel de administración del rol de
+    Moderación y Seguridad: alertas, denuncias con plazo, credenciales, antecedentes (cap -->
+
+*Insertar la captura del aula virtual durante una clase
+(‘figuras/pantallas/08-aula.png).‘
+
+## Construcción e integración*
+
+El sistema se construyó con el método dirigido por especificaciones descrito en el capítulo~[§cap:metodologia
+
+ (sección~{sec:desarrollo-ia]), con asistentes de programación con IA (declaración de uso de IA y apéndice~[§apx:prompts]). La tabla~[§tab:construccion] resume el resultado medido sobre la rama principal del repositorio del sistema.
 
 **Tabla:** Métricas de construcción al 14 de octubre de 2026
 
@@ -1510,7 +1620,6 @@ El listado~[§lst:puerto-resumen] muestra un fragmento representativo de la cons
  */
 public interface ResumenProveedor {
     ResumenResultado generarResumen(ResumenRequest request);
-}
 
 public class ResumenProveedorFailClosed implements ResumenProveedor {
     @Override public ResumenResultado generarResumen(ResumenRequest request) {
@@ -1542,7 +1651,6 @@ Las cinco pruebas omitidas son las del OCR con Tesseract real, que se saltean en
 ### Auditoría técnica
 
 El 21 de septiembre de 2026 se realizó una auditoría técnica del repositorio completo —backend, frontend, servicio de matching, migraciones, documentación, integración continua y configuración de despliegue—, que incluyó la ejecución de la suite de pruebas.
-*Quién realizó la auditoría y con qué método o herramienta.*
 La auditoría registró 36 hallazgos, que se gestionan en un registro con su estado: un hallazgo solo se da por cerrado con un cambio en el código y una prueba de regresión. La tabla~[§tab:auditoria] resume su estado.
 
 **Tabla:** Hallazgos de la auditoría técnica por severidad y estado (registro del 28/09/2026)
@@ -1583,24 +1691,24 @@ Una segunda ronda, el mismo día, probó el aula en vivo y el kill-switch con sa
 
 La remediación de los hallazgos de código se implementó el 15 de octubre de
 2026, con una prueba que reproduce cada hallazgo y falla antes del arreglo, y se integró ese mismo día a la rama principal con la integración continua en verde; queda repetir las pruebas por rol en producción (riesgo R-15 del capítulo~[§cap:riesgos]). Como parte de ella se calibró el umbral de relevancia de la búsqueda con el modelo de embeddings semánticos real sobre 40 consultas (20 relevantes, 10 irrelevantes y 10 sin sentido): con el umbral anterior (0,30) pasaban 5 de 10 consultas irrelevantes; con el elegido (0,46) el 95 % de las relevantes conserva resultados y ninguna irrelevante ni sin sentido los obtiene. La consulta relevante que se pierde cae a la recomendación por área (FR-MATCH-011).
-Las consultas son de elaboración propia, por lo que la medición calibra el umbral pero no reemplaza al indicador I-01 del piloto.
+Las consultas son de elaboración propia, por lo que la medición calibra el umbral pero no reemplaza la medición del indicador I-01 con usuarios reales.
 
-La lectura de estas dos actividades complementa la de la auditoría: cientos de pruebas exitosas no garantizan la ausencia de defectos graves, porque las pruebas verifican lo que se especificó y no lo que se omitió. La revisión independiente y la prueba sobre el despliegue real detectaron fallas que ninguna prueba cubría, y en un caso, un hueco de la propia especificación. El desarrollo asistido por IA acelera la construcción, pero no reemplaza la verificación.
+La lectura de estas dos actividades complementa la de la auditoría: cientos de pruebas exitosas no garantizan la ausencia de defectos graves, porque las pruebas verifican lo que se especificó y no lo que se omitió. La auditoría y la prueba sobre el despliegue real detectaron fallas que ninguna prueba cubría, y en un caso, un hueco de la propia especificación. El desarrollo asistido por IA acelera la construcción, pero no reemplaza la verificación.
 
 ### Pruebas de aceptación
 
-Las pruebas de aceptación con usuarios (UAT) se realizan en el piloto del Sprint~11, entre el 27 de octubre y el 27 de noviembre de
-2026, y miden los indicadores del capítulo~[§cap:metodologia]
-(tabla~[§tab:indicadores-piloto]). Por el riesgo R-01 del capítulo~[§cap:riesgos], el piloto no incluye clases con menores.
+Las pruebas de aceptación con usuarios reales (UAT) exceden el alcance de este trabajo. Los indicadores del capítulo~[§cap:metodologia] con los que se validará la hipótesis quedan definidos
+(tabla~[§tab:indicadores-validacion]) y se medirán a partir de la puesta en marcha, sin clases con menores mientras siga abierto el riesgo
+R-01 del capítulo~[§cap:riesgos].
 
-**Tabla:** Indicadores del piloto
+**Tabla:** Indicadores de validación con usuarios reales
 
 | **ID** | **Indicador** | **Umbral** | **Resultado** |
 | --- | --- | --- | --- |
-| I-01 | Aceptación de las sugerencias del matching | $> 60 %$ | *pendiente del piloto* |
-| I-02 | Calidad percibida de la sesión (escala 1 a 5) | $4{,}0$ | *pendiente del piloto* |
-| I-03 | Sesiones entre provincias distintas, con una del interior | $1$ | *pendiente del piloto* |
-| I-04 | NPS del piloto | positivo | *pendiente del piloto* |
+| I-01 | Aceptación de las sugerencias del matching | $> 60 %$ | Sin medir |
+| I-02 | Calidad percibida de la sesión (escala 1 a 5) | $4{,}0$ | Sin medir |
+| I-03 | Sesiones entre provincias distintas, con una del interior | $1$ | Sin medir |
+| I-04 | NPS de los usuarios | positivo | Sin medir |
 
 ## Validación con usuarios
 
@@ -1618,39 +1726,214 @@ La encuesta, aplicada a 88 personas entre el 28 de agosto y el 9 de septiembre d
           R-02).
 - **La disposición a pagar es menor que el precio de mercado.** La mediana de la disposición a pagar es de
           USD~4,56 por hora, aproximadamente la mitad del precio horario promedio publicado en Superprof ($13.392, unos
-          USD~8,72 al tipo de cambio de $1.535), con el que el capítulo~[§cap:economica] calcula el ticket. El modelo toma el precio de la oferta publicada y no la intención declarada; la diferencia se trata como riesgo (R-05) y se resolverá con los precios efectivos del piloto.
+          USD~8,72 al tipo de cambio de $1.535), con el que el capítulo~[§cap:economica] calcula el ticket. El modelo toma el precio de la oferta publicada y no la intención declarada; la diferencia se trata como riesgo (R-05) y se resolverá con los precios efectivos de la puesta en marcha.
 
 La encuesta tiene limitaciones que acotan estas conclusiones: la muestra no es probabilística, el 90,9 % de las respuestas proviene de la provincia de Buenos Aires y de la Ciudad Autónoma de Buenos Aires, y solo 9 corresponden a tutores. Entre las funciones consultadas figuraba un chat, que el sistema no implementa como módulo propio: los mensajes de texto del aula viajan por el canal de datos del servicio de video
 (capítulo~[§cap:metodologia]).
 
 ### Entrevistas a especialistas
 
-*Síntesis de las entrevistas (apéndice~[§apx:entrevista*): fecha, entrevistado, aportes principales y contraste con los resultados de la encuesta.]
+Se realizaron diez entrevistas semiestructuradas en cuatro perfiles: una a una docente en ejercicio (Perfil~1), una a una tutora particular consolidada (Perfil~2), cinco a tutores particulares en actividad
+(Perfil~3) y tres a familias de localidades del interior (Perfil~4).
+
+#### Perfil 1: docente
+
+Se entrevistó a Carolina Stocchetti, docente en ejercicio y Profesora de
+Educación Física (Perfil~1, apéndice~[§apx:entrevista]), con cinco años de experiencia en los niveles inicial, primario y secundario. La entrevista, semiestructurada, siguió un guion de
+25 preguntas en seis ejes, varias de las cuales presentaban un resultado de la encuesta para que la entrevistada lo interpretara. La tabla~[§tab:encuesta-entrevista] contrasta ambas fuentes sobre los supuestos del proyecto.
+
+**Tabla:** Contraste entre la encuesta y la entrevista a la docente
+
+| **Supuesto** | **Encuesta** | **Entrevista** | **Lectura** |
+| --- | --- | --- | --- |
+| Valor del apoyo particular | 70 % encontró al profesor por recomendación | “Fundamental”: la escuela no puede seguir a cada alumno | Coinciden |
+| Brecha geográfica | 90,9 % de las respuestas de Buenos Aires | Supone menor oferta rural, sin casos concretos | Sin evidencia |
+| Modalidad virtual | 77,3 % tomaría clases virtuales | Calidad equivalente con conexión, cámara y pantalla compartida | Coinciden |
+| Duración de 30 y 60 minutos | No relevada | Adecuada | Respaldo parcial |
+| Verificación de tutores | 81,8 % confía más con profesores verificados | Título o año de cursada, y experiencia visible en el perfil | Coinciden |
+| CAP para tutores de menores | No relevado | Obligatorio; su costo se recupera con una clase | Respaldo parcial |
+| Recomendación de tutores | 68,2 % la quiere; 5,7 % valora la “IA” | Explicada por reputación y por resultados de alumnos similares | Coinciden |
+| Resumen automático | Segunda función más valorada (56,8 %) | “Una herramienta más”; conceptos, puntos y preguntas clave | Coinciden |
+| Pago dentro de la plataforma | Solo 35,2 % lo prefiere | Lo preferiría “por seguridad” | Difieren |
+| Precio por hora | Mediana de USD~4,56 | Bajo: $15.000 o más por una clase presencial | Difieren |
+| Comisión del 27 % | No relevada | “Me parece que está bien” | Respaldo parcial |
+
+La entrevista a la docente aportó además tres propuestas que la encuesta no relevaba.
+Ninguna se incorpora al MVP, cuyo alcance está congelado (riesgo
+R-03), pero se registran porque señalan diferencias entre el diseño y la mirada docente:
+
+- **Presencia del adulto.** La entrevistada ubica en los 18
+          años la edad a partir de la cual un alumno puede tomar una clase virtual sin un adulto al lado, y propone que un adulto presencie siempre las clases de los menores. El diseño actual protege al menor con el kill-switch y la verificación del tutor, pero no exige la presencia del adulto responsable durante la sesión.
+- **Calificaciones de menores.** Propone que el adulto responsable, y no el menor, califique al tutor. Hoy el módulo de reputación (M7) deja calificar al tutor tanto al alumno, aunque sea menor, como al adulto que paga la clase.
+- **Tareas entre clases.** Propone un canal para que el tutor deje una tarea y el alumno la entregue fuera del horario de la sesión, una función que no forma parte del alcance del
+          MVP.
+
+Las diferencias también son informativas. En el precio, la entrevistada compara con una clase presencial, que incluye el traslado del tutor, y no con una virtual, por lo que su valor no reemplaza a la mediana de la encuesta; indica, a lo sumo, que el precio del modelo no sobrestima la disposición a pagar. En el pago, su preferencia por la plataforma “por seguridad” no compensa el resultado de la encuesta, pero coincide con la mitigación del riesgo R-02: la protección del pago es un valor que solo existe dentro de la plataforma.
+
+La entrevista tiene limitaciones que acotan su peso como evidencia: es una sola; la entrevistada enseña Educación Física, no tiene experiencia en clases particulares y trabaja en el AMBA, por lo que no cubre la mitigación del riesgo R-08, que requiere docentes del interior; y en algunas preguntas el entrevistador anticipó la respuesta al presentar el resultado de la encuesta, lo que puede haber inducido el acuerdo. Sus aportes se toman, por lo tanto, como la opinión de una docente en ejercicio y no como una validación experta del modelo.
+
+#### Perfil 2: tutora particular
+
+Se entrevistó a una tutora particular, docente con 35 años de trayectoria, formada en
+Ciencias de la Educación en la Universidad de Buenos Aires, que da clases particulares en Pilar desde hace entre 15 y 20 años y tiene habitualmente más de veinte alumnos, de primer grado al final del secundario, entre ellos alumnos con dificultades específicas de aprendizaje
+(Perfil~2, apéndice~[§apx:entrevista]). La entrevista se hizo en forma asincrónica por mensajes de audio; a pedido de la entrevistada, su identidad se mantiene anónima, y 10 de las 25 preguntas del guion no llegaron a abordarse. Esas preguntas —entre ellas, las referidas al
+CAP, al kill-switch, a las calificaciones y al resumen automático— no se interpretan como respuestas. La tabla~[§tab:tutora-modelo] contrasta lo que sí se abordó con los supuestos del modelo.
+
+**Tabla:** Contraste entre el modelo y la entrevista a la tutora
+
+| **Supuesto** | **Modelo o encuesta** | **Entrevista** | **Lectura** |
+| --- | --- | --- | --- |
+| Canal de búsqueda | 70 % encontró al profesor por recomendación | Todos sus alumnos llegaron por recomendación; nunca hizo publicidad | Coinciden |
+| Pago dentro de la plataforma | Solo 35,2 % lo prefiere (R-02) | Prefiere la relación directa y el cobro por transferencia | Coinciden |
+| Comisión del 27 % | Neto del tutor del 66,96 % | Rechaza trabajar a comisión; no propone un porcentaje | Sin respaldo en este perfil |
+| Registro con documentación | 81,8 % confía más con tutores verificados | Le da miedo dejar datos personales en plataformas | Tensión (R-07) |
+| Duración de 30 y 60 minutos | Mínimo de 30 y estándar de 60 | Clases de una hora y clases cortas según la concentración del alumno | Coinciden |
+| Clase individual | Solo clases 1 a 1 | Solo individuales; las grupales no le parecen efectivas | Coinciden |
+| Cancelación con menos de 24 horas | La clase sigue en pie; puede cambiarse de horario hasta una hora antes | Cobra con menos de 24 o 48 horas, salvo por enfermedad | Coinciden |
+| Precio | Precio único por tutor; descuento solo en el paquete mensual | Varía según la frecuencia, la distancia y la situación de cada familia | Difieren |
+| Adulto durante la clase | No exigido | “No es conveniente”: altera la autoridad del docente | Coinciden; difiere de la docente |
+| Conectividad variable | Hipótesis técnica 2 | Cortes frecuentes; alumnos conectados desde el celular | Respalda la relevancia de I-02 |
+
+**Delimitación del segmento de tutores..**  La lectura central de esta entrevista no está en ninguna fila de la tabla: la entrevistada no es el tutor que Tinku busca incorporar. Tiene más demanda de la que necesita, la consigue sin intermediarios y la sostiene con una reputación construida durante dos décadas con las familias y los colegios de su zona. Para ese perfil, una plataforma no resuelve ningún problema: la comisión es un costo sin contrapartida y el registro, una exposición de datos que no necesita. Su rechazo al modelo es coherente con esa posición y no invalida la propuesta, porque Tinku no se dirige a ella.
+
+Tinku se dirige a los tutores que todavía no tienen esa red: estudiantes avanzados, docentes y graduados recientes, o tutores que quieren enseñar fuera de su zona y no tienen cómo llegar a alumnos nuevos. Para ellos la plataforma cumple la función que para la entrevistada cumplieron durante años la recomendación y los colegios: hacerlos visibles y darles una reputación verificable. Del otro lado, se dirige a los alumnos que no tienen acceso a esa red de recomendaciones, en especial los de zonas con poca oferta presencial
+(capítulo~[§cap:introduccion]). Esta delimitación es una decisión del proyecto que la entrevista vuelve explícita, no un resultado validado: la encuesta relevó solo nueve tutores, de edades diversas (uno de 18 a 25
+años, cinco de 26 a 40 y tres de más de 40), y las entrevistas del
+Perfil~3 aportan solo un indicio cualitativo
+(sección~[§sec:resultados-perfil3]): ninguna fuente mide todavía la disposición del tutor objetivo a usar la plataforma. La puesta en marcha y el reclutamiento del riesgo R-07 son los que deben aportar esa evidencia.
+
+**Lo que la entrevista sí aporta..**  Aunque no mide la adopción, la entrevista describe cómo funciona hoy el mercado que Tinku pretende complementar, y de ella surgen cuatro observaciones:
+
+- **La confianza se construye fuera de la plataforma.** El mecanismo que hoy funciona es la recomendación personal, que tarda años en consolidarse. Es la barrera que enfrenta un tutor nuevo y la que la verificación y la reputación de Tinku buscan acortar. Al mismo tiempo, es la razón por la que un tutor que ya la tiene no necesita la plataforma, lo que refuerza el riesgo de desintermediación (R-02): una vez construida la relación con la familia, el incentivo a salir existe.
+- **La relación con el menor.** A diferencia de la docente, la tutora considera que la presencia de un adulto en la clase perjudica la dinámica, porque desplaza la autoridad del docente; en cambio, atribuye a los padres el control del dispositivo y del espacio desde donde se conecta el alumno. Las dos entrevistadas discrepan sobre la supervisión, pero coinciden en que el adulto responsable tiene un papel. El diseño actual, que protege al menor con el kill-switch, la verificación del tutor y la cuenta del adulto responsable sin exigir su presencia en la sesión, queda entre ambas posiciones.
+- **La clase virtual real.** La tutora describe una clase con varias ventanas, dos computadoras, el material de la escuela en otras plataformas y alumnos conectados desde el celular con mala señal. Es el contexto de conectividad variable que plantea la hipótesis técnica, y muestra que la pérdida de la retroalimentación visual y del seguimiento de la atención son los costos pedagógicos de la virtualidad que un tutor experimentado percibe primero.
+- **El precio como acuerdo con cada familia.** La entrevistada ajusta el precio a cada caso, incluso a la baja para familias con dificultades económicas, y cobra más por los alumnos con dificultades de aprendizaje, por el trabajo fuera de la clase. El modelo, con un precio único por tutor, no reproduce esa flexibilidad.
+
+La tutora rechaza además las clases grupales porque “los ritmos de comprensión son distintos”. La contingencia del riesgo R-04 prevé pasar a clases grupales si el volumen no alcanza el equilibrio; esta opinión no la invalida, pero anticipa que esa alternativa puede tener resistencia del lado de la oferta.
+
+La entrevista tiene limitaciones que acotan su peso como evidencia: es una sola; se hizo en forma asincrónica, sin repreguntas en el momento; dos de cada cinco preguntas del guion no se abordaron; la entrevistada trabaja en el AMBA, por lo que tampoco cubre la mitigación del riesgo R-08; y su perfil es, por definición, el opuesto al del tutor objetivo. Sus aportes se toman, por lo tanto, como la descripción de la práctica de una tutora consolidada y no como una evaluación del modelo por parte de su usuario previsto.
+
+#### Perfil 3: tutores particulares
+
+Se entrevistó, por WhatsApp, a cinco tutores en actividad
+(Perfil~3, apéndice~[§apx:entrevista]): una docente de primaria de
+Pilar con 14 años de experiencia, un profesor de matemática de secundaria del AMBA, un estudiante universitario de Córdoba que prepara alumnos para el ingreso, una profesora independiente de inglés de negocios para ejecutivos y una profesora particular de inglés con alumnos de Buenos Aires y de otras provincias. Cuatro respondieron por audio y la última, por escrito. A diferencia de la tutora del Perfil~2, ninguno tiene más demanda de la que puede atender: los cinco tienen horarios libres. La tabla~[§tab:tutores-modelo] contrasta sus respuestas con los supuestos del modelo.
+
+**Tabla:** Contraste entre el modelo y las entrevistas a tutores
+
+| **Supuesto** | **Modelo o encuesta** | **Entrevistas** | **Lectura** |
+| --- | --- | --- | --- |
+| Capacidad ociosa del tutor | No relevada | 5 de 5 tienen horarios libres; 3 los atribuyen a los traslados y 1 los usa para recuperar clases | Respaldo |
+| Canal de búsqueda | 70 % encontró al profesor por recomendación | Recomendación, redes sociales, grupos de WhatsApp y Facebook, Discord y LinkedIn | Coinciden |
+| Alcance geográfico | Tutores de cualquier provincia | 2 de 5 tienen alumnos de otra provincia | Indicio débil |
+| Comisión del 27 % | Neto del tutor del 66,96 % | 4 de 5 la aceptan a cambio de alumnos y cobro garantizado; 1 la rechaza; el dato se presentó en la pregunta | Respaldo condicionado |
+| Cobro garantizado (escrow de 24~horas) | Valor exclusivo de la plataforma (R-02) | 4 de 5 describen demoras para cobrar; la que no las tiene rechaza la comisión | Respaldo |
+| Kill-switch | Corte y bloqueo ante contenido inapropiado | 5 de 5 lo aprueban; 2 lo valoran como protección del tutor | Coinciden |
+| Quién califica al tutor | Alumno y adulto que paga (M7) | Con menores, el adulto: 5 de 5 | Difieren; coincide con la docente |
+| Resumen automático | Adicional; nunca con menores (ADR-M6-03) | 5 de 5 lo usarían; de los 3 que enseñan a menores, 2 lo quieren para la familia | Coinciden; difiere en menores |
+
+De estas entrevistas surgen tres observaciones:
+
+- **El cobro garantizado compensa la comisión, cuando hay problemas para cobrar.** Cuatro de los cinco aceptan el 27 % con reservas (“me duele un poquito”,
+          “es bastante”, “es saladito”), y los cuatro la justifican con lo mismo: no tener que reclamar pagos y cobrar al día siguiente.
+          Es el mecanismo con el que el riesgo R-02 se mitiga —un valor que solo existe dentro de la plataforma— y el primer respaldo del lado de la oferta a la comisión del modelo. La excepción lo confirma: Luli, que factura como monotributista y nunca tuvo problemas para cobrar, no pagaría la comisión, aunque la pregunta también le presentaba sus beneficios. Para un tutor que ya cobra sin demoras, el cobro garantizado no compensa el
+          27 %. Dos matices acotan el respaldo: la pregunta presentaba la comisión junto con sus beneficios, lo que puede haber inducido el acuerdo, y no mencionaba la comisión de
+          MercadoPago, que reduce el neto del tutor al 66,96 %
+          (ADR-M5-05).
+- **La capacidad ociosa está en los traslados.** Tres de los cuatro pierden horas en viajes o entre colegios y ven en la clase virtual una forma de ocupar esos huecos. La oferta que Tinku necesita para el arranque (R-07) puede venir, entonces, no solo de tutores nuevos, sino también de las horas libres de tutores ya activos. Pero esa oferta, por ahora, se concentra en Buenos
+          Aires: solo el tutor de Córdoba y una de las profesoras de inglés tienen alumnos de otra provincia, y ninguno enseña en una localidad con poca oferta. No toda hora libre es capacidad ociosa: Luli reserva las suyas para recuperar clases.
+- **Las dos funciones con menores chocan con el diseño.** Los cinco tutores coinciden con la docente del Perfil~1 en que, con menores, el adulto debería poder calificar al tutor, y la docente de primaria lo ilustra con el riesgo de que un chico castigue con una estrella una clase difícil. Y los tres tutores que enseñan a menores valoran el resumen —dos, para mandárselo a la familia, y la tercera, para seguir el progreso de cada alumno—, pero el diseño lo excluye en las clases con un menor, porque el audio del menor no se graba (ADR-M6-03). La protección del menor se mantiene; lo que las entrevistas agregan es que el resumen, tal como está diseñado, no llega al segmento que más lo pide.
+
+En la clase virtual, cada tutor resuelve con recursos propios una pérdida distinta: el cuaderno acercado a la cámara, las preguntas sorpresa a alumnos que apagan la cámara, una tableta digitalizadora en lugar del pizarrón y el aula invertida; la quinta tutora, en cambio, destaca como ventaja de la clase virtual la cantidad de material y recursos disponibles. El aula de Tinku ofrece la pantalla compartida que cuatro de ellos mencionan y una pizarra compartida que cubre la necesidad del tutor de exactas, que hoy la suple con una tableta propia; pero la pizarra solo se habilita en clases entre adultos
+(ADR-M3-06), de modo que la docente de primaria, que extraña señalar en la hoja del alumno, no contaría con ella.
+
+Estas entrevistas tienen limitaciones que acotan su peso como evidencia: son breves —nueve preguntas en tres mensajes, o en seis puntos en el caso de la respuesta escrita—, sin repreguntas; la pregunta sobre la comisión presentaba el dato y sus beneficios, dos de las preguntas sobre las calificaciones sugerían la respuesta y otra las agrupaba con el kill-switch; tres de los cinco tutores trabajan en el AMBA, y una de ellos enseña a adultos en el ámbito corporativo, fuera del segmento escolar. Sus aportes se toman como la opinión de tutores en actividad sobre el modelo y no como una medición de su adopción.
+
+#### Perfil 4: familias del interior
+
+Se entrevistó, por mensajes de audio, a tres familias de localidades del interior (Perfil~4, apéndice~[§apx:entrevista]): de Maciá (Entre
+Ríos), de Ingeniero Jacobacci (Río Negro) y de Rafaela (Santa Fe). Son la primera evidencia de la tesis que proviene de la población a la que apunta la hipótesis central, que la encuesta casi no alcanzó (R-08). La tabla~[§tab:familias-modelo] contrasta sus respuestas con los supuestos del modelo.
+
+**Tabla:** Contraste entre el modelo y las entrevistas a familias
+
+| **Supuesto** | **Modelo o encuesta** | **Entrevistas** | **Lectura** |
+| --- | --- | --- | --- |
+| Brecha geográfica | 90,9 % de las respuestas de Buenos Aires | En Maciá y Jacobacci no consiguieron profesor; en Rafaela, sin lugar por semanas | Respaldo cualitativo |
+| Tutor de otra provincia | 77,3 % tomaría clases virtuales | 3 de 3 lo aceptarían, con condiciones | Coinciden |
+| Conectividad variable | Hipótesis técnica 2 | De fibra óptica a cortes por tormenta y latencia alta | Respalda la relevancia de I-02 |
+| Cámara | Opcional; degradación de video a audio y texto (FR-AULA-002) | Una familia pide no exigirla por la latencia | Coinciden |
+| Corte de conexión | Reembolso si la clase se corta antes del 50 % (FR-PAG-004) | Una familia no sabe si se cobra la clase cortada | La regla existe; falta comunicarla |
+| Adulto durante la clase | No exigido | Solo la primera clase (1 de 3); nunca (2 de 3) | Coinciden; difiere de la docente |
+| Pago dentro de la plataforma | Solo 35,2 % lo prefiere (R-02) | 2 de 3 lo prefieren; 1 transferiría al tutor | Difieren en parte |
+| Precio por hora | Mediana de USD~4,56; piso de USD~4 ($6.140) | De $8.000 a $20.000 (USD~5,21 a USD~13,03) | Superan la mediana |
+| Recomendación de tutores | 68,2 % la quiere; 5,7 % valora la “IA” | 3 de 3 piden el motivo concreto, no solo estrellas | Coinciden |
+
+De estas entrevistas surgen cuatro observaciones:
+
+- **La brecha tiene casos concretos.** En las dos localidades pequeñas, la última vez que un hijo necesitó apoyo no hubo profesor disponible y la familia recurrió a un sobrino que estudia en otra ciudad, por teléfono, o a un amigo ingeniero,
+          “de onda, después de cenar”. En Jacobacci, además, el padre explica la causa: los universitarios se van a estudiar a
+          Bariloche o a General Roca. En Rafaela, una ciudad intermedia, el problema no es la ausencia de profesores, sino que los mejores no tienen lugar. Es la situación que describe el capítulo~[§cap:introduccion], y es la primera vez que la tesis la documenta con casos y no solo con la literatura.
+- **La recomendación tiene que decir por qué.** Las tres familias rechazan una recomendación que solo diga que el tutor es
+          “el ideal” o que muestre “estrellitas como en Mercado Libre”.
+          Cada una pide un dato distinto: experiencia con chicos de esa edad, la materia aprobada en una universidad concreta o los resultados con otras familias de la misma ciudad. Es la misma lectura de la encuesta —la IA como etiqueta casi no se valora— y da contenido a una tarea que ya figuraba entre las pendientes antes de operar comercialmente: mostrar el motivo de cada recomendación.
+- **La conectividad del interior no es homogénea.** Las tres conexiones cubren el rango que plantea la hipótesis técnica: fibra óptica estable, internet de cooperativa que se corta con las tormentas y una conexión con latencia alta, desde el celular.
+          El diseño ya contempla los dos casos difíciles: la cámara es opcional, el aula degrada de video a audio y a texto
+          (FR-AULA-002), y una clase que se corta antes de la mitad se reembolsa (FR-PAG-004). Pero la familia de Maciá no sabía qué pasaría con el cobro, lo que indica que la regla debe explicarse al reservar. En las clases con menores, además, el kill-switch analiza el video que recibe cada participante, de modo que una clase sin cámara queda cubierta solo por lo que se comparta en pantalla.
+- **El adulto confía cuando verifica al tutor.** Ninguna de las familias pide presenciar todas las clases: una se quedaría cerca en la primera, y las otras dos no estarían presentes. Lo que piden es saber quién está del otro lado —ver el DNI, conocer qué estudia, que prepare el programa local—. La posición de las familias está más cerca de la de la tutora del
+          Perfil~2 que de la de la docente del Perfil~1, y respalda un diseño que protege al menor con la verificación del tutor y el kill-switch sin exigir la presencia del adulto.
+
+Dos hallazgos señalan tensiones con el modelo. En el pago, una de las tres familias prefiere transferirle directamente al tutor, por desconfianza hacia las aplicaciones, y otra cuenta que los tutores piden cobrar por fuera para evitar la comisión: es la desintermediación del riesgo R-02, descrita ahora desde la demanda. En el precio, los valores informados —de $9.000 a $9.500 en Maciá, de $8.000 a
+$9.000 en Jacobacci y de $19.000 a $20.000 en Rafaela— superan la mediana de la encuesta (USD~4,56) y el piso de tarifa de USD~4
+($6.140). Los rangos de Maciá y de Rafaela alcanzan o superan el ticket que anula el VAN del escenario base (USD~5,87 por hora, capítulo~[§cap:economica]), y el de Jacobacci queda apenas por debajo. El de Rafaela (USD~12,38 a USD~13,03) supera incluso la mediana ($12.000) y el promedio ($13.392,43) del relevamiento de
+Superprof, y duplica el de las dos localidades pequeñas: el precio del interior no es uno solo, y un único valor no lo representa. Si estos precios fueran representativos, la encuesta, concentrada en Buenos Aires, subestimaría la disposición a pagar del interior, y las localidades con poca oferta no implicarían un ingreso por clase menor.
+Son tres casos, por lo que el resultado no reemplaza la medición del precio efectivo prevista en el riesgo R-05. Dos familias agregaron condiciones que el modelo no contempla: una, que el tutor prepare el programa de la institución local; la otra, que use un vocabulario que los chicos entiendan.
+
+Estas entrevistas tienen limitaciones que acotan su peso como evidencia: son tres, breves y sin repreguntas; las familias fueron contactadas por el autor y no se seleccionaron al azar; y los precios mezclan el que se paga en la localidad con el que la familia pagaría. Aportan casos concretos de la brecha que la hipótesis plantea, pero no la miden: el sesgo geográfico de la encuesta (R-08) sigue abierto en su dimensión cuantitativa.
 
 ### Decisiones derivadas
 
 La tabla~[§tab:feedback-decisiones] traduce los hallazgos en decisiones concretas.
 
-**Tabla:** Traducción de los hallazgos en decisiones de diseño
+{
 
 | **Fuente** | **Hallazgo** | **Decisión** | **Estado** |
 | --- | --- | --- | --- |
 | Encuesta | La IA como etiqueta casi no se valora | Presentar las recomendaciones por su resultado, sin el rótulo “IA” (T-TES-12) | Aplicado |
 | Encuesta | El resumen automático es la segunda función más valorada | Resumen como adicional opcional, a costo más un 50 % (ADR-M5-06) | Aplicado; apagado en producción (R-16) |
 | Encuesta | Solo el 35,2 % prefiere pagar en la plataforma | Mitigación del riesgo R-02: valor exclusivo dentro de la plataforma | Planificado |
-| Encuesta | Mediana de disposición a pagar de USD~4,56 por hora | Medir el precio efectivo en el piloto (riesgo R-05) | Planificado |
+| Encuesta | Mediana de disposición a pagar de USD~4,56 por hora | Medir el precio efectivo desde la puesta en marcha (riesgo R-05) | Planificado |
 | Encuesta | 90,9 % de las respuestas de Buenos Aires | Reencuesta dirigida al interior (riesgo R-08) | Planificado |
 | Auditoría | 36 hallazgos, 7 críticos | Corrección de cada uno con prueba de regresión | Aplicado |
 | Pruebas en producción | 3 hallazgos altos y uno transversal | Remediación con prueba previa al arreglo | Implementado, por integrar |
 | Pruebas en producción | Búsquedas sin relación devolvían tutores | Umbral de relevancia calibrado con el modelo real | Implementado, por integrar |
+| Entrevista (docente) | CAP obligatorio para tutores de menores | Ratifica el CAP obligatorio para dar clases a menores (R-10) | Aplicado |
+| Entrevista (docente) | Un adulto debería presenciar las clases de los menores | Se mantiene el diseño actual (kill-switch y verificación del tutor); la tutora opina lo contrario, por lo que la cuestión queda abierta | No adoptado |
+| Entrevista (docente) | El adulto, y no el menor, debería calificar al tutor | Se mantiene el diseño actual de M7; no se incorpora al MVP por el alcance congelado (R-03) | No adoptado |
+| Entrevista (docente) | Mostrar experiencia docente y año de cursada del tutor | Se mantiene el perfil actual de M1; no se incorpora al MVP por el alcance congelado (R-03) | No adoptado |
+| Entrevista (docente) | Resumen con conceptos, puntos y preguntas clave | Coincide con la estructura ya especificada (FR-SUM-003); sin cambios | Respaldo |
+| Entrevista (docente) | Tareas y entregas entre clases | Trabajo futuro, por el alcance congelado (R-03) | Trabajo futuro |
+| Entrevista (tutora) | Una tutora con cartera propia rechaza la comisión y prefiere el cobro directo | Delimitar el segmento de tutores a quienes aún no tienen una red de alumnos; reclutamiento para la puesta en marcha en la comunidad universitaria (R-07) | Aplicado en el análisis |
+| Entrevista (tutora) | Desconfianza a dejar datos personales en la plataforma | Trabajo futuro: explicar en el registro qué datos se piden, para qué y quién los ve (R-07) | Trabajo futuro |
+| Entrevista (tutora) | Precio ajustado a cada familia | Trabajo futuro: precio diferenciado por alumno, por el alcance congelado (R-03) | Trabajo futuro |
+| Entrevista (tutores) | Cuatro de cinco aceptan el 27 % a cambio de alumnos y cobro garantizado; la que cobra sin demoras la rechaza | Se mantiene la comisión; revisarla con los datos de la puesta en marcha (ADR-M5-05, R-07) | Respaldo condicionado |
+| Entrevista (tutores) | Con menores, el adulto debería calificar al tutor (cinco tutores y la docente) | Reconsiderar con prioridad tras la puesta en marcha; no se incorpora al MVP por el alcance congelado (R-03) | No adoptado |
+| Entrevista (tutores) | Los tutores de menores quieren el resumen para la familia | Se mantiene sin resumen en clases con menores (ADR-M6-03); trabajo futuro: transcripción en infraestructura propia | No adoptado |
+| Entrevista (tutores) | Un tutor de exactas suple la pizarra con una tableta propia | Coincide con la pizarra compartida entre adultos (ADR-M3-06); sin cambios | Respaldo |
+| Entrevista (familias) | Las tres piden el motivo concreto de la recomendación | Mostrar el motivo de cada recomendación antes de operar comercialmente | Planificado |
+| Entrevista (familias) | No saben qué pasa con el cobro si se corta la conexión | La regla ya existe (FR-PAG-004); explicarla al reservar | Trabajo futuro |
+| Entrevista (familias) | No exigir la cámara por la latencia | Coincide con la cámara opcional y la degradación del aula (FR-AULA-002); sin cambios | Respaldo |
+| Entrevista (familias) | Pago por fuera, pedido por la familia o por el tutor | Refuerza la mitigación del riesgo R-02 | Planificado |
+| Entrevista (familias) | El tutor debe preparar el programa local | Trabajo futuro: declarar en el perfil la institución o el examen que prepara (R-03) | Trabajo futuro |
 | Diseño | El audio de la sesión no puede anonimizarse antes del LLM | Transcripción previa y modelo de resumen solo con texto anonimizado; sin resumen con menores (ADR-M6-03) | Aplicado |
+
+}
 
 ## Contraste con el estado del arte
 
 El capítulo~[§cap:marco-teorico] comparó las plataformas existentes
 (tabla~[§tab:comparativa]). Los resultados permiten contrastar la propuesta con ellas en tres ejes:
 
-- **matching.** Las plataformas relevadas ofrecen filtros manuales; Tinku implementa un motor de matching semántico con embeddings semánticos. La calibración con consultas propias muestra que separa consultas relevantes de irrelevantes; su valor para los usuarios queda sujeto al indicador I-01 del piloto.
+- **matching.** Las plataformas relevadas ofrecen filtros manuales; Tinku implementa un motor de matching semántico con embeddings semánticos. La calibración con consultas propias muestra que separa consultas relevantes de irrelevantes; su valor para los usuarios queda sujeto al indicador I-01, a medir con usuarios reales.
 - **Aula y pagos integrados.** Tinku integra en un mismo flujo la reserva, el aula virtual y el cobro con una ventana de 24 horas en la que la plataforma todavía puede reembolsar (escrow), algo que las plataformas relevadas resuelven solo de forma parcial.
 - **Seguridad del menor.** Es el diferencial más ambicioso y, a la vez, el que la auditoría encontró más débil. Tras corregir los hallazgos críticos, reincorporar el CAP para los tutores de menores e integrar el kill-switch en el cliente, que funcionó en la prueba en vivo, quedan pendientes su medición en dispositivos reales y la decisión de encendido (riesgo R-01 del capítulo~[§cap:riesgos]).
 
@@ -1669,30 +1952,133 @@ base se anula con una comisión de aproximadamente 18,2 %. El resultado más rel
 | **Resultados favorables** | **Resultados desfavorables** |
 | --- | --- |
 | Nueve módulos implementados y desplegados, con 661 pruebas automatizadas en la rama principal y 85,6 % de cobertura | Las pruebas en producción encontraron tres hallazgos altos que la suite no detectaba; su remediación ya está en la rama principal y falta repetir las pruebas en producción |
-| Los 36 hallazgos de la auditoría, cerrados con prueba de regresión | Producción quedó, tras las pruebas, en un estado que debe revertirse antes del piloto (R-17) |
-| Kill-switch funcionando de punta a punta en la prueba en vivo | Sin medición en dispositivos reales: el piloto no incluye menores |
+| Los 36 hallazgos de la auditoría, cerrados con prueba de regresión | Producción quedó, tras las pruebas, en un estado que debe revertirse antes de la puesta en marcha (R-17) |
+| Kill-switch funcionando de punta a punta en la prueba en vivo | Sin medición en dispositivos reales: las clases con menores siguen deshabilitadas |
 | La encuesta respalda el problema, la modalidad virtual y la verificación | Solo el 35,2 % prefiere pagar dentro de la plataforma, y la disposición a pagar es la mitad del precio de mercado |
 | Escenarios base y optimista económicamente viables | Escenario pesimista no viable |
 | CAP obligatorio para dar clases a menores, implementado | Resumen automático implementado pero apagado en producción hasta tener la cláusula legal |
 
 # Capítulo 8: Implicancias, conclusiones y recomendaciones
 
-*Desarrollo del capítulo.*
+Este capítulo cierra el trabajo con la evidencia disponible al 15 de octubre de 2026, la misma del capítulo~[§cap:resultados]. La validación con usuarios reales excede el alcance de este trabajo
+(capítulo~[§cap:introduccion], sección~[§sec:limitaciones]); por eso la respuesta a la hipótesis es preliminar, y los indicadores con los que se validará quedan definidos para medirse a partir de la puesta en marcha.
 
-## *Nombre de la sección*
+## Conclusiones
 
-**Ejemplo.** [Ejemplo: forma de la respuesta a la hipótesis]
-La hipótesis planteada en el capítulo~[§cap:introduccion] se responde de manera *afirmativa, con matices*: el sistema alcanzó
-*métrica* sobre el umbral definido en el capítulo~[§cap:metodologia], aunque *limitación concreta*.
+### Hallazgos principales
 
-*Texto.*
+- **El sistema existe y está desplegado.** Se construyó un
+          MVP de nueve módulos, con 160 requerimientos funcionales,
+          37 registros de decisión de arquitectura y 739 pruebas automatizadas en el backend, con una cobertura de líneas del
+          86,2 %, desplegado en tinku.site
+          (capítulo~[§cap:resultados]). Lo construyó una sola persona, con un método dirigido por especificaciones y asistido por
+          IA.
+- **Las pruebas automatizadas no bastaron para garantizar la seguridad.** La auditoría técnica encontró 36 hallazgos, siete de ellos críticos y vinculados a la protección del menor, en un sistema cuyas 383 pruebas de ese momento resultaban exitosas.
+          Los 36 se cerraron con una prueba de regresión. Las pruebas sobre el despliegue real encontraron después tres hallazgos de severidad alta que la suite tampoco detectaba, uno de ellos un hueco de la propia especificación.
+- **El problema y la modalidad tienen respaldo; el modelo de cobro, no del todo.** La encuesta ($n = 88$) respalda el diagnóstico de informalidad, la aceptación de la tutoría virtual
+          (77,3 %) y el valor de la verificación de los tutores
+          (81,8 %). En cambio, solo el 35,2 % prefiere pagar dentro de una plataforma, y la mediana de la disposición a pagar es la mitad del precio publicado en Superprof con el que se calcula el ticket (riesgos R-02 y R-05). La docente entrevistada coincide en el valor del apoyo particular y en la equivalencia de la clase virtual, pero difiere en el pago: lo preferiría dentro de la plataforma “por seguridad”. La tutora entrevistada, con cartera propia, prefiere en cambio el cobro directo y rechaza trabajar a comisión. Cuatro de los cinco tutores del Perfil~3, en cambio, aceptan el 27 % a cambio de alumnos y cobro garantizado, aunque la pregunta presentaba la comisión junto con sus beneficios; la quinta, que nunca tuvo problemas para cobrar, la rechaza; y de las tres familias del interior, dos pagarían en la plataforma y una le transferiría al tutor.
+- **El tutor de Tinku** no es el tutor consolidado. La entrevista a una tutora con 35 años de trayectoria y más de veinte alumnos muestra que quien ya tiene una red de recomendaciones no necesita una plataforma: consigue alumnos sin intermediarios y ve en la comisión y en el registro costos sin contrapartida. El segmento de tutores de Tinku queda delimitado, por contraste, a quienes todavía no tienen esa red: estudiantes avanzados, docentes y graduados recientes, y tutores que quieren enseñar fuera de su zona. Es una delimitación de diseño; la disposición de ese segmento a usar la plataforma todavía no se midió. Las entrevistas a cinco tutores en actividad, con horarios libres y menos demanda propia, aportan un primer indicio cualitativo, mayormente a favor.
+- **La IA se valora por lo que resuelve, no por su nombre.** El 68,2 % quiere que la plataforma le recomiende un tutor, pero solo el 5,7 % eligió la “IA que recomiende profesores” como función importante. El resumen automático, descrito por su utilidad, fue la segunda función más valorada
+          (56,8 %). La entrevistada pidió que la recomendación se explique por la reputación del tutor y por los resultados de alumnos similares, y las tres familias del interior pidieron lo mismo: un motivo concreto, no “estrellitas”.
+- **La viabilidad económica es condicional.** Con la comisión del 27 %, el escenario base resulta viable
+          (VAN de USD~18.869 y TIR del 41,57 %), igual que el optimista (VAN de USD~51.990), pero el pesimista no lo es (VAN de USD~-4.410). La viabilidad depende de sostener unas 5.858 sesiones anuales en promedio, de no bajar la comisión de aproximadamente 18,2 % y de operar sin un equipo rentado (capítulo~[§cap:economica]).
+- **Contrastar el diseño con el sistema cambió las decisiones.** La contrastación del modelo económico con el sistema implementado mostró que la comisión de MercadoPago la paga el tutor y no la plataforma, y cambió la conclusión del capítulo~[§cap:economica]. La imposibilidad de anonimizar el audio antes de enviarlo a un proveedor externo llevó a transcribir primero, enviar al LLM solo el texto y excluir el resumen de las clases con menores (ADR-M6-03).
 
-**Tabla:** Grado de cumplimiento de los objetivos específicos (ejemplo de estructura)
+### Respuesta a la hipótesis
+
+La hipótesis central sostiene que una plataforma con matching semántico permitirá a estudiantes de zonas con escasez de tutores acceder a apoyo académico de calidad equivalente a la de los centros urbanos. **Con la evidencia disponible, la hipótesis no puede confirmarse ni refutarse: la evidencia es consistente con sus condiciones de posibilidad, pero todavía no verifica su núcleo.**
+
+La evidencia respalda tres condiciones necesarias para que la hipótesis se cumpla: la plataforma es técnicamente construible y operable por un equipo mínimo; la modalidad virtual es aceptada por el 77,3 % de los encuestados y considerada pedagógicamente equivalente por la docente entrevistada, aunque la tutora, que la practica a diario, señala sus costos: la pérdida de la retroalimentación visual, la dificultad para seguir la atención del alumno y los cortes de conexión; y el modelo económico es viable en los escenarios base y optimista. En cambio, falta evidencia sobre el núcleo de la hipótesis: el acceso efectivo de estudiantes del interior. El 90,9 % de las respuestas de la encuesta proviene de la provincia de Buenos Aires y de la Ciudad Autónoma de Buenos Aires, las dos primeras entrevistadas trabajan en
+Pilar, la docente no conoce casos concretos de la brecha rural, y ningún indicador se midió todavía con usuarios reales. Las entrevistas a tres familias de Entre Ríos, Río Negro y Santa Fe aportan los primeros casos concretos —en dos localidades pequeñas no hubo profesor disponible—, pero son tres y no miden la magnitud de la brecha.
+
+Las dos afirmaciones técnicas del capítulo~[§cap:introduccion] quedan en el siguiente estado:
+
+- **Relevancia de las recomendaciones del matching.**
+          Pendiente. El motor está implementado, y la calibración con 40
+          consultas de elaboración propia muestra que separa las relevantes de las irrelevantes: con el umbral elegido, el 95 %
+          de las relevantes conserva resultados y ninguna irrelevante los obtiene. La aceptación por parte de los usuarios (indicador
+          I-01, umbral superior al 60 %) solo puede medirse con usuarios reales.
+- **Sesiones entre provincias con calidad aceptable.**
+          Pendiente. El aula virtual funcionó con salas de video reales en las pruebas en producción, pero la calidad percibida (I-02) y la sesión entre provincias con una del interior (I-03) solo pueden medirse con usuarios reales.
+
+La respuesta, por lo tanto, es **preliminar**: la hipótesis se sostiene como plausible, pero su componente geográfico, que es el que distingue a Tinku de las plataformas existentes, carece hoy de evidencia directa.
+
+### Cumplimiento de los objetivos específicos
+
+La tabla~[§tab:cumplimiento] retoma cada objetivo específico del capítulo~[§cap:introduccion] y el grado en que se alcanzó.
+
+**Tabla:** Grado de cumplimiento de los objetivos específicos
 
 | **Objetivo** | **Evidencia** | **Grado** | **Observación** |
 | --- | --- | --- | --- |
-| OE-1 | Capítulo~[§cap:resultados] | Alcanzado | *...* |
-| OE-2 | *...* | Parcial | *...* |
+| OE1 Mercado y estado del arte | Capítulo~[§cap:marco-teorico]; apéndice~[§apx:encuesta] | Alcanzado | Encuesta concentrada en Buenos Aires; diez entrevistas: siete a docentes y tutores, casi todos de Buenos Aires, y tres a familias del interior (apéndice~[§apx:entrevista]) |
+| OE2 Arquitectura | Capítulo~[§cap:marco-tecnologico]; apéndice~[§apx:uml] | Alcanzado | — |
+| OE3 Motor de matching | Capítulo~[§cap:resultados], pruebas en producción | Parcial | Implementado y calibrado con consultas propias; sin validar con usuarios (I-01) |
+| OE4 Aula virtual | Capítulo~[§cap:resultados], pruebas en producción | Parcial | Aula y kill-switch funcionaron de punta a punta en la prueba en vivo; faltan la exactitud del clasificador con contenido real y la latencia en dispositivos reales, por lo que las clases con menores siguen deshabilitadas (R-01) |
+| OE5 Pagos | Capítulo~[§cap:resultados]; capítulo~[§cap:economica] | Parcial | Implementado con OAuth por tutor; pendiente de verificar en el entorno de pruebas de MercadoPago (R-11) |
+| OE6 IA educativa | Capítulo~[§cap:resultados], listado~[§lst:puerto-resumen] | Parcial | Implementado; apagado en producción hasta contar con la cláusula legal de grabación (R-16) |
+| OE7 Reputación | Capítulo~[§cap:resultados], módulo de reputación | Alcanzado | Umbral mínimo de calificaciones antes de mostrar el promedio |
+| OE8 Validación funcional | Capítulo~[§cap:resultados], pruebas técnicas y auditoría | Alcanzado | 739 pruebas del backend, 222 de extremo a extremo, auditoría con los 36 hallazgos cerrados y pruebas sobre el despliegue; indicadores I-01 a I-04 definidos, sin medir con usuarios reales |
+
+### Interpretación frente a los estudios previos
+
+Los resultados dialogan con la literatura del capítulo~[§cap:marco-teorico] en cuatro puntos.
+
+- **Efectividad de la tutoría.** La encuesta confirma que el apoyo particular se busca y se valora, y la entrevistada lo considera “fundamental” porque la escuela no puede seguir a cada alumno. Ambos resultados son coherentes con el problema de los 2 sigma [bloom1984] y con el meta-análisis de tutoría privada [sciencedirect2022]. Este trabajo no aporta evidencia nueva sobre el efecto de la tutoría en el aprendizaje, ya que no midió rendimiento académico.
+- **matching semántico.** Los antecedentes
+          [isotropy2026,, paperrec2025] validaron la técnica con pruebas de relevancia percibida. La encuesta agrega un matiz que esos trabajos no abordan: el usuario valora la recomendación, pero no la etiqueta “IA”. La relevancia técnica de la recomendación sería, así, necesaria pero no suficiente; también importa que pueda explicarse.
+- **Reputación bidireccional.** El diseño adoptó la reputación bidireccional discutida por [reputation]. La entrevista a la docente introduce una variable que esa discusión no contempla: cuando una de las partes es menor de edad, quién califica deja de ser un detalle de interfaz y pasa a ser una decisión de protección. Los cinco tutores del Perfil~3
+          coinciden, por un motivo adicional: un menor puede castigar con una mala calificación una clase difícil.
+- **Mercados bilaterales.** El problema de arranque en frío
+          [rochet2006] aparece en los datos: solo 9 de las 88
+          respuestas corresponden a tutores, y la oferta es el recurso más escaso para iniciar la operación (R-07). La entrevista a la tutora precisa el problema: el arranque en frío no se resuelve con los tutores ya consolidados, que no necesitan la plataforma, sino con los que todavía no tienen demanda propia. La comisión agrava el problema: con el 27 %, el tutor recibe el 66,96 % de su precio, seis puntos menos que cuando la plataforma absorbía la pasarela.
+
+### Limitaciones
+
+- **De validación.** La hipótesis se responde sin datos de usuarios reales: ninguno de los indicadores I-01 a I-04 pudo medirse. Las clases con menores, además, están deshabilitadas, aunque los menores son una parte central de la población objetivo.
+- **De datos.** La encuesta no es probabilística y el
+          90,9 % de sus respuestas proviene de Buenos Aires. Las entrevistas son dos, ambas en Pilar: una a una docente sin experiencia en clases particulares, en la que algunas preguntas presentaban el resultado de la encuesta antes de la respuesta, y otra a una tutora consolidada, realizada por mensajes de audio, en la que dos de cada cinco preguntas no se abordaron y cuyo perfil es el opuesto al del tutor objetivo. Las ocho entrevistas posteriores —cinco a tutores en actividad y tres a familias del interior— son breves, por WhatsApp y sin repreguntas; en las de tutores, la pregunta sobre la comisión presentaba el dato y sus beneficios. Tres de los cinco tutores trabajan en el
+          AMBA, y ninguna fuente mide todavía la adopción del tutor que Tinku busca incorporar.
+          La calibración del umbral de relevancia usa consultas de elaboración propia.
+- **Técnicas.** El clasificador del kill-switch no se midió con contenido real ni en dispositivos reales; el resumen está apagado en producción; el cobro con OAuth no se verificó en el entorno de pruebas de MercadoPago; las pruebas por rol en producción deben repetirse tras la remediación (R-15) y el despliegue debe volver a su estado previo antes de la puesta en marcha (R-17). Todo el sistema corre en un único servidor propio
+          (R-14).
+- **De mercado.** La disposición a pagar se relevó sobre una muestra urbana y resultó la mitad del precio con el que se calcula el ticket; el precio y la demanda del interior pueden diferir. La preferencia por pagar dentro de la plataforma es minoritaria.
+
+## Implicancias
+
+- **Teórica.** El trabajo sugiere que, en un marketplace educativo, la aceptación del matching no depende solo de la relevancia técnica de la recomendación, sino de que el usuario la perciba por su resultado. También muestra que la presencia de menores modifica decisiones que la literatura trata como neutras, como qué datos pueden enviarse a un proveedor de IA o quién paga la clase.
+- **Práctica.** La combinación de especificaciones previas, registros de decisión y asistencia de IA permitió que una sola persona construyera y desplegara un sistema de nueve módulos. La auditoría y las pruebas en producción mostraron el límite de ese método: la velocidad de construcción no reemplaza la revisión del sistema construido, porque las pruebas verifican lo que se especificó y no lo que se omitió.
+- **De innovación.** Ninguna de las plataformas relevadas integra matching semántico, aula virtual, pago con escrow y controles específicos para menores en un mismo flujo (tabla~[§tab:comparativa]). La integración es la innovación; ninguna pieza por separado es nueva.
+- **Social y económica.** Si la validación con usuarios confirma la hipótesis, la plataforma ampliaría el acceso al apoyo escolar en zonas sin oferta presencial y formalizaría ingresos de tutores hoy informales. La condición es económica: por debajo de unas 1.774 a
+          2.194 sesiones anuales la operación no cubre sus costos fijos, y un servicio que cierra no reduce ninguna brecha.
+
+## Aportes
+
+- Un MVP funcional, desplegado y documentado, con especificaciones, 37 registros de decisión de arquitectura y 739
+          pruebas en el backend, que otra persona puede retomar
+          (anexo~[§anx:repositorios]).
+- Un modelo de protección del menor para tutoría virtual 1 a 1: cuenta pagadora del adulto responsable, CAP obligatorio para los tutores de menores, kill-switch que corre en el navegador de cada participante y exclusión del resumen automático en las clases con menores.
+- Un modelo económico reproducible, contrastado con el sistema implementado, que muestra cómo esa contrastación cambió la conclusión (anexo~[§anx:modelo-financiero]).
+- Evidencia empírica de que, en este mercado, la IA se valora por su resultado y no como atributo del producto.
+
+## Recomendaciones
+
+- **Para la práctica profesional.** Complementar las pruebas automatizadas con una revisión independiente y con pruebas sobre el despliegue real antes de cada pasaje a producción, en especial en los controles de seguridad. En el desarrollo asistido por IA, verificar lo que el sistema hace y no solo lo que la documentación declara.
+- **Para los investigadores.** Medir la aceptación de un sistema de recomendación con y sin explicación, y separar en las encuestas la valoración de una función de la valoración de la tecnología que la resuelve. Relevar por separado a los tutores consolidados y a los que recién empiezan, porque sus incentivos frente a una plataforma son opuestos.
+- **Para instituciones y políticas públicas.** Ofrecer una vía de verificación de antecedentes consultable por las plataformas, con consentimiento del titular, que reemplace la revisión manual de un certificado presentado por el propio tutor (R-10). Las escuelas podrían, además, derivar alumnos y aportar el volumen que el modelo económico necesita (O-02).
+- **Para el desarrollo tecnológico de Tinku**. Antes de la puesta en marcha, repetir las pruebas por rol en producción y revertir el estado del despliegue (R-15, R-17). Antes de habilitar las clases con menores, medir la exactitud del clasificador y su latencia en dispositivos reales (R-01). Antes de operar comercialmente, verificar el cobro en el entorno de pruebas de
+          MercadoPago (R-11), revisar la comisión con los datos de la puesta en marcha y mostrar el motivo de cada recomendación. Con los datos de la puesta en marcha, reconsiderar las propuestas de la entrevista a la docente que no se incorporaron al MVP: la presencia del adulto responsable en las clases con menores —sobre la que las entrevistadas discrepan— y la calificación del tutor por parte del adulto, que pidieron también los cinco tutores del Perfil~3.
+          Antes de abrir las reservas, explicar al reservar qué pasa con el cobro si la clase se corta.
+
+## Futuras líneas de investigación
+
+- **Validación con usuarios reales.** Medir los indicadores
+          I-01 a I-04 desde la puesta en marcha y replicar la encuesta en localidades con escasa oferta de tutores, que es la población a la que apunta la hipótesis (R-08).
+- **Resumen automático con menores.** Evaluar la transcripción local o en infraestructura propia, previa a la anonimización, que permita ofrecer el resumen sin transferir la voz del menor a un proveedor externo. Los tutores de menores entrevistados son los que más valoran el resumen, como informe para la familia.
+- **Efecto en el aprendizaje.** Medir el rendimiento académico de los alumnos antes y después de un ciclo de tutorías, para contrastar el resultado con la literatura sobre tutoría.
+- **Continuidad entre clases.** Estudiar el valor de las tareas y entregas asincrónicas propuestas por la docente entrevistada.
+- **Funciones excluidas del alcance.** Aplicaciones móviles nativas, integración con sistemas estatales, accesibilidad completa, suscripción, clases grupales y el asistente conversacional de repaso (sección~[§sec:alcance]).
 
 # Apéndices
 
@@ -1717,8 +2103,7 @@ El modelo de ingresos vigente no toma el precio de esta encuesta: el ticket se c
           (menor acuerdo) a 5 (mayor acuerdo) y selección múltiple.
 - **Lógica condicional:** las preguntas 5 a 8 se muestran solo a quienes responden “Sí” en la pregunta 4.
 - **Población objetivo:** alumnos, madres y padres de alumnos, y tutores particulares residentes en Argentina.
-- **Muestreo:** no probabilístico, por conveniencia.
-          *Canal de distribución (grupos de WhatsApp, redes sociales, contactos personales, etc.).*
+- **Muestreo:** no probabilístico, por conveniencia. El enlace se difundió desde las cuentas del proyecto, en estados de WhatsApp e historias de Instagram, por lo que llegó principalmente a la red de contactos del autor y a sus contactos de segundo grado. Esto explica la concentración geográfica de las respuestas.
 - **Período de aplicación:** del 28 de agosto al 9 de septiembre de 2026. El 87,5 % de las respuestas se registró en los dos primeros días.
 - **Respuestas:** 88 respuestas válidas, sin duplicados por identificador de respondente, por encima del mínimo de 30
           fijado en el capítulo~[§cap:metodologia].
@@ -1729,8 +2114,11 @@ El modelo de ingresos vigente no toma el precio de esta encuesta: el ticket se c
 
 ## Presentación de la encuesta
 
-*Texto introductorio que vieron las personas participantes
-(propósito, anonimato, duración estimada) y, dado que respondieron menores de 18 años, cómo se obtuvo o se solicitó el consentimiento de su adulto responsable.*
+Al abrir el formulario, las personas participantes leían el siguiente texto:
+
+“Esta investigación académica busca comprender sus experiencias, expectativas y desafíos al buscar apoyo educativo. Sus respuestas serán tratadas confidencialmente y contribuirán al avance de una investigación educativa.”
+
+El formulario no solicitaba nombre, correo electrónico ni ningún otro dato que permita identificar a quien responde: solo edad por rango, provincia y rol. Respondieron 11 menores de 18 años (12,5 % de la muestra). La encuesta no pidió el consentimiento de un adulto responsable para ellos, lo que se declara como una limitación del relevamiento; su alcance queda acotado por el carácter anónimo del formulario, que no registró datos personales de los menores. Una aplicación futura del instrumento a menores debería incluir ese consentimiento.
 
 ## Cuestionario
 
@@ -1862,70 +2250,498 @@ Interpolando dentro del rango que la contiene, la mediana de la disposición a p
 # Entrevistas a especialistas
 
 Como se detalla en el capítulo~[§cap:marco-teorico]
-(sección~[§sec:entrevistas]), se definieron dos perfiles de especialista complementarios: un docente o gestor/a institucional y un/a profesional del campo psicopedagógico o del vínculo y la seguridad con menores. En cada caso se documenta el contexto, la ficha de la persona entrevistada y la transcripción por ejes temáticos.
+(sección~[§sec:entrevistas]), se definieron cuatro perfiles complementarios: una docente, que aporta la mirada pedagógica e institucional (Perfil~1); una tutora particular consolidada (Perfil~2) y cinco tutores particulares en actividad (Perfil~3), que aportan la del lado de la oferta del marketplace; y tres familias de localidades del interior (Perfil~4), que aportan la del lado de la demanda. En cada caso se documenta el contexto, la ficha de las personas entrevistadas, el guion y la transcripción por ejes temáticos.
 
-**Estado: [PENDIENTE]** – las entrevistas no se realizaron en el
-Sprint 3, como preveía originalmente el cronograma del capítulo~[§cap:metodologia], y se reprogramaron para
-*fecha prevista*. Hasta entonces los guiones aquí transcritos constituyen la evidencia del diseño metodológico; los
-*completar* marcan los datos que se completarán con la realización efectiva de cada entrevista.
+**Estado.** Las entrevistas no se realizaron en el Sprint~3, como preveía originalmente el cronograma del capítulo~[§cap:metodologia].
+La entrevista del Perfil~1 se realizó el 25 de septiembre de 2026; la del
+Perfil~2, el 29 de septiembre de 2026, en forma asincrónica por mensajes de audio. Las de los perfiles~3 y~4 se realizaron entre el 20 y el 27 de octubre de 2026, también en forma asincrónica por WhatsApp, y todas salvo una se respondieron con mensajes de audio.
 
-Para el Perfil~1 se preparó además un guion ampliado, de 25 preguntas en seis ejes, que contrasta con la persona entrevistada los resultados de la encuesta (apéndice~[§apx:encuesta]) y los supuestos de los capítulos~[§cap:economica] y~[§cap:riesgos]. Se conserva en el repositorio de la tesis (entrevistas/guion-entrevista-profesor.md, anexo~[§anx:repositorios]).
-
-## Perfil 1: Docente o gestor/a institucional
+## Perfil 1: Docente
 
 ### Contexto de la entrevista
 
-*Fecha, modalidad (presencial/remota), medio y duración.*
+- **Fecha, modalidad y duración:** 25 de septiembre de 2026, presencial, grabada en audio; 30 minutos.
+- **Tipo:** semiestructurada, con el guion de la sección~[§sec:guion-perfil1].
+- **Objetivo:** validar o corregir, desde la mirada de una docente en ejercicio, los supuestos del proyecto sobre el problema, la calidad de la tutoría virtual, la verificación de tutores, el matching, el resumen automático, la seguridad de los menores y el precio.
+- **Consentimiento:** la entrevistada autorizó, al inicio de la grabación, la grabación de la entrevista y la cita de sus respuestas con su nombre y cargo.
 
 ### Datos de la persona entrevistada
 
-*Formación, cargo actual, experiencia relevante.*
+- **Nombre:** Carolina Stocchetti.
+- **Formación:** Profesora de Educación Física (título terciario).
+- **Cargo actual:** profesora titular de Educación Física en tres instituciones de Pilar, provincia de Buenos Aires: Escuela
+          Complejo Evangélico Pilar, Escuela Cristiana San Pablo y Gospel
+          College.
+- **Niveles:** inicial, primario y secundario.
+- **Experiencia docente:** 5 años.
+- **Experiencia en clases particulares:** no dictó ni coordinó clases particulares o de apoyo, presenciales ni virtuales.
 
 ### Guion de entrevista
 
-*Eje 1 – apoyo escolar y repitencia.*
+El guion se organizó en seis ejes, cada uno asociado a los capítulos cuyos supuestos pone a prueba. Las preguntas entre paréntesis aportan a la persona entrevistada el contexto de la encuesta del apéndice~[§apx:encuesta].
 
-- ¿Qué rol juega el apoyo escolar personalizado en la prevención de la repitencia en los niveles primario y secundario?
-- ¿Qué diferencias observa entre el acceso a tutorías en zonas urbanas y rurales del país?
+*Eje 1 – El problema: apoyo escolar y brecha de acceso
+(capítulo~[§cap:introduccion*).]
 
-*Eje 2 – tutoría virtual pedagógica y de seguridad.*
+- ¿Qué rol cumple el apoyo escolar particular en que un alumno recupere contenidos o evite repetir?
+- ¿Qué pasa hoy con el alumno que no entiende un tema en clase y no tiene acceso a un profesor particular? ¿La escuela tiene algún mecanismo para eso?
+- ¿Observa diferencias en el acceso a clases particulares entre grandes ciudades y localidades del interior o zonas rurales?
+          ¿Tiene algún caso concreto?
+- ¿Cómo encuentran hoy las familias a un profesor particular?
+          (En la encuesta, la mayoría lo encontró por recomendación.)
 
-- Desde lo pedagógico, ¿qué recaudos considera necesarios para que una tutoría virtual 1 a 1 sea efectiva con un menor?
-- Desde la seguridad, ¿qué condiciones mínimas debería garantizar una plataforma que conecta adultos desconocidos con menores en un entorno remoto?
-- ¿Cómo observaría la articulación de esta plataforma con las instituciones educativas (escuelas, docentes, equipos de orientación)?
+*Eje 2 – Calidad pedagógica de la tutoría virtual (hipótesis y
+OE4).*
+
+- ¿Una clase virtual 1 a 1 puede tener una calidad equivalente a una presencial? ¿En qué materias o niveles sí y en cuáles no?
+- ¿Qué condiciones mínimas necesita una clase virtual para que sirva?
+- ¿A partir de qué edad un alumno puede sostener una clase virtual sin un adulto al lado?
+- ¿Le parece adecuado un mínimo de 30 minutos y una duración estándar de 60 minutos por sesión?
+
+*Eje 3 – Verificación de tutores y matching (OE3, OE7 y modelo de confianza).*
+
+- Cuando se elige un profesor particular, ¿qué es lo más difícil de saber de antemano? (En la encuesta, “saber si era bueno” y
+          “confianza” fueron las dificultades más mencionadas.)
+- ¿Qué credenciales deberían exigirse para dar clases en una plataforma: título docente, título de grado, estudiante avanzado, experiencia comprobable? ¿Varía según el nivel?
+- Más allá del título, ¿qué criterios usaría para emparejar a un alumno con un tutor?
+- (El 68 % quiere que la plataforma le recomiende al tutor más adecuado, pero solo el 6 % eligió “IA que recomiende profesores” como función importante.) ¿Cómo interpreta esa diferencia? ¿La recomendación debería explicarse o ser invisible?
+- ¿Qué tan útiles son las calificaciones de otros alumnos para juzgar a un docente? ¿Qué riesgos ve en un sistema de calificaciones hechas por menores?
+
+*Eje 4 – IA en el aprendizaje (OE6).*
+
+- (El resumen automático fue la segunda función más valorada.)
+          ¿Un resumen automático después de la clase aporta al aprendizaje?
+- ¿Qué debería tener ese resumen para ser útil pedagógicamente?
+- ¿Qué riesgos ve en un asistente de IA que responda dudas del alumno entre clases?
+
+*Eje 5 – Seguridad y articulación institucional
+(capítulo~[§cap:riesgos*).]
+
+- ¿Qué condiciones mínimas debe garantizar una plataforma que conecte a menores con adultos desconocidos?
+- ¿Le parece suficiente que el CAP sea opcional y visible en el perfil, o debería ser obligatorio para cualquier tutor de menores?
+- ¿Cómo debería participar el adulto responsable (ver las clases, recibir los resúmenes, aprobar al tutor)?
+- ¿Una escuela o un equipo de orientación recomendaría o usaría una plataforma así? ¿Qué le pediría para confiar en ella?
+
+*Eje 6 – Precio y viabilidad (capítulo~[§cap:economica*).]
+
+- ¿Cuánto cobra hoy una clase particular de una hora en su entorno? (El 68 % de los encuestados pagaría menos de
+          USD~5,86 por hora y la mediana es USD~4,56.)
+- (La plataforma cobra una comisión del 27 % al tutor.) ¿Un tutor aceptaría esa comisión a cambio de alumnos, cobro garantizado y herramientas? ¿Qué porcentaje le parece razonable?
+- (Solo el 35 % prefiere pagar dentro de una plataforma antes que por transferencia.) ¿Qué haría que una familia prefiera pagar dentro de la plataforma y no acordar por fuera después de la primera clase?
+
+*Cierre.*
+
+- Si tuviera que sacar una sola función del proyecto, ¿cuál sacaría? ¿Y cuál agregaría?
+- ¿Hay algo que no le pregunté y que considere importante?
 
 ### Transcripción de la entrevista
 
-*Transcripción organizada por ejes temáticos.*
+La transcripción se obtuvo por reconocimiento automático del audio y se editó solo para eliminar muletillas, repeticiones y errores evidentes de reconocimiento, sin alterar el sentido de las respuestas. El texto entre corchetes es una aclaración del autor; los fragmentos que el reconocimiento no permite atribuir o interpretar con certeza se señalan como tales. Las preguntas~2 y~16 no se formularon. La transcripción automática sin editar se conserva en el repositorio de la tesis
+(‘anexos/entrevista.md‘). La entrevistada revisó y validó la transcripción.
 
-## Perfil 2: Psicopedagogía / vínculo y seguridad con menores
+#### Eje 1 – El problema: apoyo escolar y brecha de acceso
+
+**P1 (rol del apoyo escolar).** “Depende de la escuela. Me parece que hay muchas que no tienen un mecanismo para poder seguir individualmente al chico y asegurarse al 100 % de que esté comprendiendo todos los contenidos.” Ante la repregunta: “Para mí es fundamental. Es fundamental porque logra todo lo que no puede lograr en una escuela.”
+
+**P3 (diferencias urbano-rurales).** “No sé ningún caso concreto
+[] La necesidad debe estar en los dos lugares, tanto en el lugar rural como en las grandes ciudades, pero no sé si hay tanto acceso a profesores particulares en lugares rurales, a diferencia de las grandes ciudades, que hay mucha [más oferta].”
+
+**P4 (cómo se encuentra a un profesor).** El entrevistador informa que en la encuesta la mayoría encontró al profesor por recomendación y pregunta si coincide. “Sí, para mí también.” A continuación se mencionan internet, publicidades y los estados de mensajería como otros canales; la transcripción no permite atribuir con certeza ese fragmento a la entrevistada.
+
+#### Eje 2 – Calidad pedagógica de la tutoría virtual
+
+**P5 (calidad equivalente).** “Yo creería que sí, que puede tener una calidad equivalente. También supongo que dependiendo de la necesidad del chico, ¿no? Pero creería que sí, que no habría problema.” La entrevistada no distinguió materias o niveles.
+
+**P6 (condiciones mínimas).** “Depende: si es una clase de matemática, vamos a poder compartirle pantalla, poder manejar bien las herramientas que tengan, que tengan acceso a internet, que tengan cámara.”
+
+**P7 (edad para una clase sin un adulto al lado).** “Yo diría, por las dudas, desde los 18.”
+
+**P8 (duración de 30 y 60 minutos).** “Sí, yo diría que está bien eso.”
+
+#### Eje 3 – Verificación de tutores y matching
+
+**P9 y P10 (credenciales).** “Estaría bueno que se exija: si es un estudiante avanzado, de qué año; si ya tiene el título. A mí me parece que es importante.” Y agrega: “También poder ver su experiencia, poder leer hace cuántos años que es docente, dónde enseñó. Creo que está bueno.”
+
+**P11 (criterios de emparejamiento).** “Yo creo que por materia y nivel.”
+
+**P12 (recomendación explicada o invisible).** “A mí me gustaría que me lo recomienden porque la persona tiene buena reputación, que se vaya votando la calidad de la enseñanza y eso haga que me lo recomienden.
+O también pienso que si varios chicos de determinados colegios o determinadas zonas accedieron a ese profesor y les fue bien, que me lo recomienden a mí porque [soy] justo del mismo curso.”
+
+**P13 (calificaciones hechas por menores).** “Es complicado eso
+[] que los menores no puedan entrar dentro de esta calificación: como todos los menores tienen un adulto a cargo, el adulto es el que pondría la nota.” El fragmento final (“¿estás de acuerdo con eso? Eso está bueno”) no puede atribuirse con certeza, pero no altera el sentido de la respuesta.
+
+#### Eje 4 – IA en el aprendizaje
+
+**P14 (aporte del resumen).** “Puede ser una herramienta más.
+Entiendo que la clase grabada no te puede quedar, pero que te hagan un resumen y que lo puedas descargar, sí.”
+
+**P15 (contenido del resumen).** “Los puntos más importantes que se tocaron, los conceptos más importantes, explicaciones gráficas o preguntas clave que se hicieron en la clase. Es como un resumen de la clase para refrescarla.”
+
+#### Eje 5 – Seguridad y articulación institucional
+
+**P17 (condiciones mínimas con menores).** “Yo creo que para ingresar [el tutor] tendría que presentar una constancia de antecedentes penales. Y siempre tener un adulto presenciando las clases, que no se permita que estén solos los chicos.”
+
+**P18 (CAP opcional u obligatorio).** El entrevistador explica que el certificado se tramita ante el Estado con un costo y plantea dos alternativas: que sea opcional y visible en el perfil, u obligatorio para dar clases a menores. “Yo lo haría obligatorio.” Sobre cuánto estaría dispuesto a pagar un tutor por el certificado: “No sé, que lo puedas recuperar con el pago de una clase y listo.”
+
+**P19 (participación del adulto responsable).** “Más que nada, que esté en la clase, que vea la clase.”
+
+**P20 (articulación con escuelas).** La pregunta se formuló, pero la grabación no registra una respuesta.
+
+#### Eje 6 – Precio y viabilidad
+
+**P21 (precio de una clase).** Ante la mediana de la encuesta
+(USD~4,56 por hora, algo menos de $7.000): “Creo que es bajo. Es una clase particular: debe estar de $15.000 para arriba, teniendo que movilizarte hasta el lugar; generalmente no vienen a tu casa. Entonces es un beneficio.”
+
+**P22 (comisión del 27 %).** “Me parece que está bien.”
+La transcripción automática registró “No, no parece que está bien”; la respuesta se verificó contra la grabación.
+
+**P23 (pago dentro de la plataforma).** “Me parece que por seguridad.”
+
+#### Cierre
+
+**P24 (función a sacar o agregar).** La entrevistada no señaló ninguna función para quitar y propuso una nueva: “Estaba pensando si existe la posibilidad de que haya un feedback, que por la misma plataforma se pueda enviar algún documento, una tarea, alguna entrega.
+Sería el medio por el cual el profesor le deja una tarea al chico y el chico se la puede entregar fuera del horario; se le deja algo para practicar luego de la clase.” Sobre si la entrega sería durante la clase o después: “No sé.”
+
+**P25 (algo más).** “No.”
+
+## Perfil 2: Tutora particular
 
 ### Contexto de la entrevista
 
-*Fecha, modalidad (presencial/remota), medio y duración.*
+- **Fecha, modalidad y duración:** 29 de septiembre de 2026, remota y asincrónica, mediante mensajes de audio de WhatsApp.
+          Al no tratarse de una conversación continua, no se registra una duración.
+- **Tipo:** semiestructurada, con el guion de la sección~[§sec:guion-perfil2], adaptado a la modalidad asincrónica: el orden de las preguntas se modificó y algunas se reformularon.
+- **Objetivo:** relevar el lado de la oferta del marketplace desde la experiencia de una tutora particular en actividad: cómo consigue alumnos, cómo da y cobra sus clases, cómo maneja la relación con los alumnos menores y sus familias, y qué opina del modelo de Tinku.
+- **Consentimiento:** la entrevistada autorizó la cita de sus respuestas en la tesis en forma anónima. Por eso no se consignan su nombre ni los datos que permitirían identificarla, y se la menciona como “la tutora entrevistada”.
 
 ### Datos de la persona entrevistada
 
-*Formación, cargo actual, experiencia relevante.*
+- **Nombre:** anónima, a pedido de la entrevistada.
+- **Formación:** docente, con estudios en Ciencias de la
+          Educación en la Facultad de Filosofía y Letras de la
+          Universidad de Buenos Aires.
+- **Trayectoria:** 35 años como docente, en escuelas públicas y privadas, entre ellas dos colegios bilingües de la zona de
+          Pilar, provincia de Buenos Aires.
+- **Clases particulares:** desde hace entre 15 y 20 años en
+          Pilar, primero a domicilio y, desde la pandemia, también en forma virtual. Tiene con frecuencia más de veinte alumnos, desde primer grado hasta el final del secundario, con distintos planes de estudio (entre ellos, bilingüe y francés), alumnos con dislexia, trastorno por déficit de atención y discalculia, y alumnos que hacen *homeschooling*. Enseña varias materias según lo que trae cada alumno.
+- **Experiencia con plataformas:** nunca usó una plataforma de tutorías y no conocía Tinku.
+
+### Alcance de la entrevista
+
+La entrevista se realizó por mensajes de audio y parte del guion no llegó a abordarse. De las 25 preguntas previstas, se abordaron las de los ejes~1 a~3 —salvo la~12 y la~15—, y la~19 y la~23 recibieron una respuesta parcial; las otras diez (12, 15 a~18, 20 a~22, 24 y~25) no se abordaron o recibieron como respuesta que el tema no se había conversado. Estas preguntas se registran en la transcripción, pero **no se interpretan como respuestas**: no se extrae de ellas ninguna conclusión. La entrevista aportó además información que el guion no preveía: cómo organiza la entrevistada una clase virtual con varios materiales, dónde y cómo se conectan los alumnos, por qué no da clases grupales y cómo fija el precio según cada familia.
 
 ### Guion de entrevista
 
-*Eje 1 – vínculo y acompañamiento.*
+El guion aborda el lado de la oferta del marketplace, el menos representado en la encuesta (9 tutores sobre 88 respuestas). En las preguntas sobre duración, precio, comisión y pago dentro de la plataforma, el dato de la encuesta o del modelo se presenta recién después de la respuesta, para no condicionarla.
 
-- ¿Qué impacto vincular observa en un acompañamiento personalizado
-          1 a 1 para niños, niñas y adolescentes?
-- ¿Qué señales de alerta de un menor conviene monitorear en un entorno remoto de interacción con un adulto no conocido?
-- ¿Qué rol recomienda para el adulto responsable dentro de la plataforma?
+*Eje 1 – Cómo consigue alumnos (capítulo~[§cap:introduccion* y riesgo R-07).]
 
-*Eje 2 – reputación y diseño seguro.*
+- ¿Cómo conseguís alumnos hoy? ¿Qué canal te funciona mejor?
+- ¿Te faltan o te sobran alumnos? ¿Cambia según la época del año?
+- ¿Tuviste alumnos de otras provincias o del interior? ¿Cómo llegaron?
+- ¿Usaste alguna plataforma de tutorías? ¿Qué te sirvió y qué no?
 
-- ¿Qué errores evitaría en el diseño de un sistema de reputación bidireccional que involucra a menores?
-- ¿Qué balance propone entre la protección del menor y el respeto a su privacidad al revisar sesiones o interacciones?
-- ¿Qué recomendaciones daría para el manejo de denuncias y situaciones de conflicto entre tutores y familias?
+*Eje 2 – La clase virtual desde el lado del tutor (hipótesis y
+OE4).*
+
+- ¿Das clases virtuales? ¿Con qué herramienta y con qué problemas técnicos?
+- ¿Hay materias o niveles que funcionen peor en forma virtual?
+- ¿Cuánto dura tu clase típica? ¿Qué proporción de tus clases dura
+          30 minutos?
+- Cuando das clases virtuales a un menor, ¿suele haber un adulto presente?
+
+*Eje 3 – Precio, comisión y cobro (capítulo~[§cap:economica*; riesgos R-02 y R-04).]
+
+- ¿Cuánto cobrás la hora? ¿Cambia según el nivel y la modalidad?
+- ¿Cómo cobrás hoy? ¿Te pasó que no te pagaran una clase o que te cancelaran a último momento?
+- ¿Qué porcentaje de comisión te parecería razonable a cambio de alumnos, cobro garantizado y aula virtual? ¿Aceptarías el
+          27 %?
+- ¿Te parece aceptable cobrar 24 horas después de la clase?
+- ¿Te parece justa la política de cancelación con 24 horas de anticipación?
+- Si conocés a un alumno por la plataforma, ¿seguirías dentro de ella o pasarías a cobrarle por transferencia? ¿Qué te haría quedarte?
+- ¿Estás inscripta en el monotributo o facturás tus clases?
+
+*Eje 4 – Registro y verificación (riesgos R-07 y R-10).*
+
+- ¿Qué documentación estarías dispuesta a subir para registrarte?
+- ¿Tramitarías el CAP para dar clases a menores? ¿Te haría desistir de registrarte?
+- ¿Cuánto tiempo esperarías la aprobación de tu perfil?
+
+*Eje 5 – Reputación y matching (OE3 y OE7).*
+
+- ¿Qué información te gustaría ver de un alumno antes de aceptar una clase?
+- ¿Qué te parece el umbral de cinco calificaciones y la calificación oculta del alumno por parte del tutor?
+
+*Eje 6 – Seguridad y resumen automático (riesgos R-01 y R-16; OE6).*
+
+- ¿Qué te parece el corte automático de la videollamada ante contenido inapropiado? ¿Te preocupa un corte por error?
+- ¿Aceptarías que se grabe el audio de la clase para generar el resumen? ¿Te sería útil?
+
+*Cierre.*
+
+- Si tuvieras que sacar una sola función del proyecto, ¿cuál sacarías? ¿Y cuál agregarías?
+- ¿Te sumarías al piloto como tutora? ¿Conocés a otros tutores que se sumarían?
+- ¿Hay algo que no te pregunté y que consideres importante?
 
 ### Transcripción de la entrevista
 
-*Transcripción organizada por ejes temáticos.*
+La transcripción se reconstruyó a partir de los mensajes de audio y se editó solo para eliminar muletillas y repeticiones, sin alterar el sentido de las respuestas. El texto entre corchetes es una aclaración del autor. Las preguntas se numeran según el guion de la sección~[§sec:guion-perfil2]; como en la entrevista se reformularon, cada una indica entre paréntesis el tema efectivamente conversado. La versión completa, en el orden en que se desarrolló la conversación, se conserva en el repositorio de la tesis
+(‘anexos/entrevista-tutora.md‘), también anonimizada. La entrevistada revisó y validó la transcripción.
+
+#### Eje 1 – Cómo consigue alumnos
+
+**P1 (canales).** “Todo por recomendación, de boca en boca.” Al llegar a Pilar trabajó cerca de un año para una madre que había armado un emprendimiento de contratación de profesores: “Ella cobraba una parte y a mí me daba un porcentaje. Estuve aproximadamente un año así y después ya quise independizarme.” A partir de un primer alumno conseguido por una profesora de un colegio de la zona, “fue todo recomendación. La verdad es que nunca tuve que hacer publicidad ni nada”. Hoy la recomiendan las familias y, a veces, directoras de colegio, y trabaja en contacto con psicopedagogos y con los colegios de sus alumnos.
+
+**P2 (volumen de alumnos).** “Tengo bastantes. Muchas veces más de veinte.” Atribuye la demanda a su trayectoria: “Tengo una trayectoria y una reputación ganada con los papás, entonces me siguen recomendando.”
+
+**P3 (alumnos de otras localidades).** “Tuve una alumna que vivía en Luján y otro alumno que vivía en El Golf y venía hasta acá.” No mencionó alumnos de otras provincias.
+
+**P4 (plataformas).** “No. No me gusta trabajar así, con plataformas y a comisión [] Yo tengo una mirada determinada sobre la educación y, en un contexto así, ya hay que hacer ciertas adecuaciones para quien te contrata. Y después no siempre es cómodo todo lo que hay que presentar y todos los datos que tenés que aportar. Y
+sinceramente, todo lo que sea virtual para dejar datos personales a mí me da miedo [] Hay realmente muchas formas de engañar.”
+
+#### Eje 2 – La clase virtual desde el lado del tutor
+
+**P5 (clases virtuales y problemas técnicos).** Empezó a dar clases por Zoom en la pandemia, sin experiencia previa con plataformas. Lo que más le costó fue “la pantalla. Sin duda. Porque la pantalla te quita el feedback que tenés cuando el alumno está sentado al lado tuyo [] Y
+también, bueno, lo atencional. No sabés tanto cómo se está involucrando con la actividad”. Sobre la conexión: su servicio de internet era lento hasta que contrató uno de mayor velocidad y costo, y del lado de los alumnos “algunos chicos se conectaban desde el celular, tenían poca señal, o la computadora tenía algún problema. Y las clases se interrumpían por alguna cuestión técnica. No digo que pasara siempre, pero era bastante común”. Relaciona la calidad de la conexión con el nivel económico de cada familia.
+
+**P6 (materias y herramientas).** Para matemática tuvo que comprar un atril con pizarrón, y empezó a enviar fotos de material didáctico armado. Las herramientas digitales de dibujo le resultaron difíciles.
+Durante una clase trabaja con varias ventanas y una segunda computadora:
+“Si doy una clase de [Prácticas del Lenguaje], tengo el libro de literatura en PDF abierto. Después están las consignas que dieron los profesores [] Y además otra ventana con la pantalla compartida con el alumno [] Y muchas veces también tengo Classroom abierto
+[] Termina siendo un despliegue tecnológico importante.” Agrega que no conoce recursos más prácticos y que no tiene tiempo para aprenderlos, y que cada alumno llega con una materia, un nivel y un plan de estudio distintos: “Me traen lo que tienen y yo trabajo sobre eso.”
+
+**P7 (duración).** “Las clases suelen ser de una hora. Pero manejo clases cortas según el alumno, según el grado de dificultad, según cuánto tiempo de concentración tenga.” No dio una proporción. Todas sus clases son individuales: las grupales no le parecen efectivas porque
+“los ritmos de comprensión son distintos. Si yo le estoy explicando algo a un alumno, el otro está esperando”, y “si tienen dificultades, las clases grupales directamente no existen para mí”.
+
+**P8 (adulto presente en clases con menores).** “No, no es conveniente. No es saludable y tampoco es respetuoso, digamos, desde la jerarquía del docente. Uno establece con el chico un vínculo personal y ocupa un lugar de autoridad. Pero obviamente no hay una autoridad más grande que la de los padres [] Cada uno tiene que estar en su ámbito.” Lo que el alumno haga con el dispositivo durante la clase no lo puede controlar: “Las restricciones sobre el dispositivo las tienen que poner los padres.” Sobre el lugar desde donde se conecta el alumno:
+“Hay papás que hacen que el chico se conecte desde su habitación
+[] cierra la puerta y listo. Pero otros [] lo sientan en el comedor, en la cocina [] La mamá cocinando, la abuela que pasa por atrás de la pantalla [] La clase necesita un contexto que acompañe.” También relata cortes de conexión en los que el alumno, solo en su casa, no sabía volver a conectarse, y observa durante la pandemia una dependencia de los alumnos respecto de los padres: “En algunos casos, terminaban haciendo las actividades más los padres que los chicos.”
+
+#### Eje 3 – Precio, comisión y cobro
+
+**P9 (precio).** “No tengo un precio exacto ni fijo. Varía.”
+Depende de la frecuencia y la duración de las clases, de la distancia y de la situación económica de la familia: “Si veo que no tienen una buena situación económica, generalmente hago alguna concesión, bajo mi hora o veo cómo lo puedo acomodar.” Con alumnos con dificultades de aprendizaje cobra más, por el trabajo que requieren fuera de la clase.
+No informó un monto.
+
+**P10 (forma de cobro y cancelaciones).** “En las clases virtuales, muchas veces por transferencia y antes de la clase.” En las presenciales, en efectivo o por transferencia. Sobre las cancelaciones:
+“Si una clase no se cancela con 24 o 48 horas de anticipación, se paga”, con excepciones por enfermedad del alumno. No mencionó casos de clases impagas.
+
+**P11 (comisión).** El entrevistador informó que la plataforma cobra el 21 % y MercadoPago alrededor de un 6 % adicional, por lo que al tutor le queda cerca del 73 % del precio.Valores del modelo vigente al momento de la entrevista. La comisión vigente es del
+27 %, con la que el tutor recibe el 66,96 % de su precio
+(capítulo~[§cap:economica]). “Yo no me siento cómoda trabajando con plataformas a comisión. No tengo una cifra concreta de comisión que considere aceptable porque directamente no es una modalidad que me guste.”
+
+**P12 (cobro a las 24 horas).** No se abordó.
+
+**P13 (política de cancelación).** “Sería parecido a lo que hago actualmente [] La diferencia es que yo contemplo excepciones cuando hay una causa justificada, como una enfermedad.” En la misma línea, ante los paquetes de cuatro clases con descuento, respondió que no aplica un descuento fijo, sino que ajusta el precio a la frecuencia, las horas y la situación de cada familia. Sobre la reprogramación con aceptación del alumno, no tiene una opinión formada.
+
+**P14 (permanencia en la plataforma).** “Por mi forma de trabajar, actualmente prefiero la relación directa con la familia y el pago por transferencia. No me gusta trabajar con plataformas a comisión y tampoco me gusta tener que dejar datos personales en plataformas virtuales.”
+
+**P15 (facturación y planilla de cobros).** No se abordó.
+
+#### Eje 4 – Registro y verificación
+
+**P16 a P18 (documentación, CAP y tiempo de aprobación).** No se abordaron. Sobre la documentación, la entrevistada reiteró su preocupación general por “todo lo relacionado con dejar datos personales en plataformas virtuales”.
+
+#### Eje 5 – Reputación y matching
+
+**P19 (información del alumno).** No definió una información concreta, pero considera importante “saber con qué alumno voy a trabajar, su grado, sus dificultades y qué necesita hacer, porque justamente mi trabajo se adapta mucho a cada caso”.
+
+**P20 (calificaciones).** No se abordó.
+
+#### Eje 6 – Seguridad y resumen automático
+
+**P21 y P22 (kill-switch y resumen).** No se abordaron.
+
+#### Cierre
+
+**P23 (función a sacar o agregar).** No propuso una función, pero señaló que “una cuestión fundamental sería la seguridad. Todo lo que implique dejar datos personales o trabajar virtualmente me genera bastante preocupación”.
+
+**P24 y P25 (piloto y otros temas).** No se abordaron.
+
+## Perfil 3: Tutores particulares
+
+### Contexto de las entrevistas
+
+- **Fecha, modalidad y duración:** entre el 20 y el 27 de octubre de 2026 (la fecha de cada una figura en la tabla~[§tab:tutores-entrevistados]), remotas y asincrónicas, mediante mensajes de WhatsApp: el entrevistador envió las preguntas por escrito, en tres mensajes, y cada persona respondió con un mensaje de audio por tanda. Se registra la duración total de los audios de cada entrevista. La excepción es Luli, que recibió las preguntas agrupadas en seis puntos y respondió por escrito, en un solo mensaje.
+- **Tipo:** semiestructurada y breve, con un guion común de nueve preguntas (sección~[§sec:guion-perfil3]). Es una versión abreviada del guion del Perfil~2, pensada para que la entrevista entrara en tres mensajes.
+- **Objetivo:** contrastar los supuestos del lado de la oferta con tutores en actividad más cercanos al segmento que
+          Tinku busca incorporar que la tutora del Perfil~2: cómo consiguen alumnos, si tienen horarios libres, cómo cobran, qué pierden en la clase virtual y qué opinan de la comisión, el kill-switch, las calificaciones y el resumen automático.
+- **Consentimiento:** los cinco tutores autorizaron la cita de sus respuestas en la tesis el mismo día de su entrevista, en un mensaje aparte que no forma parte de la transcripción. Se los identifica solo por el nombre de pila.
+
+### Datos de las personas entrevistadas
+
+**Tabla:** Tutores entrevistados (Perfil 3)
+
+| **Nombre** | **Fecha** | **Perfil** | **Experiencia** | **Alumnos** | **Zona** | **Audio** |
+| --- | --- | --- | --- | --- | --- | --- |
+| Valeria | 20/10 | Docente de primaria; clases a domicilio | 14 años | 8 fijos | Pilar y Del Viso | 2:55 |
+| Martín | 24/10 | Profesor de secundaria; matemática | 8 años | 12 | CABA y Gran Buenos Aires | 2:37 |
+| Tomás | 21/10 | Estudiante universitario; física y análisis matemático, ingreso a la universidad | 3 años | 5 | Córdoba y CABA | 2:23 |
+| Sofía | 24/10 | Profesional independiente; inglés de negocios y oratoria para ejecutivos | 6 años | 4 clientes | Barrios cerrados de Pilar y CABA | 3:09 |
+| Luli | 27/10 | Profesora particular de inglés | 5 años | 8 semanales | Buenos Aires y otras provincias | Escrita |
+
+Tres de los cinco trabajan en el AMBA. Tomás estudia en Córdoba y da clases a alumnos de Córdoba y de Buenos Aires; Luli tiene la mayoría de sus alumnos en Buenos Aires y algunos en otras provincias. Valeria,
+Martín y Luli enseñan a menores; Tomás, solo a mayores de 18 años, y
+Sofía, a adultos.
+
+### Guion de entrevista
+
+El guion se envió en tres tandas. A diferencia del guion del Perfil~2, la pregunta sobre la comisión presenta el dato del modelo
+—27 % a cambio de conseguir alumnos y cobrar dentro de las
+24~horas— dentro de la misma pregunta, y no después de la respuesta.
+
+*Tanda 1 – Cómo consigue alumnos y comisión (capítulo~[§cap:introduccion*; riesgos R-02 y R-07).]
+
+- ¿Cómo conseguís alumnos hoy?
+- ¿Tenés alumnos de otras provincias?
+- ¿Te quedan horarios libres durante la semana?
+- Tinku te cobraría un 27 % de comisión por conseguirte alumnos y garantizarte que cobres dentro de las 24~horas. ¿Cómo lo ves?
+
+*Tanda 2 – Cobro y clase virtual (capítulo~[§cap:economica*; hipótesis y OE4).]
+
+- ¿Cómo manejás hoy los cobros y la facturación? ¿Tuviste problemas para cobrar?
+- ¿Qué sentís que perdés en la clase virtual respecto de la presencial y cómo lo compensás?
+
+*Tanda 3 – Seguridad, reputación y resumen (riesgo R-01; OE6 y OE7).*
+
+- ¿Qué te parece que una IA detecte algo inapropiado y corte automáticamente la llamada?
+- ¿Quién debería calificarte: los padres o los alumnos?
+- ¿Te serviría que la IA te arme un resumen de cada clase?
+
+La formulación varió levemente entre entrevistas. La pregunta~8 se le planteó a Valeria como “¿preferís que te califiquen los padres en lugar de los chicos?” y a Martín como “¿y de que califiquen los padres?”, dos formulaciones que sugieren la respuesta; a Tomás, como una elección abierta (“¿los padres o los alumnos?”); a Sofía no se le formuló, aunque respondió sobre el tema. A Sofía, que trabaja con adultos, la pregunta~7 se le planteó en condicional (“si trabajaras con menores”).
+A Luli las nueve preguntas se le enviaron en seis puntos: las preguntas~1 y~2, 3 y~4, y 7 y~8 se agruparon de a pares, de modo que sus respuestas a esos pares son conjuntas.
+
+### Transcripción de las entrevistas
+
+La transcripción se tomó de los mensajes de audio y se editó solo para eliminar muletillas, sin alterar el sentido de las respuestas. El texto entre corchetes es una aclaración del autor. Las respuestas de Luli, escritas, se citan textuales, con correcciones ortográficas mínimas
+(tildes y mayúsculas). La versión completa, en el orden de la conversación, se conserva en el repositorio de la tesis
+(‘anexos/entrevistas-tutores.md‘).
+
+#### Tanda 1 – Cómo consigue alumnos y comisión
+
+**P1 (canales).** Valeria: “Por el boca a boca, generalmente por las mamás del colegio o del club.” Martín: “Al principio conseguía alumnos pegando cartelitos en las fotocopiadoras de los colegios. Ahora se mueve casi todo por grupos de WhatsApp, donde se van pasando mi número.” Tomás: “Publicando en grupos de Facebook para gente que está preparando el ingreso a la facu y también por Discord.” Sofía: “La mayoría de mis clientes llegan por recomendación de otros gerentes o porque los contacto directamente por LinkedIn.” Luli: “Algunos alumnos eran personas que yo conocía y que sabían que daba clases de inglés, la mayoría por difusión en redes sociales.”
+
+**P2 (alumnos de otras provincias).** Valeria: “De otras provincias no tengo a nadie, son todos de acá, de la zona de Pilar.” Martín: “De otras provincias no tuve nunca. Son todos pibes de Zona Oeste o de
+Capital.” Tomás: “El boca a boca me trajo un par de alumnos de Buenos
+Aires, aunque yo estoy estudiando acá en Córdoba. Así que está bueno poder darles clases sin importar dónde estén.” Sofía tiene clientes de la Ciudad de Buenos Aires y de los barrios cerrados de Zona Norte. Luli:
+“Sí, tengo alumnos de otras provincias aunque la mayoría son de Buenos
+Aires.”
+
+**P3 (horarios libres).** Los cinco tienen horarios libres; tres los asocian al tiempo que hoy pierden en traslados, y una los reserva para recuperar clases. Valeria: “Doy clases a domicilio y a las cinco de la tarde agarrar la Panamericana o la
+Ruta~8 es un desastre. Pierdo un montón de tiempo viajando, así que la idea de dar clases desde casa me viene bárbaro para sumar alumnos [].
+A la tardecita tengo algunos huequitos.” Martín: “Tengo algunos baches bastante largos entre un colegio y otro. A veces me quedan dos horas muertas y me voy a un café a hacer tiempo. Estaría buenísimo poder meter una clase en ese rato.” Tomás: “Mis horarios son medio un tetris porque tengo cursadas salteadas, pero siempre me quedan algunos huecos raros a la mañana o a la siesta.” Sofía: “Ir presencialmente a los countries me hace perder muchísimo tiempo entre los ingresos y el tráfico. A veces se me van dos horas del día solamente viajando [].
+Por eso estoy buscando pasar cada vez más a la modalidad virtual.”
+Tiene horarios libres a la mañana temprano y al mediodía. Luli: “Sí, tengo algunos horarios sin cubrir. [] Los horarios libres los utilizo para aquellos alumnos que necesiten recuperar las clases.”
+
+**P4 (comisión del 27 % y cobro en 24 horas).** Cuatro de los cinco la aceptan, condicionada a que la plataforma les consiga alumnos y les garantice el cobro; Luli la rechaza. Valeria: “Lo del 27 % me duele un poquito, no te voy a mentir, porque es plata. Pero si me asegurás que el alumno se conecta, que no tengo que andar persiguiendo a los padres para que me paguen y que tengo la plata al día siguiente, me re sirve. Posta, la tranquilidad de no tener que reclamar pagos no tiene precio.” Martín:
+“El 27 % es bastante []. Pero conseguir alumnos lleva tiempo y es un lío. Si la aplicación me los consigue y encima me asegura que voy a cobrar sin tener que andar reclamando, la verdad es que me cierra bastante.” Tomás: “El 27 % es saladito, pero si la aplicación me consigue una clase un martes a las once, cuando estoy al pedo, y encima me deposita rápido, me viene bárbaro. Es una forma de juntar plata para las expensas sin tener que meterme en un laburo fijo.” Sofía: “Lo veo como un costo para conseguir clientes. Si Tinku me conecta con perfiles corporativos sin que tenga que invertir en publicidad y, además, me paga en 24 horas, me parece razonable ceder ese porcentaje.”
+Luli: “No pagaría comisión a cambio de alumnos y cobro.”
+
+#### Tanda 2 – Cobro y clase virtual
+
+**P5 (cobro y problemas para cobrar).** Los cinco cobran por transferencia o billetera virtual, y cuatro de ellos describen demoras.
+Valeria cobra por transferencia o en efectivo en la casa del alumno:
+“A veces los papás están a mil durante la semana, se olvidan y después te dicen: ‘Uy, Vale, me re colgué, el finde te transfiero'. Pero mientras tanto yo tengo que hacer las compras y pagar mis cosas.”
+Martín cobra por MercadoPago o transferencia: “Problemas graves no tuve, pero está el clásico adolescente que te dice: ‘Profe, mi viejo te transfiere a la noche', y después pasa un día y no llega nada. Ahí tenés que empezar a mandarles mensajes a los padres para preguntar por la plata, y es bastante incómodo.” Tomás: “Les paso mi alias y me transfieren desde alguna billetera virtual. Y sí, se cuelgan bastante.
+[] A veces llegan a fin de mes sin un mango y te dicen: ‘Che, bancame hasta el primero'.” Sofía factura a principio de mes: “El gran problema aparece cuando el pago depende de la empresa del ejecutivo.
+Algunas tienen circuitos administrativos de 30, 60 o hasta 90 días, y eso te desacomoda muchísimo las finanzas. Por eso me interesa tanto la posibilidad de cobrar rápido.” Luli es la única que no tuvo problemas:
+“Cobro por transferencia bancaria y facturo. Soy monotributista. Nunca tuve problemas para cobrar.”
+
+**P6 (qué se pierde en la clase virtual y cómo se compensa).**
+Valeria: “Lo que más extraño es poder agarrarles el lápiz o señalarles algo en la hoja. [] Les pido todo el tiempo que me acerquen el cuaderno a la cámara para ver qué hicieron. También trato de armar juegos y actividades compartiendo pantalla, porque si no, a los chicos les cuesta mantener la atención.” Martín: “A los pibes los perdés enseguida. Apagan la cámara, se ponen en silencio y vos no sabés si están haciendo el ejercicio o jugando al Discord. Para evitar eso, les pido que compartan la pantalla o les tiro preguntas de golpe [].
+Así por lo menos sé que están prestando atención.” Tomás: “Lo que más extraño es el pizarrón. Explicar una integral hablando y haciendo gestos en el aire no sirve de mucho. Así que terminé comprándome una tableta digitalizadora bastante barata. Comparto pantalla y voy escribiendo ahí.” Sofía: “Lo que más se pierde es la lectura del lenguaje corporal y esa conexión que se genera cuando estás frente a la otra persona.
+[] Invertí bastante en el equipo: tengo una buena cámara réflex y un buen micrófono. También trabajo con la metodología de aula invertida”: envía el material teórico antes de la clase y usa la videollamada para ejercicios de *roleplay* y debate. Luli no describe cómo lo compensa, pero señala una ventaja: “La presencialidad permite otra interacción, y también ayuda a concentrarse. La virtualidad permite que lo que pase alrededor nos distraiga. Lo positivo de la virtualidad es la gran cantidad de material y recursos disponibles, la clase puede ser más fluida.”
+
+#### Tanda 3 – Seguridad, reputación y resumen
+
+**P7 (kill-switch).** Los cinco lo aprueban; dos lo valoran también como protección del tutor. Valeria: “A las mamás les da bastante miedo dejar a los chicos solos frente a una pantalla, y saber que hay un sistema de seguridad así les daría mucha tranquilidad.”
+Martín: “Te da una protección extra como profesor ante cualquier situación rara o malentendido. Hoy en día podés terminar metido en un problema por cualquier cosa.” Tomás: “Es medio *Black Mirror*, pero banco. A mí mucho no me afecta porque doy clases a pibes de 18 años para arriba, pero si trabajás con chicos más chicos, me parece que suma un montón.” Sofía: “Me parece un estándar de seguridad muy bueno.
+Demuestra que la plataforma se toma en serio estos temas y también ayuda a reducir los riesgos legales para quienes damos clases.” Luli respondió a las preguntas~7 y~8, agrupadas, con una aprobación que abarca las dos: “Sí, me parece que sería un buen sistema.” Ninguno se refirió al riesgo de un corte por error, sobre el que no se preguntó.
+
+**P8 (quién califica al tutor).** Los cinco aceptan que, con menores, califique el adulto. Valeria: “Tiene todo el sentido que evalúe la mamá. Imaginate que tengo a un nene de ocho años haciendo fracciones durante dos horas. ¡Me pone una estrella y me arruina el promedio!” Martín: “Que califiquen los padres, obvio. Al final son los que pagan y los que están pendientes de cómo les va a los hijos.”
+Tomás: “Prefiero que me evalúen los alumnos, porque son los que cursan conmigo y saben si les sirve cómo explico. Ahora, si es un menor, sí, me parece bien que también pueda calificar el padre.” Sofía: “Depende del tipo de cliente. En el ámbito corporativo, podría evaluarme el propio alumno o alguien de Recursos Humanos. Pero si estamos hablando de menores, sí me parece fundamental que los padres puedan dar su opinión, porque son quienes contratan y pagan el servicio.” Luli aprobó que califiquen los padres en su respuesta conjunta a las preguntas~7 y~8
+(“Sí, me parece que sería un buen sistema”).
+
+**P9 (resumen automático).** Los cinco lo usarían. Los cuatro primeros describen cada uno un destinatario distinto, y Luli, como
+Martín, lo usaría para su propio seguimiento. Valeria, para la familia: “Yo siempre que termino una clase le mando un audio a la mamá contándole qué vimos y cómo trabajamos. Si la aplicación me lo deja escrito, lo copio y se lo mando directamente.” Martín, para su propio seguimiento: “Con doce alumnos distintos, a veces se me mezclan los temas y no me acuerdo si a Pérez le expliqué función cuadrática o factoreo la semana pasada.
+Tener un registro de cada clase me re serviría.” Tomás, para el alumno:
+“Se lo mandaría al alumno por WhatsApp, tipo: ‘Che, hoy vimos esto y esto otro, repasate estos temas'.” Sofía, para el cliente: “Lo usaría para enviarles a mis clientes un resumen ejecutivo de cada sesión, con los temas tratados y los puntos importantes.” Luli: “¡Sí! Para tener un seguimiento mucho más detallado, analizar el progreso del alumno y poder reforzar aquellos conceptos que no hayan quedado claros.”
+
+## Perfil 4: Familias del interior
+
+### Contexto de las entrevistas
+
+- **Fecha, modalidad y duración:** 24 y 25 de octubre de
+          2026 (la fecha de cada una figura en la tabla~[§tab:familias-entrevistadas]), remotas y asincrónicas, mediante mensajes de WhatsApp: el entrevistador envió las preguntas por escrito, en tres mensajes, y cada persona respondió con un mensaje de audio por tanda.
+- **Tipo:** semiestructurada y breve, con un guion común
+          (sección~[§sec:guion-perfil4]) que se adaptó a lo que cada persona contó en el primer audio.
+- **Objetivo:** relevar el lado de la demanda en localidades del interior, el que la encuesta casi no cubre (riesgo R-08): cómo consiguen hoy apoyo escolar, si aceptarían un tutor de otra provincia por videollamada, con qué conexión y qué dispositivo, si acompañarían la clase, cuánto pagan y cómo prefieren pagar, y qué necesitan saber de un tutor recomendado.
+- **Consentimiento:** las tres personas lo dieron en su primer audio (“te doy el ok para la charla”, “tenés mi consentimiento”, “tenés mi permiso para usar los datos”). Se las identifica por el nombre de pila y la localidad.
+
+### Datos de las personas entrevistadas
+
+**Tabla:** Familias entrevistadas (Perfil 4)
+
+| **Nombre** | **Fecha** | **Localidad** | **Hijos** | **Última necesidad de apoyo** | **Audio** |
+| --- | --- | --- | --- | --- | --- |
+| Silvana | 24/10 | Maciá, Entre Ríos | 13 años (secundaria) y 9 años | Matemática, materia previa del mayor | 5:25 |
+| Raúl | 25/10 | Ingeniero Jacobacci, Río Negro | 17 y 14 años | Química para el ingreso a la universidad del mayor | 5:10 |
+| Georgina | 24/10 | Rafaela, Santa Fe | 16 y 14 años | Contabilidad, materia previa del mayor | 5:30 |
+
+Maciá y Jacobacci son localidades pequeñas; Rafaela es una ciudad intermedia. En los tres casos, el alumno que necesitó apoyo es menor de edad.
+
+### Guion de entrevista
+
+*Tanda 1 – El problema (capítulo~[§cap:introduccion*).]
+
+- Contame un poco de vos y qué pasó la última vez que tus hijos necesitaron ayuda con el colegio.
+
+*Tanda 2 – Tutor de otra provincia y conectividad (hipótesis, OE4; riesgo R-08).*
+
+- Si consiguieras por la aplicación un tutor de otra provincia que le dé clases por videollamada, ¿te serviría?
+- ¿Con qué conexión y qué dispositivo se conectarían?
+- ¿Te quedarías cerca durante la clase?
+
+*Tanda 3 – Precio, pago y recomendación (capítulo~[§cap:economica*; riesgo R-02; OE3).]
+
+- ¿Cuánto te parece razonable pagar por hora, o cuánto pagás hoy?
+- ¿Cómo preferís pagar?
+- Si la plataforma te recomienda un tutor, ¿qué necesitarías saber de él para elegirlo?
+
+La pregunta~4 se formuló en la segunda tanda a Silvana y a Georgina, y en la tercera a Raúl. A Silvana no se le formuló la pregunta~7: la respondió por iniciativa propia. Los ejemplos de provincia que se mencionaron en la pregunta~2 variaron según la entrevista (Mendoza o
+Buenos Aires; Córdoba).
+
+### Transcripción de las entrevistas
+
+La transcripción se tomó de los mensajes de audio y se editó solo para eliminar muletillas, sin alterar el sentido de las respuestas. El texto entre corchetes es una aclaración del autor. La versión completa, en el orden de la conversación, se conserva en el repositorio de la tesis
+(‘anexos/entrevistas-familias.md‘).
+
+#### Tanda 1 – El problema
+
+**P1 (la última vez que necesitaron apoyo).** Silvana: “El mayor se llevó Matemáticas y acá en Maciá está complicado conseguir profesor. El que es bueno en exactas vive lleno de alumnos, así que conseguir un turno es casi imposible. Al final terminé llamando a un sobrino que estudia en
+Paraná para que lo ayudara, pero por teléfono no se entendían nada. Fue un desastre.” Raúl: “El de 17 necesitaba ayuda con Química para el ingreso a la universidad y ahí se nos complicó todo. Acá no hay muchos chicos universitarios que den clases porque la mayoría se va a Bariloche o a Roca a estudiar. Así que la última vez lo terminó ayudando un amigo mío, que es ingeniero y vive acá en el pueblo. [] Conseguir un profesor de otra manera es prácticamente imposible.” Georgina: “Acá la ciudad es grande y profesores hay []. El problema es que los que son buenos de verdad [] están hasta las manos. La última vez, el de 16
+se llevó Contabilidad []. La profe Marta, que para mí es de las mejores, no tenía lugar hasta dentro de tres semanas. [] Terminé buscando en grupos de Facebook a cualquier hora. Un estrés.”
+
+#### Tanda 2 – Tutor de otra provincia y conectividad
+
+**P2 (tutor de otra provincia).** Los tres lo aceptarían, con condiciones distintas. Silvana: “Al principio me daría un poquito de cosa []. Eso de meter a alguien que no conocés en la computadora de tu casa. Yo le pediría que me muestre el DNI por cámara la primera vez, aunque sea, para quedarme tranquila.” Raúl: “A mí me da lo mismo de dónde sea, mientras sepa el tema y maneje el programa que le van a tomar en la universidad. [] Lo que sí me preocupa es que el profesor de otra provincia le enseñe cosas que no tienen nada que ver con el programa de acá. Tendría que haber alguna forma de asegurarse de que está preparando al chico para lo que realmente le van a tomar.”
+Georgina: “Cero drama con que sea online. [] El profesor puede ser de cualquier provincia. [] Lo único que me daría un poquito de miedo es que use palabras muy distintas o tenga una forma de hablar que a los chicos les cueste entender. Pero si explica claro y se hace entender, no hay problema.”
+
+**P3 (conexión y dispositivo).** Silvana: “Usaríamos la netbook que le dieron en el colegio al nene. El tema es internet. Tenemos el de la cooperativa y, en general, anda bien, pero cuando se nubla o se larga una tormenta, olvidate. Se corta todo. Y no sé cómo sería en ese caso, si se interrumpe la clase, si te cobran igual o cómo se maneja. Eso me preocuparía.” Raúl: “No quiero que sea obligatorio tener la cámara prendida todo el tiempo. [] Tenemos bastante latencia y, por ahí, si el pibe se conecta desde el celular y prende el video, se le empieza a congelar todo. [] Si pueden hablar por micrófono y compartir pantalla, para mí, bárbaro.” Georgina: “En casa tenemos fibra óptica, así que internet anda bárbaro y los chicos se conectan con sus notebooks sin problema. No se nos corta prácticamente nunca.”
+
+**P4 (presencia del adulto).** Silvana: “La primera clase seguro me quedo cerca. Capaz me pongo a planchar o a doblar ropa en la cocina, pero escuchando un poco qué onda, para ver cómo se llevan y si el profe tiene paciencia con el nene. Después, si veo que va todo bien, ya los dejaría más tranquilos.” Raúl: “No, qué me voy a quedar al lado. Ya tiene 17
+años, que se arregle solo con el profesor.” Georgina: “Olvidate de que me quede al lado durante la clase. Yo estaría trabajando en la computadora, en el otro cuarto, o haciendo la cena. Justamente busco a alguien que los ayude para no tener que estar yo pendiente de todo.”
+
+#### Tanda 3 – Precio, pago y recomendación
+
+**P5 (precio por hora).** Silvana: “Acá están cobrando entre 9.000
+y 9.500 pesos la hora.” Raúl: “Yo pagaría entre 8.000 y 9.000 pesos la hora.” Georgina: “Acá se está pagando entre 19.000 y 20.000 pesos la hora.” [Silvana y Georgina informan el precio de su localidad; Raúl, lo que pagaría.]
+
+**P6 (medio de pago).** Silvana: “Yo prefiero transferirle directamente al alias de MercadoPago del profesor. Las aplicaciones a veces te cobran de más o te dejan la plata trabada, y esas cosas me dan desconfianza.” Raúl: “Prefiero pagar directamente por la aplicación, con la tarjeta de débito, y listo.” Georgina: “Prefiero pagar por la app. Cargo la tarjeta y me olvido, es mucho más práctico. Lo que sí, sé que a veces los profesores se quejan de las comisiones que les cobran las aplicaciones y te terminan pidiendo que les transfieras por afuera. Y ahí ya se complica, porque justamente quiero evitar estar coordinando todo por mi cuenta.”
+
+**P7 (qué necesita saber de un tutor recomendado).** Los tres piden que la recomendación diga por qué, con un dato concreto, y cada uno valora un tipo de dato distinto. Silvana: “Si la app me recomienda un profesor, necesito saber por qué. No me sirve que me diga que es el ideal y nada más. Quiero que me explique algo concreto, como que tiene experiencia con chicos de 13 años o que está estudiando profesorado.”
+Raúl: “Necesito saber quién está del otro lado. Qué estudia, dónde estudia, si tiene algún certificado o algo que demuestre que sabe
+Química. [] No me pongas solamente estrellitas como en Mercado
+Libre. Decime algo concreto, como que aprobó Química en la UTN o que ya cursó Física~I.” Georgina: “No me interesa tanto leer un currículum larguísimo. Prefiero que me digas algo como que ya les dio clases a cinco chicos de Rafaela y todos aprobaron, o que otras madres dejaron comentarios diciendo que tiene mucha paciencia y que sus hijos entendieron todo. [] Si veo que a otras familias les funcionó, me quedo mucho más tranquila.”
 
 # Detalles técnicos e implementación
 
@@ -2090,7 +2906,7 @@ La tabla~[§tab:variables-entorno] lista las variables que cambian el comportami
 
 | **Variable** | **Propósito (valor por defecto)** |
 | --- | --- |
-| TINKU_MENORES_SESIONES_HABILITADAS | Habilita las clases con menores (‘false‘: piloto sin menores) |
+| TINKU_MENORES_SESIONES_HABILITADAS | Habilita las clases con menores (‘false‘: clases con menores deshabilitadas) |
 | TINKU_RESUMEN_ADICIONAL_HABILITADO | Habilita el adicional de resumen (‘false‘) |
 | LLM_PROVEEDOR, LLM_API_KEY | Activa la transcripción y el resumen con OpenAI solo si vale ‘gpt-4o‘; vacío, no sale nada |
 | MP_CLIENT_ID, MP_CLIENT_SECRET, MP_OAUTH_REDIRECT_URI | Aplicación de MercadoPago para el modelo A (OAuth por tutor) |
@@ -2150,7 +2966,6 @@ El historial de git deja registrada la magnitud de esta asistencia: al
 ## Consultas de contraste
 
 Gemini y ChatGPT se consultaron de forma esporádica, como segunda y tercera opinión sobre decisiones puntuales. Sus respuestas no se incorporaron como texto al documento.
-*Transcribir, si se conservaron, una o dos consultas representativas y la decisión que motivaron.*
 
 ## Elaboración del documento
 
@@ -2343,6 +3158,8 @@ Código del sistema y su documentación de diseño. La rama
 
 Cómo ejecutarlo y probarlo: ver el README.md del repositorio y el apéndice~[§apx:tecnicos].
 
+**Licencia.** MIT: permite usar, copiar, modificar y distribuir el código, incluso con fines comerciales, siempre que se conserve el aviso de autoría y de licencia, y sin garantía de ningún tipo.
+
 ## Tesis (‘usal-tinku-docs‘)
 
 smercadocarbone/usal-tinku-docs
@@ -2428,14 +3245,14 @@ MercadoPago la paga el tutor, y el único uso de LLM es el adicional de resumen,
 * `[postgresqldocs]` *PostgreSQL Global Development Group. PostgreSQL 16 Documentation (2024). https://www.postgresql.org/docs/16/*
 * `[torino2023]` *Torino, Michel. Deserción escolar en Argentina (2023). *
 * `[olea]` *Olea, María Marta. Ruralidad y educación en Argentina: instituciones, políticas y programas (s. f.). *
-* `[sciencedirect2022]` *EDITAR: autores del meta-análisis. Effects of private tutoring intervention on students' academic achievement: A systematic review based on a three-level meta-analysis model (2022). Disponible en ScienceDirect. *
-* `[ondemand2026]` *EDITAR: autores. A Causal Framework for Estimating Heterogeneous Effects of On-Demand Tutoring (2026). arXiv:2602.19296. *
-* `[isotropy2026]` *EDITAR: autores. Isotropy-Optimized Contrastive Learning for Semantic Course Recommendation (2026). arXiv:2601.11427. *
-* `[paperrec2025]` *EDITAR: autores. Scientific Paper Recommendation System: Application of Sentence Transformers and Cosine Similarity Using arXiv Data (2025). Journal of Applied Informatics and Computing. vol. 9*
-* `[beefore2024]` *EDITAR: autores. beeFormer: Bridging the Gap Between Semantic and Interaction Similarity in Recommender Systems (2024). arXiv:2409.10309. *
-* `[webrtc2025]` *EDITAR: autores. Design and Implementation of WebRTC-based Remote Online Teaching System for English Courses (2025). Proceedings of the 3rd International Conference on Educational Knowledge and Informatization. *
+* `[sciencedirect2022]` *Zhang, Enming and Liu, Yunyun. Effects of private tutoring intervention on students' academic achievement: A systematic review based on a three-level meta-analysis model and robust variance estimation method (2022). International Journal of Educational Research. vol. 112 pp. 101949 DOI: 10.1016/j.ijer.2022.101949*
+* `[ondemand2026]` *Vanacore, Kirk and Thomas, Danielle R. and Smith, Digory and Groot, Bibi and Reich, Justin and Kizilcec, René. A Causal Framework for Estimating Heterogeneous Effects of On-Demand Tutoring (2026). arXiv:2602.19296. DOI: 10.48550/arXiv.2602.19296*
+* `[isotropy2026]` *Khreis, Ali and Nasr, Anthony and Hilal, Yusuf. Isotropy-Optimized Contrastive Learning for Semantic Course Recommendation (2026). arXiv:2601.11427. DOI: 10.48550/arXiv.2601.11427*
+* `[paperrec2025]` *Putra, Ananda Pannadhika and Singgih Putri, Desy Purnami and Wiranatha, A. A. Kt. Agung Cahyawan. Scientific Paper Recommendation System: Application of Sentence Transformers and Cosine Similarity Using arXiv Data (2025). Journal of Applied Informatics and Computing. vol. 9 pp. 1374--1382 DOI: 10.30871/jaic.v9i4.9766*
+* `[beefore2024]` *Van\vcura, Vojt\vech and Kordík, Pavel and Straka, Milan. beeFormer: Bridging the Gap Between Semantic and Interaction Similarity in Recommender Systems (2024). Proceedings of the 18th ACM Conference on Recommender Systems (RecSys '24). pp. 1102--1107 DOI: 10.1145/3640457.3691707*
+* `[webrtc2025]` *Wu, Si and Wang, Fei. Design and Implementation of WebRTC-based Remote Online Teaching System for English Courses (2025). Proceedings of the 2025 3rd International Conference on Educational Knowledge and Informatization. pp. 357--361 DOI: 10.1145/3765325.3765385*
 * `[liang2013]` *Liang, Yu-Ling and Xing, Xinyu and Cheng, Hao and Dang, Jiaxiu and Huang, Shuang and Han, Richard and Liu, Xin and Lv, Qin and Mishra, Shivakant. SafeVchat: A System for Obscene Content Detection in Online Video Chat Services (2013). ACM Transactions on Internet Technology. vol. 12 pp. 13*
-* `[reputation]` *EDITAR: autores del capítulo. Reputation, Feedback, and Trust in Online Platforms (s. f.). Reengineering the Sharing Economy. *
+* `[reputation]` *Tadelis, Steven. Reputation, Feedback, and Trust in Online Platforms (2023). Reengineering the Sharing Economy. pp. 62--82 DOI: 10.1017/9781108865630.006*
 * `[carroll1963]` *Carroll, John B.. A Model of School Learning (1963). Teachers College Record. vol. 64 pp. 723--733*
 * `[bloom1968]` *Bloom, Benjamin S.. Learning for Mastery (1968). Evaluation Comment. vol. 1 pp. 1--12*
 * `[bloom1984]` *Bloom, Benjamin S.. The 2 Sigma Problem: The Search for Methods of Group Instruction as Effective as One-to-One Tutoring (1984). Educational Researcher. vol. 13 pp. 4--16*
