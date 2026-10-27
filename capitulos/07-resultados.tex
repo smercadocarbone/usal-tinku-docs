@@ -277,6 +277,20 @@ El 21 de septiembre de 2026 se realizó una auditoría técnica del
 repositorio completo ---backend, frontend, servicio de \gls{matching},
 migraciones, documentación, integración continua y configuración de
 despliegue---, que incluyó la ejecución de la suite de pruebas.
+
+La auditoría la realizó el propio autor con asistencia de herramientas
+de \gls{ia} generativa (declaración de uso de \gls{ia}), por lo que no
+es una auditoría independiente. Se hizo sobre una versión fija del
+código (commit \texttt{50b6b4d} de la rama principal) y con este método:
+se contrastó cada módulo con su especificación y sus \glspl{adr}, se
+corrió la suite completa del backend contra PostgreSQL real (383
+pruebas, sin fallas) y cada hallazgo se registró con la evidencia en el
+código (archivo y líneas), un escenario concreto de falla y un nivel de
+confianza. Para compensar la falta de independencia, ningún hallazgo se
+dio por válido ni por cerrado solo por estar en el informe: en los
+hallazgos de seguridad y de integridad de datos, la corrección empezó
+por una prueba de regresión que fallaba antes del cambio, lo que
+confirmaba el hallazgo en el código.
 La auditoría registró 36 hallazgos, que se gestionan en un registro con
 su estado: un hallazgo solo se da por cerrado con un cambio en el código
 y una prueba de regresión. La tabla~\ref{tab:auditoria} resume su estado.

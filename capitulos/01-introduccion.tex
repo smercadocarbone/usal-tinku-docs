@@ -79,10 +79,11 @@ término captura con precisión la misión del proyecto: construir el punto
 de encuentro digital entre quienes necesitan aprender y quienes tienen
 el conocimiento para enseñar, sin importar en qué rincón del país se
 encuentren. La conectividad a internet, incluso en zonas remotas, ha
-mejorado sustancialmente gracias a iniciativas de satelital de baja
-órbita como Starlink, que está siendo adoptada masivamente en
-localidades del interior argentino, ampliando de manera concreta la base
-de usuarios potenciales de la plataforma.
+mejorado gracias a la internet satelital de baja órbita, como
+Starlink: según datos del \gls{enacom}, los accesos satelitales crecieron
+más de un 300\,\% interanual y se acercan a los 800.000
+\citep{dplsatelital2026}, lo que amplía la base de usuarios potenciales
+de la plataforma en localidades del interior.
 
 \sistema{} propone una plataforma digital de \gls{marketplace} educativo
 que centraliza en un único ecosistema la búsqueda de tutores, la
@@ -146,7 +147,7 @@ un intermediario (capítulo~\ref{cap:resultados}).
 
 \textbf{Hipótesis central.} La implementación de una plataforma digital
 de \gls{marketplace} educativo con capacidades de \gls{matching}
-inteligente basado en búsqueda semántica (\gls{nlp}) permitirá que
+inteligente basado en búsqueda semántica y \gls{nlp} permitirá que
 estudiantes ubicados en zonas geográficas con escasez de tutores locales
 --incluyendo pueblos pequeños, comunidades de montaña y regiones
 rurales-- accedan a servicios de apoyo académico personalizado de
@@ -318,10 +319,10 @@ mercado argentino con el nivel de integración que \sistema{} propone:
           requiere demostrar que la calidad y la seguridad del servicio
           son equivalentes o superiores al modelo informal vigente.
     \item \textbf{Barrera de conectividad:} aunque la cobertura de
-          internet ha mejorado sustancialmente --y tecnologías como
-          Starlink están siendo adoptadas masivamente en localidades del
-          interior argentino, llevando conectividad satelital de banda
-          ancha a zonas que antes carecían de ella-- sigue existiendo un
+          internet ha mejorado --los accesos satelitales, como los de
+          Starlink, crecieron más de un 300\,\% interanual
+          \citep{dplsatelital2026} y llevan banda ancha a zonas que antes
+          carecían de ella-- sigue existiendo un
           segmento de la población, especialmente en contextos de bajos
           recursos, que no puede acceder a estos servicios ni cuenta con
           dispositivos adecuados. Esta realidad puede limitar el alcance
@@ -350,8 +351,13 @@ mercado argentino con el nivel de integración que \sistema{} propone:
 La relevancia de \sistema{} se articula en tres dimensiones
 complementarias:
 
-\textbf{Relevancia social.} Argentina presenta tasas de repitencia y
-abandono escolar que afectan especialmente a estudiantes en situaciones
+\textbf{Relevancia social.} En Argentina, el 15,1\,\% de los
+estudiantes que tenían 11 años en 2016 había abandonado la escuela a los
+17, y en Santiago del Estero, Misiones y Formosa la proporción supera el
+28\,\%, frente al 9,0\,\% de la Ciudad de Buenos Aires
+\citep{miguez2023}. En la cohorte anterior, el 29\,\% de quienes seguían
+en la escuela a los 17 años cursaba con uno o más años de sobreedad. El
+abandono y el atraso afectan especialmente a estudiantes en situaciones
 de vulnerabilidad educativa --entre ellos, quienes no logran seguir el
 ritmo de enseñanza colectivo y carecen de acceso a apoyo
 extracurricular. El acceso a tutoría personalizada y oportuna es uno de
@@ -378,10 +384,10 @@ concreto tecnologías de \gls{ia} de vanguardia: \gls{embeddings}
 semánticos para el \gls{matching}, modelos de lenguaje de gran escala
 (\gls{llm}) para el resumen de las sesiones y un clasificador de
 contenido que corre en el navegador para proteger a los participantes.
-Esta aplicación constituye un aporte original al estado del arte en plataformas
-educativas adaptativas en el contexto latinoamericano, diferenciándose
-de soluciones globales por su foco en las particularidades del sistema
-educativo y la geografía argentina.
+Ninguna de estas tecnologías es nueva por separado: el aporte del
+proyecto está en integrarlas en una sola plataforma de tutorías,
+diseñada para las particularidades del sistema educativo y la geografía
+argentina, que la diferencian de las soluciones globales.
 
 \section{Enfoque metodológico}\label{sec:enfoque}
 
@@ -590,7 +596,8 @@ acceso al apoyo escolar personalizado --acentuada por la geografía
 argentina y por la rigidez del modelo de enseñanza colectiva-- afecta a
 miles de estudiantes hoy. No se trata de un problema académico
 hipotético, sino de una necesidad concreta con consecuencias medibles en
-las tasas de repitencia y abandono escolar.
+el abandono escolar, que a los 17 años alcanza al 15,1\,\% de una cohorte
+y supera el 28\,\% en tres provincias del norte \citep{miguez2023}.
 
 La solución incorpora tecnologías emergentes de manera que genera valor
 diferencial concreto: no se intenta construir un modelo de \gls{ia}

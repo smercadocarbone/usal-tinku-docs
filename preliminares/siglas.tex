@@ -7,7 +7,9 @@
 %            \acrshort{clave}  -> siempre la sigla
 %            \acrlong{clave}   -> siempre la expansión
 %            \acrfull{clave}   -> "Expansión (SIGLA)"
-% \glsresetall (en main.tex) reinicia el conteo después de la Introducción.
+% Cada sigla se expande una sola vez en todo el documento. La expansión
+% no lleva paréntesis propios: el término en otro idioma va después de una
+% coma, para que la primera aparición no quede \"X (Y) (SIGLA)\".
 
 \newacronym{api}{API}{Application Programming Interface}
 \newacronym{cicd}{CI/CD}{Continuous Integration / Continuous Deployment}
@@ -20,31 +22,32 @@
 \newacronym{ia}{IA}{inteligencia artificial}
 \newacronym{ml}{ML}{Machine Learning}
 \newacronym{sql}{SQL}{Structured Query Language}
-\newacronym{llm}{LLM}{Large Language Model (modelo de lenguaje de gran escala)}
-\newacronym{nlp}{NLP}{procesamiento de lenguaje natural (Natural Language Processing)}
-\newacronym{pwa}{PWA}{Progressive Web App (aplicación web progresiva)}
-\newacronym{uat}{UAT}{pruebas de aceptación de usuario (User Acceptance Testing)}
+\newacronym[longplural={modelos de lenguaje de gran escala, \emph{Large Language Models}}]{llm}{LLM}{modelo de lenguaje de gran escala, \emph{Large Language Model}}
+\newacronym{nlp}{NLP}{procesamiento de lenguaje natural, \emph{Natural Language Processing}}
+\newacronym{pwa}{PWA}{aplicación web progresiva, \emph{Progressive Web App}}
+\newacronym{uat}{UAT}{pruebas de aceptación de usuario, \emph{User Acceptance Testing}}
 \newacronym{nps}{NPS}{Net Promoter Score}
-\newacronym{ocr}{OCR}{reconocimiento óptico de caracteres (Optical Character Recognition)}
+\newacronym{ocr}{OCR}{reconocimiento óptico de caracteres, \emph{Optical Character Recognition}}
 \newacronym{cap}{CAP}{Certificado de Antecedentes Penales}
-\newacronym{vps}{VPS}{servidor privado virtual (Virtual Private Server)}
+\newacronym{vps}{VPS}{servidor privado virtual, \emph{Virtual Private Server}}
 \newacronym{jwt}{JWT}{JSON Web Token}
 \newacronym{webrtc}{WebRTC}{Web Real-Time Communication}
-\newacronym{edtech}{EdTech}{tecnología educativa (educational technology)}
-\newacronym{adr}{ADR}{registro de decisión de arquitectura (Architecture Decision Record)}
-\newacronym{afip}{AFIP}{Administración Federal de Ingresos Públicos (actual ARCA)}
+\newacronym{edtech}{EdTech}{tecnología educativa, \emph{educational technology}}
+\newacronym[longplural={registros de decisión de arquitectura, \emph{Architecture Decision Records}}]{adr}{ADR}{registro de decisión de arquitectura, \emph{Architecture Decision Record}}
+\newacronym{afip}{AFIP}{Administración Federal de Ingresos Públicos, actual ARCA}
 \newacronym{arca}{ARCA}{Agencia de Recaudación y Control Aduanero}
 \newacronym{bna}{BNA}{Banco de la Nación Argentina}
-\newacronym{cagr}{CAGR}{tasa de crecimiento anual compuesto (Compound Annual Growth Rate)}
+\newacronym{enacom}{ENACOM}{Ente Nacional de Comunicaciones}
+\newacronym{cagr}{CAGR}{tasa de crecimiento anual compuesto, \emph{Compound Annual Growth Rate}}
 \newacronym{dni}{DNI}{Documento Nacional de Identidad}
-\newacronym{e2e}{E2E}{de punta a punta (end-to-end)}
+\newacronym{e2e}{E2E}{de punta a punta, \emph{end-to-end}}
 \newacronym{faiss}{FAISS}{Facebook AI Similarity Search}
 \newacronym{http}{HTTP}{Hypertext Transfer Protocol}
 \newacronym{oauth}{OAuth}{Open Authorization}
-\newacronym{orm}{ORM}{mapeo objeto-relacional (Object-Relational Mapping)}
-\newacronym{paas}{PaaS}{plataforma como servicio (Platform as a Service)}
+\newacronym{orm}{ORM}{mapeo objeto-relacional, \emph{Object-Relational Mapping}}
+\newacronym{paas}{PaaS}{plataforma como servicio, \emph{Platform as a Service}}
 \newacronym{pkce}{PKCE}{Proof Key for Code Exchange}
 \newacronym{renaper}{RENAPER}{Registro Nacional de las Personas}
 \newacronym{rest}{REST}{Representational State Transfer}
-\newacronym{sdk}{SDK}{kit de desarrollo de software (Software Development Kit)}
+\newacronym{sdk}{SDK}{kit de desarrollo de software, \emph{Software Development Kit}}
 \newacronym{tls}{TLS}{Transport Layer Security}
