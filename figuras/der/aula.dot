@@ -1,0 +1,15 @@
+digraph "aula" {
+  graph [fontname="Helvetica", rankdir=TB, nodesep=0.35, ranksep=0.9, pad=0.2];
+  node [shape=plain, fontname="Helvetica", fontsize=10];
+  edge [fontname="Helvetica", fontsize=9, color="#333333", dir=both, arrowsize=0.9];
+  "aula.alertas_seguridad" [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="2" COLOR="#2F5A9E"><TR><TD COLSPAN="2" BGCOLOR="#EEF3FB" ALIGN="CENTER"><B>alertas_seguridad</B></TD></TR><TR><TD ALIGN="LEFT"><U>id</U></TD><TD ALIGN="LEFT"><FONT COLOR="#2F5A9E">PK</FONT></TD></TR><TR><TD ALIGN="LEFT">sesion_id</TD><TD ALIGN="LEFT"><FONT COLOR="#2F5A9E">FK</FONT></TD></TR><TR><TD ALIGN="LEFT">detectado_id</TD><TD ALIGN="LEFT"><FONT COLOR="#2F5A9E">FK</FONT></TD></TR><TR><TD COLSPAN="2" ALIGN="LEFT"><FONT COLOR="#777777"><I>+ 7 atributos</I></FONT></TD></TR></TABLE>>];
+  "aula.confirmaciones_killswitch" [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="2" COLOR="#2F5A9E"><TR><TD COLSPAN="2" BGCOLOR="#EEF3FB" ALIGN="CENTER"><B>confirmaciones_killswitch</B></TD></TR><TR><TD ALIGN="LEFT"><U>id</U></TD><TD ALIGN="LEFT"><FONT COLOR="#2F5A9E">PK</FONT></TD></TR><TR><TD ALIGN="LEFT">sesion_id</TD><TD ALIGN="LEFT"><FONT COLOR="#2F5A9E">FK, UQ</FONT></TD></TR><TR><TD ALIGN="LEFT">detectado_id</TD><TD ALIGN="LEFT"><FONT COLOR="#2F5A9E">FK</FONT></TD></TR><TR><TD COLSPAN="2" ALIGN="LEFT"><FONT COLOR="#777777"><I>+ 6 atributos</I></FONT></TD></TR></TABLE>>];
+  "aula.sesiones_aprendizaje" [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="2" COLOR="#2F5A9E"><TR><TD COLSPAN="2" BGCOLOR="#EEF3FB" ALIGN="CENTER"><B>sesiones_aprendizaje</B></TD></TR><TR><TD ALIGN="LEFT"><U>id</U></TD><TD ALIGN="LEFT"><FONT COLOR="#2F5A9E">PK</FONT></TD></TR><TR><TD ALIGN="LEFT">reserva_id</TD><TD ALIGN="LEFT"><FONT COLOR="#2F5A9E">FK, UQ</FONT></TD></TR><TR><TD COLSPAN="2" ALIGN="LEFT"><FONT COLOR="#777777"><I>+ 17 atributos</I></FONT></TD></TR></TABLE>>];
+  "identidad.usuarios" [shape=box, style="dashed,rounded", color="#777777", fontcolor="#777777", label="identidad.usuarios"];
+  "reservas.reservas" [shape=box, style="dashed,rounded", color="#777777", fontcolor="#777777", label="reservas.reservas"];
+  "aula.alertas_seguridad" -> "identidad.usuarios" [arrowtail=crowodot, arrowhead=teetee, label="detectado_id"];
+  "aula.alertas_seguridad" -> "aula.sesiones_aprendizaje" [arrowtail=crowodot, arrowhead=teetee, label="sesion_id"];
+  "aula.confirmaciones_killswitch" -> "identidad.usuarios" [arrowtail=crowodot, arrowhead=teetee, label="detectado_id"];
+  "aula.confirmaciones_killswitch" -> "aula.sesiones_aprendizaje" [arrowtail=teeodot, arrowhead=teetee, label="sesion_id"];
+  "aula.sesiones_aprendizaje" -> "reservas.reservas" [arrowtail=teeodot, arrowhead=teetee, label="reserva_id"];
+}

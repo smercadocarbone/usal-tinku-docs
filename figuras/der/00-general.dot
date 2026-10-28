@@ -1,0 +1,27 @@
+digraph "general" {
+  graph [fontname="Helvetica", rankdir=TB, nodesep=0.35, ranksep=0.9, pad=0.2];
+  node [shape=plain, fontname="Helvetica", fontsize=10];
+  edge [fontname="Helvetica", fontsize=9, color="#333333", dir=both, arrowsize=0.9];
+  edge [dir=forward, arrowhead=vee];
+  "identidad" [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="3" COLOR="#2F5A9E"><TR><TD BGCOLOR="#EEF3FB"><B>identidad</B> (M1)</TD></TR><TR><TD ALIGN="LEFT">aceptaciones_clausula</TD></TR><TR><TD ALIGN="LEFT">autorizaciones_tutor</TD></TR><TR><TD ALIGN="LEFT">certificados_antecedentes_penales</TD></TR><TR><TD ALIGN="LEFT">consentimientos_menor</TD></TR><TR><TD ALIGN="LEFT">credencial_especialidades</TD></TR><TR><TD ALIGN="LEFT">credenciales_academicas</TD></TR><TR><TD ALIGN="LEFT">especialidades_tutor</TD></TR><TR><TD ALIGN="LEFT">intentos_credencial</TD></TR><TR><TD ALIGN="LEFT">intentos_ocr</TD></TR><TR><TD ALIGN="LEFT">tokens_reset_password</TD></TR><TR><TD ALIGN="LEFT">usuarios</TD></TR></TABLE>>];
+  "matching" [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="3" COLOR="#2F5A9E"><TR><TD BGCOLOR="#EEF3FB"><B>matching</B> (M2)</TD></TR><TR><TD ALIGN="LEFT">busquedas_guardadas</TD></TR><TR><TD ALIGN="LEFT">evaluacion_aceptaciones</TD></TR><TR><TD ALIGN="LEFT">evaluacion_busquedas</TD></TR><TR><TD ALIGN="LEFT">materias_niveles</TD></TR><TR><TD ALIGN="LEFT">perfiles_tutor_matching</TD></TR><TR><TD ALIGN="LEFT">temas</TD></TR><TR><TD ALIGN="LEFT">temas_sugeridos</TD></TR><TR><TD ALIGN="LEFT">trayectos</TD></TR></TABLE>>];
+  "aula" [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="3" COLOR="#2F5A9E"><TR><TD BGCOLOR="#EEF3FB"><B>aula</B> (M3)</TD></TR><TR><TD ALIGN="LEFT">alertas_seguridad</TD></TR><TR><TD ALIGN="LEFT">confirmaciones_killswitch</TD></TR><TR><TD ALIGN="LEFT">sesiones_aprendizaje</TD></TR></TABLE>>];
+  "reservas" [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="3" COLOR="#2F5A9E"><TR><TD BGCOLOR="#EEF3FB"><B>reservas</B> (M4)</TD></TR><TR><TD ALIGN="LEFT">franjas_disponibilidad</TD></TR><TR><TD ALIGN="LEFT">notas_clase</TD></TR><TR><TD ALIGN="LEFT">paquetes</TD></TR><TR><TD ALIGN="LEFT">pedidos_previos</TD></TR><TR><TD ALIGN="LEFT">pedidos_reprogramacion</TD></TR><TR><TD ALIGN="LEFT">reservas</TD></TR><TR><TD ALIGN="LEFT">solicitudes_sesion</TD></TR></TABLE>>];
+  "pagos" [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="3" COLOR="#2F5A9E"><TR><TD BGCOLOR="#EEF3FB"><B>pagos</B> (M5)</TD></TR><TR><TD ALIGN="LEFT">cuentas_mp_tutor</TD></TR><TR><TD ALIGN="LEFT">oauth_estados</TD></TR><TR><TD ALIGN="LEFT">pasarela_estado</TD></TR><TR><TD ALIGN="LEFT">precios_referencia_regional</TD></TR><TR><TD ALIGN="LEFT">preferencias_pago</TD></TR><TR><TD ALIGN="LEFT">tarifas_tutor</TD></TR><TR><TD ALIGN="LEFT">transacciones</TD></TR></TABLE>>];
+  "resumen" [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="3" COLOR="#2F5A9E"><TR><TD BGCOLOR="#EEF3FB"><B>resumen</B> (M6)</TD></TR><TR><TD ALIGN="LEFT">resumenes_sesion</TD></TR></TABLE>>];
+  "reputacion" [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="3" COLOR="#2F5A9E"><TR><TD BGCOLOR="#EEF3FB"><B>reputacion</B> (M7)</TD></TR><TR><TD ALIGN="LEFT">calificaciones</TD></TR><TR><TD ALIGN="LEFT">senales_implicitas_tutor</TD></TR></TABLE>>];
+  "admin" [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="3" COLOR="#2F5A9E"><TR><TD BGCOLOR="#EEF3FB"><B>admin</B> (M8)</TD></TR><TR><TD ALIGN="LEFT">admins</TD></TR><TR><TD ALIGN="LEFT">log_auditoria_admin</TD></TR><TR><TD ALIGN="LEFT">mapeo_origen_rol</TD></TR><TR><TD ALIGN="LEFT">notificaciones</TD></TR><TR><TD ALIGN="LEFT">nps_respuestas</TD></TR><TR><TD ALIGN="LEFT">tickets_soporte</TD></TR></TABLE>>];
+  "seguridad" [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="3" COLOR="#2F5A9E"><TR><TD BGCOLOR="#EEF3FB"><B>seguridad</B> (M9)</TD></TR><TR><TD ALIGN="LEFT">denuncias</TD></TR><TR><TD ALIGN="LEFT">sanciones</TD></TR></TABLE>>];
+  "admin" -> "identidad" [label=" 4 FK", penwidth=2.0];
+  "aula" -> "identidad" [label=" 2 FK", penwidth=1.5];
+  "aula" -> "reservas" [label=" 1 FK", penwidth=1.2];
+  "matching" -> "identidad" [label=" 4 FK", penwidth=2.0];
+  "pagos" -> "identidad" [label=" 4 FK", penwidth=2.0];
+  "pagos" -> "reservas" [label=" 2 FK", penwidth=1.5];
+  "reputacion" -> "aula" [label=" 1 FK", penwidth=1.2];
+  "reputacion" -> "identidad" [label=" 2 FK", penwidth=1.5];
+  "reservas" -> "identidad" [label=" 9 FK", penwidth=3.0];
+  "resumen" -> "aula" [label=" 1 FK", penwidth=1.2];
+  "seguridad" -> "aula" [label=" 2 FK", penwidth=1.5];
+  "seguridad" -> "identidad" [label=" 5 FK", penwidth=2.2];
+}

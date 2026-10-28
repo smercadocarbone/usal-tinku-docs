@@ -117,10 +117,17 @@ docs/               Constitucion, Tabla de Tiempos, specs, ADR (docs/adr),
 
 \subsection{Esquema de base de datos}
 
-El esquema se construye con 47 migraciones de Flyway (\texttt{V1} a
-\texttt{V47} al 14/10/2026). Como ninguna migración aplicada se edita,
-las tablas iniciales se completan con migraciones posteriores. Los
-listados siguientes son extractos textuales de las migraciones.
+El esquema se construye con 55 migraciones de Flyway, de \texttt{V1} a
+\texttt{V60} (la numeración saltea V51, V53, V55, V57 y V59); la última,
+\texttt{V60\_\_m3\_estudiante\_admitido.sql}, es del 27/10/2026. Como
+ninguna migración aplicada se edita, las tablas iniciales se completan con
+migraciones posteriores. El resultado son nueve esquemas, uno por módulo,
+con 47 tablas de dominio; las tablas de Quartz (\path{QRTZ_*}) viven en el
+esquema \texttt{public} (ADR-000-01). El diagrama entidad-relación de cada
+esquema y el diccionario de datos completo están en la
+sección~\ref{sec:apx-modelo-datos}. Los listados siguientes son extractos
+textuales de las migraciones que ilustran las restricciones más
+relevantes.
 
 \begin{lstlisting}[language=SQL, caption={Usuarios (extracto de \texttt{V2\_\_m1\_identidad.sql})}, label={lst:esquema}]
 CREATE TABLE identidad.usuarios (
@@ -202,56 +209,6 @@ El nombre \path{retenido_escrow} es anterior al modelo de cobro A
 estado indica que todavía no cerró la ventana lógica --hasta 24 horas
 después de la clase-- en la que \sistema{} puede ordenar el reembolso.
 
-\subsection{Diccionario de datos}
-
-La tabla~\ref{tab:diccionario} resume las tablas principales de cada
-esquema. El detalle de columnas, restricciones e índices está en la
-migración que se indica y en las que la completan.
-
-{\small
-\begin{xltabular}{\textwidth}{>{\raggedright\arraybackslash}p{4.6cm} L >{\raggedright\arraybackslash}p{1.8cm}}
-    \caption{Diccionario de datos: tablas principales}
-    \label{tab:diccionario} \\
-    \toprule
-    \tb{Tabla} & \tb{Contenido} & \tb{Migración} \\
-    \midrule
-    \endfirsthead
-    \toprule
-    \tb{Tabla} & \tb{Contenido} & \tb{Migración} \\
-    \midrule
-    \endhead
-    \bottomrule
-    \endfoot
-    \path{identidad.usuarios} & Cuenta de cada persona: \gls{dni} único, tipo (ADULTO, MENOR, TUTOR), capacidades del adulto, Adulto Responsable del menor, hash de la contraseña y estado de la cuenta & V2 \\
-    \path{identidad.credenciales_academicas} & Título, analítico o matrícula del tutor, con su estado de revisión e intentos & V2 \\
-    \path{identidad.autorizaciones_tutor} & Tutores que el Adulto Responsable autorizó para cada menor & V2 \\
-    \path{identidad.certificados_antecedentes_penales} & \gls{cap} del tutor: estado (pendiente, aprobado, rechazado, en revisión legal, vencido) y vencimiento & V6 \\
-    \path{identidad.aceptaciones_clausula} & Quién aceptó qué versión de los Términos y de la cláusula de grabación, y cuándo & V36 \\
-    \path{matching.temas} & Catálogo cerrado de temas por materia y nivel, con su \gls{embeddings} & V19, V42 \\
-    \path{matching.perfiles_tutor_matching} & \gls{embeddings} del perfil del tutor y si está activo para el \gls{matching} & V7 \\
-    \path{matching.temas_sugeridos} & Contador agregado de temas buscados sin tutor, sin datos de quién buscó & V43 \\
-    \path{reservas.franjas_disponibilidad} & Franjas semanales o puntuales que publica el tutor & V9 \\
-    \path{reservas.solicitudes_sesion} & Pedido de clase del menor, que no bloquea horario ni genera cobro & V9 \\
-    \path{reservas.reservas} & Clase reservada: pagador, beneficiario, tutor, horario, duración, precio congelado y estado & V9, V29, V46 \\
-    \path{reservas.paquetes} & Paquete mensual de cuatro clases con un solo pago & V46 \\
-    \path{aula.sesiones_aprendizaje} & Sesión de aula (1 a 1 con la reserva): asistencia y estado de la clase & V8 \\
-    \path{aula.alertas_seguridad} & Alertas del kill-switch y referencia al clip de evidencia & V8 \\
-    \path{aula.confirmaciones_killswitch} & Pregunta a la contraparte en la rama de adultos y su vencimiento & V12, V47 \\
-    \path{pagos.transacciones} & Cobro de cada reserva, comisión y estado del \gls{escrow} & V11 \\
-    \path{pagos.tarifas_tutor} & Precio por hora del tutor y configuración del paquete & V17, V31, V46 \\
-    \path{pagos.cuentas_mp_tutor} & Cuenta de MercadoPago conectada por \gls{oauth}, con los tokens cifrados & V39 \\
-    \path{resumen.resumenes_sesion} & Resumen generado y su estado & V15 \\
-    \path{reputacion.calificaciones} & Calificaciones bidireccionales por sesión & V14 \\
-    \path{seguridad.denuncias}, \path{seguridad.sanciones} & Denuncias con su estado y evidencia opcional; sanciones aplicadas & V13 \\
-    \path{admin.admins} & Administradores, vinculados a un usuario, con uno de dos roles & V16 \\
-    \path{admin.log_auditoria_admin} & Registro de cada acción de un administrador & V16 \\
-    \path{admin.notificaciones} & Avisos a usuarios y cola de salida del correo & V32 \\
-\end{xltabular}
-}
-
-Las tablas de Quartz (\path{QRTZ_*}) viven en el esquema
-\texttt{public} (ADR-000-01).
-
 \subsection{Variables de entorno}
 
 La tabla~\ref{tab:variables-entorno} lista las variables que cambian el
@@ -283,6 +240,64 @@ el repositorio: los valores secretos se cargan en Coolify.
     \end{tabularx}
 \end{table}
 
+\section{Modelo de datos}\label{sec:apx-modelo-datos}
+
+Esta sección documenta las 47 tablas de los nueve esquemas del dominio
+con todos sus atributos. Cada tabla tiene sus tipos, su clave primaria,
+sus claves foráneas y sus restricciones (\texttt{NOT NULL},
+\texttt{UNIQUE}, \texttt{CHECK} y \texttt{EXCLUDE}). Por esquema hay un
+diagrama entidad-relación; el diagrama general, con los nueve esquemas y
+las claves foráneas entre ellos, es la figura~\ref{fig:der-general} del
+capítulo~\ref{cap:marco-tecnologico}.
+
+\paragraph{Cómo se obtuvo.} La estructura no se transcribió de los
+archivos SQL. Se aplicaron las 55 migraciones, en orden, sobre una base
+vacía de PostgreSQL~16 con pgvector, y se leyó el esquema resultante del
+catálogo del motor. Así quedan incorporados los \texttt{ALTER},
+\texttt{DROP CONSTRAINT} y \texttt{RENAME} de las migraciones
+posteriores. El script \path{scripts/diccionario/generar.py} del
+repositorio de este documento hace esa lectura y escribe esta sección y
+los diagramas. Las descripciones de tablas y atributos están en
+\path{scripts/diccionario/descripciones.py}, y el script se detiene si
+una tabla o una columna de la base no tiene descripción. La versión que
+se documenta es la de la rama principal del repositorio del sistema al
+27/10/2026 (commit \texttt{0f09a3e}, última migración \texttt{V60}).
+
+\paragraph{Qué no se incluye.} Las 11 tablas \path{QRTZ_*} del esquema
+\texttt{public} son el almacén estándar de Quartz para los trabajos
+programados (ADR-000-01). Las crea \path{V3__quartz_tables.sql} con el
+esquema que publica Quartz y no modelan el dominio.
+
+\paragraph{Cómo leer las tablas.} La columna \emph{Clave} marca PK
+(clave primaria), FK (clave foránea) y UQ (valor único). La columna
+\emph{Nulo} indica si el atributo admite nulos; un ``no'' equivale a
+\texttt{NOT NULL}. Los tipos son los de PostgreSQL: \texttt{timestamptz}
+es una fecha y hora con zona horaria, \texttt{varchar(n)} un texto de
+hasta $n$ caracteres, \texttt{numeric(10,2)} un importe con dos
+decimales, \texttt{vector(384)} un vector de pgvector y
+\texttt{uuid[]} un arreglo de identificadores. Debajo de cada tabla se
+listan sus restricciones con el nombre que tienen en la base y sus
+índices secundarios. Las expresiones se muestran simplificadas: sin las
+conversiones de tipo implícitas que agrega PostgreSQL y con
+\texttt{IN (\ldots)} en lugar de \texttt{= ANY (ARRAY[\ldots])}.
+\emph{Migraciones} son las que crean o modifican la tabla.
+
+\paragraph{Cómo leer los diagramas.} Las relaciones usan la notación
+pata de gallo. En el extremo de la tabla que tiene la clave foránea, la
+pata de gallo con un círculo significa ``cero o muchos'' y la barra con
+un círculo, ``cero o uno''. Este último caso se da cuando la clave
+foránea es además única, como en una relación 1 a 1. En el extremo de
+la tabla referenciada, dos barras significan ``exactamente uno'' y
+corresponden a una clave foránea obligatoria. Una barra con un círculo
+significa ``cero o uno'' y corresponde a una clave foránea que admite
+nulos. El rótulo de cada línea es la columna, o las columnas, de la
+clave foránea. Las tablas de otro esquema se dibujan con borde punteado.
+Para que cada diagrama entre legible en una página, las entidades
+muestran sus atributos de clave y la cantidad de atributos restantes,
+que se detallan en el diccionario.
+
+\input{apendices/C-diccionario-datos}
+
 \section{Ejecución de las pruebas}
 
 La suite del backend corre solo con JDK~21: el
@@ -302,7 +317,9 @@ bun run test:e2e      # Playwright + axe-core
 uv run pytest -q
 \end{lstlisting}
 
-Al 14/10/2026 la suite del backend registraba 661 pruebas, 0 fallas, 0
-errores y 5 omitidas --las pruebas del \gls{ocr} real, que se saltean si
-el equipo no tiene Tesseract instalado y que en el CI sí corren--, con
-una cobertura de líneas del 85,6\,\% medida con JaCoCo (ADR-000-05).
+Al 18/10/2026, en la integración continua, la suite del backend
+registraba 859 pruebas, 0 fallas y 1 omitida, con una cobertura de
+líneas del 89,6\,\% medida con JaCoCo (ADR-000-05); la de Playwright,
+252 pruebas exitosas, y la de pytest, 44 de 44. En un equipo sin
+Tesseract instalado se saltean además las pruebas del \gls{ocr} real, que
+en el CI sí corren.

@@ -3,33 +3,136 @@
 %
 % Definir:   \newglossaryentry{sym:clave}{type=symbols, name={\ensuremath{...}},
 %                description={...}, sort={clave}}
-% Usar:      \gls{sym:clave}
+% Usar:      \gls{sym:clave}, o \glsadd{sym:clave} junto a la ecuación
+%            cuando el símbolo se escribe directamente en modo matemático.
 % Si no se usa ningún símbolo, la sección no se imprime.
+% El campo sort fija el orden de la lista: primero la evaluación
+% financiera (sección 5.x) y después el precio del resumen automático.
 
+% --- evaluación financiera (ecuaciones del VAN, la TIR y el repago) ---
 \newglossaryentry{sym:van}{
     type=symbols,
     name={\ensuremath{\mathit{VAN}}},
-    description={Valor actual neto del flujo de caja proyectado},
-    sort={van}
+    description={Valor actual neto del flujo de fondos proyectado},
+    sort={01}
+}
+
+\newglossaryentry{sym:tir}{
+    type=symbols,
+    name={\ensuremath{\mathit{TIR}}},
+    description={Tasa interna de retorno: tasa que hace nulo el \ensuremath{\mathit{VAN}}},
+    sort={02}
+}
+
+\newglossaryentry{sym:i0}{
+    type=symbols,
+    name={\ensuremath{I_0}},
+    description={Inversión inicial del proyecto (período 0)},
+    sort={03}
+}
+
+\newglossaryentry{sym:fc}{
+    type=symbols,
+    name={\ensuremath{FC_t}},
+    description={Flujo de fondos neto del período \ensuremath{t}},
+    sort={04}
 }
 
 \newglossaryentry{sym:r}{
     type=symbols,
     name={\ensuremath{r}},
     description={Tasa de descuento anual utilizada en la evaluación económica},
-    sort={r}
+    sort={05}
 }
 
-\newglossaryentry{sym:fc}{
+\newglossaryentry{sym:t}{
     type=symbols,
-    name={\ensuremath{FC_t}},
-    description={Flujo de caja neto del período \ensuremath{t}},
-    sort={fc}
+    name={\ensuremath{t}},
+    description={Índice del período (año) del horizonte de evaluación},
+    sort={06}
 }
 
-\newglossaryentry{sym:f1}{
+\newglossaryentry{sym:n}{
     type=symbols,
-    name={\ensuremath{F_1}},
-    description={Media armónica entre precisión y exhaustividad de un clasificador},
-    sort={f1}
+    name={\ensuremath{n}},
+    description={Cantidad de períodos del horizonte de evaluación},
+    sort={07}
+}
+
+\newglossaryentry{sym:m}{
+    type=symbols,
+    name={\ensuremath{m}},
+    description={Período en el que el flujo acumulado pasa de negativo a positivo},
+    sort={08}
+}
+
+\newglossaryentry{sym:fa}{
+    type=symbols,
+    name={\ensuremath{FA_{m-1}}},
+    description={Flujo de fondos acumulado al cierre del último período negativo},
+    sort={09}
+}
+
+% --- duración de la sesión y precio del resumen automático ---
+\newglossaryentry{sym:dmedia}{
+    type=symbols,
+    name={\ensuremath{\bar{d}}},
+    description={Duración media ponderada de una sesión, en minutos},
+    sort={10}
+}
+
+\newglossaryentry{sym:d}{
+    type=symbols,
+    name={\ensuremath{d}},
+    description={Duración de una clase, en minutos},
+    sort={11}
+}
+
+\newglossaryentry{sym:presumen}{
+    type=symbols,
+    name={\ensuremath{P_{\text{resumen}}(d)}},
+    description={Precio del resumen automático de una clase de duración \ensuremath{d}},
+    sort={12}
+}
+
+\newglossaryentry{sym:cia}{
+    type=symbols,
+    name={\ensuremath{C_{\text{IA}}(d)}},
+    description={Costo de inteligencia artificial del resumen de una clase de duración \ensuremath{d}},
+    sort={13}
+}
+
+\newglossaryentry{sym:ct}{
+    type=symbols,
+    name={\ensuremath{c_t}},
+    description={Costo de transcripción por minuto de audio},
+    sort={14}
+}
+
+\newglossaryentry{sym:ce}{
+    type=symbols,
+    name={\ensuremath{c_e}},
+    description={Costo por token de entrada del modelo de lenguaje},
+    sort={15}
+}
+
+\newglossaryentry{sym:tau}{
+    type=symbols,
+    name={\ensuremath{\tau}},
+    description={Tokens de transcripción generados por minuto de clase},
+    sort={16}
+}
+
+\newglossaryentry{sym:cs}{
+    type=symbols,
+    name={\ensuremath{c_s}},
+    description={Costo por token de salida del modelo de lenguaje},
+    sort={17}
+}
+
+\newglossaryentry{sym:sigma}{
+    type=symbols,
+    name={\ensuremath{\sigma}},
+    description={Tokens de salida y de instrucciones fijas por resumen},
+    sort={18}
 }

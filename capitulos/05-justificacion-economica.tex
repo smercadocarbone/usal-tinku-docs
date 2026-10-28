@@ -112,7 +112,7 @@ comprobable:
           que el sistema aporta es otra: cada cobro queda registrado en la
           cuenta del tutor y la plataforma le permite exportar sus cobros
           del mes, con los datos del adulto pagador, para facturar y
-          declarar ante la \gls{arca} (ex AFIP). Asimismo, la plataforma aplica el principio de
+          declarar ante la \gls{arca}. Asimismo, la plataforma aplica el principio de
           minimización de datos para cumplir estrictamente con la Ley de
           Protección de Datos Personales (Ley 25.326).
     \item \textbf{Justificación institucional:} \sistema{} se desarrolla
@@ -224,12 +224,14 @@ modelo A (ADR-M5-02), en el que MercadoPago descuenta su comisión de los
 fondos del tutor y la plataforma recibe el \comision{} completo
 (sección~\ref{sec:costos-variables}); además, la partida fija de
 procesamiento de \gls{llm} se eliminó por no tener contraparte en el
-sistema (sección~\ref{sec:costos-recurrentes}). Con el modelo corregido,
-el \gls{van} del escenario base se anula con una comisión de
-\textbf{aproximadamente 18,2\,\%}. La afirmación anterior de que el
+sistema (sección~\ref{sec:costos-recurrentes}). Con el modelo corregido
+y la inversión inicial vigente (tabla~\ref{tab:inversion}), el
+\gls{van} del escenario base se anula con una comisión de
+\textbf{aproximadamente 10,9\,\%} (18,2\,\% si la inversión se valorizara
+a tarifas de contratista; sección~\ref{sec:sensibilidad}). La afirmación anterior de que el
 \comision{} era el mínimo para que el proyecto se justificara deja, por lo
 tanto, de ser cierta: el \comision{} se mantiene como una decisión del
-dueño del producto (ADR-M5-05) con un margen de unos nueve puntos
+dueño del producto (ADR-M5-05) con un margen de unos dieciséis puntos
 porcentuales sobre el equilibrio del escenario base, cuyo fundamento se
 expone en la sección~\ref{sec:fundamento-comision}.
 
@@ -251,6 +253,7 @@ supuesta}, que se declara como estimación propia: se asume que un
 
 \begin{equation}
     \bar{d} = 60 \times (1 - 0{,}30) + 30 \times 0{,}30 = 51 \text{ minutos.}
+    \glsadd{sym:dmedia}%
     \label{eq:duracion}
 \end{equation}
 
@@ -286,8 +289,10 @@ escenario se dictaran al piso:
 \begin{itemize}
     \item en el \textbf{escenario base}, la comisión cubriría los costos
           fijos de todos los años (bastaría un precio de \usd{2,26} por
-          hora), pero no recuperaría la inversión: el \gls{van} sería de
-          \usd{-12.340};
+          hora) y, con la inversión vigente, también la recuperaría a la
+          tasa exigida, con poca holgura: el \gls{van} sería de
+          \usd{3.111} (de \usd{-12.340} con la inversión de \usd{25.730}
+          valorizada a tarifas de contratista);
     \item en el \textbf{escenario pesimista}, la comisión ya no cubriría
           los costos fijos del Año 2 (flujo de \usd{-40}): el precio por
           hora que los cubre en todos los años de ese escenario es de
@@ -295,9 +300,10 @@ escenario se dictaran al piso:
 \end{itemize}
 
 El piso, entonces, no garantiza la viabilidad del proyecto, que depende
-del ticket promedio: el \gls{van} del escenario base se anula con unos
-\usd{5,87} por hora (sección~\ref{sec:sensibilidad}), por encima del piso.
-Lo que el piso asegura es una cota inferior: con un volumen como el del
+del ticket promedio y del volumen: el \gls{van} del escenario base se
+anula con unos \usd{3,53} por hora (sección~\ref{sec:sensibilidad}),
+por debajo del piso, pero con el volumen del escenario pesimista una
+tarifa al piso no cubre los costos fijos. Lo que el piso asegura es una cota inferior: con un volumen como el del
 escenario pesimista, una tarifa por debajo de él dejaría a la comisión sin
 cubrir siquiera los costos fijos de operación. Esa es la lectura que
 sostiene el cálculo de la afirmación con la que el sistema fundamenta la
@@ -315,6 +321,7 @@ costo más un 50\,\% (ADR-M5-06):
     P_{\text{resumen}}(d) = 1{,}50 \times C_{\text{IA}}(d),
     \qquad
     C_{\text{IA}}(d) = c_{t}\,d + c_{e}\,\tau\,d + c_{s}\,\sigma,
+    \glsadd{sym:presumen}\glsadd{sym:cia}\glsadd{sym:d}\glsadd{sym:ct}\glsadd{sym:ce}\glsadd{sym:tau}\glsadd{sym:cs}\glsadd{sym:sigma}%
     \label{eq:precio-resumen}
 \end{equation}
 
@@ -324,7 +331,7 @@ su fuente, son los de la tabla~\ref{tab:parametros-ia}.
 
 \begin{table}[H]
     \centering
-    \caption{Parámetros del costo de \gls{ia} del resumen}
+    \caption[Parámetros del costo de \acrshort{ia} del resumen]{Parámetros del costo de \gls{ia} del resumen}
     \label{tab:parametros-ia}
     \small
     \begin{tabularx}{\textwidth}{l L r}
@@ -408,7 +415,7 @@ Tres consecuencias de este diseño son relevantes para la evaluación:
           ese reembolso parcial entre el tutor y la plataforma, la
           diferencia que se le descuente al tutor la devuelve la
           plataforma por la cola de reembolsos manuales (ADR-M5-02,
-          pendiente de verificar en el entorno de pruebas de MercadoPago).
+          pendiente de la prueba en el \emph{sandbox} de MercadoPago).
           Nada de esto se cuantifica en el modelo base y se declara como
           una restricción del análisis; su magnitud es de centavos de dólar
           por incidente.
@@ -448,24 +455,35 @@ no un registro de horas trabajadas.
         \toprule
         \tb{Categoría} & \tb{Concepto} & \tb{Cant.} & \tb{Valor unit.} & \tb{Total} \\
         \midrule
-        Personal       & Senior --- arquitectura, \gls{ia} y \gls{webrtc} & 192 hs & 50 & 9.600 \\
-        Personal       & Mid --- backend y pasarela de pagos              & 250 hs & 30 & 7.500 \\
-        Personal       & Junior --- frontend \gls{pwa} e interfaz         & 250 hs & 15 & 3.750 \\
-        Personal       & Junior --- \gls{uat} y pruebas                   & 120 hs & 15 & 1.800 \\
+        Personal       & Senior --- arquitectura, \gls{ia} y \gls{webrtc} & 192 hs & 17 & 3.264 \\
+        Personal       & Mid --- backend y pasarela de pagos              & 250 hs & 11 & 2.750 \\
+        Personal       & Junior --- frontend \gls{pwa} e interfaz         & 250 hs & 7 & 1.750 \\
+        Personal       & Junior --- \gls{uat} y pruebas                   & 120 hs & 7 & 840 \\
         Infraestructura & Servidor propio preexistente y capas gratuitas (LiveKit, GitHub) & 6 meses & 0 & 0 \\
         Administrativo & Registro de dominio                              & 1 año  & 15 & 15 \\
         Legal          & Asesoría en privacidad de datos y TyC            & único  & 800 & 800 \\
-        Riesgo         & Contingencia por imprevistos (10\,\% del desarrollo) & único & 2.265 & 2.265 \\
+        Riesgo         & Contingencia por imprevistos (10\,\% del desarrollo) & único & 860 & 860 \\
         \midrule
-        \multicolumn{4}{l}{\tb{Total inversión inicial}} & \tb{25.730} \\
+        \multicolumn{4}{l}{\tb{Total inversión inicial}} & \tb{10.279} \\
         \bottomrule
     \end{tabularx}
 \end{table}
 
-Las tarifas horarias por perfil (USD 50 para el rol senior, USD 30 para
-el semi-senior y USD 15 para los roles junior) se adoptan como estimación
-propia basada en valores de mercado para desarrollo remoto en la región,
-y se declaran como tal. Las horas asignadas a los perfiles mid y junior
+Las tarifas horarias por perfil (USD 17 para el rol senior, USD 11 para
+el semi-senior y USD 7 para los roles junior) surgen de las medianas del
+salario bruto mensual de desarrolladores con dedicación completa en la
+Encuesta de Sueldos 2026.1 de Sysarmy (\$4.100.000, \$2.800.000 y
+\$1.667.500, respectivamente; \citealp{sysarmy2026}), divididas por 160
+horas mensuales y convertidas al tipo de cambio de \$1.535 por USD
+\citep{bna2026}. Al no incluir las contribuciones patronales, representan
+un piso del costo laboral. El criterio es el mismo con el que se valoriza
+el tiempo del fundador, a salario local de convenio
+(sección~\ref{sec:costo-fundador}). Si el mismo trabajo se contratara a
+tarifas internacionales de contratista independiente, la inversión sería
+mayor: con tarifas de USD 50, 30 y 15 por hora para los perfiles senior,
+semi-senior y junior, como las que usaba una versión anterior de este
+capítulo, ascendía a \usd{25.730}. El efecto de esa diferencia sobre los
+indicadores se muestra en la sección~\ref{sec:sensibilidad}. Las horas asignadas a los perfiles mid y junior
 se dimensionaron considerando que el uso de un marco de desarrollo maduro
 para el backend (Java con Spring Boot, ADR-000-02), de una única base de
 datos PostgreSQL que también aloja el índice semántico (pgvector,
@@ -543,21 +561,135 @@ Tres decisiones de este cuadro merecen justificación explícita:
           incorpora personal técnico contratado dentro de los costos
           fijos durante los cinco años proyectados. Con el volumen de
           sesiones proyectado, el escenario base admite como máximo unos
-          \usd{469} mensuales constantes de costo adicional antes de que
+          \usd{853} mensuales constantes de costo adicional antes de que
           el \gls{van} se anule (sección~\ref{sec:sensibilidad}): a la
-          tarifa junior de la tabla~\ref{tab:inversion} (\usd{15} por
-          hora) equivale a unas 31 horas mensuales, una dedicación parcial
+          tarifa junior de la tabla~\ref{tab:inversion} (\usd{7} por
+          hora) equivale a unas 122 horas mensuales, una dedicación parcial
           y no un equipo. El mantenimiento correctivo y evolutivo queda a
           cargo del equipo fundador. La incorporación de soporte pago se
           difiere hasta que el volumen efectivo de sesiones lo justifique,
           lo cual constituye una restricción operativa declarada del
-          modelo y no un supuesto de costo cero.
+          modelo y no un supuesto de costo cero. El tiempo que el
+          fundador dedica al soporte, la moderación y la revisión de
+          credenciales se valoriza por separado en la
+          sección~\ref{sec:costo-fundador}.
     \item \textbf{Presupuesto de adquisición de usuarios.} Se incorpora
           una partida de marketing, modesta pero creciente, dado que la
           proyección de demanda no se sostiene por sí sola: un modelo que
           proyecta captación de usuarios sin asignar presupuesto de
           adquisición incurre en una inconsistencia interna.
 \end{itemize}
+
+\subsection{Costo del tiempo del fundador}\label{sec:costo-fundador}
+
+Mientras no haya personal contratado, el fundador atiende en persona
+tres tareas operativas que el sistema deja a cargo de un humano: el
+soporte a los usuarios (incluidas las disputas y los reembolsos que
+resuelve a mano el rol de soporte financiero, regla FR-PAG-010), la
+moderación de las denuncias (rol de Moderación y Seguridad, con descargo
+del denunciado y resolución) y la revisión manual del \gls{cap} y de la
+credencial académica de los tutores (ADR-M1-04). Ese tiempo no es
+gratuito: tiene el costo de oportunidad de lo que costaría pagárselo a
+un tercero. Para que el flujo de fondos no lo omita, se estima en horas
+a partir del volumen de operaciones del propio modelo y se valoriza con
+un salario de convenio.
+
+\paragraph{Horas.} Las horas mensuales de cada año se derivan de las
+sesiones mensuales (alumnos activos $\times$ 3) y de los alumnos activos
+de la tabla~\ref{tab:demanda}, con los siguientes supuestos, que son
+estimaciones propias de tiempo por tarea y se declaran como tales: el
+5\,\% de las sesiones genera una consulta de soporte de 10 minutos
+(reprogramación, cobro, acceso al aula); el 1\,\% genera una disputa o un
+reembolso manual de 20 minutos; el 0,5\,\% genera una denuncia, que
+insume 45 minutos entre la lectura de la evidencia, el descargo y la
+resolución; hay un tutor activo cada cuatro alumnos activos, cada uno
+presenta dos documentos por año (el \gls{cap}, que vence a los doce
+meses, y la credencial académica) y cada revisión lleva 15 minutos; y se
+suma una hora semanal fija de revisión de los paneles de administración y
+de las colas pendientes. Con estos supuestos el escenario base requiere
+entre 15,7 horas mensuales (Año~1) y 20,8 horas mensuales (Año~4); el
+soporte a los usuarios es la tarea de mayor peso (tabla~\ref{tab:horas-fundador}).
+
+\begin{table}[H]
+    \centering
+    \caption{Horas mensuales del fundador en el escenario base}
+    \label{tab:horas-fundador}
+    \small
+    \begin{tabularx}{\textwidth}{L r r r r r}
+        \toprule
+        \tb{Tarea} & \tb{Año 1} & \tb{Año 2} & \tb{Año 3} & \tb{Año 4} & \tb{Año 5} \\
+        \midrule
+        Soporte a usuarios                    & 5,0 & 6,5 & 5,2 & 7,2 & 6,2 \\
+        Disputas y reembolsos manuales        & 2,0 & 2,6 & 2,1 & 2,9 & 2,5 \\
+        Moderación de denuncias               & 2,2 & 2,9 & 2,4 & 3,3 & 2,8 \\
+        Revisión del \gls{cap} y de credenciales & 2,1 & 2,7 & 2,2 & 3,0 & 2,6 \\
+        Revisión de paneles y colas (fija)    & 4,3 & 4,3 & 4,3 & 4,3 & 4,3 \\
+        \midrule
+        \tb{Total mensual}                    & \tb{15,7} & \tb{19,1} & \tb{16,2} & \tb{20,8} & \tb{18,5} \\
+        \tb{Costo mensual (USD)}              & \tb{70} & \tb{85} & \tb{73} & \tb{93} & \tb{83} \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\paragraph{Valor de la hora.} Se toma el salario de la categoría
+Administrativo~A del convenio colectivo de empleados de comercio
+(convenio colectivo de trabajo 130/75), que en octubre de 2026 es de \$1.316.632 mensuales
+para la jornada completa, básico más suma fija \citep{iprofesional2026comercio}.
+Dividido por las 208 horas mensuales de una jornada de 48 horas
+semanales (Ley 11.544, art.~1) y ajustado por el sueldo anual
+complementario (un sueldo más por año, Ley 20.744, art.~121), la hora
+vale unos \$6.857, es decir, \usd{4,47} al tipo de cambio de \$1.535 que
+usa el resto del modelo. El valor no incluye contribuciones patronales:
+representa el costo de oportunidad del tiempo del fundador, no el de una
+contratación en relación de dependencia, cuyo costo sería mayor. Para
+acotar ese efecto y el de los tiempos por tarea, se calcula también una
+variante con el doble de horas.
+
+\paragraph{Efecto sobre los indicadores.} La
+tabla~\ref{tab:van-fundador} muestra los indicadores con y sin el costo
+del fundador, calculados con las mismas ecuaciones y la misma tasa del
+15\,\% (sección~\ref{sec:indicadores-formulas}). En el escenario base el
+costo resta \usd{3.206} al \gls{van}, que sigue siendo positivo
+(\usd{31.114}); aun con el doble de horas se mantiene en \usd{27.909}.
+El escenario pesimista también sigue siendo positivo: su \gls{van} baja
+de \usd{11.041} a \usd{8.817}, y a \usd{6.592} con el doble de horas.
+Visto al revés, el
+excedente de unos \usd{853} mensuales del escenario base
+(sección~\ref{sec:sensibilidad}) equivale a unas 191 horas mensuales al
+valor de convenio, unas diez veces las horas estimadas: el riesgo no
+está en la valorización del tiempo, sino en que el volumen real de
+consultas y denuncias resulte muy superior al supuesto, o en que la
+operación requiera contratar personal con cargas sociales completas. El
+cálculo es reproducible con el script del anexo~\ref{anx:modelo-financiero}.
+
+\begin{table}[H]
+    \centering
+    \caption{Indicadores con y sin el costo del tiempo del fundador}
+    \label{tab:van-fundador}
+    \small
+    \begin{tabularx}{\textwidth}{L L r r r r}
+        \toprule
+        \tb{Escenario} & \tb{Variante} & \tb{VAN (USD)} & \tb{TIR} & \tb{Repago simple} & \tb{Repago desc.} \\
+        \midrule
+        Pesimista & Sin costo del fundador & 11.041 & 50,92\,\% & 2,03 años & 2,40 años \\
+                  & Con costo del fundador & 8.817 & 44,13\,\% & 2,20 años & 2,65 años \\
+                  & Con el doble de horas  & 6.592 & 37,17\,\% & 2,42 años & 2,97 años \\
+        \addlinespace
+        Base      & Sin costo del fundador & 34.320 & 117,80\,\% & 0,95 años & 1,07 años \\
+                  & Con costo del fundador & 31.114 & 109,10\,\% & 1,02 años & 1,15 años \\
+                  & Con el doble de horas  & 27.909 & 100,33\,\% & 1,08 años & 1,23 años \\
+        \addlinespace
+        Optimista & Sin costo del fundador & 67.441 & 190,32\,\% & 0,62 años & 0,71 años \\
+                  & Con costo del fundador & 62.841 & 179,39\,\% & 0,66 años & 0,76 años \\
+                  & Con el doble de horas  & 58.240 & 168,42\,\% & 0,71 años & 0,82 años \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+Los indicadores principales del capítulo (tabla~\ref{tab:indicadores-financieros})
+se mantienen sin este costo para que sean comparables con las versiones
+anteriores del modelo; la lectura prudente del escenario base es la del
+\gls{van} con el costo del fundador, \usd{31.114}.
 
 \subsection{Costos variables por transacción y reparto del cobro}\label{sec:costos-variables}
 
@@ -770,20 +902,20 @@ del escenario base.
         Sesiones anuales       & 0 & 7.200 & 9.360 & 7.560 & 10.440 & 9.000 \\
         Ingreso neto           & 0 & 14.424 & 18.752 & 15.146 & 20.915 & 18.031 \\
         Costos fijos anuales   & 0 & $-3.555$ & $-3.675$ & $-3.915$ & $-4.155$ & $-4.395$ \\
-        Inversión inicial      & $-25.730$ & 0 & 0 & 0 & 0 & 0 \\
+        Inversión inicial      & $-10.279$ & 0 & 0 & 0 & 0 & 0 \\
         \midrule
-        \tb{Flujo neto}        & \tb{$-25.730$} & \tb{10.869} & \tb{15.077} & \tb{11.231} & \tb{16.760} & \tb{13.636} \\
-        \tb{Flujo acumulado}   & \tb{$-25.730$} & \tb{$-14.861$} & \tb{216} & \tb{11.447} & \tb{28.208} & \tb{41.843} \\
-        \tb{Flujo descontado}  & \tb{$-25.730$} & \tb{9.452} & \tb{11.400} & \tb{7.384} & \tb{9.583} & \tb{6.779} \\
-        \tb{Acum.\ descontado} & \tb{$-25.730$} & \tb{$-16.278$} & \tb{$-4.878$} & \tb{2.506} & \tb{12.089} & \tb{18.869} \\
+        \tb{Flujo neto}        & \tb{$-10.279$} & \tb{10.869} & \tb{15.077} & \tb{11.231} & \tb{16.760} & \tb{13.636} \\
+        \tb{Flujo acumulado}   & \tb{$-10.279$} & \tb{590} & \tb{15.667} & \tb{26.898} & \tb{43.659} & \tb{57.294} \\
+        \tb{Flujo descontado}  & \tb{$-10.279$} & \tb{9.452} & \tb{11.400} & \tb{7.384} & \tb{9.583} & \tb{6.779} \\
+        \tb{Acum.\ descontado} & \tb{$-10.279$} & \tb{$-827$} & \tb{10.573} & \tb{17.957} & \tb{27.540} & \tb{34.320} \\
         \bottomrule
     \end{tabularx}
 \end{table}
 
 La comparación entre las dos últimas filas ilustra el efecto del descuento:
-mientras el flujo acumulado nominal cambia de signo al cierre del Año 2,
-el acumulado descontado recién lo hace durante el Año 3. Esa distancia
-es, precisamente, el precio del tiempo.
+mientras el flujo acumulado nominal ya es positivo al cierre del Año 1,
+el acumulado descontado recién cambia de signo a comienzos del Año 2.
+Esa distancia es, precisamente, el precio del tiempo.
 
 \section{Evaluación financiera}
 
@@ -794,6 +926,7 @@ presente, incluida la inversión inicial:
 
 \begin{equation}
     \mathit{VAN} = -I_0 + \sum_{t=1}^{n} \frac{\gls{sym:fc}}{(1 + r)^{t}},
+    \glsadd{sym:van}\glsadd{sym:i0}\glsadd{sym:r}\glsadd{sym:t}\glsadd{sym:n}%
     \label{eq:van}
 \end{equation}
 
@@ -809,6 +942,7 @@ La \gls{tir} es el caso particular en que la tasa de corte hace que el
 
 \begin{equation}
     0 = -I_0 + \sum_{t=1}^{n} \frac{\gls{sym:fc}}{(1 + \mathit{TIR})^{t}}.
+    \glsadd{sym:tir}%
     \label{eq:tir}
 \end{equation}
 
@@ -823,6 +957,7 @@ dentro del año en que se produce el cambio de signo:
 
 \begin{equation}
     \text{Repago} = m - 1 + \frac{\left| FA_{m-1} \right|}{FC_{m}},
+    \glsadd{sym:m}\glsadd{sym:fa}%
     \label{eq:repago}
 \end{equation}
 
@@ -844,9 +979,9 @@ calculados sobre el flujo de fondos de cada escenario.
         \toprule
         \tb{Escenario} & \tb{VAN (USD)} & \tb{TIR} & \tb{Repago simple} & \tb{Repago descontado} \\
         \midrule
-        Pesimista & $-4.410$  & 8{,}09\,\%     & 4,22 años             & No recupera en 5 años \\
-        Base      & 18.869    & 41{,}57\,\%    & 1,99 años             & 2,66 años \\
-        Optimista & 51.990    & 78{,}24\,\%    & 1,34 años             & 1,56 años \\
+        Pesimista & 11.041    & 50{,}92\,\%    & 2,03 años             & 2,40 años \\
+        Base      & 34.320    & 117{,}80\,\%   & 0,95 años             & 1,07 años \\
+        Optimista & 67.441    & 190{,}32\,\%   & 0,62 años             & 0,71 años \\
         \bottomrule
     \end{tabularx}
 \end{table}
@@ -854,37 +989,43 @@ calculados sobre el flujo de fondos de cada escenario.
 La lectura de cada indicador es la siguiente:
 
 \begin{itemize}
-    \item \textbf{\gls{van} del escenario base:} \usd{18.869}. Es
+    \item \textbf{\gls{van} del escenario base:} \usd{34.320}. Es
           positivo, por lo que el proyecto crea valor por encima de la tasa
           exigida del 15\,\% y se acepta: además de recuperar la inversión
           y rendir el 15\,\% anual, deja un excedente equivalente a
-          aproximadamente el 73\,\% de la inversión de \usd{25.730},
+          aproximadamente 3,3 veces la inversión de \usd{10.279},
           expresado en dinero de hoy.
-    \item \textbf{\gls{tir} del escenario base:} 41,57\,\%. Supera a la
-          tasa de corte del 15\,\% por 26,57 puntos porcentuales. Ese
-          diferencial es el margen de seguridad: la tasa exigida podría
-          subir hasta casi el 41,6\,\% antes de que el proyecto dejara
-          de convenir.
-    \item \textbf{Período de repago:} 1,99 años en el escenario base. La
-          inversión nominal se recupera al cierre del Año 2.
-    \item \textbf{Repago descontado:} 2,66 años. Medido en dinero de hoy,
-          el recupero se alcanza durante el Año 3, con más de dos años de
-          holgura dentro del horizonte proyectado.
+    \item \textbf{\gls{tir} del escenario base:} 117,80\,\%. Supera a la
+          tasa de corte del 15\,\% por más de cien puntos porcentuales.
+          Un valor tan alto no debe leerse como un rendimiento anual
+          sostenible: refleja que la inversión inicial, valorizada a
+          salario local, es pequeña frente a los flujos operativos, de
+          modo que el flujo del Año 1 casi la iguala. En esas condiciones
+          la \gls{tir} pierde capacidad de discriminar, y el indicador
+          relevante para la decisión es el \gls{van}.
+    \item \textbf{Período de repago:} 0,95 años en el escenario base. La
+          inversión nominal se recupera antes del cierre del Año 1.
+    \item \textbf{Repago descontado:} 1,07 años. Medido en dinero de hoy,
+          el recupero se alcanza a comienzos del Año 2, con casi cuatro
+          años de holgura dentro del horizonte proyectado.
 \end{itemize}
 
-El escenario pesimista, en cambio, no se justifica: con un \gls{van} de
-\usd{-4.410} y una \gls{tir} de 8,09\,\%, inferior a la tasa de corte,
-los flujos devuelven el capital nominal invertido (repago simple de 4,22
-años) pero no alcanzan a remunerarlo al 15\,\% exigido, y el repago
-descontado no se produce dentro del horizonte. El escenario optimista
-presenta holgura en las cuatro métricas.
+El escenario pesimista también se justifica, con menos holgura: su
+\gls{van} es de \usd{11.041}, su \gls{tir} de 50,92\,\% y la inversión se
+recupera en 2,03 años (2,40 años en dinero de hoy). Ese resultado depende
+de la valorización de la inversión: el \gls{van} pesimista se anula con
+una inversión de unos \usd{21.320}, de modo que con la inversión de
+\usd{25.730} que resultaba de tarifas de contratista sería negativo
+(sección~\ref{sec:sensibilidad}). El escenario optimista presenta holgura
+en las cuatro métricas.
 
 Estos resultados mejoran sustancialmente los de la versión anterior del
 modelo (\gls{van} base de \usd{3.573}, \gls{tir} de 20,47\,\% y
 \gls{van} pesimista de \usd{-14.499}). La diferencia no proviene de
 supuestos de demanda más favorables —los escenarios son los mismos— sino
-de dos correcciones de alineación con el sistema implementado, cuyo
-efecto se separa en la tabla~\ref{tab:puente}.
+de dos correcciones de alineación con el sistema implementado y de la
+valorización de la inversión inicial a salario local, cuyos efectos se
+separan en la tabla~\ref{tab:puente}.
 
 \begin{table}[H]
     \centering
@@ -897,7 +1038,8 @@ efecto se separa en la tabla~\ref{tab:puente}.
         \midrule
         Anterior: pasarela a cargo de la plataforma y partida fija de \gls{llm} & 1,5552 & 3.573 & 20,47\,\% & $\approx$ 25,3\,\% \\
         Reparto del modelo A (ADR-M5-02, ADR-M5-05) & 2,0034 & 16.459 & 38,43\,\% & $\approx$ 19,3\,\% \\
-        \tb{Vigente}: además, sin partida fija de \gls{llm} & \tb{2,0034} & \tb{18.869} & \tb{41,57\,\%} & \tb{$\approx$ 18,2\,\%} \\
+        Además, sin partida fija de \gls{llm} & 2,0034 & 18.869 & 41,57\,\% & $\approx$ 18,2\,\% \\
+        \tb{Vigente}: además, inversión a salario local (tabla~\ref{tab:inversion}) & \tb{2,0034} & \tb{34.320} & \tb{117,80\,\%} & \tb{$\approx$ 10,9\,\%} \\
         \bottomrule
     \end{tabularx}
 \end{table}
@@ -906,7 +1048,11 @@ El reparto del modelo A explica la mayor parte del cambio: confirma lo
 que el propio registro de decisiones del sistema anticipaba, que el
 modelo anterior era una cota inferior conservadora del margen real
 (ADR-M5-05). Con solo esa corrección, el escenario pesimista mejora de
-\usd{-14.499} a \usd{-6.820}; con ambas, a \usd{-4.410}.
+\usd{-14.499} a \usd{-6.820}; con ambas, a \usd{-4.410}. Las tres
+primeras filas usan la inversión de \usd{25.730}, valorizada a tarifas de
+contratista; la valorización a salario local reduce la inversión en
+\usd{15.451}, que se suman al \gls{van} de cada escenario porque se
+desembolsan en el Año~0, y lleva el pesimista a \usd{11.041}.
 
 \section{Análisis de sensibilidad}\label{sec:sensibilidad}
 
@@ -925,47 +1071,47 @@ base.
           Por debajo de ese umbral la operación genera pérdidas antes de
           considerar la recuperación de la inversión. Para que el
           \gls{van} del escenario base no sea negativo, el volumen puede
-          caer hasta un 32,8\,\% en todos los años: el promedio anual de
-          sesiones no puede bajar de unas 5.858, frente a las 8.712 del
+          caer hasta un 59,6\,\% en todos los años: el promedio anual de
+          sesiones no puede bajar de unas 3.521, frente a las 8.712 del
           escenario base.
     \item \textbf{Comisión de plataforma.} El \gls{van} del escenario base
-          se anula con una comisión de aproximadamente 18,2\,\%. La
+          se anula con una comisión de aproximadamente 10,9\,\%. La
           tabla~\ref{tab:sens-comision} muestra el efecto de otros valores
           sobre el escenario base, sobre el pesimista y sobre el neto que
           recibe el tutor.
     \item \textbf{Ticket promedio.} Con la comisión en \comision{}, el
           \gls{van} del escenario base se anula con un ticket de
-          aproximadamente \usd{4,99} por sesión de duración media, es
-          decir, unos \usd{5,87} por hora (\$9.010 al tipo de cambio de
-          \$1.535): un precio horario que queda entre el primer cuartil
-          (\$8.000) y la mediana (\$12.000) del relevamiento de Superprof.
+          aproximadamente \usd{3,00} por sesión de duración media, es
+          decir, unos \usd{3,53} por hora (\$5.416 al tipo de cambio de
+          \$1.535): un precio horario inferior al piso de tarifa del
+          sistema (\$6.140, sección~\ref{sec:piso-tarifa}).
           Como el ticket depende del tipo de cambio, el resultado es
           sensible a él: el \gls{van} base se anula por encima de unos
-          \$2.281 por USD (apéndice~\ref{apx:precio}).
+          \$3.795 por USD (apéndice~\ref{apx:precio}).
     \item \textbf{Paquete mensual con descuento.} El descuento de 0 a
           30\,\% que el tutor puede aplicar al paquete (ADR-M5-03) reduce
           el ticket de las clases vendidas en paquete. Si la mitad de las
           sesiones se vendiera en paquetes con el descuento máximo, el
           ticket efectivo bajaría a \usd{6,31} y el \gls{van} base a
-          \usd{10.228}; aun si todas las sesiones se vendieran así, el
+          \usd{25.679}; aun si todas las sesiones se vendieran así, el
           ticket sería de \usd{5,19} y el \gls{van} base seguiría siendo
-          positivo (\usd{1.587}). El descuento medio que anula el \gls{van}
-          base es de 32,8\,\%, por encima del máximo que el sistema admite.
+          positivo (\usd{17.038}). El descuento medio que anula el \gls{van}
+          base es de 59,6\,\%, muy por encima del máximo que el sistema admite.
           No se dispone de datos de adopción del paquete, por lo que estas
           cifras son cotas y no una proyección.
     \item \textbf{Duración media de las sesiones.} Como el precio de la
           sesión es proporcional a su duración, el ticket se mueve con el
           supuesto de 51 minutos (ecuación~\ref{eq:duracion}): con una
           duración media de 45 minutos el ticket sería de \usd{6,54} y el
-          \gls{van} base de \usd{12.037}; con 60 minutos, de \usd{8,72} y
-          \usd{28.961}. El \gls{van} base se anula con una duración media
-          de unos 34 minutos, cercana al bloque mínimo de 30.
+          \gls{van} base de \usd{27.488}; con 60 minutos, de \usd{8,72} y
+          \usd{44.412}. El \gls{van} base se anula con una duración media
+          de unos 21 minutos, por debajo del bloque mínimo de 30.
     \item \textbf{Estructura de costos fijos.} La incorporación de un
           equipo de soporte rentado —evaluada en una formulación previa
           del modelo con perfiles junior, mid y senior incorporados de
           forma escalonada— tornaba negativo el \gls{van} en los tres
           escenarios. Con el modelo vigente, el escenario base podría
-          absorber como máximo unos \usd{469} mensuales constantes de
+          absorber como máximo unos \usd{853} mensuales constantes de
           costo adicional durante los cinco años antes de que el \gls{van}
           se anule. Ese mismo margen es el que debe cubrir los costos que
           la plataforma absorbe y el modelo no cuantifica
@@ -973,9 +1119,22 @@ base.
           soporte y esos costos compiten por el mismo excedente.
     \item \textbf{Partida fija de \gls{llm}.} Si se mantuviera la partida
           de \usd{55} a \usd{70} mensuales que se eliminó
-          (sección~\ref{sec:costos-recurrentes}), el \gls{van} base sería
-          de \usd{16.459} y la comisión de equilibrio de aproximadamente
-          19,3\,\% (tabla~\ref{tab:puente}).
+          (sección~\ref{sec:costos-recurrentes}), el \gls{van} base
+          bajaría en unos \usd{2.410} y la comisión de equilibrio subiría
+          algo más de un punto porcentual (tabla~\ref{tab:puente}, donde
+          el efecto se mide con la inversión anterior).
+    \item \textbf{Inversión inicial.} El \gls{van} del escenario base se
+          anula con una inversión de unos \usd{44.599}, más de cuatro
+          veces la estimada; el del pesimista, con unos \usd{21.320}. Como
+          cota superior de la valorización del desarrollo, con la
+          inversión de \usd{25.730} que resultaba de las tarifas de
+          contratista (tabla~\ref{tab:inversion}), el escenario
+          base tendría un \gls{van} de \usd{18.869}, una \gls{tir} de
+          41,57\,\% y un repago descontado de 2,66 años; el optimista, un
+          \gls{van} de \usd{51.990}; y el pesimista, un \gls{van} de
+          \usd{-4.410}, sin repago descontado dentro del horizonte. La
+          conclusión sobre el escenario base no depende, entonces, de cómo
+          se valorice el trabajo de desarrollo; la del pesimista, sí.
 \end{itemize}
 
 \begin{table}[H]
@@ -987,13 +1146,13 @@ base.
         \toprule
         \tb{Comisión} & \tb{VAN base (USD)} & \tb{TIR base} & \tb{VAN pesimista (USD)} & \tb{Neto del tutor} \\
         \midrule
-        18,2\,\% (equilibrio del base) & 0 & 15,00\,\% & $-15.653$ & 75,8\,\% \\
-        21\,\%   & 6.068   & 24,14\,\% & $-12.038$ & 72,96\,\% \\
-        23\,\%   & 10.335  & 30,18\,\% & $-9.495$  & 70,96\,\% \\
-        25\,\%   & 14.602  & 35,97\,\% & $-6.952$  & 68,96\,\% \\
-        \tb{\comision{} (vigente)} & \tb{18.869} & \tb{41,57\,\%} & \tb{$-4.410$} & \tb{66,96\,\%} \\
-        30\,\%   & 25.269  & 49,67\,\% & $-596$    & 63,96\,\% \\
-        33\,\%   & 31.669  & 57,50\,\% & 3.218     & 60,96\,\% \\
+        10,9\,\% (equilibrio del base) & 0 & 15,00\,\% & $-9.409$ & 83,0\,\% \\
+        21\,\%   & 21.519  & 82,99\,\%  & 3.413  & 72,96\,\% \\
+        23\,\%   & 25.786  & 94,80\,\%  & 5.956  & 70,96\,\% \\
+        25\,\%   & 30.053  & 106,39\,\% & 8.499  & 68,96\,\% \\
+        \tb{\comision{} (vigente)} & \tb{34.320} & \tb{117,80\,\%} & \tb{11.041} & \tb{66,96\,\%} \\
+        30\,\%   & 40.720  & 134,67\,\% & 14.855 & 63,96\,\% \\
+        33\,\%   & 47.120  & 151,32\,\% & 18.669 & 60,96\,\% \\
         \bottomrule
     \end{tabularx}
 \end{table}
@@ -1005,7 +1164,7 @@ de los flujos.
 \subsection{Por qué se mantiene la comisión del \comision{}}\label{sec:fundamento-comision}
 
 Con el modelo corregido, el escenario base tolera una comisión de hasta
-aproximadamente 18,2\,\%. El \comision{} no se mantiene, entonces, porque
+aproximadamente 10,9\,\%. El \comision{} no se mantiene, entonces, porque
 sea el mínimo que el proyecto necesita —eso dejó de ser cierto
 (sección~\ref{sec:calibracion-comision})—, sino por los siguientes
 fundamentos:
@@ -1016,21 +1175,21 @@ fundamentos:
           conocimiento de que el tutor recibe el 66,96\,\% del precio. La
           misma decisión reemplazó a una comisión del 21\,\% que había
           estado vigente durante el desarrollo (ADR-M5-04).
-    \item \textbf{Colchón frente al escenario pesimista.} Aun con el
+    \item \textbf{Colchón frente al escenario pesimista.} Con el
           \comision{}, el escenario pesimista tiene un \gls{van} de
-          \usd{-4.410}; para que se anule haría falta una comisión de
-          aproximadamente 30,5\,\%. Bajar la comisión al equilibrio del
-          escenario base dejaría el \gls{van} pesimista en
-          \usd{-15.653} (tabla~\ref{tab:sens-comision}). La holgura del
-          escenario base es la que permite absorber una demanda menor a la
-          proyectada.
+          \usd{11.041}, que se anula con una comisión de aproximadamente
+          18,3\,\%. Bajar la comisión al equilibrio del escenario base
+          dejaría el \gls{van} pesimista en \usd{-9.409}
+          (tabla~\ref{tab:sens-comision}). La holgura de la comisión es la
+          que permite absorber una demanda menor a la proyectada o un
+          desarrollo más caro que el valorizado a salario local.
     \item \textbf{Costos que el modelo no cuantifica.} La plataforma
           absorbe la diferencia de comisión en los reembolsos parciales
           por disputa (FR-PAG-010), los reembolsos que debe afrontar con
           fondos propios cuando un tutor revoca el acceso a su cuenta
           (ADR-M5-02), la fricción impositiva sobre su comisión y el
           soporte que hoy presta el equipo fundador. Todos compiten por el
-          mismo excedente, de unos \usd{469} mensuales en el escenario
+          mismo excedente, de unos \usd{853} mensuales en el escenario
           base.
     \item \textbf{Dentro de la banda de referencia.} El \comision{} se
           ubica dentro de la banda de comisiones de Preply (18\,\% a
@@ -1049,8 +1208,8 @@ clases siguientes por fuera de la plataforma— y la mayor dificultad para
 definitiva: la métrica con la que se revisará con los datos de la puesta en marcha quedó
 diferida deliberadamente hasta ese momento (regla BR-PAG-03), y la
 tabla~\ref{tab:sens-comision} muestra el margen disponible para hacerlo
-—una reducción a 23 o 25\,\% mantiene el escenario base con \gls{van}
-positivo— a costa de agravar el pesimista.
+—una reducción a 23 o 25\,\% mantiene positivos el \gls{van} base y el
+pesimista— a costa de reducir la holgura frente a una demanda menor.
 
 \section{Política de reembolsos y su costo real}\label{sec:reembolsos}
 
@@ -1080,8 +1239,11 @@ de percibir la comisión de una sesión que no se concretó, y el modelo solo
 computa ingresos de sesiones concretadas. Esa conclusión descansa en un
 \textbf{supuesto} que se declara: que el reembolso total revierte tanto
 la comisión de MercadoPago como el \texttt{marketplace\_fee} de la
-plataforma. El sistema dejó esa verificación pendiente en el entorno de
-pruebas de MercadoPago (ADR-M5-02); si no se cumpliera, el reembolso
+plataforma. El cobro se probó en Modo Bypass y con pruebas automáticas que
+simulan al cliente de MercadoPago, que no ejercitan ese comportamiento
+del proveedor; su verificación queda pendiente de la prueba en el
+\emph{sandbox} de MercadoPago (ADR-M5-02); si no se cumpliera, el reembolso
+% TODO-AUTOR: actualizar si se completa la prueba en sandbox
 tendría un costo que el modelo no incluye.
 
 \section{Conclusión de la evaluación económica}
@@ -1090,10 +1252,10 @@ El proyecto se justifica económicamente, bajo condiciones que corresponde
 explicitar.
 
 En el escenario base, los cuatro indicadores apuntan en la misma
-dirección: el \gls{van} es positivo (\usd{18.869}), la \gls{tir} supera
-holgadamente la tasa de corte (41,57\,\% frente a 15\,\%) y tanto el
-repago simple (1,99 años) como el descontado (2,66 años) se producen
-dentro de los primeros tres años del horizonte. Conforme al criterio de
+dirección: el \gls{van} es positivo (\usd{34.320}), la \gls{tir} supera
+holgadamente la tasa de corte (117,80\,\% frente a 15\,\%) y tanto el
+repago simple (0,95 años) como el descontado (1,07 años) se producen
+dentro de los primeros dos años del horizonte. Conforme al criterio de
 decisión estándar, el proyecto se acepta. El escenario optimista confirma
 esa conclusión con holgura.
 
@@ -1101,20 +1263,21 @@ Estos resultados reemplazan a los de la versión anterior del capítulo,
 que restaba la comisión de MercadoPago como costo de la plataforma. Con
 el modelo de cobro que el sistema implementa, esa comisión la paga el
 tutor, que recibe el 66,96\,\% de su precio, y la plataforma percibe el
-\comision{} completo. El escenario pesimista sigue sin justificarse
-(\gls{van} de \usd{-4.410}): recupera el capital nominal invertido, pero
-no lo remunera a la tasa exigida. De ello se desprenden tres condiciones
-de viabilidad:
+\comision{} completo. Con la inversión valorizada a salario local,
+también el escenario pesimista se justifica (\gls{van} de \usd{11.041}),
+pero ese resultado no es robusto: con la inversión de \usd{25.730} que
+resultaría de tarifas de contratista sería negativo (\usd{-4.410}). De
+ello se desprenden tres condiciones de viabilidad:
 
 \begin{enumerate}
     \item \textbf{Sostener un volumen mínimo de entre 1.774 (Año 1) y
           2.194 (Año 5) sesiones anuales}, umbral por debajo del cual la
-          operación no cubre siquiera sus costos fijos, y de unas 5.858
+          operación no cubre siquiera sus costos fijos, y de unas 3.521
           sesiones anuales en promedio para que el \gls{van} no sea
           negativo.
     \item \textbf{No bajar la comisión por debajo de aproximadamente
-          18,2\,\%}, valor con el que el \gls{van} del escenario base se
-          anula. El \comision{} vigente deja un margen de unos nueve
+          10,9\,\%}, valor con el que el \gls{van} del escenario base se
+          anula. El \comision{} vigente deja un margen de unos dieciséis
           puntos porcentuales, que se mantiene deliberadamente como
           colchón frente al escenario pesimista y a los costos que el
           modelo no cuantifica, y que se revisará con los datos de la puesta en marcha
@@ -1122,13 +1285,19 @@ de viabilidad:
           desintermediación.
     \item \textbf{Operar sin equipo de soporte rentado}, o con una
           dedicación parcial que, sumada a los costos no modelados, no
-          supere unos \usd{469} mensuales, durante el horizonte evaluado,
+          supere unos \usd{853} mensuales, durante el horizonte evaluado,
           difiriendo la incorporación de un equipo hasta que el volumen
-          efectivo la justifique.
+          efectivo la justifique. Valorizado a salario de convenio, el
+          tiempo que el fundador dedica hoy a esas tareas (entre 16 y 21
+          horas mensuales en el escenario base) reduce el \gls{van} base a
+          \usd{31.114} y la \gls{tir} a 109,10\,\%
+          (sección~\ref{sec:costo-fundador}).
 \end{enumerate}
 
-Que el escenario pesimista no resulte viable no invalida el proyecto,
-sino que delimita con precisión el terreno en que debe moverse. Ante una
+Que la viabilidad del escenario pesimista dependa de cómo se valorice el
+desarrollo no invalida el proyecto, sino que delimita con precisión el
+terreno en que debe moverse: una tracción baja combinada con un
+desarrollo más caro que el estimado no se justifica. Ante una
 tracción inferior a la proyectada, las alternativas disponibles no pasan
 por reducir costos —el margen de recorte es escaso— sino por revisar el
 modelo de negocio: segmentar la oferta por niveles de precio, incorporar

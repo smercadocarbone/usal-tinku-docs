@@ -28,7 +28,7 @@ El sistema tiene que existir y andar: la entrega final incluye el
 proyecto funcional.
 \end{guia}
 
-Este capítulo presenta los resultados del proyecto al 15 de octubre de
+Este capítulo presenta los resultados del proyecto al 19 de octubre de
 2026: los requerimientos del sistema, su construcción, las pruebas
 técnicas ---automatizadas, de auditoría y en producción---, la validación
 con usuarios y la evaluación económica. Se informan tanto los resultados
@@ -37,6 +37,8 @@ reales exceden el alcance de este trabajo
 (capítulo~\ref{cap:introduccion}, sección~\ref{sec:limitaciones}): los
 indicadores con los que se validará la hipótesis quedan definidos y se
 medirán a partir de la puesta en marcha.
+La evaluación técnica del sistema, en cambio, sí se realizó, y sus
+resultados se informan en la sección~\ref{sec:evaluacion-tecnica}.
 
 \section{Requerimientos}\label{sec:requerimientos}
 
@@ -63,9 +65,9 @@ implementación.
         \midrule
         M1 Identidad y perfiles    & FR-ID    & 30 & Implementado, incluido el \gls{cap} para tutores de menores (ADR-M1-04). Diferidos: video de presentación del tutor (FR-ID-034 a 036, fuera del \gls{mvp}) y especialidades verificadas contra registros oficiales (ADR-M1-06) \\
         M2 Motor de \gls{matching} & FR-MATCH & 14 & Implementado \\
-        M3 Aula virtual            & FR-AULA  & 13 & Implementado, con el kill-switch en el cliente; faltan su prueba formal de punta a punta, la medición en dispositivos reales y el encendido de las clases con menores (T-M3-06) \\
+        M3 Aula virtual            & FR-AULA  & 13 & Implementado, con el kill-switch en el cliente y su prueba de punta a punta contra LiveKit real (9 de 9 casos, sección~\ref{sec:evaluacion-tecnica}); faltan la medición en un teléfono físico y el encendido de las clases con menores (T-M3-06) \\
         M4 Reservas y agenda       & FR-RES   & 33 & Implementado; un requerimiento retirado (FR-RES-028, ADR-M4-01) \\
-        M5 Motor de pagos          & FR-PAG   & 23 & Implementado, con conexión de la cuenta de MercadoPago de cada tutor (ADR-M5-02), pendiente de verificar en el entorno de pruebas del proveedor, y modo de operación sin cobro real (ADR-M5-01) \\
+        M5 Motor de pagos          & FR-PAG   & 23 & Implementado, con conexión de la cuenta de MercadoPago de cada tutor (ADR-M5-02), y modo de operación sin cobro real (Modo Bypass, ADR-M5-01). Probado en Modo Bypass y con pruebas automáticas con el cliente de MercadoPago simulado; la prueba en el \emph{sandbox} de MercadoPago está pendiente (sección~\ref{sec:pruebas}) \\
         M6 Resumen automático      & FR-SUM   & 8  & Implementado (transcripción y GPT-4o sobre texto anonimizado); apagado en producción hasta contar con el texto legal de la cláusula de grabación \\
         M7 Reputación              & FR-REP   & 12 & Implementado \\
         M8 Administración          & FR-ADM   & 11 & Implementado \\
@@ -101,7 +103,7 @@ la Constitución del proyecto define como no negociables.
         RNF-01 & Disponibilidad   & 95\,\% mensual en operación & A medir desde la puesta en marcha; el servidor único es un riesgo aceptado (R-14, capítulo~\ref{cap:riesgos}) \\
         RNF-02 & Seguridad        & \gls{tls} 1.2 o superior; contraseñas con bcrypt o argon2; registro de auditoría de toda acción de administración & Implementado: \gls{tls} hasta Cloudflare y túnel cifrado, bcrypt, auditoría de las acciones de administración; los 36 hallazgos de la auditoría técnica, cerrados (sección~\ref{sec:auditoria}) \\
         RNF-03 & Privacidad       & Cumplimiento de la Ley 25.326, con especial cuidado en los datos de menores & Medidas implementadas (la imagen del \gls{dni} no sale del servidor, las clases no se graban salvo el adicional entre adultos, clases con menores deshabilitadas); riesgos abiertos R-16 y R-17 \\
-        RNF-04 & Rendimiento      & Latencia de videollamada menor a 200~ms; ajuste automático de calidad sin modo degradado visible & A medir desde la puesta en marcha \\
+        RNF-04 & Rendimiento      & Latencia de videollamada menor a 200~ms; ajuste automático de calidad sin modo degradado visible & A medir desde la puesta en marcha: la latencia de la videollamada la mide LiveKit y requiere clases reales entre provincias; las latencias de la \gls{api} se midieron en la evaluación técnica (sección~\ref{sec:evaluacion-tecnica}) \\
         RNF-05 & Mantenibilidad   & Sostenible por uno o dos desarrolladores, sin conocimiento tácito no documentado & Cumplido: Constitución, especificaciones, registros de decisión y manual de operación versionados \\
         \bottomrule
     \end{tabularx}
@@ -198,6 +200,14 @@ resultado medido sobre la rama principal del repositorio del sistema.
     \end{tabularx}
 \end{table}
 
+Las tareas se cuentan sobre la lista de tareas del sistema
+(\path{docs/Tasks_Tinku_Implementacion.md}, anexo~\ref{anx:repositorios})
+en su versión de esa fecha, contando como completadas las casillas
+marcadas y como pendientes las vacías, incluidas las subtareas; no se
+cuentan las tareas marcadas como en curso ni las canceladas. Con el mismo
+criterio, al 19 de octubre de 2026 la lista registra 234 tareas
+completadas, 3 pendientes, 4 en curso y 1 cancelada.
+
 El listado~\ref{lst:puerto-resumen} muestra un fragmento representativo
 de la construcción: el puerto que aísla al proveedor de \gls{llm}. Si el
 proveedor no está configurado, la implementación activa rechaza toda
@@ -258,13 +268,42 @@ del backend en las mediciones registradas en el repositorio del sistema.
         21/09/2026 & Auditoría técnica, sobre la rama principal & 383, sin fallas & --- \\
         14/10/2026 & Línea de base de la rama principal & 661, sin fallas, 5 omitidas & Cobertura de líneas del 85,6\,\% (JaCoCo) \\
         15/10/2026 & Rama principal, con la remediación de las pruebas en producción y la ventana mínima de 21 minutos integradas & 739, sin fallas, 5 omitidas & Cobertura del 86,2\,\% (medida con 738 pruebas, antes del último cambio); Playwright: 222 exitosas y 3 omitidas; pytest: 26 de 26 \\
+        18/10/2026 & Integración continua de la rama que incorporó la evaluación técnica (commit \texttt{9e047eb}, integrado a la rama principal) & 859, sin fallas, 1 omitida & Cobertura de líneas del 89,6\,\% (JaCoCo); Playwright: 252 exitosas; pytest: 44 de 44 \\
         \bottomrule
     \end{tabularx}
 \end{table}
 
-Las cinco pruebas omitidas son las del \gls{ocr} con Tesseract real, que
-se saltean en un equipo sin Tesseract instalado y corren en la
-integración continua. La metodología fijaba una cobertura mínima del
+Las cinco pruebas omitidas en las mediciones locales son las del
+\gls{ocr} con Tesseract real, que se saltean en un equipo sin Tesseract
+instalado y corren en la integración continua; la omitida en la
+integración continua del 18 de octubre es la prueba del validador de
+firmas digitales contra el servicio oficial real, que no se ejecuta en
+ese entorno.
+
+\paragraph{Cobro con MercadoPago.} El circuito de pagos se probó de dos
+maneras, y ninguna de ellas usa el entorno de pruebas
+(\emph{sandbox}) de MercadoPago. La primera es el Modo Bypass
+(ADR-M5-01), en el que la pasarela está apagada y el pago se simula: la
+reserva se confirma sin pasar por MercadoPago, con el mismo circuito de
+confirmación y de ventana de reembolso que el cobro real; es el modo que
+usan la prueba nocturna del camino crítico, las pruebas en producción y
+la evaluación técnica. La segunda son las pruebas automáticas del
+backend, en las que el cliente de MercadoPago se reemplaza por un doble
+simulado: las pruebas de integración de pagos (creación de la
+preferencia, conexión de la cuenta del tutor, notificaciones del
+proveedor, liberación del \gls{escrow}, reembolsos, paquetes y Modo
+Bypass) cubren la lógica propia contra una base real, y las del cliente
+\gls{http} verifican las solicitudes y el manejo de las respuestas
+contra un servidor local que imita las de MercadoPago, junto con la
+verificación de la firma de sus notificaciones. Estas pruebas verifican
+lo que el sistema hace con las respuestas documentadas por el
+proveedor, pero no el comportamiento real de MercadoPago (por ejemplo,
+cómo prorratea un reembolso entre el tutor y la plataforma): esa
+verificación requiere la prueba en el \emph{sandbox}, que está
+pendiente (riesgo R-11).
+% TODO-AUTOR: actualizar si se completa la prueba en sandbox (fecha, casos probados y resultado; en ese caso, actualizar también la tabla tab:rf, R-11 del cap. 6, cap. 5 y cap. 8)
+
+La metodología fijaba una cobertura mínima del
 70\,\% por módulo; durante la implementación se optó por medir primero la
 cobertura de todo el backend, sin un umbral que corte la construcción,
 y decidir el umbral con el valor medido (ADR-000-05). El valor medido
@@ -394,14 +433,16 @@ La remediación de los hallazgos de código se implementó el 15 de octubre de
 arreglo, y se integró ese mismo día a la rama principal con la
 integración continua en verde; queda repetir las pruebas por rol en
 producción (riesgo R-15 del capítulo~\ref{cap:riesgos}). Como parte de ella se calibró el
-umbral de relevancia de la búsqueda con el modelo de \gls{embeddings}
+umbral de relevancia de la búsqueda con el modelo de \glspl{embeddings}
 real sobre 40 consultas (20 relevantes, 10 irrelevantes y 10 sin
 sentido): con el umbral anterior (0,30) pasaban 5 de 10 consultas
 irrelevantes; con el elegido (0,46) el 95\,\% de las relevantes conserva
 resultados y ninguna irrelevante ni sin sentido los obtiene. La consulta
 relevante que se pierde cae a la recomendación por área (FR-MATCH-011).
 Las consultas son de elaboración propia, por lo que la medición calibra
-el umbral pero no reemplaza la medición del indicador I-01 con usuarios reales.
+el umbral pero no reemplaza la medición del indicador I-01 con usuarios
+reales; la evaluación offline de la sección~\ref{sec:evaluacion-tecnica}
+la amplía a 120 consultas y a todos los tutores de prueba.
 
 La lectura de estas dos actividades complementa la de la auditoría:
 cientos de pruebas exitosas no garantizan la ausencia de defectos
@@ -411,28 +452,163 @@ detectaron fallas que ninguna prueba cubría, y en un caso, un hueco de
 la propia especificación. El desarrollo asistido por \gls{ia} acelera la
 construcción, pero no reemplaza la verificación.
 
+\subsection{Evaluación técnica}\label{sec:evaluacion-tecnica}
+
+La validación de la hipótesis con usuarios reales excede el alcance de
+este trabajo (capítulo~\ref{cap:introduccion},
+sección~\ref{sec:limitaciones}). Lo que sí puede medirse sin usuarios
+se midió con una evaluación técnica reproducible sobre el sistema real:
+una evaluación offline del motor de \gls{matching} con búsquedas
+etiquetadas ---la parte técnica del indicador I-01---, la latencia de
+las operaciones críticas, el kill-switch y la calidad del software.
+
+Los resultados de esta sección se midieron el 18 de octubre de 2026 y
+están registrados, con los comandos para repetirlos, en el repositorio
+del sistema (\path{docs/operacion/EVALUACION_tecnica.md} y
+\path{matching-service/tests/eval_relevancia/reporte_ranking.md},
+anexo~\ref{anx:repositorios}).
+
+\paragraph{Motor de \gls{matching}: evaluación offline.} Se construyó un
+conjunto de 120 búsquedas en lenguaje natural: 85 que algún tutor de los
+datos de prueba cubre, 20 pedidos con sentido que ningún tutor cubre
+(por ejemplo, clases de tango o de cocina) y 15 textos sin sentido. Las
+búsquedas relevantes se etiquetaron leyendo el catálogo de temas de cada
+tutor, mirando materia y nivel, antes de correr el modelo y sin usar su
+puntaje, para que la etiqueta no sea circular. Un script puntúa a los 37
+tutores de prueba con el mismo modelo de \glspl{embeddings} del servicio
+(\texttt{paraphrase-multilingual-MiniLM-L12-v2}) y aplica los mismos
+cortes que el backend (umbral absoluto de 0,46 y relativo de 0,25 del
+mejor puntaje), de modo que mide lo que ve el usuario. La
+tabla~\ref{tab:eval-matching} presenta el resultado.
+
+\begin{table}[H]
+    \centering
+    \caption{Evaluación offline del \gls{matching} sobre 120 búsquedas etiquetadas (umbral vigente 0,46)}
+    \label{tab:eval-matching}
+    \small
+    \begin{tabularx}{\textwidth}{L r r l}
+        \toprule
+        \tb{Métrica} & \tb{Valor} & \tb{Meta} & \tb{Cumple} \\
+        \midrule
+        MRR, rango recíproco medio (búsquedas relevantes) & 0,920 & $\geq 0{,}80$ & Sí \\
+        \emph{Recall@5} (búsquedas relevantes)          & 0,949 & $\geq 0{,}60$ & Sí \\
+        Precisión@1 / @3 / @5 (búsquedas relevantes)    & 0,882 / 0,725 / 0,640 & --- & --- \\
+        Relevantes con al menos un resultado            & 100\,\% & $\geq 90\,\%$ & Sí \\
+        Irrelevantes sin resultados                     & 60\,\% (12 de 20) & $\geq 80\,\%$ & No \\
+        Sin sentido sin resultados                      & 80\,\% (12 de 15) & 100\,\% & No \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+El primer resultado es pertinente en el 88,2\,\% de las búsquedas
+relevantes, el primer tutor correcto aparece en promedio entre la
+primera y la segunda posición (MRR de 0,920) y, en promedio, el
+94,9\,\% de los tutores relevantes de cada búsqueda figura entre los
+cinco primeros. El resultado desfavorable está en el otro extremo: el
+40\,\% de los pedidos que ningún tutor cubre y el 20\,\% de los textos
+sin sentido también devuelven tutores (por ejemplo, ``curso de
+fotografía'' devuelve siete). La calibración del 15 de octubre, que daba
+cero falsos positivos con el mismo umbral, comparaba cada búsqueda solo
+con los temas de 7 de los 37 tutores de prueba; con todos, cada búsqueda
+se compara con 780 temas y el máximo coseno de una consulta ajena sube.
+Un barrido del umbral (tabla~\ref{tab:barrido-umbral}) muestra que 0,54
+es el primer valor que cumple las cinco metas; el umbral vigente no se
+cambió, porque es una decisión de configuración que corresponde al
+dueño del producto.
+% TODO-AUTOR: si se adopta el umbral 0,54 (MATCHING_SCORE_MINIMO) antes de la entrega, repetir el script y reemplazar la tabla tab:eval-matching por los valores de esa fila.
+
+\begin{table}[H]
+    \centering
+    \caption{Barrido del umbral absoluto de relevancia (corte relativo fijo en 0,25)}
+    \label{tab:barrido-umbral}
+    \small
+    \begin{tabularx}{\textwidth}{l r r R R R}
+        \toprule
+        \tb{Umbral} & \tb{MRR} & \tb{\emph{Recall@5}} & \tb{Relevantes con resultado} & \tb{Irrelevantes en 0} & \tb{Sin sentido en 0} \\
+        \midrule
+        0,46 (vigente) & 0,920 & 0,949 & 100\,\%  & 60\,\% & 80\,\% \\
+        0,50           & 0,919 & 0,945 & 100\,\%  & 80\,\% & 93,3\,\% \\
+        0,52           & 0,904 & 0,920 & 98,8\,\% & 85\,\% & 93,3\,\% \\
+        0,54           & 0,900 & 0,913 & 97,6\,\% & 95\,\% & 100\,\% \\
+        0,56           & 0,871 & 0,875 & 95,3\,\% & 95\,\% & 100\,\% \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+Esta evaluación mide la calidad del ranking contra un criterio
+documentado, no la aceptación de los usuarios: las búsquedas las
+escribió el autor y se evaluaron contra los tutores de prueba y no
+contra una oferta real.
+
+\paragraph{Latencia de las operaciones críticas.} Con cinco usuarios
+concurrentes y cien solicitudes por operación, después de diez de
+calentamiento descartadas, en un entorno local con los datos de prueba,
+el percentil 95 de la latencia fue el de la tabla~\ref{tab:latencias},
+sin errores. La medición no incluye la latencia de red hasta el
+servidor desplegado ni la de Cloudflare.
+
+\begin{table}[H]
+    \centering
+    \caption{Latencia de las operaciones críticas (entorno local, 100 solicitudes, 5 concurrentes)}
+    \label{tab:latencias}
+    \small
+    \begin{tabularx}{\textwidth}{L r r r r}
+        \toprule
+        \tb{Operación} & \tb{p50 (ms)} & \tb{p95 (ms)} & \tb{Meta p95 (ms)} & \tb{Errores} \\
+        \midrule
+        Búsqueda (incluye el modelo de \glspl{embeddings} en CPU) & 269 & 360 & 1.500 & 0 \\
+        Creación de una reserva                         & 52  & 74  & 800   & 0 \\
+        Confirmación del pago en Modo Bypass            & 139 & 195 & 800   & 0 \\
+        Acceso a la sala de clase (token)               & 26  & 69  & 500   & 0 \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\paragraph{Kill-switch.} Las pruebas de punta a punta contra el backend
+y el servidor de video reales (nueve casos, 16 de octubre de 2026)
+pasaron todas: verificaron las dos ramas del corte ---con un menor
+presente la clase se corta sin preguntar; entre adultos se pregunta
+antes de cortar--- y el comportamiento cuando el clasificador no carga.
+En un navegador sin GPU con la CPU frenada cuatro veces (perfil de gama
+media de Lighthouse), el clasificador tardó 609\,ms por imagen en el
+percentil 95, lo que da un tiempo de detección estimado de 1,8\,s con
+una cámara, dentro del objetivo de 3\,s, sin turnos salteados ni pérdida
+de memoria. Falta la medición en un teléfono físico de gama media, y la
+exactitud del clasificador con contenido real está fuera del alcance de
+la evaluación.
+
+\paragraph{Calidad del software.} La integración continua del 18 de
+octubre de 2026 corrió 859 pruebas del backend sin fallas, con una
+cobertura de líneas del 89,6\,\%, 252 pruebas de Playwright y 44 de
+pytest (tabla~\ref{tab:evolucion-pruebas}); los 36 hallazgos de la
+auditoría figuran cerrados, sin críticos abiertos.
+
 \subsection{Pruebas de aceptación}
 
-Las pruebas de aceptación con usuarios reales (\gls{uat}) exceden el
+Las \gls{uat} con usuarios reales exceden el
 alcance de este trabajo. Los indicadores del capítulo~\ref{cap:metodologia}
 con los que se validará la hipótesis quedan definidos
 (tabla~\ref{tab:indicadores-validacion}) y se medirán a partir de la
 puesta en marcha, sin clases con menores mientras siga abierto el riesgo
-R-01 del capítulo~\ref{cap:riesgos}.
+R-01 del capítulo~\ref{cap:riesgos}. Solo la parte técnica de I-01
+(I-01a) tiene hoy un resultado, medido en la evaluación
+offline de la sección~\ref{sec:evaluacion-tecnica}; los demás requieren
+usuarios reales y figuran sin medir hasta la puesta en marcha.
 
 \begin{table}[H]
     \centering
-    \caption{Indicadores de validación con usuarios reales}
+    \caption{Indicadores de validación}
     \label{tab:indicadores-validacion}
     \small
-    \begin{tabularx}{\textwidth}{l L l l}
+    \begin{tabularx}{\textwidth}{l L L L}
         \toprule
-        \tb{ID} & \tb{Indicador} & \tb{Umbral} & \tb{Resultado} \\
+        \tb{ID} & \tb{Indicador y fuente} & \tb{Umbral} & \tb{Resultado} \\
         \midrule
-        I-01 & Aceptación de las sugerencias del \gls{matching} & $> 60\,\%$ & Sin medir \\
-        I-02 & Calidad percibida de la sesión (escala 1 a 5)   & $\geq 4{,}0$ & Sin medir \\
-        I-03 & Sesiones entre provincias distintas, con una del interior & $\geq 1$ & Sin medir \\
-        I-04 & \gls{nps} de los usuarios                       & positivo & Sin medir \\
+        I-01a & Calidad del ranking del \gls{matching} (evaluación offline, 120 búsquedas) & MRR $\geq 0{,}80$ y \emph{recall@5} $\geq 0{,}60$ & Cumple: MRR 0,920 y \emph{recall@5} 0,949; no cumple el filtrado de pedidos sin oferta (tabla~\ref{tab:eval-matching}) \\
+        I-01b & Aceptación de las sugerencias del \gls{matching} por los usuarios & $> 60\,\%$ & Sin medir: requiere usuarios reales \\
+        I-02  & Calidad percibida de la sesión (escala 1 a 5) & $\geq 4{,}0$ & Sin medir: requiere usuarios reales \\
+        I-03  & Sesiones entre provincias distintas, con una del interior & $\geq 1$ & Sin medir: requiere usuarios reales \\
+        I-04  & \gls{nps} de los usuarios & Positivo & Sin medir: requiere usuarios reales \\
         \bottomrule
     \end{tabularx}
 \end{table}
@@ -562,7 +738,7 @@ solo existe dentro de la plataforma.
 
 La entrevista tiene limitaciones que acotan su peso como evidencia: es
 una sola; la entrevistada enseña Educación Física, no tiene experiencia
-en clases particulares y trabaja en el AMBA, por lo que no cubre la
+en clases particulares y trabaja en el Área Metropolitana de Buenos Aires (AMBA), por lo que no cubre la
 mitigación del riesgo R-08, que requiere docentes del interior; y en algunas
 preguntas el entrevistador anticipó la respuesta al presentar el
 resultado de la encuesta, lo que puede haber inducido el acuerdo. Sus
@@ -960,12 +1136,14 @@ El capítulo~\ref{cap:marco-teorico} comparó las plataformas existentes
 propuesta con ellas en tres ejes:
 
 \begin{itemize}
-    \item \textbf{\gls{matching}.} Las plataformas relevadas ofrecen
+    \item \textbf{\Gls{matching}.} Las plataformas relevadas ofrecen
           filtros manuales; \sistema{} implementa un motor de
-          \gls{matching} semántico con \gls{embeddings}. La calibración
-          con consultas propias muestra que separa consultas relevantes de
-          irrelevantes; su valor para los usuarios queda sujeto al
-          indicador I-01, a medir con usuarios reales.
+          \gls{matching} semántico con \glspl{embeddings}. La evaluación
+          offline con 120 búsquedas etiquetadas muestra que ordena bien a
+          los tutores pertinentes (MRR de 0,920), pero que con el umbral
+          vigente no filtra todos los pedidos sin oferta; su valor para los
+          usuarios queda sujeto al indicador I-01, a medir con usuarios
+          reales.
     \item \textbf{Aula y pagos integrados.} \sistema{} integra en un
           mismo flujo la reserva, el aula virtual y el cobro con una
           ventana de 24 horas en la que la plataforma todavía puede
@@ -985,10 +1163,13 @@ propuesta con ellas en tres ejes:
 La evaluación del capítulo~\ref{cap:economica}, con un ticket de
 \usd{7,42} por sesión, la comisión del \comision{} a cargo del tutor y
 una tasa de descuento del 15\,\%, arroja en el escenario base un
-\gls{van} de \usd{18.869} y una \gls{tir} del 41,57\,\%, con un repago
-simple de 1,99 años y uno descontado de 2,66 años. El escenario
-pesimista no resulta viable (\gls{van} de \usd{-4.410}). El \gls{van}
-base se anula con una comisión de aproximadamente 18,2\,\%. El resultado
+\gls{van} de \usd{34.320} y una \gls{tir} del 117,80\,\%, con un repago
+simple de 0,95 años y uno descontado de 1,07 años. El escenario
+pesimista también resulta viable (\gls{van} de \usd{11.041}), pero solo
+con la inversión valorizada a salario local: con la inversión de
+\usd{25.730} que resultaría de tarifas de contratista, su \gls{van} sería
+de \usd{-4.410}. El \gls{van}
+base se anula con una comisión de aproximadamente 10,9\,\%. El resultado
 más relevante del proceso fue que la contrastación del modelo con el
 sistema implementado cambió la conclusión: una versión anterior del
 modelo restaba la comisión de MercadoPago como costo de la plataforma,
@@ -1007,16 +1188,20 @@ en el anexo~\ref{anx:modelo-financiero}.
         \toprule
         \tb{Resultados favorables} & \tb{Resultados desfavorables} \\
         \midrule
-        Nueve módulos implementados y desplegados, con 661 pruebas automatizadas en la rama principal y 85,6\,\% de cobertura &
+        Nueve módulos implementados y desplegados, con 859 pruebas automatizadas del backend y 89,6\,\% de cobertura (18/10/2026) &
         Las pruebas en producción encontraron tres hallazgos altos que la suite no detectaba; su remediación ya está en la rama principal y falta repetir las pruebas en producción \\
         Los 36 hallazgos de la auditoría, cerrados con prueba de regresión &
         Producción quedó, tras las pruebas, en un estado que debe revertirse antes de la puesta en marcha (R-17) \\
-        Kill-switch funcionando de punta a punta en la prueba en vivo &
-        Sin medición en dispositivos reales: las clases con menores siguen deshabilitadas \\
+        Kill-switch funcionando de punta a punta en la prueba en vivo y en 9 de 9 pruebas contra LiveKit real; detección estimada de 1,8\,s &
+        Sin medición en un teléfono físico; las clases con menores siguen deshabilitadas \\
+        Evaluación offline del \gls{matching}: MRR de 0,920 y \emph{recall@5} de 0,949 sobre 120 búsquedas etiquetadas &
+        Con el umbral vigente, el 40\,\% de los pedidos sin oferta y el 20\,\% de los textos sin sentido devuelven tutores \\
+        Latencias p95 de las operaciones críticas muy por debajo de las metas (búsqueda: 360\,ms) &
+        La validación con usuarios reales excede el alcance: los indicadores I-01b a I-04 se miden desde la puesta en marcha; el cobro no se probó en el \emph{sandbox} de MercadoPago \\
         La encuesta respalda el problema, la modalidad virtual y la verificación &
         Solo el 35,2\,\% prefiere pagar dentro de la plataforma, y la disposición a pagar es la mitad del precio de mercado \\
-        Escenarios base y optimista económicamente viables &
-        Escenario pesimista no viable \\
+        Escenarios base y optimista económicamente viables, aun con la inversión a tarifas de contratista &
+        Escenario pesimista viable solo con la inversión valorizada a salario local \\
         \gls{cap} obligatorio para dar clases a menores, implementado &
         Resumen automático implementado pero apagado en producción hasta tener la cláusula legal \\
         \bottomrule

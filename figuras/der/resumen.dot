@@ -1,0 +1,8 @@
+digraph "resumen" {
+  graph [fontname="Helvetica", rankdir=TB, nodesep=0.35, ranksep=0.9, pad=0.2];
+  node [shape=plain, fontname="Helvetica", fontsize=10];
+  edge [fontname="Helvetica", fontsize=9, color="#333333", dir=both, arrowsize=0.9];
+  "resumen.resumenes_sesion" [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="2" COLOR="#2F5A9E"><TR><TD COLSPAN="2" BGCOLOR="#EEF3FB" ALIGN="CENTER"><B>resumenes_sesion</B></TD></TR><TR><TD ALIGN="LEFT"><U>id</U></TD><TD ALIGN="LEFT"><FONT COLOR="#2F5A9E">PK</FONT></TD></TR><TR><TD ALIGN="LEFT">sesion_id</TD><TD ALIGN="LEFT"><FONT COLOR="#2F5A9E">FK, UQ</FONT></TD></TR><TR><TD COLSPAN="2" ALIGN="LEFT"><FONT COLOR="#777777"><I>+ 9 atributos</I></FONT></TD></TR></TABLE>>];
+  "aula.sesiones_aprendizaje" [shape=box, style="dashed,rounded", color="#777777", fontcolor="#777777", label="aula.sesiones_aprendizaje"];
+  "resumen.resumenes_sesion" -> "aula.sesiones_aprendizaje" [arrowtail=teeodot, arrowhead=teetee, label="sesion_id"];
+}
