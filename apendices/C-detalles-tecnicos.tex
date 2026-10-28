@@ -12,7 +12,7 @@ de base de datos. Reproducibilidad total es un marcador de excelencia.
 
 Este apéndice reúne los detalles técnicos del sistema tal como están en
 la rama principal del repositorio de código (anexo~\ref{anx:repositorios})
-al 14/10/2026. La fuente de cada valor son estos archivos del repositorio:
+al 27/10/2026. La fuente de cada valor son estos archivos del repositorio:
 
 \begin{itemize}
     \item \path{backend/pom.xml}, \path{frontend/package.json} y
@@ -38,7 +38,7 @@ al 14/10/2026. La fuente de cada valor son estos archivos del repositorio:
         Spring Boot & 4.1.1 & \path{pom.xml} (incluye Spring Security, Data JPA, Flyway, Quartz, Validation, Actuator) \\
         jjwt (\gls{jwt}) & 0.13.0 & \path{pom.xml} \\
         Testcontainers & la que fija Spring Boot 4.1.1 & \path{pom.xml} \\
-        JaCoCo & 0.8.13 & \path{pom.xml} \\
+        JaCoCo & 0.8.15 & \path{pom.xml} \\
         Tesseract (\gls{ocr}) & paquete del sistema & \path{backend/Dockerfile}: \texttt{tesseract-ocr} y \texttt{tesseract-ocr-spa} sobre \texttt{eclipse-temurin:21-jre} \\
         Next.js & 16.3.6 & \path{package.json} \\
         React & \texttt{\^{}19.2} & \path{package.json} \\
@@ -48,9 +48,9 @@ al 14/10/2026. La fuente de cada valor son estos archivos del repositorio:
         Playwright / axe-core & \texttt{\^{}1.63.0} / \texttt{\^{}4.13.0} & \path{package.json} \\
         oxlint & \texttt{\^{}1.82.0} & \path{package.json} \\
         Python (\gls{matching}) & 3.12 & \path{matching-service/Dockerfile} y CI \\
-        FastAPI & \texttt{>=0.141.1} & \path{requirements.txt} \\
+        FastAPI & \texttt{>=0.143.0} & \path{requirements.txt} \\
         sentence-transformers & \texttt{>=6.1.0} & \path{requirements.txt} \\
-        psycopg / pgvector (Python) & \texttt{>=3.3.6} / \texttt{>=0.5.0} & \path{requirements.txt} \\
+        psycopg / pgvector (Python) & \texttt{>=3.3.6} / \texttt{>=0.5.1} & \path{requirements.txt} \\
         PostgreSQL + pgvector & 16 & Imagen \path{pgvector/pgvector:pg16} en \path{deploy/docker-compose.coolify.yml}; la misma usan las pruebas \\
         Copia de seguridad & 16 & Imagen \path{eeshugerman/postgres-backup-s3:16} en el mismo archivo \\
         \bottomrule
