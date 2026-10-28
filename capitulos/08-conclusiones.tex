@@ -391,6 +391,53 @@ capítulo~\ref{cap:marco-teorico} en cuatro puntos.
           voz del menor a un proveedor externo. Los tutores de menores
           entrevistados son los que más valoran el resumen, como informe
           para la familia.
+    \item \textbf{Moderación de contenido sensible no sexual.} El
+          kill-switch detecta solo contenido sexual: no reconoce heridas,
+          sangre, violencia, dibujos ofensivos no sexuales ni palabras
+          escritas en un papel o en un pizarrón frente a la cámara. El
+          canal de texto del aula sí oculta datos de contacto e insultos
+          (FR-AULA-011), con un filtro que corre en los dos navegadores y
+          no tiene costo por mensaje. Para la imagen, la opción evaluada es
+          el endpoint de moderación de OpenAI
+          (\texttt{omni-moderation-latest}), que es gratuito y clasifica
+          imágenes en violencia, violencia gráfica, autolesiones y
+          contenido sexual \citep{openaimoderacion2026}. No se implementó
+          por cinco razones. Primera, no puede reemplazar al clasificador
+          local: cada imagen viaja a un servidor externo y tarda segundos
+          en responder, mientras que NSFWJS confirma una detección en
+          alrededor de un segundo y sigue funcionando sin red. Segunda, la
+          imagen de un menor no puede salir de su navegador, de modo que
+          solo podría analizarse la cámara del tutor, con su
+          consentimiento expreso para la transferencia internacional,
+          como ya se exige para el audio del resumen (ADR-M3-04). Tercera,
+          en materias como Anatomía o Historia una lámina o una fotografía
+          de guerra son material legítimo, y un corte automático
+          interrumpiría clases válidas. Cuarta, el nivel gratuito admite
+          5.000 pedidos por día ---unas siete horas de clase con un cuadro
+          cada cinco segundos--- y los términos de uso para contenido que
+          no pasa por un modelo de OpenAI no son explícitos. Quinta, el
+          envío lo haría el navegador del alumno, que podría fabricar un
+          cuadro para incriminar al tutor.
+
+          Una implementación posible, que requiere un registro de
+          decisión, una cláusula de consentimiento del tutor y las filas
+          correspondientes en la Tabla de Tiempos, es la siguiente. El
+          navegador del alumno toma un cuadro de la cámara del tutor, sin
+          la pantalla compartida, cada cinco segundos, y lo envía al
+          backend, que conserva la clave de OpenAI y consulta el endpoint.
+          Si dos cuadros seguidos superan el umbral de violencia gráfica o
+          de autolesiones, se oculta el video del tutor y se registra una
+          alerta para revisión humana junto con el clip de los últimos 30
+          segundos que ya conserva el kill-switch, sin cortar la clase ni
+          sancionar de forma automática. El contenido sexual sigue a
+          cargo del clasificador local. La alternativa sin proveedor
+          externo es ejecutar un modelo abierto en infraestructura propia:
+          ShieldGemma~2 cubre violencia y gore con un F1 de 0,85 en la
+          evaluación de sus autores, pero tiene 4.000 millones de
+          parámetros y requiere una GPU que el servidor actual no tiene
+          \citep{shieldgemma2}. Las palabras escritas frente a la cámara
+          requieren reconocimiento de texto en la imagen y, en el caso de
+          la escritura a mano, siguen siendo el caso más difícil.
     \item \textbf{Efecto en el aprendizaje.} Medir el rendimiento académico
           de los alumnos antes y después de un ciclo de tutorías, para
           contrastar el resultado con la literatura sobre tutoría.
