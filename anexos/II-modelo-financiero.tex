@@ -1,7 +1,8 @@
 %!TEX root = ../main.tex
 % ANEXO II — Modelo financiero
 % Describe el modelo vigente del capítulo 5 (reparto del modelo de cobro A,
-% sin partida fija de LLM). La planilla de una versión anterior
+% sin partida fija de LLM). La planilla vigente es anexos/modelo_financiero.xlsx
+% (la genera anexos/generar_planilla.py). La planilla de una versión anterior
 % (Presupuesto_y_Proyecciones_-_Proyecto_Tinku.xlsx) NO se incluye: sus
 % cifras (ticket de USD 3,88, pasarela a cargo de la plataforma, partida
 % fija de LLM, VAN base de USD 3.496) contradicen el capítulo 5 vigente.
@@ -149,6 +150,16 @@ y los de la variante con el doble de horas, se presentan en la
 tabla~\ref{tab:van-fundador}.
 
 \section{Reproducción del cálculo}
+
+La planilla \path{anexos/modelo_financiero.xlsx}, que se entrega junto con
+este documento y está en el repositorio de la tesis
+(anexo~\ref{anx:repositorios}), contiene el modelo vigente con fórmulas:
+parámetros con su origen, inversión inicial, costos fijos, demanda, costo
+del tiempo del fundador, flujos e indicadores de los tres escenarios en
+sus tres variantes, y los análisis de sensibilidad. Al cambiar un
+parámetro, todo se recalcula. Los valores que anulan el \gls{van} se
+obtienen en forma cerrada, porque el \gls{van} es lineal en el margen
+por sesión. La genera \path{anexos/generar_planilla.py}.
 
 El script \path{anexos/modelo_financiero.py} del repositorio de la tesis
 (anexo~\ref{anx:repositorios}) implementa esta cadena con la biblioteca
