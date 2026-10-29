@@ -45,6 +45,7 @@ LaTeX Workshop) no tiene límite.
 | `apendices/` | A encuesta de validación · B entrevista · C detalles técnicos · D prompts de IA · E defensa del precio (con `superprof-precios.csv`, el relevamiento de 414 avisos) |
 | `anexos/` | Repositorios de código |
 | `figuras/` | Imágenes del trabajo (el diagrama de arquitectura se edita en `.svg` y se exporta a `.pdf`) |
+| `presentacion/` | La presentación de la defensa en PDF (`Tinku-presentacion.pdf`), exportada de la versión web (`/presentacion` del sistema): una página por diapositiva, con el diagnóstico y los riesgos antes y después de dar vuelta las tarjetas |
 | `main.pdf` | PDF compilado. **No se regenera solo**: compilar y commitear después de cambiar los `.tex` |
 | `tesis.md`, `tesis_a_markdown.py` | Versión Markdown de la tesis para trabajar con asistentes de IA. **Se genera** con `python3 tesis_a_markdown.py`; no editar a mano, y regenerarla después de cambiar los `.tex` |
 
