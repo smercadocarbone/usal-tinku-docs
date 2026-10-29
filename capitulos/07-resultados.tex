@@ -64,16 +64,16 @@ implementación.
         \tb{Módulo} & \tb{Prefijo} & \tb{RF} & \tb{Estado} \\
         \midrule
         M1 Identidad y perfiles    & FR-ID    & 30 & Implementado, incluido el \gls{cap} para tutores de menores (ADR-M1-04). Diferidos: video de presentación del tutor (FR-ID-034 a 036, fuera del \gls{mvp}) y especialidades verificadas contra registros oficiales (ADR-M1-06) \\
-        M2 Motor de \gls{matching} & FR-MATCH & 14 & Implementado \\
-        M3 Aula virtual            & FR-AULA  & 13 & Implementado, con el kill-switch en el cliente y su prueba de punta a punta contra LiveKit real (9 de 9 casos, sección~\ref{sec:evaluacion-tecnica}); faltan la medición en un teléfono físico y el encendido de las clases con menores (T-M3-06) \\
-        M4 Reservas y agenda       & FR-RES   & 33 & Implementado; un requerimiento retirado (FR-RES-028, ADR-M4-01) \\
+        M2 Motor de \gls{matching} & FR-MATCH & 15 & Implementado \\
+        M3 Aula virtual            & FR-AULA  & 14 & Implementado, con el kill-switch en el cliente y su prueba de punta a punta contra LiveKit real (9 de 9 casos, sección~\ref{sec:evaluacion-tecnica}) y el modo salud para Medicina y Anatomía (ADR-M3-07); faltan la medición en un teléfono físico y el encendido de las clases con menores (T-M3-06) \\
+        M4 Reservas y agenda       & FR-RES   & 34 & Implementado; un requerimiento retirado (FR-RES-028, ADR-M4-01) \\
         M5 Motor de pagos          & FR-PAG   & 23 & Implementado, con conexión de la cuenta de MercadoPago de cada tutor (ADR-M5-02), y modo de operación sin cobro real (Modo Bypass, ADR-M5-01). Probado en Modo Bypass y con pruebas automáticas con el cliente de MercadoPago simulado; la prueba en el \emph{sandbox} de MercadoPago está pendiente (sección~\ref{sec:pruebas}) \\
-        M6 Resumen automático      & FR-SUM   & 8  & Implementado (transcripción y GPT-4o sobre texto anonimizado); apagado en producción hasta contar con el texto legal de la cláusula de grabación \\
+        M6 Resumen automático      & FR-SUM   & 8  & Implementado (transcripción y GPT-4o sobre texto anonimizado) y probado de punta a punta en un entorno local; apagado en producción hasta contar con el texto legal de la cláusula de grabación \\
         M7 Reputación              & FR-REP   & 12 & Implementado \\
         M8 Administración          & FR-ADM   & 11 & Implementado \\
         M9 Denuncias y seguridad   & FR-SEC   & 16 & Implementado \\
         \midrule
-        \multicolumn{2}{l}{\tb{Total}} & \tb{160} & \\
+        \multicolumn{2}{l}{\tb{Total}} & \tb{163} & \\
         \bottomrule
     \end{tabularx}
 \end{table}
@@ -576,6 +576,42 @@ una cámara, dentro del objetivo de 3\,s, sin turnos salteados ni pérdida
 de memoria. Falta la medición en un teléfono físico de gama media, y la
 exactitud del clasificador con contenido real está fuera del alcance de
 la evaluación.
+
+\paragraph{Modo salud del kill-switch.} En las clases de Medicina y de
+Anatomía, mostrar el cuerpo humano es parte del contenido. Para medir
+si la regla entre adultos cortaba esas clases sin motivo, se pasaron por
+el mismo clasificador del aula 30 imágenes de dominio público: láminas
+de \emph{Gray's Anatomy} (1918) y de Sobotta (1909), el Hombre de
+Vitruvio y esquemas anatómicos actuales. Con la regla entre adultos
+(pornografía más dibujo explícito, umbral de 0,85), una de las 30
+láminas habría cortado la clase: sumó 0,93, de los cuales 0,78
+correspondían a la clase de dibujo explícito, que en NSFWJS agrupa los
+dibujos pornográficos y donde el modelo ubica las láminas de cuerpos
+desnudos. Por eso, cuando la materia elegida al reservar es de
+Medicina o de Anatomía y no hay un menor, el cliente cuenta solo la
+clase de pornografía con un umbral de 0,95 (ADR-M3-07); con esa regla
+ninguna lámina cortó la clase y el puntaje más alto fue 0,24. Con un
+menor nunca se aplica: una de las láminas habría sumado 0,98 con la
+regla de menores. El aula avisa al entrar que en esa clase la
+protección se flexibiliza. La muestra se limita a dibujos y no mide
+qué puntaje obtiene el contenido sexual explícito real, por lo que el
+umbral de 0,95 es una decisión de diseño que se calibrará con las
+alertas de esas clases, con el mismo disparador que el resto de los
+umbrales.
+
+\paragraph{Resumen automático.} En producción el resumen sigue
+apagado (R-16), pero el circuito completo se probó en un entorno local
+con un proveedor compatible con la \gls{api} de OpenAI (Groq), que el
+sistema admite por configuración: \texttt{whisper-large-v3} para la
+transcripción y \texttt{gpt-oss-120b} para el resumen. Sobre una clase
+de prueba de 11 minutos (fracciones con distinto denominador), el
+resumen llegó al celular del alumno con los temas, los conceptos y la
+tarea de la clase. La prueba dejó dos ajustes: el modelo de
+transcripción más rápido (\texttt{whisper-large-v3-turbo}) confundía
+cifras e inventaba frases en los silencios, por lo que se usa el
+completo, y la instrucción al modelo pasó a pedir texto plano, sin
+Markdown ni fórmulas, y a omitir cualquier cuenta que no pueda
+verificar.
 
 \paragraph{Calidad del software.} La integración continua del 18 de
 octubre de 2026 corrió 859 pruebas del backend sin fallas, con una
