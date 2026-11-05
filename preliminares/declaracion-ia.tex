@@ -47,11 +47,15 @@ se presenta en el apéndice~\ref{apx:prompts}.
 \end{table}
 
 La magnitud de la asistencia queda registrada en el historial de los
-repositorios (anexo~\ref{anx:repositorios}). Al 14 de octubre de 2026,
-129 de los 482 commits de la rama principal del repositorio del sistema
-figuran con autor ``Claude'', entre ellos 76 de los 196 que modifican
-pruebas automatizadas; en el repositorio de la tesis, al 15 de octubre de
-2026, 13 de sus 24 commits. Los commits registrados a nombre del autor
+repositorios (anexo~\ref{anx:repositorios}). En la versión entregada del
+sistema (tag \texttt{entrega-final}), 270 de sus 560 commits, sin contar
+los de integración (\textit{merge}), figuran con autor ``Claude'', entre
+ellos 151 de los 267 que modifican pruebas automatizadas; otros 32 son
+actualizaciones de dependencias de Dependabot. En el repositorio de la
+tesis, al 5 de noviembre de 2026, 49 de sus 77 commits. Las cifras se
+reproducen con \texttt{git rev-list --count --no-merges} sobre el tag,
+filtrando por autor y, para las pruebas, por \path{backend/src/test},
+\path{frontend/tests} y \path{matching-service/tests}. Los commits registrados a nombre del autor
 también pueden contener código generado con asistencia, en particular
 con OpenCode, que no firma sus cambios.
 

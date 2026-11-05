@@ -21,6 +21,7 @@ digraph "general" {
   "reputacion" -> "aula" [label=" 1 FK", penwidth=1.2];
   "reputacion" -> "identidad" [label=" 2 FK", penwidth=1.5];
   "reservas" -> "identidad" [label=" 9 FK", penwidth=3.0];
+  "reservas" -> "matching" [label=" 1 FK", penwidth=1.2];
   "resumen" -> "aula" [label=" 1 FK", penwidth=1.2];
   "seguridad" -> "aula" [label=" 2 FK", penwidth=1.5];
   "seguridad" -> "identidad" [label=" 5 FK", penwidth=2.2];

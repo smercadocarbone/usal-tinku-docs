@@ -108,7 +108,7 @@ responsabilidades.
         \tb{Componente} & \tb{Responsabilidad} & \tb{Tecnología} \\
         \midrule
         Cliente web (\gls{pwa}) & Interfaz para alumno, tutor, adulto responsable y administración; consume la \gls{api} \gls{rest} del backend. En el aula corre el clasificador del kill-switch sobre el video remoto y, solo con el adicional de resumen, graba el audio en el navegador del tutor & Next.js 16 + React 19; NSFWJS sobre TensorFlow.js; cliente de LiveKit \\
-        Backend (monolito modular) & Lógica de negocio de los nueve módulos, autenticación y autorización por tipo de usuario y por acción, plazos de negocio persistidos, orquestación de los servicios externos & Java 21 + Spring Boot 4.1.1, Spring Security + \gls{jwt}, Quartz, JPA + Flyway \\
+        Backend (monolito modular) & Lógica de negocio de los nueve módulos, autenticación y autorización por tipo de usuario y por acción, plazos de negocio persistidos, orquestación de los servicios externos & Java 21 + Spring Boot 4.1.2, Spring Security + \gls{jwt}, Quartz, JPA + Flyway \\
         Motor de \gls{matching} & Cálculo de \glspl{embeddings} de perfiles y temas, y consulta de similitud semántica contra la base & Python, FastAPI, sentence-transformers (\texttt{paraphrase-}\allowbreak\texttt{multilingual-}\allowbreak\texttt{MiniLM-L12-v2}, 384 dimensiones) \\
         Base de datos & Persistencia de los nueve módulos (un esquema por módulo), índice semántico y tablas de Quartz & PostgreSQL 16 con pgvector, en contenedor propio \\
         Aula virtual & Transmisión de audio, video, pizarra y mensajes de texto entre tutor y alumno & LiveKit Cloud (\gls{webrtc}); el backend emite los tokens de sala y cierra las salas por la \gls{api} de LiveKit, sin \gls{sdk} \\
@@ -242,7 +242,7 @@ apéndice~\ref{apx:tecnicos}.
         \toprule
         \tb{Ítem} & \tb{Detalle} \\
         \midrule
-        Tecnología & Java 21 + Spring Boot 4.1.1 (la rama 3.5 dejó de recibir parches gratuitos el 30/06/2026) \\
+        Tecnología & Java 21 + Spring Boot 4.1.2 (la rama 3.5 dejó de recibir parches gratuitos el 30/06/2026) \\
         Por qué se eligió & Framework ``batteries-included'' (seguridad, ORM, validación, manejo de excepciones ya resueltos) que reduce el riesgo de un desarrollador único investigando y ensamblando librerías sueltas bajo un cronograma fijo; Quartz con persistencia en la base, necesario para que ningún plazo de negocio viva en memoria; alta disponibilidad de documentación y comunidad en español (ADR-000-02) \\
         Alternativas evaluadas & Go -- descartado pese a tener ventajas reales de footprint de memoria y simplicidad del lenguaje, porque su ecosistema requiere ensamblar manualmente router, ORM y librerías de autenticación, lo cual consume tiempo de decisión de arquitectura que un proyecto de 6 meses en solitario no puede permitirse. Node.js -- descartado como backend principal por preferirse la robustez de tipado y el ecosistema de seguridad de Spring, con el que el desarrollador ya tenía experiencia previa en Java y Spring Boot (sección~\ref{sec:recursos}) \\
         Autenticación & Spring Security + \gls{jwt} emitido y validado por el propio backend, sin un proveedor externo de identidad: el modelo de permisos de \sistema{} --adulto responsable, menor con permisos por acción, tutor, dos roles de administración-- requiere reglas de autorización propias que conviene mantener dentro del mismo framework que gestiona el resto de las reglas de negocio \\
@@ -537,7 +537,7 @@ diseño inicial.
     Pruebas & Jest en el frontend; cobertura mínima del 70\,\% por módulo & Backend: JUnit 5 y Testcontainers con PostgreSQL real; frontend: Playwright (con la \gls{api} simulada) y axe-core, más oxlint; pruebas del motor de \gls{matching} y prueba nocturna contra el sistema completo. Cobertura medida con JaCoCo, sin umbral que corte la construcción & ADR-000-05 \\
     Roles & ADMIN como un rol más de Usuario, con un rol único de administración & Usuario de tipo ADULTO, MENOR o TUTOR; el administrador es una entidad aparte con uno de dos roles: Moderación y Seguridad, o Soporte Financiero & Spec M8 (FR-ADM-008) \\
     Monitoreo & Paneles de Supabase y Upstash & Panel propio ``Salud de Infraestructura'' en la administración, más los paneles de Coolify y LiveKit & ADR-M8-01 \\
-    Versiones & --- & Spring Boot 4.1.1 y Next.js 16.3.6, para mantener parches de seguridad durante la puesta en marcha & Apéndice~\ref{apx:tecnicos} \\
+    Versiones & --- & Spring Boot 4.1.2 y Next.js 16.3.6, para mantener parches de seguridad durante la puesta en marcha & Apéndice~\ref{apx:tecnicos} \\
 \end{xltabular}
 }
 

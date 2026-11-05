@@ -1,7 +1,7 @@
 %!TEX root = ../main.tex
 % GENERADO por scripts/diccionario/generar.py — no editar a mano.
 
-% 47 tablas, 375 columnas.
+% 47 tablas, 377 columnas.
 
 \subsection{Esquema \texttt{identidad} (M1)}\label{dd:identidad}
 
@@ -860,7 +860,7 @@ Contador agregado de temas buscados que el catálogo no cubre (ADR-M2-04). No gu
 
 \subsubsection{\texorpdfstring{\texttt{matching.trayectos}}{matching.trayectos}}\label{dd:matching.trayectos}
 
-Catálogo cerrado de trayectos: nivel, año o carrera y materia. Lo siembra \path{V20__m2_temas_seed.sql}. \emph{Migraciones:} V19, V20.
+Catálogo cerrado de trayectos: nivel, año o carrera y materia. Lo siembra \path{V20__m2_temas_seed.sql}. \emph{Migraciones:} V19, V20, V61.
 
 {\small
 \begin{xltabular}{\textwidth}{@{}>{\raggedright\arraybackslash}p{3.6cm} >{\raggedright\arraybackslash}p{2.3cm} >{\raggedright\arraybackslash}p{1cm} >{\centering\arraybackslash}p{0.85cm} L@{}}
@@ -878,6 +878,7 @@ Catálogo cerrado de trayectos: nivel, año o carrera y materia. Lo siembra \pat
     \texttt{nivel} & \texttt{text} &  & no & primario, secundario o universitario \\
     \texttt{anio\_\allowbreak{}o\_\allowbreak{}carrera} & \texttt{text} &  & no & Año o curso (por ejemplo, ``4°'') o carrera \\
     \texttt{materia} & \texttt{text} &  & no & Nombre de la materia \\
+    \texttt{contenido\_\allowbreak{}anatomico} & \texttt{boolean} &  & no & Materia donde mostrar el cuerpo humano es parte de la clase (Medicina, Anatomía); activa el modo salud del kill-switch (ADR-M3-07). Por defecto: \texttt{false} \\
 \end{xltabular}
 }
 
@@ -1073,7 +1074,7 @@ Reservas y agenda: franjas de disponibilidad, solicitudes del menor, reservas, p
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[scale=0.747]{figuras/der/reservas}
+    \includegraphics[scale=0.697]{figuras/der/reservas}
     \caption{Diagrama entidad-relación del esquema \texttt{reservas} (M4)}
     \label{fig:der-reservas}
 \end{figure}
@@ -1310,7 +1311,7 @@ Pedido del tutor para cambiar el horario de una reserva. Puede haber uno solo pe
 
 \subsubsection{\texorpdfstring{\texttt{reservas.reservas}}{reservas.reservas}}\label{dd:reservas.reservas}
 
-Clase reservada. Distingue a quien paga, a quien recibe la clase y al tutor, y congela el precio y la duración al crearse. \emph{Migraciones:} V9, V11, V29, V30, V35, V36, V37, V38, V44, V45, V46.
+Clase reservada. Distingue a quien paga, a quien recibe la clase y al tutor, y congela el precio y la duración al crearse. \emph{Migraciones:} V9, V11, V29, V30, V35, V36, V37, V38, V44, V45, V46, V61.
 
 {\small
 \begin{xltabular}{\textwidth}{@{}>{\raggedright\arraybackslash}p{3.6cm} >{\raggedright\arraybackslash}p{2.3cm} >{\raggedright\arraybackslash}p{1cm} >{\centering\arraybackslash}p{0.85cm} L@{}}
@@ -1339,6 +1340,7 @@ Clase reservada. Distingue a quien paga, a quien recibe la clase y al tutor, y c
     \texttt{resumen\_\allowbreak{}contratado} & \texttt{boolean} &  & no & Se contrató el adicional de resumen. Por defecto: \texttt{false} \\
     \texttt{precio\_\allowbreak{}adicional\_\allowbreak{}resumen} & \texttt{numeric(\allowbreak{}10,\allowbreak{}2)} &  & sí & Precio congelado del adicional; presente si y solo si se contrató \\
     \texttt{paquete\_\allowbreak{}id} & \texttt{uuid} & FK & sí & Paquete mensual al que pertenece la clase, si lo hay \\
+    \texttt{trayecto\_\allowbreak{}id} & \texttt{uuid} & FK & sí & Materia de la clase; nula en reservas anteriores a V61 y en las que salen de una solicitud de un menor \\
 \end{xltabular}
 }
 
@@ -1366,6 +1368,7 @@ Clase reservada. Distingue a quien paga, a quien recibe la clase y al tutor, y c
     FK & \texttt{reservas\_\allowbreak{}pagador\_\allowbreak{}id\_\allowbreak{}fkey} & \texttt{(\allowbreak{}pagador\_\allowbreak{}id) $\rightarrow$ identidad.usuarios(\allowbreak{}id)} \\
     FK & \texttt{reservas\_\allowbreak{}paquete\_\allowbreak{}id\_\allowbreak{}fkey} & \texttt{(\allowbreak{}paquete\_\allowbreak{}id) $\rightarrow$ reservas.paquetes(\allowbreak{}id)} \\
     FK & \texttt{reservas\_\allowbreak{}solicitud\_\allowbreak{}origen\_\allowbreak{}id\_\allowbreak{}fkey} & \texttt{(\allowbreak{}solicitud\_\allowbreak{}origen\_\allowbreak{}id) $\rightarrow$ reservas.solicitudes\_\allowbreak{}sesion(\allowbreak{}id)} \\
+    FK & \texttt{reservas\_\allowbreak{}trayecto\_\allowbreak{}id\_\allowbreak{}fkey} & \texttt{(\allowbreak{}trayecto\_\allowbreak{}id) $\rightarrow$ matching.trayectos(\allowbreak{}id)} \\
     FK & \texttt{reservas\_\allowbreak{}tutor\_\allowbreak{}id\_\allowbreak{}fkey} & \texttt{(\allowbreak{}tutor\_\allowbreak{}id) $\rightarrow$ identidad.usuarios(\allowbreak{}id)} \\
     PK & \texttt{reservas\_\allowbreak{}pkey} & \texttt{(\allowbreak{}id)} \\
     EXCLUDE & \texttt{ex\_\allowbreak{}reservas\_\allowbreak{}rango\_\allowbreak{}beneficiario} & \texttt{gist (\allowbreak{}beneficiario\_\allowbreak{}id WITH =,\allowbreak{} tstzrange(\allowbreak{}horario,\allowbreak{} horario\_\allowbreak{}fin,\allowbreak{} \textquotesingle{}[)\textquotesingle{}) WITH \&\&) WHERE (\allowbreak{}estado \textless{}\textgreater{} \textquotesingle{}cancelada\textquotesingle{})} \\

@@ -243,6 +243,8 @@ TABLAS = {
             "nivel": "primario, secundario o universitario",
             "anio_o_carrera": "Año o curso (por ejemplo, ``4°'') o carrera",
             "materia": "Nombre de la materia",
+            "contenido_anatomico": "Materia donde mostrar el cuerpo humano es parte de la clase "
+            "(Medicina, Anatomía); activa el modo salud del kill-switch (ADR-M3-07)",
         },
     ),
     "matching.temas": (
@@ -400,6 +402,8 @@ TABLAS = {
             "resumen_contratado": "Se contrató el adicional de resumen",
             "precio_adicional_resumen": "Precio congelado del adicional; presente si y solo si se contrató",
             "paquete_id": "Paquete mensual al que pertenece la clase, si lo hay",
+            "trayecto_id": "Materia de la clase; nula en reservas anteriores a V61 y en las que "
+            "salen de una solicitud de un menor",
         },
     ),
     "reservas.paquetes": (
