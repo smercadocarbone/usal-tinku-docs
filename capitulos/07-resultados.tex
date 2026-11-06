@@ -51,8 +51,8 @@ descripción y criterios de aceptación expresados como escenarios
 verificables (``dado \ldots, cuando \ldots, entonces \ldots''); las
 especificaciones se enmiendan con fecha cuando una decisión posterior
 las modifica. La tabla~\ref{tab:rf} resume los requerimientos registrados
-por módulo en la rama principal al 14 de octubre de 2026 y su estado de
-implementación.
+por módulo en la versión entregada del sistema (tag
+\texttt{entrega-final}) y su estado de implementación.
 
 \begin{table}[H]
     \centering
@@ -65,7 +65,7 @@ implementación.
         \midrule
         M1 Identidad y perfiles    & FR-ID    & 30 & Implementado, incluido el \gls{cap} para tutores de menores (ADR-M1-04). Diferidos: video de presentación del tutor (FR-ID-034 a 036, fuera del \gls{mvp}) y especialidades verificadas contra registros oficiales (ADR-M1-06) \\
         M2 Motor de \gls{matching} & FR-MATCH & 15 & Implementado \\
-        M3 Aula virtual            & FR-AULA  & 14 & Implementado, con el kill-switch en el cliente y su prueba de punta a punta contra LiveKit real (9 de 9 casos, sección~\ref{sec:evaluacion-tecnica}) y el modo salud para Medicina y Anatomía (ADR-M3-07); faltan la medición en un teléfono físico y el encendido de las clases con menores (T-M3-06) \\
+        M3 Aula virtual            & FR-AULA  & 14 & Implementado, con el kill-switch en el cliente y su prueba de punta a punta contra LiveKit real (9 de 9 casos, sección~\ref{sec:evaluacion-tecnica}) y el modo salud para Medicina y Anatomía (ADR-M3-07); faltan la medición en un teléfono físico y el encendido de las clases con menores (T-M3-06i, M3C-09) \\
         M4 Reservas y agenda       & FR-RES   & 34 & Implementado; un requerimiento retirado (FR-RES-028, ADR-M4-01) \\
         M5 Motor de pagos          & FR-PAG   & 23 & Implementado, con conexión de la cuenta de MercadoPago de cada tutor (ADR-M5-02), y modo de operación sin cobro real (Modo Bypass, ADR-M5-01). Probado en Modo Bypass y con pruebas automáticas con el cliente de MercadoPago simulado; la prueba en el \emph{sandbox} de MercadoPago está pendiente (sección~\ref{sec:pruebas}) \\
         M6 Resumen automático      & FR-SUM   & 8  & Implementado (transcripción y GPT-4o sobre texto anonimizado) y probado de punta a punta en un entorno local; apagado en producción hasta contar con el texto legal de la cláusula de grabación \\
@@ -169,8 +169,19 @@ despliegue de producción (\path{tinku.site}) con datos de prueba
     \label{fig:cap-admin}
 \end{figure}
 
-\completar{Insertar la captura del aula virtual durante una clase
-(\texttt{figuras/pantallas/08-aula.png}).}
+La figura~\ref{fig:cap-aula} muestra el aula virtual durante una clase
+entre dos adultos con el adicional de resumen contratado, tomada de la
+grabación de la demostración del sistema.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[height=0.55\textheight]{pantallas/08-aula}
+    \caption[Aula virtual durante una clase]{Aula virtual durante una
+    clase, vista del tutor en el teléfono: video del estudiante, imagen
+    propia, controles y, arriba, el aviso permanente de que se graba solo
+    el audio para el resumen (ADR-M3-04).}
+    \label{fig:cap-aula}
+\end{figure}
 
 \section{Construcción e integración}
 
@@ -178,11 +189,12 @@ El sistema se construyó con el método dirigido por especificaciones
 descrito en el capítulo~\ref{cap:metodologia} (sección~\ref{sec:desarrollo-ia}), con asistentes de
 programación con \gls{ia} (declaración de uso de \gls{ia} y
 apéndice~\ref{apx:prompts}). La tabla~\ref{tab:construccion} resume el
-resultado medido sobre la rama principal del repositorio del sistema.
+resultado medido sobre la versión entregada del sistema (tag
+\texttt{entrega-final}, commit \texttt{d167796}).
 
 \begin{table}[H]
     \centering
-    \caption{Métricas de construcción al 14 de octubre de 2026}
+    \caption{Métricas de construcción de la versión entregada}
     \label{tab:construccion}
     \small
     \begin{tabularx}{\textwidth}{L r}
@@ -190,23 +202,25 @@ resultado medido sobre la rama principal del repositorio del sistema.
         \tb{Métrica} & \tb{Valor} \\
         \midrule
         Módulos de dominio con especificación propia                     & 9 \\
-        Requerimientos funcionales especificados                         & 160 \\
-        Migraciones de base de datos versionadas (V1 a V47)              & 47 \\
-        Registros de decisión de arquitectura (\glspl{adr})               & 37 \\
-        Tareas completadas / pendientes                                  & 221 / 9 \\
-        Commits de la rama principal                                     & 482 \\
-        Pruebas automatizadas del backend / cobertura de líneas          & 661 / 85,6\,\% \\
+        Requerimientos funcionales especificados                         & 163 \\
+        Migraciones de base de datos versionadas (V1 a V61)              & 56 \\
+        Registros de decisión de arquitectura (\glspl{adr})               & 38 \\
+        Tareas completadas / pendientes                                  & 241 / 3 \\
+        Commits, sin contar los de integración (\textit{merge})          & 560 \\
+        Pruebas automatizadas del backend / cobertura de líneas          & 877 / 89,5\,\% \\
         \bottomrule
     \end{tabularx}
 \end{table}
 
 Las tareas se cuentan sobre la lista de tareas del sistema
 (\path{docs/Tasks_Tinku_Implementacion.md}, anexo~\ref{anx:repositorios})
-en su versión de esa fecha, contando como completadas las casillas
-marcadas y como pendientes las vacías, incluidas las subtareas; no se
-cuentan las tareas marcadas como en curso ni las canceladas. Con el mismo
-criterio, al 19 de octubre de 2026 la lista registra 234 tareas
-completadas, 3 pendientes, 4 en curso y 1 cancelada.
+en la versión del tag, contando como completadas las casillas marcadas y
+como pendientes las vacías, incluidas las subtareas; no se cuentan las 4
+tareas marcadas como en curso ni la cancelada. Las 3 pendientes son el
+entorno de pruebas previo a producción (T-M3-06h), el encendido de las
+clases con menores (T-M3-06i), que decide y ejecuta el autor como dueño
+del sistema, y el video de presentación del tutor, diferido fuera del
+\gls{mvp} (T-TA-07).
 
 El listado~\ref{lst:puerto-resumen} muestra un fragmento representativo
 de la construcción: el puerto que aísla al proveedor de \gls{llm}. Si el
@@ -269,6 +283,7 @@ del backend en las mediciones registradas en el repositorio del sistema.
         14/10/2026 & Línea de base de la rama principal & 661, sin fallas, 5 omitidas & Cobertura de líneas del 85,6\,\% (JaCoCo) \\
         15/10/2026 & Rama principal, con la remediación de las pruebas en producción y la ventana mínima de 21 minutos integradas & 739, sin fallas, 5 omitidas & Cobertura del 86,2\,\% (medida con 738 pruebas, antes del último cambio); Playwright: 222 exitosas y 3 omitidas; pytest: 26 de 26 \\
         18/10/2026 & Integración continua de la rama que incorporó la evaluación técnica (commit \texttt{9e047eb}, integrado a la rama principal) & 859, sin fallas, 1 omitida & Cobertura de líneas del 89,6\,\% (JaCoCo); Playwright: 252 exitosas; pytest: 44 de 44 \\
+        05/11/2026 & Versión entregada (tag \texttt{entrega-final}, commit \texttt{d167796}), corrida local & 877, sin fallas, 3 omitidas & Cobertura de líneas del 89,5\,\% (JaCoCo, 8.787 de 9.823 líneas) \\
         \bottomrule
     \end{tabularx}
 \end{table}
@@ -278,7 +293,11 @@ Las cinco pruebas omitidas en las mediciones locales son las del
 instalado y corren en la integración continua; la omitida en la
 integración continua del 18 de octubre es la prueba del validador de
 firmas digitales contra el servicio oficial real, que no se ejecuta en
-ese entorno.
+ese entorno. En la medición del 5 de noviembre, con Tesseract instalado,
+esa misma prueba se omitió por no estar habilitada la llamada al
+servicio real, y otras dos de reservas se omitieron por la hora: se
+saltean a propósito cuando la suite corre después de las 21:30, porque
+la franja de dos horas que necesitan ya no entra en el día.
 
 \paragraph{Cobro con MercadoPago.} El circuito de pagos se probó de dos
 maneras, y ninguna de ellas usa el entorno de pruebas
